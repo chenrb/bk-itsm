@@ -67,8 +67,8 @@
           >
             {{ $t(`m.tickets['存入任务库']`) }}
           </bk-button>
+          <template #content>
           <div
-            slot="content"
             style="width: 294px"
             class="task-library-manage-panel"
           >
@@ -94,7 +94,7 @@
         :size="'small'"
       >
         <bk-table-column :label="$t(`m.task['顺序']`)" :width="60">
-          <template slot-scope="props">
+          <template #default="props">
             <bk-input
               v-if="edittingOrderId === props.row.id"
               v-model="props.row.editOrder"
@@ -112,7 +112,7 @@
           </template>
         </bk-table-column>
         <bk-table-column :label="$t(`m.task['任务名称']`)">
-          <template slot-scope="props">
+          <template #default="props">
             <span
               v-bk-tooltips.top="{ content: props.row.name, allowHTML: false }"
               class="task-name"
@@ -122,14 +122,14 @@
           </template>
         </bk-table-column>
         <bk-table-column :label="$t(`m.task['处理人']`)">
-          <template slot-scope="props">
+          <template #default="props">
             <span v-bk-tooltips.top="{ content: props.row.processor_users, allowHTML: false }">
               {{ props.row.processor_users || "--" }}
             </span>
           </template>
         </bk-table-column>
         <bk-table-column :label="$t(`m.task['任务类型']`)">
-          <template slot-scope="props">
+          <template #default="props">
             <span v-bk-tooltips.top="{ content: props.row.processor_users, allowHTML: false }">
               {{
                 getTaskTypeName(props.row.component_type) ||
@@ -139,13 +139,13 @@
           </template>
         </bk-table-column>
         <bk-table-column :label="$t(`m.task['状态']`)" :wdith="120">
-          <template slot-scope="props">
+          <template #default="props">
             <!-- 任务状态组件 -->
             <task-status :status="props.row.status"></task-status>
           </template>
         </bk-table-column>
         <bk-table-column :label="$t(`m.task['操作']`)" min-width="140">
-          <template slot-scope="props">
+          <template #default="props">
             <template
               v-for="(opt, index) in operatingMap[
                 props.row.status
@@ -253,7 +253,7 @@
       </bk-table>
     </div>
     <bk-sideslider
-      :is-show.sync="createInfo.isShow"
+      v-model:is-show="createInfo.isShow"
       :title="
         createInfo.isAdd
           ? $t(`m.task['创建任务']`)
@@ -267,7 +267,7 @@
       "
       :width="800"
     >
-      <div slot="content" style="min-height: 300px">
+      <template #content><div style="min-height: 300px">
         <new-task
           v-if="createInfo.isShow"
           ref="newTask"
@@ -280,11 +280,11 @@
       </div>
     </bk-sideslider>
     <bk-sideslider
-      :is-show.sync="dealTaskInfo.show"
+      v-model:is-show="dealTaskInfo.show"
       :quick-close="true"
       :width="800"
     >
-      <div slot="header">
+      <template #header><div>
         <task-handle-trigger
           v-if="dealTaskInfo.show"
           :task-info="dealTaskInfo.itemContent"
@@ -292,9 +292,9 @@
           :show-status="true"
           @close-slider="dealTaskInfo.show = false"
         >
+          <template #right-content>
           <div
             v-if="isShowJumpIcon(dealTaskInfo.itemContent)"
-            slot="right-content"
             class="jump-to-other-system"
             @click.stop="
               onJumpToSopsClick(dealTaskInfo.itemContent)
@@ -322,8 +322,8 @@
           </div>
         </task-handle-trigger>
       </div>
+      <template #content>
       <div
-        slot="content"
         v-bkloading="{ isLoading: dealTaskInfo.addLoading }"
         style="height: 100%"
       >
@@ -354,7 +354,7 @@
     </bk-sideslider>
     <!-- 任务库创建任务 -->
     <bk-sideslider
-      :is-show.sync="taskLibrary.show"
+      v-model:is-show="taskLibrary.show"
       :title="$t(`m.tickets['从任务库创建任务']`)"
       :before-close="
         () => {
@@ -364,7 +364,7 @@
       :quick-close="true"
       :width="800"
     >
-      <div slot="content" style="min-height: 300px">
+      <template #content><div style="min-height: 300px">
         <task-library
           ref="taskLibrary"
           v-if="taskLibrary.show"
@@ -489,7 +489,7 @@
           .then((res) => {
             this.taskList = res.data;
             this.taskList.forEach((item) => {
-              this.$set(item, 'editOrder', item.order);
+              item['editOrder'] = item.order;
             });
             // 如果当前的状态为QUEUE、RUNNING、WAITING_FOR_XXX则轮询,否则为处理完成状态,需刷新单据
             const loopStatusList = [
@@ -512,7 +512,7 @@
               const setTimeoutFunc = setTimeout(() => {
                 this.getTaskList(source);
               }, 10000);
-              this.$once('hook:beforeDestroy', () => {
+              this.$once('hook:beforeUnmount', () => {
                 clearInterval(setTimeoutFunc);
               });
             }

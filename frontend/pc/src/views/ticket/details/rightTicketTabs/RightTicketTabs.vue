@@ -24,7 +24,7 @@
   <div class="right-content">
     <bk-tab
       data-test-id="ticket_tab_rightMenu"
-      :active.sync="activeTab"
+      v-model:active="activeTab"
       type="unborder-card"
       ext-cls="right-tiket-tabs"
     >
@@ -205,11 +205,11 @@
 .right-tiket-tabs {
     flex: 1;
     background: #ffffff;
-    /deep/ .bk-tab-section {
+    ::v-deep  .bk-tab-section {
         overflow: auto;
         @include scroller;
     }
-    /deep/ .bk-tab-label-item {
+    ::v-deep  .bk-tab-label-item {
         min-width: auto;
     }
 }

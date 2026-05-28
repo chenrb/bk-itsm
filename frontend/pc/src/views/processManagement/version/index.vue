@@ -79,7 +79,7 @@
           width="60"
           align="center"
           :selectable="disabledFn">
-          <template slot-scope="props">
+          <template #default="props">
             <template v-if="!hasPermission(['flow_version_manage'], props.row.auth_actions)">
               <div style="height: 100%; display: flex; justify-content: center; align-items: center;">
                 <span
@@ -106,38 +106,38 @@
         </bk-table-column>
         <!--<bk-table-column type="index" label="NO." align="center" width="60"></bk-table-column>-->
         <bk-table-column :label="$t(`m.common['ID']`)" min-width="60">
-          <template slot-scope="props">
+          <template #default="props">
             <span :title="props.row.id">{{ props.row.id || '--' }}</span>
           </template>
         </bk-table-column>
 
         <bk-table-column :label="$t(`m.flowManager['流程名']`)" width="200">
-          <template slot-scope="props">
+          <template #default="props">
             <span :title="props.row.name">{{ props.row.name || '--' }}</span>
           </template>
         </bk-table-column>
         <bk-table-column :label="$t(`m.flowManager['版本号']`)" min-width="150">
-          <template slot-scope="props">
+          <template #default="props">
             <span :title="props.row.version_number">{{ props.row.version_number || '--' }}</span>
           </template>
         </bk-table-column>
         <bk-table-column :label="$t(`m.flowManager['发布人']`)">
-          <template slot-scope="props">
+          <template #default="props">
             <span :title="props.row.updated_by">{{ props.row.updated_by || '--' }}</span>
           </template>
         </bk-table-column>
         <bk-table-column :label="$t(`m.flowManager['发布时间']`)" min-width="150">
-          <template slot-scope="props">
+          <template #default="props">
             <span :title="props.row.update_at">{{ props.row.update_at || '--' }}</span>
           </template>
         </bk-table-column>
         <bk-table-column :label="$t(`m.flowManager['关联服务数']`)" width="90">
-          <template slot-scope="props">
+          <template #default="props">
             <span :title="props.row.service_cnt">{{ props.row.service_cnt || '--' }}</span>
           </template>
         </bk-table-column>
         <bk-table-column :label="$t(`m.flowManager['操作']`)" width="150">
-          <template slot-scope="props">
+          <template #default="props">
             <bk-button
               v-cursor="{ active: !hasPermission(['flow_version_manage'], props.row.auth_actions) }"
               text
@@ -195,7 +195,7 @@
           :normal-color="normalColor">
         </preview>
       </div>
-      <div slot="footer">
+      <template #footer><div>
         <bk-button
           theme="default"
           @click="processInfo.isShow = false">
@@ -209,7 +209,7 @@
   import axios from 'axios';
   import searchInfo from '../../commonComponent/searchInfo/searchInfo.vue';
   import preview from '../../commonComponent/preview';
-  import permission from '@/mixins/permission.js';
+  import { usePermission } from '@/composables/usePermission';
   import { errorHandler } from '../../../utils/errorHandler';
 
   export default {
@@ -218,7 +218,7 @@
       searchInfo,
       preview,
     },
-    mixins: [permission],
+    setup() { return { ...usePermission() }; },
     data() {
       return {
         secondClick: false,
@@ -314,7 +314,7 @@
         this.$store.dispatch('workflowVersion/list', params).then((res) => {
           this.dataList = res.data.items;
           this.dataList.forEach((item) => {
-            this.$set(item, 'checkStatus', false);
+            item['checkStatus'] = false;
           });
           // 分页
           this.pagination.current = res.data.page;
@@ -580,7 +580,7 @@
 </script>
 
 <style lang='scss' scoped>
-    .filter-btn /deep/ .icon-search-more {
+    .filter-btn ::v-deep  .icon-search-more {
         font-size: 14px;
     }
 </style>

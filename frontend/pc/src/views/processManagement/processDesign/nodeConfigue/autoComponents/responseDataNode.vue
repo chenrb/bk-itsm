@@ -26,7 +26,7 @@
             :data="tableList"
             :size="'small'">
             <bk-table-column :label="$t(`m.treeinfo['名称']`)" min-width="200">
-                <template slot-scope="props">
+                <template #default="props">
                     <div class="bk-more">
                         <span :style="{ paddingLeft: 20 * props.row.level + 'px' }">
                             <span
@@ -42,22 +42,22 @@
             </bk-table-column>
             <bk-table-column :label="$t(`m.treeinfo['类型']`)" prop="type"></bk-table-column>
             <bk-table-column :label="$t(`m.treeinfo['是否必须']`)">
-                <template slot-scope="props">
+                <template #default="props">
                     {{ props.row.is_necessary ? $t(`m.treeinfo["是"]`) : $t(`m.treeinfo["否"]`) }}
                 </template>
             </bk-table-column>
             <bk-table-column :label="$t(`m.treeinfo['备注']`)" width="100">
-                <template slot-scope="props">
+                <template #default="props">
                     <span :title="props.row.desc">{{props.row.desc || '--'}}</span>
                 </template>
             </bk-table-column>
             <bk-table-column v-if="isStatic" :label="$t(`m.treeinfo['参数值']`)" width="270">
-                <template slot-scope="props">
+                <template #default="props">
                     {{ props.row.customValue || '--' }}
                 </template>
             </bk-table-column>
             <bk-table-column v-else-if="isCustom" :label="$t(`m.treeinfo['参数值']`)" width="270">
-                <template slot-scope="props">
+                <template #default="props">
                     <bk-input
                         class="bk-respone-input"
                         :clearable="true"
@@ -68,7 +68,7 @@
                 </template>
             </bk-table-column>
             <bk-table-column v-else :label="$t(`m.treeinfo['引用为全局变量']`)" width="300">
-                <template slot-scope="props">
+                <template #default="props">
                     <template v-if="props.row.isSelectAbled">
                         <bk-checkbox style="width: 40px; position: absolute; top: 12px; left: 15px;"
                             :true-value="trueStatus"
@@ -96,14 +96,16 @@
 </template>
 
 <script>
-    import mixins from '../../../../commonMix/mixins_api.js'
+    import { useMixinsApi } from '@/composables/useMixinsApi'
 
     export default {
         name: 'responseDataNode',
+        setup() {
+            return { ...useMixinsApi() };
+        },
         components: {
 
         },
-        mixins: [mixins],
         props: {
             changeInfo: {
                 type: Object,

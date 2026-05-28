@@ -20,66 +20,38 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE
  */
 
-export const COMMON_ATTRS = {
-  label: {
-    type: String,
-    required: false,
-  },
-  hiddenLabel: {
-    type: Boolean,
-    default: false,
-  },
-  form: {
-    type: Object,
-    default: () => ({}),
-  },
-  scheme: {
-    type: Object,
-    default: () => ({}),
-  },
-  children: {
-    type: [String, Array],
-    required: false,
-  },
-  desc: {
-    type: String,
-    required: false,
-  },
-};
-export function getFormMixins(attrs) {
-  const privateProps = {}; // 继承属性
-  for (const key in attrs) {
-    if (key !== 'value') {
-      privateProps[key] = attrs[key];
-    }
-  }
-  return {
-    props: {
-      ...COMMON_ATTRS,
-      ...privateProps,
+import { defineStore } from 'pinia'
+import ajax from '@/utils/ajax'
+
+export const useEvaluationStore = defineStore('evaluation', {
+  state: () => ({}),
+  actions: {
+    // 提交满意度评价
+    postEvaluation({ params, id }) {
+      return ajax.put(`ticket/comments/${id}/`, params).then((response) => {
+        const res = response.data
+        return res
+      })
     },
-    inject: ['getContext'],
-    data() {
-      return {
-        value: this.$attrs.value ? this.$attrs.value : attrs.value.default,
-      };
+    // 短信提交
+    sendTelephone({ params, id }) {
+      return ajax.post(`ticket/receipts/${id}/send_sms/`, params).then((response) => {
+        const res = response.data
+        return res
+      })
     },
-    methods: {
-      /**
-             * 获取最顶层 ViewItem 组件实例
-             */
-      getTopViewItem() {
-        let vueTag = this;
-        let isTop = false;
-        while (!isTop) {
-          if (vueTag.$parent && vueTag.$parent.isRootRenderView) {
-            isTop = true;
-          } else {
-            vueTag = vueTag.$parent;
-          }
-        }
-        return vueTag;
-      },
+    sendEmail({ params, id }) {
+      return ajax.post(`ticket/receipts/${id}/send_email/`, params).then((response) => {
+        const res = response.data
+        return res
+      })
     },
-  };
-}
+    // 获取满意度评价
+    getEvaluation(params) {
+      return ajax.get(`ticket/comments/${params.id}/`, { params }).then((response) => {
+        const res = response.data
+        return res
+      })
+    },
+  },
+})

@@ -20,7 +20,7 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE
  */
 
-import Vue from 'vue';
+import { getCurrentInstance } from 'vue';
 import axios from 'axios';
 import bus from './bus.js';
 import { checkDataType } from './getDataType.js';
@@ -198,7 +198,5 @@ instance.interceptors.response.use(
   },
   (error) => Promise.reject(error)
 );
-
-Vue.prototype.$http = instance;
 
 export default instance;

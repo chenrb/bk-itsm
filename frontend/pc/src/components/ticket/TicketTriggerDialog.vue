@@ -145,7 +145,7 @@
             const setTimeoutFunc = setTimeout(() => {
               this.getTriggerStatus(id);
             }, 1000);
-            this.$once('hook:beforeDestroy', () => {
+            this.$once('hook:beforeUnmount', () => {
               clearInterval(setTimeoutFunc);
             });
           } else {
@@ -387,11 +387,11 @@
   };
 </script>
 <style lang='scss' scoped>
-/deep/ .bk-dialog-wrapper .bk-dialog-body {
+::v-deep  .bk-dialog-wrapper .bk-dialog-body {
     max-height: 600px;
     overflow: auto;
 }
-/deep/ .bk-send-message {
+::v-deep  .bk-send-message {
     border: 1px solid #dcdee5;
 }
 @keyframes rotation {

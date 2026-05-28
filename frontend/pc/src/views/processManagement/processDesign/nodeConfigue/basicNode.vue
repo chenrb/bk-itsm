@@ -245,10 +245,10 @@
         .bk-node-btn{
             font-size: 0;
         }
-        /deep/ .common-section-card-label {
+        ::v-deep  .common-section-card-label {
             display: none;
         }
-        /deep/ .common-section-card-body {
+        ::v-deep  .common-section-card-body {
             padding: 20px;
         }
     }

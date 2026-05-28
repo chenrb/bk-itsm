@@ -108,17 +108,17 @@
       </div>
     </div>
     <bk-sideslider
-      :is-show.sync="serviceAgreementIsShow"
+      v-model:is-show="serviceAgreementIsShow"
       :quick-close="true"
       :before-close="clearLastNode"
       :width="695">
-      <div slot="header" class="sideslider-header">
+      <template #header><div class="sideslider-header">
         {{$t(`m.serviceConfig['绑定服务协议']`)}}
         <div @click="viewAgreementIsShow = true" class="view-agreement-text">
           {{$t(`m.serviceConfig['查看协议计时说明']`)}}
         </div>
       </div>
-      <div slot="content" class="sideslider-content">
+      <template #content><div class="sideslider-content">
         <bk-form
           :label-width="250"
           form-type="vertical"
@@ -178,7 +178,7 @@
                   @click.stop="handleEditAgreement(option)">
                 </i>
               </bk-option>
-              <div slot="extension" @click="handleCreateAgreement" style="cursor: pointer;">
+              <template #extension><div @click="handleCreateAgreement" style="cursor: pointer;">
                 <i class="bk-icon icon-plus-circle"></i>{{$t(`m.serviceConfig['跳转新建协议']`)}}
               </div>
             </bk-select>
@@ -216,7 +216,7 @@
   import axios from 'axios';
   import { mapState } from 'vuex';
   import secondFlow from './slaJsflowCanvas/secondFlow.vue';
-  import commonMix from '../../commonMix/common.js';
+  import { useCommonMix } from '@/composables/useCommonMix';
   import { ProcessTools } from '@/utils/process.js';
   import { errorHandler } from '../../../utils/errorHandler';
 
@@ -225,7 +225,7 @@
     components: {
       secondFlow,
     },
-    mixins: [commonMix],
+    setup() { return { ...useCommonMix() }; },
     props: {
       modelPriority: {
         type: Array,
@@ -405,7 +405,7 @@
         this.serviceAgreementIsShow = true;
         this.endNodeOption = [];
         if (!agree.color) {
-          this.$set(this.agreementEditData, 'color', this.getRendomColor());
+          this.agreementEditData['color'] = this.getRendomColor();
         }
         if (this.agreementEditData.start_node_id) {
           this.getPostNodes(this.agreementEditData.start_node_id);
@@ -460,7 +460,7 @@
           }
 
           lastSlaItem.end_node_id = value.id;
-          this.$set(sla, len, sla[len]);
+          sla[len] = sla[len];
           if (this.nodeCheck(sla[len])) {
             sla[len].end_node_id = '';
             return;
@@ -607,7 +607,7 @@
             height: calc(100vh - 92px);
         }
     }
-    .bk-loading /deep/.bk-spin-loading {
+    .bk-loading ::v-deep .bk-spin-loading {
         width: 16px;
         height: 16px;
     }
@@ -754,7 +754,7 @@
     }
     .display-range {
         width: 100%;
-        /deep/ {
+        ::v-deep  {
             .first-level {
                 margin-right: 8px;
             }
@@ -765,7 +765,7 @@
                 width: 100%;
             }
         }
-        /deep/ &.no-second {
+        ::v-deep  &.no-second {
             .first-level {
                 width: 100%;
             }

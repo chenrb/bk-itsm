@@ -20,8 +20,7 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE
  */
 
-import Vue from "vue";
-import Vuex from "vuex";
+import { createStore } from "vuex";
 import ajax from "../utils/ajax";
 import { jsonp } from "../utils/util";
 import i18n from '@/i18n/index.js';
@@ -75,9 +74,7 @@ import project from "./modules/project.js";
 // 根据模板重新整理
 import ticket from "./modules/ticket";
 
-Vue.use(Vuex);
-
-export default new Vuex.Store({
+export default createStore({
   // 模块
   modules: {
     user,

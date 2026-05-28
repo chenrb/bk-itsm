@@ -608,12 +608,12 @@
 
                         .bk-form-item-cus{
 
-                            /deep/ .bk-form-content{
+                            ::v-deep  .bk-form-content{
                                 display: inline-flex;
                                 align-items: center;
                             }
 
-                            /deep/ .bk-select-dropdown{
+                            ::v-deep  .bk-select-dropdown{
                                 width: 100%;
                             }
 

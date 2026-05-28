@@ -46,7 +46,7 @@
         <bk-table-column :render-header="$renderHeader" :show-overflow-tooltip="true" :label="$t(`m.slaContent['更新时间']`)" prop="update_at"></bk-table-column>
         <bk-table-column :render-header="$renderHeader" :show-overflow-tooltip="true" :label="$t(`m.deployPage['更新人']`)" prop="updated_by" width="150"></bk-table-column>
         <bk-table-column :label="$t(`m.deployPage['操作']`)" width="150">
-          <template slot-scope="props">
+          <template #default="props">
             <bk-button
               v-cursor="{ active: !hasPermission(['system_settings_manage'], $store.state.project.projectAuthActions) }"
               :class="{ 'text-permission-disable': !hasPermission(['system_settings_manage'], $store.state.project.projectAuthActions) }"
@@ -65,7 +65,7 @@
             </bk-button>
           </template>
         </bk-table-column>
-        <div class="empty" slot="empty">
+        <template #empty><div class="empty">
           <empty
             :is-error="listError"
             :is-search="searchToggle"
@@ -130,7 +130,7 @@
 
 <script>
   import editorNotice from '../processManagement/notice/editorNotice.vue';
-  import permission from '@/mixins/permission.js';
+  import { usePermission } from '@/composables/usePermission';
   import { mapState } from 'vuex';
   import Empty from '../../components/common/Empty.vue';
   export default {
@@ -139,7 +139,7 @@
       editorNotice,
       Empty,
     },
-    mixins: [permission],
+    setup() { return { ...usePermission() }; },
     data() {
       return {
         acticeTab: 'WEIXIN',

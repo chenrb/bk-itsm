@@ -65,7 +65,7 @@
 
     .bk-form-width {
         width: 550px;
-        /deep/.bk-textarea-wrapper{
+        ::v-deep .bk-textarea-wrapper{
             background: white;
         }
     }

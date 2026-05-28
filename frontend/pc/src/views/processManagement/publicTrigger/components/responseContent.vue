@@ -158,15 +158,15 @@
     },
     methods: {
       initData() {
-        this.$set(this.item, 'contentStatus', false);
+        this.item['contentStatus'] = false;
         // 对于API字段需要做特定的数据处理
         if (this.item.wayInfo.key === 'api') {
           this.item.wayInfo.field_schema.forEach(schema => {
             if (schema.key === 'api_source') {
-              this.$set(schema, 'systemId', '');
-              this.$set(schema, 'apiId', '');
+              schema['systemId'] = '';
+              schema['apiId'] = '';
             } else {
-              this.$set(schema, 'apiContent', {});
+              schema['apiContent'] = {};
             }
           });
         } else {
@@ -197,7 +197,7 @@
                 valueInfo.push(itemValue);
               }
             }
-            this.$set(schema, 'value', valueInfo);
+            schema['value'] = valueInfo;
             // 对于发通知的数据格式
             if (schema.type === 'SUBCOMPONENT' && schema.sub_components && schema.sub_components.length) {
               schema.sub_components.forEach(subComponent => {
@@ -229,7 +229,7 @@
                         ];
                       }
                     }
-                    this.$set(subField, 'value', subFieldValue);
+                    subField['value'] = subFieldValue;
                   });
                 }
               });
@@ -252,7 +252,7 @@
         padding: 0 18px;
     }
     .no-require-item{
-        /deep/ .bk-label:after{
+        ::v-deep  .bk-label:after{
             color: transparent;
         }
     }

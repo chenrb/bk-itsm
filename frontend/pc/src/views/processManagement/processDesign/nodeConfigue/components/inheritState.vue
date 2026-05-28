@@ -37,7 +37,7 @@
       <bk-table-column :label="$t(`m.treeinfo['唯一标识']`)" prop="key"></bk-table-column>
       <bk-table-column :label="$t(`m.treeinfo['字段类型']`)" prop="typeName"></bk-table-column>
       <bk-table-column :label="$t(`m.treeinfo['是否只读']`)">
-        <template slot-scope="props">
+        <template #default="props">
           <bk-radio-group v-model="props.row.is_readonly">
             <bk-radio :value="trueStatus"
               :disabled="props.row.key === 'priority' || props.row.is_disabled"
@@ -114,11 +114,11 @@
             // 字段类型
             this.globalChoise.field_type.forEach((node) => {
               if (item.type === node.typeName) {
-                this.$set(item, 'typeName', node.name);
+                item['typeName'] = node.name;
               }
             });
-            this.$set(item, 'is_readonly', false);
-            this.$set(item, 'is_disabled', false);
+            item['is_readonly'] = false;
+            item['is_disabled'] = false;
             this.showTabList.forEach((tableItem) => {
               if (item.key === tableItem.key) {
                 item.is_readonly = tableItem.is_readonly;

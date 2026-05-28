@@ -112,7 +112,7 @@
 
 <script>
   import ace from '../../../commonComponent/aceEditor/index.js';
-  import mixins from '../../../commonMix/mixins_api.js';
+  import { useMixinsApi } from '@/composables/useMixinsApi';
   import apiEditorBasic from './apiEditorBasic.vue';
   import apiEditorRequest from './apiEditorRequest.vue';
   import apiEditorResult from './apiEditorResult.vue';
@@ -120,6 +120,9 @@
   import { errorHandler } from '../../../../utils/errorHandler.js';
 
   export default {
+    setup() {
+      return { ...useMixinsApi() };
+    },
     components: {
       apiEditorBasic,
       apiEditorRequest,
@@ -127,7 +130,6 @@
       apiEditorOthers,
       ace,
     },
-    mixins: [mixins],
     props: {
       apiDetailInfoCommon: {
         type: Object,

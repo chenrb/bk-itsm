@@ -150,7 +150,7 @@
 <script>
   import descInfo from './descInfo.vue';
   import dealPerson from './dealPerson.vue';
-  import commonMix from '../../../../commonMix/common.js';
+  import { useCommonMix } from '@/composables/useCommonMix';
   import { errorHandler } from '../../../../../utils/errorHandler';
 
   export default {
@@ -159,7 +159,7 @@
       dealPerson,
       descInfo,
     },
-    mixins: [commonMix],
+    setup() { return { ...useCommonMix() }; },
     props: {
       flowInfo: {
         type: Object,
@@ -470,7 +470,7 @@
         color: #ff5656;
         font-size: 12px;
     }
-    /deep/ .bk-form-width {
+    ::v-deep  .bk-form-width {
         width: 448px;
     }
 </style>

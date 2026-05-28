@@ -33,7 +33,7 @@
         :key="item.key"
         :label="item.name"
         :prop="item.key">
-        <template slot-scope="scope">
+        <template #default="scope">
           <ViewItem
             :scheme="getScheme(item, scope.row[item.key])"
             :form="scope.row[item.key]">
@@ -45,7 +45,7 @@
 </template>
 
 <script>
-  import { getFormMixins } from '../formMixins';
+  import { useFormMixins, COMMON_ATTRS } from '@/composables/useFormMixins';
   const tableAttrs = {
     column: {
       type: Array,
@@ -82,7 +82,14 @@
     components: {
       ViewItem: () => import('../ViewItem.vue'),
     },
-    mixins: [getFormMixins(tableAttrs)],
+    setup() {
+      return { ...useFormMixins() };
+    },
+    props: {
+      ...COMMON_ATTRS,
+      column: tableAttrs.column,
+    },
+    inject: ['getContext'],
     methods: {
       /**
        * scheme 优先级：from.scheme > item.scheme > item.type

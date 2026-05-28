@@ -63,6 +63,7 @@
   </div>
 </template>
 <script>
+  import lockRadiusImg from '../../../images/lock-radius.svg';
   export default {
     name: 'PermissionContent',
     props: {
@@ -73,7 +74,7 @@
     },
     data() {
       return {
-        lock: require('../../../images/lock-radius.svg'),
+        lock: lockRadiusImg,
         // 返回499code 关联的实例对象取type
         resource_label: {
           task_template: this.$t('m.common[\'任务模板\']'),

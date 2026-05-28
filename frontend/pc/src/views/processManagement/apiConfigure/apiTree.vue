@@ -28,17 +28,17 @@
           :right-icon="'bk-icon icon-search'"
           :clearable="true"
           @clear="clearInfo">
-          <template slot="append">
+          <template #append>
             <bk-dropdown-menu class="group-text"
               @show="dropdownShow"
               @hide="dropdownHide"
               ref="dropdown"
               style="width: 70px; line-height: 30px;">
-              <div class="dropdown-trigger-btn" style="padding-left: 6px;" slot="dropdown-trigger">
+              <template #dropdown-trigger><div class="dropdown-trigger-btn" style="padding-left: 6px;">
                 <span>{{ $t(`m.systemConfig['系统接入']`)}}</span>
                 <i :class="['bk-icon icon-angle-down',{ 'icon-flip': isDropdownShow }]"></i>
               </div>
-              <ul class="bk-dropdown-list" slot="dropdown-content">
+              <template #dropdown-content><ul class="bk-dropdown-list">
                 <li>
                   <a href="javascript:;"
                     data-test-id="api_a_accessApi"
@@ -231,9 +231,9 @@
 <script>
   import collapseTransition from '@/utils/collapse-transition.js';
   import memberSelect from '../../commonComponent/memberSelect';
-  import commonMix from '../../commonMix/common.js';
   import { errorHandler } from '../../../utils/errorHandler.js';
-  import permission from '@/mixins/permission.js';
+  import { usePermission } from '@/composables/usePermission';
+  import { useCommonMix } from '@/composables/useCommonMix';
   import Empty from '../../../components/common/Empty.vue';
 
   export default {
@@ -243,7 +243,7 @@
       memberSelect,
       Empty,
     },
-    mixins: [commonMix, permission],
+    setup() { return { ...usePermission(), ...useCommonMix() }; },
     props: {
       projectId: String,
       treeListOri: {

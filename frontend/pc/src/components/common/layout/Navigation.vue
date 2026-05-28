@@ -30,10 +30,10 @@
     :need-menu="sideRouters.length > 0"
     @toggle="isSideOpen = $event"
     @toggle-click="isSideOpen = $event">
-    <template slot="side-icon">
+    <template #side-icon>
       <img :src="platformInfo.appLogo || appLogo" alt="" style="width: 28px; height: 28px;">
     </template>
-    <template slot="header">
+    <template #header>
       <div class="nav-header">
         <!-- <bk-button
           data-test-id="navigation-button-createTicket"
@@ -49,7 +49,7 @@
             v-for="router in topNav"
             :key="router.id"
             :class="['nav-item', { active: router.id === activeNav }]">
-            <router-link :to="router.path" :data-test-id="`navigation-router-navRouter-${router.id}`" event="" @click.native.prevent="handleTopNavClick(router, $event)">{{ router.name }}</router-link>
+            <router-link :to="router.path" :data-test-id="`navigation-router-navRouter-${router.id}`" event="" @click.prevent="handleTopNavClick(router, $event)">{{ router.name }}</router-link>
           </li>
         </ul>
       </div>
@@ -58,7 +58,7 @@
           <div class="language">
             <span :class="['language-btn bk-itsm-icon', curLanguage === 'zh' ? 'icon-yuyanqiehuanzhongwen' : 'icon-yuyanqiehuanyingwen']"></span>
           </div>
-          <template slot="content">
+          <template #content>
             <ul class="nav-language-list">
               <li class="language-item" :class="{ 'active': curLanguage === 'zh' }" @click="changeLanguage('zh')">
                 <span class="bk-itsm-icon icon-yuyanqiehuanzhongwen"></span>
@@ -84,7 +84,7 @@
               <path d="M32,4C16.5,4,4,16.5,4,32c0,3.6,0.7,7.1,2,10.4V56c0,1.1,0.9,2,2,2h13.6C36,63.7,52.3,56.8,58,42.4S56.8,11.7,42.4,6C39.1,4.7,35.6,4,32,4z M31.3,45.1c-1.7,0-3-1.3-3-3s1.3-3,3-3c1.7,0,3,1.3,3,3S33,45.1,31.3,45.1z M36.7,31.7c-2.3,1.3-3,2.2-3,3.9v0.9H29v-1c-0.2-2.8,0.7-4.4,3.2-5.8c2.3-1.4,3-2.2,3-3.8s-1.3-2.8-3.3-2.8c-1.8-0.1-3.3,1.2-3.5,3c0,0.1,0,0.1,0,0.2h-4.8c0.1-4.4,3.1-7.4,8.5-7.4c5,0,8.3,2.8,8.3,6.9C40.5,28.4,39.2,30.3,36.7,31.7z"></path>
             </svg>
           </div>
-          <template slot="content">
+          <template #content>
             <ul class="nav-operate-list">
               <li class="operate-item">
                 <a :href="bkDocUrl" target="_blank">{{ $t(`m.wiki["产品文档"]`) }}</a>
@@ -103,7 +103,7 @@
             <span>{{ userName }}</span>
             <i class="bk-icon icon-down-shape"></i>
           </div>
-          <template slot="content">
+          <template #content>
             <ul class="nav-operate-list">
               <li class="operate-item">
                 <span @click="onGoToProjectList">{{ $t(`m["项目管理"]`) }}</span>
@@ -116,7 +116,7 @@
         </bk-popover>
       </div>
     </template>
-    <template slot="menu">
+    <template #menu>
       <template v-if="activeNav === 'project'">
         <bk-select
           v-if="isSideOpen"
@@ -141,7 +141,7 @@
               {{ item.name }}
             </div>
           </bk-option>
-          <div slot="extension" class="project-select-extension">
+          <template #extension><div class="project-select-extension">
             <div
               data-test-id="navigation-div-createProject"
               v-cursor="{ active: !hasPermission(['project_create']) }"
@@ -204,7 +204,7 @@
     <div class="page-container">
       <slot></slot>
       <version-log v-if="isVersionLogShow" @close="isVersionLogShow = false"></version-log>
-      <create-ticket-dialog :is-show.sync="isCreateTicketDialogShow"></create-ticket-dialog>
+      <create-ticket-dialog v-model:is-show="isCreateTicketDialogShow"></create-ticket-dialog>
       <edit-project-dialog
         :title="$t(`m['新建项目']`)"
         :is-show="isEditDialogShow"
@@ -220,13 +220,14 @@
   import { mapState } from 'vuex';
   import Cookies from 'js-cookie';
   import bus from '@/utils/bus.js';
-  import permission from '@/mixins/permission.js';
+  import { usePermission } from '@/composables/usePermission';
   import ROUTER_LIST from '@/constants/routerList.js';
   import VersionLog from '@/components/common/layout/VersionLog.vue';
   import CreateTicketDialog from '@/components/common/modal/CreateTicketDialog.vue';
   import EditProjectDialog from '@/views/project/editProjectDialog.vue';
   import { errorHandler } from '../../../utils/errorHandler';
   import { getCookie } from '../../../utils/util';
+  import itsmLogoImg from '../../../images/itsm-logo.png';
 
   export default {
     name: 'Navigation',
@@ -236,10 +237,10 @@
       EditProjectDialog,
     },
     inject: ['reload'],
-    mixins: [permission],
+    setup() { return { ...usePermission() }; },
     data() {
       return {
-        appLogo: require('../../../images/itsm-logo.png'),
+        appLogo: itsmLogoImg,
         userName: window.username || '--',
         bkDocUrl: window.DOC_URL,
         routerList: ROUTER_LIST.slice(0),
@@ -647,7 +648,7 @@
             }
         }
     }
-    /deep/ .project-select.bk-select {
+    ::v-deep  .project-select.bk-select {
         border: none;
         border-bottom: 1px solid #cec6cc;
         box-shadow: none;

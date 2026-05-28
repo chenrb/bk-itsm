@@ -77,7 +77,7 @@
         </bk-table-column>
         <bk-table-column type="index" label="No." align="center" width="60"></bk-table-column>
         <bk-table-column :label="$t(`m.systemConfig['编码']`)" width="220">
-          <template slot-scope="props">
+          <template #default="props">
             <span class="bk-lable-primary"
               :title="props.row.key"
               @click="openAddData(props.row)">
@@ -86,44 +86,44 @@
           </template>
         </bk-table-column>
         <bk-table-column :label="$t(`m.systemConfig['名称']`)">
-          <template slot-scope="props">
+          <template #default="props">
             <span :title="props.row.name">{{ props.row.name || '--' }}</span>
           </template>
         </bk-table-column>
         <bk-table-column :label="$t(`m.systemConfig['描述']`)">
-          <template slot-scope="props">
+          <template #default="props">
             <span :title="props.row.desc || '--'">{{ props.row.desc || '--' }}</span>
           </template>
         </bk-table-column>
         <bk-table-column :label="$t(`m.systemConfig['启用状态']`)">
-          <template slot-scope="props">
+          <template #default="props">
             <span :title="props.row.is_enabled ? $t(`m.systemConfig['有效']`) : $t(`m.systemConfig['无效']`)">
               {{ props.row.is_enabled ? $t(`m.systemConfig["有效"]`) : $t(`m.systemConfig["无效"]`)}}
             </span>
           </template>
         </bk-table-column>
         <bk-table-column :label="$t(`m.systemConfig['负责人']`)">
-          <template slot-scope="props">
+          <template #default="props">
             <span :title="props.row.owners">{{props.row.owners || '--'}}</span>
           </template>
         </bk-table-column>
         <bk-table-column :label="$t(`m.systemConfig['创建人']`)">
-          <template slot-scope="props">
+          <template #default="props">
             <span :title="props.row.creator">{{props.row.creator || '--'}}</span>
           </template>
         </bk-table-column>
         <bk-table-column :label="$t(`m.systemConfig['更新人']`)">
-          <template slot-scope="props">
+          <template #default="props">
             <span :title="props.row.updated_by">{{ props.row.updated_by || '--' }}</span>
           </template>
         </bk-table-column>
         <bk-table-column :label="$t(`m.systemConfig['更新时间']`)">
-          <template slot-scope="props">
+          <template #default="props">
             <span :title="props.row.update_at">{{ props.row.update_at || '--' }}</span>
           </template>
         </bk-table-column>
         <bk-table-column :label="$t(`m.systemConfig['操作']`)" width="150">
-          <template slot-scope="props">
+          <template #default="props">
             <bk-button theme="primary" text @click="openAddData(props.row)">
               {{ $t('m.systemConfig["编辑"]') }}
             </bk-button>
@@ -135,7 +135,7 @@
             </bk-button>
           </template>
         </bk-table-column>
-        <div class="empty" slot="empty">
+        <template #empty><div class="empty">
           <empty
             :is-error="listError"
             :is-search="Boolean(searchInfo.key)"
@@ -148,13 +148,13 @@
     <!-- 新增字典 -->
     <div class="bk-add-data">
       <bk-sideslider
-        :is-show.sync="customSettings.isShow"
+        v-model:is-show="customSettings.isShow"
         :title="customSettings.title"
         :quick-close="true"
         :transfer="true"
         :width="customSettings.width"
         :before-close="handleBeforeClose">
-        <div class="p20" slot="content" v-if="customSettings.isShow">
+        <template #content><div class="p20" v-if="customSettings.isShow">
           <add-data-directory
             :slide-data="slideData"
             @change="isFormChanged = true"

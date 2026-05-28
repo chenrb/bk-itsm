@@ -152,9 +152,9 @@
   import TicketHeader from './TicketHeader.vue';
   import NoTicketContent from './components/NoTicketContent.vue';
   import RightTicketTabs from './rightTicketTabs/RightTicketTabs.vue';
-  import commonMix from '@/views/commonMix/common.js';
-  import apiFieldsWatch from '@/views/commonMix/api_fields_watch.js';
-  import fieldMix from '@/views/commonMix/field.js';
+  import { useCommonMix } from '@/composables/useCommonMix';
+  import { useApiFieldsWatch } from '@/composables/useApiFieldsWatch';
+  import { useField } from '@/composables/useField';
   import { mapState } from 'vuex';
   import { errorHandler } from '@/utils/errorHandler.js';
   import { deepClone, transCustomFormToTable } from '@/utils/util';
@@ -176,7 +176,7 @@
         reloadTicket: this.reloadTicket,
       };
     },
-    mixins: [fieldMix, commonMix, apiFieldsWatch],
+    setup() { return { ...useCommonMix(), ...useField(), ...useApiFieldsWatch() }; },
     data() {
       const approveDict = {
         审批意见: this.$t('m.managePage["审批意见"]'),
@@ -330,7 +330,7 @@
       }
       this.$store.commit('project/setProjectId', this.ticketInfo.project_key);
     },
-    beforeDestroy() {
+    beforeUnmount() {
       this.clearTicketTimer();
       this.$store.commit('project/setProjectId', window.DEFAULT_PROJECT);
     },
@@ -407,8 +407,8 @@
       async getReplyCommet(id, index) {
         if (id) {
           const res = await this.$store.dispatch('ticket/getReplyComment', { ticket_id: this.ticketId, id });
-          this.$set(this.commentList[index], 'parent_creator', res.data.creator);
-          this.$set(this.commentList[index], 'parent_content', res.data.content);
+          this.commentList[index]['parent_creator'] = res.data.creator;
+          this.commentList[index]['parent_content'] = res.data.content;
         }
       },
       async addTargetComment(curComment) {
@@ -587,7 +587,7 @@
         if (this.openFunction.FIRST_STATE_SWITCH) {
           this.firstStateFields = copyList.find(item => item.state_id === Number(this.ticketInfo.first_state_id)).fields;
           this.firstStateFields.forEach(item => {
-            this.$set(item, 'val', (item.value || ''));
+            item['val'] = (item.value || '');
             this.conditionField(item, this.firstStateFields);
           });
         }
@@ -615,7 +615,7 @@
 
         this.$store.dispatch('ticketStatus/getTypeStatus', { type }).then((res) => {
           const item = res.data.find(m => m.key === status);
-          this.$set(this.headerInfo, 'statusColor', item ? item.color_hex : '');
+          this.headerInfo['statusColor'] = item ? item.color_hex : '';
         })
           .catch(res => {
             errorHandler(res, this);

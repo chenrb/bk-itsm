@@ -104,12 +104,12 @@
 </template>
 
 <script>
-  import commonMix from '@/views/commonMix/common.js';
+  import { useCommonMix } from '@/composables/useCommonMix';
   import { errorHandler } from '@/utils/errorHandler.js';
 
   export default {
     name: 'StepSubmitDialog',
-    mixins: [commonMix],
+    setup() { return { ...useCommonMix() }; },
     props: {
       ticketInfo: {
         type: Object,

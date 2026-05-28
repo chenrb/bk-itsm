@@ -137,11 +137,11 @@
     methods: {
       initData() {
         this.fieldSchema.forEach((item) => {
-          this.$set(item, 'referenceType', (item.ref_type || 'custom'));
+          item['referenceType'] = (item.ref_type || 'custom');
         });
         this.fieldKeyItem = this.fieldSchema[0];
         this.fieldValueItem = this.fieldSchema[1];
-        this.$set(this.fieldValueItem, 'itemInfo', []);
+        this.fieldValueItem['itemInfo'] = [];
         if (this.fieldKeyItem.value) {
           const tempItemInfo = this.fieldKeyItem.choice.filter(item => item.key === this.fieldKeyItem.value);
           tempItemInfo[0].val = this.fieldValueItem.value;

@@ -30,7 +30,7 @@
     trigger="click"
     theme="light">
     <i class="bk-icon icon-id" v-if="memberVal" ref="icon"></i>
-    <div slot="content">
+    <template #content><div>
       <ul ref="message" class="bk-member-message" v-bkloading="{ isLoading: localLoading }">
         <li v-for="(member, memIndex) in memberList"
           :key="memIndex"

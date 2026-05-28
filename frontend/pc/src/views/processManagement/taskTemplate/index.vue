@@ -71,7 +71,7 @@
           <div class="bk-task-content">
             <p class="bk-none-content" v-if="templateList.length === 0">
               <Empty :is-search="Boolean(searchKey)" :is-error="listError" @onClearSearch="clearSearch">
-                <template v-if="!searchKey" slot="create">
+                <template #create>
                   <i class="bk-icon icon-info-circle"></i>
                   <span>{{$t(`m.taskTemplate['尚未创建任一任务模板，']`)}}</span>
                   <span
@@ -183,7 +183,7 @@
 <script>
   import commonStep from './components/commonStep';
   import memberSelect from '../../commonComponent/memberSelect';
-  import permission from '@/mixins/permission.js';
+  import { usePermission } from '@/composables/usePermission';
   import { errorHandler } from '../../../utils/errorHandler';
   import Empty from '../../../components/common/Empty.vue';
 
@@ -194,7 +194,7 @@
       memberSelect,
       Empty,
     },
-    mixins: [permission],
+    setup() { return { ...usePermission() }; },
     data() {
       return {
         infoStatus: true,

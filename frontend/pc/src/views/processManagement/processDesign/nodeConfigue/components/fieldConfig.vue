@@ -70,9 +70,9 @@
             <th>{{ $t('m.treeinfo["操作"]') }}</th>
           </tr>
         </thead>
-        <draggable tag="tbody" v-model="showTabList" @end="updateInfo" handle=".move-handler-content">
-          <template v-if="showTabList.length">
-            <tr v-for="(item, index) in showTabList" :key="index">
+        <draggable tag="tbody" v-model="showTabList" item-key="id" @end="updateInfo" handle=".move-handler-content">
+          <template #item="{ element: item, index }">
+            <tr v-if="showTabList.length">
               <td class="move-handler-content">
                 <span><i class="bk-itsm-icon icon-move-new move-handler"></i>{{item.name}}</span>
               </td>
@@ -119,7 +119,7 @@
               </td>
             </tr>
           </template>
-          <template v-else>
+          <template v-if="!showTabList.length">
             <tr v-cloak>
               <td colspan="10" class="bk-none-content">
                 <i class="bk-table-empty-icon bk-icon icon-empty"></i>
@@ -139,7 +139,7 @@
       :render-directive="'if'"
       :ext-cls="'bk-preview-overflow'">
       <field-preview :fields="previewTab"></field-preview>
-      <div slot="footer">
+      <template #footer><div>
         <bk-button
           theme="default"
           @click="processInfo.isShow = false">
@@ -149,12 +149,12 @@
     </bk-dialog>
     <!-- 新增字段 -->
     <bk-sideslider
-      :is-show.sync="sliderInfo.show"
+      v-model:is-show="sliderInfo.show"
       :quick-close="true"
       :title="sliderInfo.title"
       :width="sliderInfo.width"
       :before-close="handleBeforeClose">
-      <div class="p20" slot="content" v-if="sliderInfo.show">
+      <template #content><div class="p20" v-if="sliderInfo.show">
         <add-field
           :change-info="changeInfo"
           :template-info="templateInfo"
@@ -180,7 +180,7 @@
       :auto-close="moduleInfo.autoClose"
       :mask-close="moduleInfo.autoClose"
       @confirm="submitModule">
-      <p slot="header">{{ $t(`m.treeinfo["选择模型字段"]`) }}</p>
+      <template #header><p>{{ $t(`m.treeinfo["选择模型字段"]`) }}</p></template>
       <div class="bk-add-module">
         <inherit-state
           ref="inheritState"
@@ -195,7 +195,7 @@
 </template>
 <script>
   import draggable from 'vuedraggable';
-  import apiFieldsWatch from '../../../../commonMix/api_fields_watch';
+  import { useApiFieldsWatch } from '@/composables/useApiFieldsWatch';
   import useModalCloseConfirmation from '../../../../../utils/use-modal-close-confirmation';
   import fieldPreview from './fieldPreview.vue';
   import addField from '../addField';
@@ -210,7 +210,7 @@
       addField,
       inheritState,
     },
-    mixins: [apiFieldsWatch],
+    setup() { return { ...useApiFieldsWatch() }; },
     props: {
       // 流程信息
       flowInfo: {
@@ -298,7 +298,7 @@
     async mounted() {
       await this.initData();
     },
-    beforeDestroy() {
+    beforeUnmount() {
       this.clearFieldsIndexInfo();
     },
     methods: {
@@ -334,19 +334,19 @@
             // 字段类型
             this.globalChoise.field_type.forEach((node) => {
               if (item.type === node.typeName) {
-                this.$set(item, 'typeName', node.name);
+                item['typeName'] = node.name;
               }
             });
             if (item.type === 'COMPLEX-MEMBERS') {
-              this.$set(item, 'typeName', this.$t('m.newCommon[\'处理人\']'));
+              item['typeName'] = this.$t('m.newCommon[\'处理人\']');
             }
             if (item.type === 'SOPS_TEMPLATE') {
-              this.$set(item, 'typeName', this.$t('m.newCommon[\'流程模板\']'));
+              item['typeName'] = this.$t('m.newCommon[\'流程模板\']');
             }
             // 是否必填
             this.globalChoise.validate_type.forEach((node) => {
               if (item.validate_type === node.typeName) {
-                this.$set(item, 'is_required', node.name);
+                item['is_required'] = node.name;
               }
             });
           });
@@ -502,10 +502,10 @@
           for (let j = 0; j < this.previewTab[i].choice.length; j++) {
             this.previewTab[i].choice[j].typeName = this.previewTab[i].choice[0] ? this.previewTab[i].choice[0].key : '';
           }
-          this.$set(this.previewTab[i], 'val', (this.previewTab[i].default || ''));
-          this.$set(this.previewTab[i], 'showFeild', true);
+          this.previewTab[i]['val'] = (this.previewTab[i].default || '');
+          this.previewTab[i]['showFeild'] = true;
           if (this.previewTab[i].key === 'priority' && !priorityReadonly) {
-            this.$set(this.previewTab[i], 'is_readonly', false);
+            this.previewTab[i]['is_readonly'] = false;
           }
         }
         this.processInfo.isShow = true;

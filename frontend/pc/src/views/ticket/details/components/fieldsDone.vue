@@ -36,7 +36,7 @@
           :max-height="450">
           <template v-for="title in item.choice">
             <bk-table-column :label="title.name" :key="title.key">
-              <template slot-scope="props">
+              <template #default="props">
                 <span :title="props.row[title.key]">{{ props.row[title.key] }}</span>
               </template>
             </bk-table-column>
@@ -56,7 +56,7 @@
           :size="'small'">
           <template v-for="(column) in item.meta.columns">
             <bk-table-column :label="column.name" :key="column.key">
-              <template slot-scope="props">
+              <template #default="props">
                 <span :title="props.row[column.key]">{{ getCustomTableDisplayValue(column, props.row) || '--' }}</span>
               </template>
             </bk-table-column>
@@ -94,7 +94,7 @@
       </div>
       <bk-popover theme="light">
         <div class="bk-itsm-icon icon-icon-info bk-text-primary f12 rich-show"></div>
-        <div slot="content" style="white-space: normal; cursor: pointer;">
+        <template #content><div style="white-space: normal; cursor: pointer;">
           <div v-bk-copy="item.value.replace(/<[^>]+>/g, '')" class="bk-li-right bk-fields-richtext tui-editor-contents"
             v-dompurify-html="item.value" :title="'点击复制'">
           </div>
@@ -266,7 +266,7 @@
       }
     },
     mounted() {
-      this.$set(this.item, 'isEdit', false);
+      this.item['isEdit'] = false;
       this.reloadCurPage();
       if (this.item.type === 'FILE') {
         this.valToList();
@@ -308,7 +308,7 @@
         this.fields.forEach(ite => {
           ite.isEdit = false;
         });
-        this.$set(this.item, 'isEdit', true);
+        this.item['isEdit'] = true;
       },
       // 11.01 修改 附件上传
       downFile(file) {
@@ -411,7 +411,7 @@
             }
             .bk-fields-richtext {
                 font-size: 14px;
-                /deep/ .rich-text {
+                ::v-deep  .rich-text {
                     margin: 5px 0;
                     overflow: hidden;
                     text-overflow: ellipsis;

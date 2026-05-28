@@ -30,6 +30,7 @@
 </template>
 
 <script>
+  import boxImg from '@/images/box.png';
 
   export default {
     name: 'NoData',
@@ -44,7 +45,7 @@
     },
     data() {
       return {
-        imgUrl: require('@/images/box.png'),
+        imgUrl: boxImg,
       };
     },
   };

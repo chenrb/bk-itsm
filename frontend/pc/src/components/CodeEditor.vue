@@ -74,7 +74,7 @@
     mounted() {
       this.initIntance();
     },
-    beforeDestroy() {
+    beforeUnmount() {
       if (this.monacoInstance) {
         this.monacoInstance.dispose();
       }

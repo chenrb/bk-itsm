@@ -200,7 +200,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            /deep/.bk-checkbox-text{
+            ::v-deep .bk-checkbox-text{
                 text-overflow: ellipsis;
                 overflow: hidden;
                 white-space: nowrap;

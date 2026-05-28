@@ -76,9 +76,9 @@
             <th style="max-width: 120px;">{{ $t('m.publicField["字段类型"]') }}</th>
           </tr>
         </thead>
-        <draggable element="tbody" v-model="dataList" @end="updateInfo">
-          <template v-if="dataList.length">
-            <tr v-for="(item, index) in dataList" :key="index">
+        <draggable tag="tbody" v-model="dataList" item-key="id" @end="updateInfo">
+          <template #item="{ element: item, index }">
+            <tr v-if="dataList.length">
               <td class="move-handler-content">
                 <span><i class="bk-itsm-icon icon-move-new move-handler"></i>{{index + 1}}</span>
               </td>
@@ -93,7 +93,7 @@
               </td>
             </tr>
           </template>
-          <template v-else>
+          <template v-if="!dataList.length">
             <tr v-cloak>
               <td colspan="10" class="bk-none-content">
                 <i class="bk-table-empty-icon bk-icon icon-empty"></i>
@@ -126,14 +126,14 @@
 <script>
   import draggable from 'vuedraggable';
   import { errorHandler } from '../../../utils/errorHandler.js';
-  import commonMix from '../../commonMix/common.js';
+  import { useCommonMix } from '@/composables/useCommonMix';
 
   export default {
     name: 'addBasicModule',
     components: {
       draggable,
     },
-    mixins: [commonMix],
+    setup() { return { ...useCommonMix() }; },
     props: {
       slideData: {
         type: Object,
@@ -179,7 +179,7 @@
         this.publicList.forEach((item) => {
           this.globalChoise.field_type.forEach((node) => {
             if (item.type === node.typeName) {
-              this.$set(item, 'typeName', node.name);
+              item['typeName'] = node.name;
             }
           });
         });
@@ -194,7 +194,7 @@
           this.dataList.forEach((item) => {
             this.globalChoise.field_type.forEach((node) => {
               if (item.type === node.typeName) {
-                this.$set(item, 'typeName', node.name);
+                item['typeName'] = node.name;
               }
             });
           });

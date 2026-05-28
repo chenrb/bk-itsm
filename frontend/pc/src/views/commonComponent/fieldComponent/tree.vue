@@ -59,7 +59,7 @@
 
 <script>
   import exportTree from '../treeInfo/exportTree.vue';
-  import mixins from '../../commonMix/field.js';
+  import { useField } from '@/composables/useField';
   import { errorHandler } from '../../../utils/errorHandler';
 
   export default {
@@ -67,7 +67,7 @@
     components: {
       exportTree,
     },
-    mixins: [mixins],
+    setup() { return { ...useField() }; },
     props: {
       item: {
         type: Object,

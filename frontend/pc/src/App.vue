@@ -64,15 +64,15 @@
 </template>
 <script>
   import { mapActions, mapState } from 'vuex';
-  import NoticeComponent from '@blueking/notice-component-vue2';
-  import '@blueking/notice-component-vue2/dist/style.css';
+  // TODO: Replace with Vue 3 compatible notice component
+  const NoticeComponent = { template: '<div></div>' };
   import bus from './utils/bus';
   import Navigation from './components/common/layout/Navigation.vue';
   import PermissionModal from '@/components/common/modal/PermissionModal.vue';
   import permissionApply from '@/components/common/layout/permissionApply.vue';
-  import permission from '@/mixins/permission.js';
+  import { usePermission } from '@/composables/usePermission';
   import { errorHandler } from './utils/errorHandler';
-  import { subEnv } from '@blueking/sub-saas/dist/main.js';
+  import { subEnv } from '@blueking/sub-saas';
 
   export default {
     name: 'app',
@@ -87,7 +87,7 @@
         reload: this.reload,
       };
     },
-    mixins: [permission],
+    setup() { return { ...usePermission() }; },
     data() {
       return {
         enableNoticeCenter: window.NOTICE_CENTER_SWITCH === 'on',

@@ -68,7 +68,7 @@
           :show-overflow-tooltip="true"
           :render-header="$renderHeader"
         >
-          <template slot-scope="props">
+          <template #default="props">
             <span
               class="bk-lable-primary"
               @click="checkOne(props.row)"
@@ -79,7 +79,7 @@
           </template>
         </bk-table-column>
         <bk-table-column :label="$t(`m.newCommon['绑定时间']`)" :render-header="$renderHeader" :show-overflow-tooltip="true">
-          <template slot-scope="props">
+          <template #default="props">
             <span
               v-if="props.row.related_status === 'UNBIND_FAILED'"
               class="bk-failed-status"
@@ -99,7 +99,7 @@
           </template>
         </bk-table-column>
         <bk-table-column :label="$t(`m.newCommon['操作']`)" width="100">
-          <template slot-scope="props">
+          <template #default="props">
             <bk-button
               theme="primary"
               text
@@ -110,7 +110,7 @@
             </bk-button>
           </template>
         </bk-table-column>
-        <div class="empty" slot="empty">
+        <template #empty><div class="empty">
           <empty
             :is-error="listError"
             @onRefresh="getInheritStateList()">
@@ -141,7 +141,7 @@
           :label="$t(`m.newCommon['单号']`)"
           min-width="140"
         >
-          <template slot-scope="props">
+          <template #default="props">
             <span
               class="bk-lable-primary"
               @click="checkOne(props.row)"
@@ -152,7 +152,7 @@
           </template>
         </bk-table-column>
         <bk-table-column :label="$t(`m.newCommon['绑定时间']`)">
-          <template slot-scope="props">
+          <template #default="props">
             <span
               v-if="props.row.related_status === 'UNBIND_FAILED'"
               class="bk-failed-status"
@@ -204,7 +204,7 @@
             :label="$t(`m.newCommon['单号']`)"
             min-width="100"
           >
-            <template slot-scope="props">
+            <template #default="props">
               <span
                 class="bk-lable-primary"
                 @click="checkOne(props.row)"
@@ -218,7 +218,7 @@
             :label="$t(`m.newCommon['状态']`)"
             width="80"
           >
-            <template slot-scope="props">
+            <template #default="props">
               {{
                 props.row.related_type === "master"
                   ? $t('m.newCommon["母单"]')
@@ -236,7 +236,7 @@
           ></bk-table-column>
         </bk-table>
       </div>
-      <div slot="footer">
+      <template #footer><div>
         <bk-button theme="default" @click="closeHistory">
           {{ $t('m.home["取消"]') }}
         </bk-button>
@@ -245,13 +245,13 @@
 
     <!-- 新建母子单 -->
     <bk-sideslider
-      :is-show.sync="isShowAddInheritTicket"
+      v-model:is-show="isShowAddInheritTicket"
       :quick-close="true"
       :title="$t(`m.newCommon['新建母子单']`)"
       :before-close="closeSideslider"
       :width="750"
     >
-      <div class="p20" slot="content">
+      <template #content><div class="p20">
         <inherit-ticket-add-dialog
           ref="addInheritTicket"
           v-if="isShowAddInheritTicket"
@@ -515,7 +515,7 @@
 .icon-cus {
     font-size: 18px;
     padding: 0 9px !important;
-    /deep/ .bk-itsm-icon {
+    ::v-deep  .bk-itsm-icon {
         top: 0;
         width: auto;
     }

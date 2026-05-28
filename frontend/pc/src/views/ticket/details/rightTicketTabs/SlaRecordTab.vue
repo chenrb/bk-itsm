@@ -258,16 +258,8 @@
             .then((res) => {
               this.slaList = res.data;
               this.slaList.forEach((item) => {
-                this.$set(
-                  item,
-                  'sla_responseTime',
-                  [0, 0, 0, 0, 0, 0]
-                );
-                this.$set(
-                  item,
-                  'sla_processTime',
-                  [0, 0, 0, 0, 0, 0]
-                );
+                item['sla_responseTime'] = [0, 0, 0, 0, 0, 0];
+                item['sla_processTime'] = [0, 0, 0, 0, 0, 0];
               });
             })
             .catch((res) => {
@@ -393,7 +385,7 @@
                 this.slaList[index].isProcessTimeout = isProcessTimeout;
                 this.slaList[index].isResponseNormal = isResponseNormal;
                 this.slaList[index].isProcessNormal = isProcessNormal;
-                this.$set(this.slaList, index, this.slaList[index]);
+                this.slaList[index] = this.slaList[index];
             }, 1000);
         },
         /* eslint-disable */

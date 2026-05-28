@@ -111,15 +111,15 @@
         this.closeTree();
       },
       asyncLoadNodes(node) {
-        this.$set(node, 'loading', true);
+        node['loading'] = true;
         this.$store.dispatch('cdeploy/getTreeInfoChildren', { id: node.id }).then((res) => {
           res.data.children.forEach(ite => {
             this.setCheckedValue(ite);
           });
-          this.$set(node, 'children', res.data.children || []);
+          node['children'] = res.data.children || [];
         });
         this.setTreeNodeTitle();
-        this.$set(node, 'loading', false);
+        node['loading'] = false;
       },
       setDispalyName() {
         this.displayName = this.checked.full_name;
@@ -153,8 +153,8 @@
         }
       },
       setCheckedValue(tree) {
-        this.$set(tree, 'expanded', false);
-        this.$set(tree, 'async', tree.has_children);
+        tree['expanded'] = false;
+        tree['async'] = tree.has_children;
       },
       showTree() {
         if (this.loading) {
@@ -214,14 +214,14 @@
   padding: 5px 10px;
   color: #63656e;
   // .single {
-  //   /deep/ .tree-drag-node {
+  //   ::v-deep  .tree-drag-node {
   //     &:hover {
   //       background-color: #cfe8fc;
   //     }
   //   }
   // }
 }
-.bk-tree /deep/ .tree-drag-node {
+.bk-tree ::v-deep  .tree-drag-node {
   display: flex;
   align-items: center;
   .tree-node {

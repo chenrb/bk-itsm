@@ -26,7 +26,7 @@
       :data="paramTableData"
       :size="'small'">
       <bk-table-column :label="$t(`m.treeinfo['名称']`)" min-width="150">
-        <template slot-scope="props">
+        <template #default="props">
           <div class="bk-more">
             <span :style="{ paddingLeft: 20 * props.row.level + 'px' }">
               <span
@@ -41,17 +41,17 @@
         </template>
       </bk-table-column>
       <bk-table-column :label="$t(`m.treeinfo['必选']`)" width="60">
-        <template slot-scope="props">
+        <template #default="props">
           {{ props.row.is_necessary ? $t(`m.treeinfo["是"]`) : $t(`m.treeinfo["否"]`) }}
         </template>
       </bk-table-column>
       <bk-table-column :label="$t(`m.treeinfo['备注']`)" width="200">
-        <template slot-scope="props">
+        <template #default="props">
           <span :title="props.row.desc">{{props.row.desc || '--'}}</span>
         </template>
       </bk-table-column>
       <bk-table-column :label="$t(`m.treeinfo['参数值']`)" width="280">
-        <template slot-scope="props">
+        <template #default="props">
           <template v-if="(props.row.type !== 'object') && (props.row.type !== 'array')">
             <div style="width: 120px; position: absolute; top: 5px; left: 10px;">
               <bk-select v-model="props.row.source_type"
@@ -94,7 +94,7 @@
         </template>
       </bk-table-column>
       <bk-table-column width="60" class-name="last-add-row-column">
-        <template slot-scope="props">
+        <template #default="props">
           <div class="bk-between-operat" v-if="props.row.lastType === 'array'">
             <i class="bk-itsm-icon icon-flow-add" @click="addChildren(props.row)"></i>
             <i class="bk-itsm-icon icon-flow-reduce"
@@ -108,12 +108,14 @@
   </div>
 </template>
 <script>
-  import mixins from '../../../commonMix/mixins_api.js';
+  import { useMixinsApi } from '@/composables/useMixinsApi';
   import { deepClone } from '../../../../utils/util';
   import { mapState } from 'vuex';
   export default {
     name: 'postParams',
-    mixins: [mixins],
+    setup() {
+      return { ...useMixinsApi() };
+    },
     props: {
       itemInfo: {
         type: Object,
@@ -163,7 +165,7 @@
     },
     methods: {
       initData() {
-        this.$set(this.itemInfo.apiContent, 'treeDataList', {});
+        this.itemInfo.apiContent['treeDataList'] = {};
         this.itemInfo.apiContent.treeDataList = this.jsonschemaToList({
           root: JSON.parse(JSON.stringify(this.itemInfo.apiContent.req_body)),
         });
@@ -390,7 +392,7 @@
 
 <style lang='scss' scoped>
     @import '../../../../scss/mixins/clearfix.scss';
-    /deep/ .last-add-row-column {
+    ::v-deep  .last-add-row-column {
         .cell {
             padding: 0;
         }

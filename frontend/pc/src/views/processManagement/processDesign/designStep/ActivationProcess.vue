@@ -231,14 +231,16 @@
   </div>
 </template>
 <script>
-  import commonMix from '../../../commonMix/common.js';
+  import { useCommonMix } from '@/composables/useCommonMix';
   import memberSelect from '../../../commonComponent/memberSelect';
   import collapseTransition from '@/utils/collapse-transition.js';
   import commonTriggerList from '../../taskTemplate/components/commonTriggerList';
   import TaskConfigPanel from './components/TaskConfigPanel.vue';
   import BasicCard from '@/components/common/layout/BasicCard.vue';
-  import permission from '@/mixins/permission.js';
+  import { usePermission } from '@/composables/usePermission';
   import { errorHandler } from '../../../../utils/errorHandler.js';
+  import qwIcon from '../../../../images/qw.svg';
+  import emailIcon from '../../../../images/email.svg';
 
   export default {
     name: 'ActivationProcess',
@@ -249,7 +251,7 @@
       commonTriggerList,
       TaskConfigPanel,
     },
-    mixins: [commonMix, permission],
+    setup() { return { ...usePermission(), ...useCommonMix() }; },
     props: {
       flowInfo: {
         type: Object,
@@ -343,8 +345,8 @@
         // 校验
         rules: {},
         showMoreConfig: false,
-        qwIcon: require('../../../../images/qw.svg'),
-        emailIcon: require('../../../../images/email.svg'),
+        qwIcon: qwIcon,
+        emailIcon: emailIcon,
       };
     },
     computed: {

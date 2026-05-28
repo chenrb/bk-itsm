@@ -298,7 +298,7 @@
             overflow: auto;
             @include scroller;
 
-            /deep/ p {
+            ::v-deep  p {
                 font-size: 14px;
                 font-weight: 500;
                 color: #313238;

@@ -28,39 +28,39 @@
       :size="'small'"
     >
       <bk-table-column :label="$t(`m.task['顺序']`)" :width="60">
-        <template slot-scope="props">
+        <template #default="props">
           <span>{{ props.row.order || "--" }}</span>
         </template>
       </bk-table-column>
       <bk-table-column :label="$t(`m.task['任务名称']`)" :render-header="$renderHeader" :show-overflow-tooltip="true">
-        <template slot-scope="props">
+        <template #default="props">
           <span v-bk-tooltips.top="{ content: props.row.name, allowHTML: false }" class="task-name">
             {{ props.row.name || "--" }}
           </span>
         </template>
       </bk-table-column>
       <bk-table-column :label="$t(`m.task['处理人']`)" :render-header="$renderHeader" :show-overflow-tooltip="true">
-        <template slot-scope="props">
+        <template #default="props">
           <span v-bk-tooltips.top="{ content: props.row.processor_users, allowHTML: false }">{{
             props.row.processor_users || "--"
           }}</span>
         </template>
       </bk-table-column>
       <bk-table-column :label="$t(`m.task['任务类型']`)" :render-header="$renderHeader" :show-overflow-tooltip="true">
-        <template slot-scope="props">
+        <template #default="props">
           <span v-bk-tooltips.top="{ content: props.row.processor_users, allowHTML: false }">{{
             getTaskTypeName(props.row.component_type) || "--"
           }}</span>
         </template>
       </bk-table-column>
       <bk-table-column :label="$t(`m.task['状态']`)" :render-header="$renderHeader" :wdith="120" :show-overflow-tooltip="true">
-        <template slot-scope="props">
+        <template #default="props">
           <!-- 任务状态组件 -->
           <task-status :status="props.row.status"></task-status>
         </template>
       </bk-table-column>
       <bk-table-column :label="$t(`m.task['操作']`)" min-width="60">
-        <template slot-scope="props">
+        <template #default="props">
           <bk-button
             theme="primary"
             text
@@ -70,7 +70,7 @@
           </bk-button>
         </template>
       </bk-table-column>
-      <div class="empty" slot="empty">
+      <template #empty><div class="empty">
         <empty
           :is-error="listError"
           @onRefresh="getTaskList()">
@@ -78,11 +78,11 @@
       </div>
     </bk-table>
     <bk-sideslider
-      :is-show.sync="dealTaskInfo.show"
+      v-model:is-show="dealTaskInfo.show"
       :quick-close="true"
       :width="800"
     >
-      <div slot="header">
+      <template #header><div>
         <task-handle-trigger
           v-if="dealTaskInfo.show"
           :task-info="dealTaskInfo.itemContent"
@@ -90,7 +90,7 @@
           @close-slider="dealTaskInfo.show = false"
         ></task-handle-trigger>
       </div>
-      <div slot="content" style="min-height: 300px">
+      <template #content><div style="min-height: 300px">
         <deal-task
           v-if="dealTaskInfo.show"
           :deal-type="dealTaskInfo.type"

@@ -93,7 +93,7 @@
         </bk-select>
       </p>
     </div>
-    <div slot="footer">
+    <template #footer><div>
       <bk-button
         theme="primary"
         :disabled="!exportInfo.checkList.length"

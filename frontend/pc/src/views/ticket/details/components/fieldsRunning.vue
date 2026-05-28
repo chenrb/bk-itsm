@@ -38,7 +38,7 @@
   </div>
 </template>
 <script>
-  import commonMix from '../../../commonMix/common.js';
+  import { useCommonMix } from '@/composables/useCommonMix';
   import string from '../../../commonComponent/fieldComponent/string.vue';
   import link from '../../../commonComponent/fieldComponent/link';
   import int from '../../../commonComponent/fieldComponent/int.vue';
@@ -86,7 +86,7 @@
       'CW-CASCADE': cascade,
       'CW-CUSTOM-FORM': customForm,
     },
-    mixins: [commonMix],
+    setup() { return { ...useCommonMix() }; },
     props: {
       basicInfomation: {
         type: Object,
@@ -142,7 +142,7 @@
       },
     },
     mounted() {
-      this.$set(this.item, 'isEdit', true);
+      this.item['isEdit'] = true;
       this.$nextTick(() => {
         this.reloadCurPage();
       });
@@ -200,7 +200,7 @@
         this.fields.forEach((ite) => {
           ite.isEdit = false;
         });
-        this.$set(this.item, 'isEdit', false);
+        this.item['isEdit'] = false;
       },
       async save() {
         if (this.item.key === 'current_status') {
@@ -224,7 +224,7 @@
         }
       },
       async toDone() {
-        await this.$set(this.item, 'isEdit', false);
+        this.item['isEdit'] = false;
         // await this.partUpdate()
       },
     },

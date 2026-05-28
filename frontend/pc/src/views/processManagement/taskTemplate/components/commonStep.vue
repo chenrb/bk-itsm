@@ -304,7 +304,7 @@
 <style scoped lang="scss">
     @import '../taskCss/commonStep';
     .flex-form-item{
-        /deep/ .bk-form-content{
+        ::v-deep  .bk-form-content{
             display: inline-flex;
         }
     }

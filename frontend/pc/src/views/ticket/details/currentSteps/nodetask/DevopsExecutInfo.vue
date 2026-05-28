@@ -71,7 +71,7 @@
           v-bkloading="{ isLoading: buildStatusLoading }"
           :data="buildList">
           <bk-table-column label="构建名称" prop="name">
-            <template slot-scope="props">
+            <template #default="props">
               <span class="link-ui" @click.stop="openBuildDetail(props.row)">{{ props.row.name }}</span>
             </template>
           </bk-table-column>
@@ -92,14 +92,14 @@
       </div>
     </div>
     <bk-sideslider
-      :is-show.sync="isShowBuildDetailDialog"
+      v-model:is-show="isShowBuildDetailDialog"
       :width="800"
       :quick-close="true"
       :title="openBuildInfo.name">
-      <div slot="header">
+      <template #header><div>
         {{ $t(`m.tickets['构建详情']`) }} 【{{ openBuildInfo.name }}】
       </div>
-      <div slot="content">
+      <template #content><div>
         <build-detail-info
           v-if="isShowBuildDetailDialog"
           :build-item="openBuildInfo">

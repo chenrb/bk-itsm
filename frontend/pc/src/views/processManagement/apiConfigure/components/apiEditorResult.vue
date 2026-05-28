@@ -90,14 +90,16 @@
 <script>
   import apiRequestBody from './apiRequestBody.vue';
   import ace from '../../../commonComponent/aceEditor/index.js';
-  import mixins from '../../../commonMix/mixins_api.js';
+  import { useMixinsApi } from '@/composables/useMixinsApi';
 
   export default {
+    setup() {
+      return { ...useMixinsApi() };
+    },
     components: {
       apiRequestBody,
       ace,
     },
-    mixins: [mixins],
     props: {
       detailInfoOri: {
         type: Object,
@@ -185,7 +187,7 @@
         },
         // setter
         set(newVal) {
-          this.$set(this.$parent.DetailInfo, 'responseTreeDataList', newVal);
+          this.$parent.DetailInfo['responseTreeDataList'] = newVal;
         },
       },
     },
@@ -250,7 +252,7 @@
           parentInfo: this.bodyInfo.checkInfo,
         };
         if (!node.children || !node.children.length) {
-          this.$set(node, 'children', []);
+          node['children'] = [];
           node.has_children = true;
           node.showChildren = true;
         }

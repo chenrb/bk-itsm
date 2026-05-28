@@ -150,7 +150,7 @@
             :min="1"
             v-model="formInfo.api_info.end_conditions.poll_interval"
             :placeholder="$t(`m.treeinfo['请输入间隔时间']`)">
-            <template slot="append">
+            <template #append>
               <div class="group-text">{{ $t('m.treeinfo["秒"]') }}</div>
             </template>
           </bk-input>
@@ -172,14 +172,16 @@
 
 <script>
   import exportTree from '../../../../commonComponent/treeInfo/exportTree.vue';
-  import mixins from '../../../../commonMix/mixins_api.js';
+  import { useMixinsApi } from '@/composables/useMixinsApi';
 
   export default {
     name: 'nodeCondition',
+    setup() {
+      return { ...useMixinsApi() };
+    },
     components: {
       exportTree,
     },
-    mixins: [mixins],
     props: {
       lineInfo: {
         type: Object,

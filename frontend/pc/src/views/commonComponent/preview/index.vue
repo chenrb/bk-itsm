@@ -31,7 +31,7 @@
       :node-options="nodeOptions"
       :show-palette="false"
       @onNodeMoveStop="onNodeMoveStop">
-      <template slot="toolPanel">
+      <template #toolPanel>
         <tool-panel
           @onZoomIn="onZoomIn"
           @onZoomOut="onZoomOut"
@@ -39,7 +39,7 @@
           :full-status="fullStatus">
         </tool-panel>
       </template>
-      <template slot="nodeTemplate" slot-scope="{ node }">
+      <template #nodeTemplate="{ node }">
         <node-template
           ref="templateNode"
           :node="node"
@@ -162,7 +162,7 @@
             showMore: false,
             nodeInfo: item,
           });
-          this.$set(this.nodeInfo, `node_${item.id}`, item);
+          this.nodeInfo[`node_${item.id}`] = item;
         });
         this.lineList.forEach((item) => {
           this.canvasData.lines.push({

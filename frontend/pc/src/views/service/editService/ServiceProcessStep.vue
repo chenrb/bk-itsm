@@ -242,7 +242,7 @@
 .process-step-node-conf {
     margin: 24px auto;
     width: 1000px;
-    /deep/ .bk-basic-node {
+    ::v-deep  .bk-basic-node {
         padding: 0;
     }
 }

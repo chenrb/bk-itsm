@@ -25,11 +25,10 @@
  * @example 路由组件名统一首字母大写
  */
 
-import Vue from 'vue';
-import Router from 'vue-router';
+import { createRouter, createWebHashHistory } from 'vue-router';
 import bus from '../utils/bus';
 import routerModules from './modules/index.js';
-import { rootPath, connectToMain } from '@blueking/sub-saas/dist/main.js';
+import { rootPath, connectToMain } from '@blueking/sub-saas';
 
 // 首页
 const Home = () => import('../views/home/index.vue');
@@ -293,9 +292,8 @@ const routes = [
   ...routerModules,
 ];
 
-const router = new Router({
-  mode: 'hash',
-  base,
+const router = createRouter({
+  history: createWebHashHistory(base),
   routes,
 });
 

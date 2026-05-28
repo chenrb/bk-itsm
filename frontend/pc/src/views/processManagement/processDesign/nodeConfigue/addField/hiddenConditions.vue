@@ -104,11 +104,11 @@
 </template>
 <script>
   import { errorHandler } from '../../../../../utils/errorHandler.js';
-  import apiFieldsWatch from '../../../../commonMix/api_fields_watch.js';
+  import { useApiFieldsWatch } from '@/composables/useApiFieldsWatch';
 
   export default {
     name: 'hiddenConditions',
-    mixins: [apiFieldsWatch],
+    setup() { return { ...useApiFieldsWatch() }; },
     props: {
       workflow: {
         type: [String, Number],

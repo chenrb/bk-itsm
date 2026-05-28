@@ -186,7 +186,7 @@
         if (node.children && node.children.length) {
           for (const child of node.children) {
             if (!child.disabled) {
-              this.$set(child, 'checked', checked);
+              child['checked'] = checked;
             }
             this.$emit('on-check', child, checked);
           }
@@ -198,15 +198,15 @@
        */
       this.$on('parentChecked', (node, checked) => {
         if (!node.disabled) {
-          this.$set(node, 'checked', checked);
+          node['checked'] = checked;
         }
         if (!node.parent) return false;
         const someBortherNodeChecked = node.parent.children.some(node => node.checked);
         const allBortherNodeChecked = node.parent.children.every(node => node.checked);
         if (this.halfcheck) {
-          allBortherNodeChecked ? this.$set(node.parent, 'halfcheck', false) : someBortherNodeChecked ? this.$set(node.parent, 'halfcheck', true) : this.$set(node.parent, 'halfcheck', false);
+          allBortherNodeChecked ? node.parent['halfcheck'] = false : someBortherNodeChecked ? node.parent['halfcheck'] = true : node.parent['halfcheck'] = false;
           if (!checked && someBortherNodeChecked) {
-            this.$set(node.parent, 'halfcheck', true);
+            node.parent['halfcheck'] = true;
             return false;
           }
           this.$emit('parentChecked', node.parent, checked);
@@ -229,7 +229,7 @@
        * @event monitor 节点过滤时 可见/不可见 visible event
        */
       this.$on('toggleshow', (node, isShow) => {
-        this.$set(node, 'visible', isShow);
+        node['visible'] = isShow;
         this.visibleStatus.push(node.visible);
         if (this.visibleStatus.every(item => !item)) {
           this.isEmpty = true;
@@ -241,17 +241,20 @@
         }
       });
       this.$on('cancelSelected', (root) => {
-        for (const child of root.$children) {
-          for (const node of child.data) {
-            child.$set(node, 'selected', false);
+        const cancelNodes = (data) => {
+          for (const node of data) {
+            node['selected'] = false;
+            if (node.children && node.children.length) {
+              cancelNodes(node.children);
+            }
           }
-          if (child.$children) child.$emit('cancelSelected', child);
-        }
+        };
+        cancelNodes(root.data || []);
       });
       this.initTreeData();
     },
-    destroyed() {
-      this.$delete(window, 'bkTreeDrag');
+    unmounted() {
+      delete window['bkTreeDrag'];
     },
     methods: {
       /**
@@ -381,32 +384,32 @@
                         node.children.push(drag);
 
                         if (node.children.length && this.isShowIcon) {
-                            this.$set(node, 'openedIcon', this.openedIcon);
-                            this.$set(node, 'closedIcon', this.closedIcon);
+                            node['openedIcon'] = this.openedIcon;
+                            node['closedIcon'] = this.closedIcon;
                         }
 
                         dragHost.splice(dragHost.indexOf(drag), 1);
 
                         if (this.isShowIcon) {
                             if (drag.parent.children && drag.parent.children.length) {
-                                this.$set(drag.parent, 'openedIcon', this.openedIcon);
-                                this.$set(drag.parent, 'closedIcon', this.closedIcon);
+                                drag.parent['openedIcon'] = this.openedIcon;
+                                drag.parent['closedIcon'] = this.closedIcon;
                             } else {
-                                this.$set(drag.parent, 'icon', this.nodeIcon);
+                                drag.parent['icon'] = this.nodeIcon;
                             }
                         }
 
                         node.children[node.children.length - 1].parent = node;
                     } else {
                         if (this.isShowIcon) {
-                            this.$set(node, 'openedIcon', this.openedIcon);
-                            this.$set(node, 'closedIcon', this.closedIcon);
+                            node['openedIcon'] = this.openedIcon;
+                            node['closedIcon'] = this.closedIcon;
                         }
 
-                        this.$set(node, 'children', [drag]);
+                        node['children'] = [drag];
                         dragHost.splice(dragHost.indexOf(drag), 1);
                     }
-                    this.$set(node, 'expanded', this.dragAfterExpanded);
+                    node['expanded'] = this.dragAfterExpanded;
                 }
                 this.$emit('on-drag-node', { dragNode: drag, targetNode: node, currentParent: drag.parent || {} });
             },
@@ -425,29 +428,29 @@
             */
             initTreeData() {
                 for (const node of this.data) {
-                    this.$set(node, 'parent', this.parent);
+                    node['parent'] = this.parent;
                     if (node.children && node.children.length) {
                         if (Object.prototype.hasOwnProperty.call(node, 'disabled')) {
-                            this.$delete(node, 'disabled');
+                            delete node['disabled'];
                         }
                         if (Object.prototype.hasOwnProperty.call(node, 'icon')) {
-                            this.$delete(node, 'icon');
+                            delete node['icon'];
                         }
                     } else {
                         if (Object.prototype.hasOwnProperty.call(node, 'openedIcon')) {
-                            this.$delete(node, 'openedIcon');
+                            delete node['openedIcon'];
                         }
                         if (Object.prototype.hasOwnProperty.call(node, 'closedIcon')) {
-                            this.$delete(node, 'closedIcon');
+                            delete node['closedIcon'];
                         }
                     }
                     if (this.multiple) {
                         if (Object.prototype.hasOwnProperty.call(node, 'selected')) {
-                            this.$delete(node, 'selected');
+                            delete node['selected'];
                         }
                     } else {
                         if (Object.prototype.hasOwnProperty.call(node, 'checked')) {
-                            this.$delete(node, 'checked');
+                            delete node['checked'];
                         }
                     }
                 }
@@ -459,7 +462,7 @@
              * @param {Object} node 当前节点
              */
             expandNode(node) {
-                this.$set(node, 'expanded', !node.expanded);
+                node['expanded'] = !node.expanded;
                 if (node.async && !node.children) {
                     this.$emit('async-load-nodes', node);
                 }
@@ -506,7 +509,7 @@
              */
             addNode(parent, newNode) {
                 let addnode = {};
-                this.$set(parent, 'expanded', true);
+                parent['expanded'] = true;
                 if (typeof newNode === 'undefined') {
                     throw new ReferenceError('newNode is required but undefined');
                 }
@@ -520,7 +523,7 @@
                     addnode = Object.assign({}, newNode);
                 }
                 if (this.isLeaf(parent)) {
-                    this.$set(parent, 'children', []);
+                    parent['children'] = [];
                     parent.children.push(addnode);
                 } else {
                     parent.children.push(addnode);
@@ -626,13 +629,13 @@
                 const root = getRoot(this);
                 if (!this.multiple) {
                     for (const rn of root.data || []) {
-                        this.$set(rn, 'selected', false);
+                        rn['selected'] = false;
                         this.$emit('cancelSelected', root);
                     }
                 }
                 // 当为多选时 必须通过选择复选框触发
                 // if (this.multiple) this.$set(node, 'checked', !node.selected)
-                this.$set(node, 'selected', !node.selected);
+                node['selected'] = !node.selected;
                 this.$emit('on-click', node);
             },
             iconSelected(node, event) {
@@ -646,13 +649,13 @@
                 const root = getRoot(this);
                 if (!this.multiple) {
                     for (const rn of root.data || []) {
-                        this.$set(rn, 'selected', false);
+                        rn['selected'] = false;
                         this.$emit('cancelSelected', root);
                     }
                 }
                 // 当为多选时 必须通过选择复选框触发
                 // if (this.multiple) this.$set(node, 'checked', !node.selected)
-                this.$set(node, 'selected', !node.selected);
+                node['selected'] = !node.selected;
                 this.$emit('on-click', node);
                 const param = {
                     node,
@@ -728,12 +731,12 @@
                 data = data || this.data;
                 for (const node of data) {
                     const searched = filter ? (typeof filter === 'function' ? filter(node) : node.name.indexOf(filter) > -1) : false;
-                    this.$set(node, 'searched', searched);
-                    this.$set(node, 'visible', false);
+                    node['searched'] = searched;
+                    node['visible'] = false;
                     this.$emit('toggleshow', node, filter ? searched : true);
                     if (node.children && node.children.length) {
                         if (searched) {
-                            this.$set(node, 'expanded', true);
+                            node['expanded'] = true;
                         }
                         this.searchFlag = true;
                         this.visibleStatus.splice(0, this.visibleStatus.length, ...[]);

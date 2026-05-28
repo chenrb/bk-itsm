@@ -98,7 +98,7 @@
   </div>
 </template>
 <script>
-  import commonMix from '../../../commonMix/common.js';
+  import { useCommonMix } from '@/composables/useCommonMix';
   import memberSelect from '../../../commonComponent/memberSelect';
   import { errorHandler } from '../../../../utils/errorHandler.js';
   import SectionCard from '@/components/common/layout/SectionCard';
@@ -106,7 +106,7 @@
   export default {
     name: 'CreateProcess',
     components: { memberSelect, SectionCard },
-    mixins: [commonMix],
+    setup() { return { ...useCommonMix() }; },
     props: {
       flowInfo: {
         type: Object,

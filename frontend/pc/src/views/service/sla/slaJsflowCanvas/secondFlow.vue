@@ -40,7 +40,7 @@
       @onBeforeDrop="onBeforeDrop"
       @onNodeMoveStop="onNodeMoveStop"
       @onNodeMoving="onNodeMoving">
-      <template slot="nodeTemplate" slot-scope="{ node }">
+      <template #nodeTemplate="{ node }">
         <div class="bk-sla-rect">
           <span v-for="(agree, index) in serviceAgreementList" :key="index">
             <span
@@ -250,7 +250,7 @@
               },
             },
           });
-          this.$set(this.nodeInfo, `node_${item.id}`, item);
+          this.nodeInfo[`node_${item.id}`] = item;
         });
         this.getLineData();
       },
@@ -320,7 +320,7 @@
         this.canvasData.nodes.forEach((item) => {
           valueList.forEach((node) => {
             if (item.nodeInfo.id === node) {
-              this.$set(item.nodeInfo, 'errorInfo', true);
+              item.nodeInfo['errorInfo'] = true;
             }
           });
         });

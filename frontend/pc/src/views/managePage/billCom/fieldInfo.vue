@@ -75,8 +75,8 @@
   import sopsTemplate from '../../commonComponent/fieldComponent/sopsTemplate.vue';
   import devopsTemplate from '../../commonComponent/fieldComponent/devopsTemplate.vue';
 
-  import apiFieldsWatch from '../../commonMix/api_fields_watch.js';
-  import commonMix from '../../commonMix/common.js';
+  import { useCommonMix } from '@/composables/useCommonMix';
+  import { useApiFieldsWatch } from '@/composables/useApiFieldsWatch';
   import { isEmpty } from '../../../utils/util';
   import { errorHandler } from '../../../utils/errorHandler';
 
@@ -106,7 +106,7 @@
       'CW-DEVOPS_TEMPLATE': devopsTemplate,
       'CW-CUSTOM-FORM': customForm,
     },
-    mixins: [apiFieldsWatch, commonMix],
+    setup() { return { ...useApiFieldsWatch(), ...useCommonMix() }; },
     props: {
       fields: {
         type: Array,
@@ -148,7 +148,7 @@
     created() {
       // 内置一个校验参数
       this.fields.forEach((item) => {
-        this.$set(item, 'checkValue', false);
+        item['checkValue'] = false;
       });
     },
     mounted() {
@@ -307,7 +307,7 @@
             width: 280px;
             position: relative;
             padding: 0 10px 10px 0;
-            /deep/ .bk-label{
+            ::v-deep  .bk-label{
                 display: none;
             }
         }
@@ -334,7 +334,7 @@
         font-size: 12px;
         color: #ff5656;
     }
-    /deep/ .bk-form-item.is-required .bk-label{
+    ::v-deep  .bk-form-item.is-required .bk-label{
         width: auto !important;
     }
 </style>

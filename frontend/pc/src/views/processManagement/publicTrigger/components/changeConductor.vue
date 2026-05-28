@@ -196,10 +196,10 @@
             name: '引用变量',
           });
           const valueInfo = this.itemInfo.type === 'MULTISELECT' ? [] : '';
-          this.$set(this.itemInfo, 'insertValue', valueInfo);
+          this.itemInfo['insertValue'] = valueInfo;
         }
       }
-      this.$set(this.itemInfo, 'referenceType', (this.itemInfo.referenceType || 'custom'));
+      this.itemInfo['referenceType'] = (this.itemInfo.referenceType || 'custom');
       // 初始化默认值
       if (this.itemInfo.ref_type) {
         this.itemInfo.referenceType = this.itemInfo.ref_type;
@@ -253,7 +253,7 @@
         font-size: 12px;
         color: #63656E;
         @include clearfix;
-        /deep/ .bk-form-control{
+        ::v-deep  .bk-form-control{
             width: calc(100% - 130px)!important;
         }
     }

@@ -71,14 +71,14 @@
 <script>
   import fieldsDone from './fieldsDone.vue';
   import fieldsRunning from './fieldsRunning.vue';
-  import apiFieldsWatch from '@/views/commonMix/api_fields_watch.js';
+  import { useApiFieldsWatch } from '@/composables/useApiFieldsWatch';
   export default {
     name: 'tableFields',
     components: {
       fieldsDone,
       fieldsRunning,
     },
-    mixins: [apiFieldsWatch],
+    setup() { return { ...useApiFieldsWatch() }; },
     props: {
       basicInfomation: {
         type: Object,
@@ -141,12 +141,12 @@
     methods: {
       initData() {
         this.basicInfomation.table_fields.forEach((item) => {
-          this.$set(item, 'isEdit', false);
-          this.$set(item, 'service', this.basicInfomation.service_type);
-          this.$set(item, 'val', (item.value || ''));
-          this.$set(item, 'showFeild', true);
+          item['isEdit'] = false;
+          item['service'] = this.basicInfomation.service_type;
+          item['val'] = (item.value || '');
+          item['showFeild'] = true;
           if (item.key === 'current_status') {
-            this.$set(item, 'ticket_status', this.basicInfomation.current_status);
+            item['ticket_status'] = this.basicInfomation.current_status;
           }
         });
         this.isNecessaryToWatch({ fields: this.basicInfomation.table_fields });

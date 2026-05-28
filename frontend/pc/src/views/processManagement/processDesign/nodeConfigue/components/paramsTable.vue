@@ -2,12 +2,12 @@
   <div>
     <bk-table :data="list" :disabled="true">
       <bk-table-column width="40">
-        <template slot-scope="props">
+        <template #default="props">
           <bk-checkbox v-model="props.row.select" :disabled="disable"></bk-checkbox>
         </template>
       </bk-table-column>
       <bk-table-column :label="$t(`m['字段名']`)" :render-header="$renderHeader">
-        <template slot-scope="props">
+        <template #default="props">
           <bk-input :behavior="'simplicity'"
             :disabled="disable"
             v-model="props.row.key"
@@ -15,7 +15,7 @@
         </template>
       </bk-table-column>
       <bk-table-column :label="$t(`m['值']`)" :render-header="$renderHeader">
-        <template slot-scope="props">
+        <template #default="props">
           <bk-input style="z-index: 101"
             v-model="props.row.value"
             :behavior="'simplicity'"
@@ -32,7 +32,7 @@
             :disabled="!props.row.value"
             :ext-cls="props.row.value ? 'show-tippy' : ''"
             :transfer="true">
-            <div slot="content" class="params-select-value">
+            <template #content><div class="params-select-value">
               <ul class="params-select">
                 <li v-for="(item, index) in wwwFormData"
                   :key="index"
@@ -46,7 +46,7 @@
         </template>
       </bk-table-column>
       <bk-table-column :label="$t(`m['描述']`)" :render-header="$renderHeader">
-        <template slot-scope="props">
+        <template #default="props">
           <bk-input
             :behavior="'simplicity'"
             :disabled="disable"
@@ -55,7 +55,7 @@
         </template>
       </bk-table-column>
       <bk-table-column width="40">
-        <template slot-scope="props" v-if="isShowDelete !== list.indexOf(props.row)">
+        <template #default="props" v-if="isShowDelete !== list.indexOf(props.row)">
           <i v-if="!disable" class="bk-itsm-icon icon-itsm-icon-three-one" @click="handleDelete(props.row)"></i>
         </template>
       </bk-table-column>
@@ -237,13 +237,13 @@
         }
     }
 }
-/deep/ .tippy-tooltip {
+::v-deep  .tippy-tooltip {
     padding: 0;
 }
-/deep/ .tippy-arrow {
+::v-deep  .tippy-arrow {
     display: none;
 }
-/deep/ .bk-tooltip {
+::v-deep  .bk-tooltip {
     display: block;
     .bk-tooltip-ref {
         display: block;

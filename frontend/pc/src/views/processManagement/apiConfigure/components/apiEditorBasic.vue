@@ -41,25 +41,27 @@
           :label="$t(`m.systemConfig['接口路径：']`)">
           <bk-input v-model="basicInfo.path" placeholder="/path"
             :disabled="basicInfo.is_builtin">
-            <template slot="prepend">
+            <template #prepend>
+            </template>
+            <template #append>
               <bk-dropdown-menu class="group-text"
                 @show="dropdownShow"
                 @hide="dropdownHide"
                 ref="requestwayDrop"
-                slot="append"
                 :font-size="'normal'"
                 :disabled="basicInfo.is_builtin">
-                <bk-button type="primary" slot="dropdown-trigger">
+                <template #dropdown-trigger><bk-button type="primary">
                   <span> {{ basicInfo.method }} </span>
                   <i :class="['bk-icon icon-angle-down',{ 'icon-flip': isDropdownShow }]"></i>
                 </bk-button>
-                <ul class="bk-dropdown-list" slot="dropdown-content">
+                <template #dropdown-content><ul class="bk-dropdown-list">
                   <li v-for="(requestway, requestwayIndex) in typeList" :key="requestwayIndex">
                     <a href="javascript:;" @click="requestHandler(requestway, requestwayIndex)">
                       {{ requestway.name }}
                     </a>
                   </li>
                 </ul>
+                </template>
               </bk-dropdown-menu>
             </template>
           </bk-input>

@@ -27,13 +27,13 @@
         :size="'small'">
         <template v-for="title in item.choice">
           <bk-table-column :label="title.name" :key="title.key">
-            <template slot-scope="props">
+            <template #default="props">
               <bk-input :clearable="true" v-model="props.row[title.key]" :disabled="disabled"></bk-input>
             </template>
           </bk-table-column>
         </template>
         <bk-table-column :label="$t(`m.user['操作']`)" width="150">
-          <template slot-scope="props">
+          <template #default="props">
             <bk-button theme="primary" :disabled="disabled" text @click="addOne">
               {{ $t('m.newCommon["添加"]') }}
             </bk-button>

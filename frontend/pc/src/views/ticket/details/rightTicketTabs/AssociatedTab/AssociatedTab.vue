@@ -50,7 +50,7 @@
     </div>
     <bk-table :data="associatedList" :size="'small'" v-bkloading="{ isLoading: associaLoading }">
       <bk-table-column :label="$t(`m.newCommon['单号']`)" min-width="140" :show-overflow-tooltip="true" :render-header="$renderHeader">
-        <template slot-scope="props">
+        <template #default="props">
           <span
             class="bk-lable-primary"
             @click="checkOne(props.row, 'noInfo')"
@@ -61,19 +61,19 @@
         </template>
       </bk-table-column>
       <bk-table-column :label="$t(`m.newCommon['工单类型']`)" :show-overflow-tooltip="true" :render-header="$renderHeader">
-        <template slot-scope="props">
+        <template #default="props">
           {{ props.row.service_type_name || "--" }}
         </template>
       </bk-table-column>
       <bk-table-column :label="$t(`m.newCommon['服务名称']`)" :show-overflow-tooltip="true" :render-header="$renderHeader">
-        <template slot-scope="props">
+        <template #default="props">
           <span :title="props.row.service_name">{{
             props.row.service_name || "--"
           }}</span>
         </template>
       </bk-table-column>
       <bk-table-column :label="$t(`m.newCommon['操作']`)" width="100">
-        <template slot-scope="props">
+        <template #default="props">
           <bk-button
             theme="primary"
             text
@@ -84,7 +84,7 @@
           </bk-button>
         </template>
       </bk-table-column>
-      <div class="empty" slot="empty">
+      <template #empty><div class="empty">
         <empty
           :is-error="listError"
           @onRefresh="getAssociatesHistory()">
@@ -107,7 +107,7 @@
             :label="$t(`m.newCommon['单号']`)"
             min-width="100"
           >
-            <template slot-scope="props">
+            <template #default="props">
               <span
                 class="bk-lable-primary"
                 @click="checkOne(props.row)"
@@ -125,7 +125,7 @@
             :label="$t(`m.newCommon['解绑时间']`)"
             prop="end_at"
           ></bk-table-column>
-          <div class="empty" slot="empty">
+          <template #empty><div class="empty">
             <empty
               :is-error="historyListError"
               @onRefresh="getAssociates()">
@@ -133,7 +133,7 @@
           </div>
         </bk-table>
       </div>
-      <div slot="footer">
+      <template #footer><div>
         <bk-button theme="default" @click="closeHistory">
           {{ $t('m.home["取消"]') }}
         </bk-button>
@@ -141,13 +141,13 @@
     </bk-dialog>
 
     <bk-sideslider
-      :is-show.sync="isShowAddAssociation"
+      v-model:is-show="isShowAddAssociation"
       :title="$t(`m.manageCommon['新建关联单']`)"
       :quick-close="true"
       :before-close="closeSideslider"
       :width="750"
     >
-      <div class="p20" slot="content">
+      <template #content><div class="p20">
         <associated-dialog
           ref="associated"
           v-if="isShowAddAssociation"

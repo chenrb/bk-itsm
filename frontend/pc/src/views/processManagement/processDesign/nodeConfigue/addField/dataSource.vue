@@ -96,7 +96,6 @@
   export default {
     name: 'dataSource',
     components: {},
-    mixins: [],
     props: {
       formInfo: {
         type: Object,

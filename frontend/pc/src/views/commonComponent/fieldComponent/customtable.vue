@@ -28,7 +28,7 @@
         :size="'small'">
         <template v-for="columnItem in item.meta.columns">
           <bk-table-column :label="columnItem.name" :key="columnItem.key">
-            <template slot-scope="props">
+            <template #default="props">
               <template v-if="columnItem.display === 'input'">
                 <bk-input
                   :clearable="true"
@@ -81,7 +81,7 @@
           </bk-table-column>
         </template>
         <bk-table-column :label="$t(`m.user['操作']`)" width="150">
-          <template slot-scope="props">
+          <template #default="props">
             <bk-button theme="primary" text @click="addOne" :disabled="disabled">
               {{ $t('m.newCommon["添加"]') }}
             </bk-button>

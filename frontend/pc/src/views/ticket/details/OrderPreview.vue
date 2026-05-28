@@ -68,11 +68,11 @@
     <div class="bk-node-content">
       <bk-sideslider
         :show-mask="false"
-        :is-show.sync="nodeContent.isShow"
+        v-model:is-show="nodeContent.isShow"
         :title="nodeContent.title"
         :width="nodeContent.width"
         :quick-close="nodeContent.quick">
-        <div slot="content" v-if="nodeContent.isShow">
+        <template #content><div v-if="nodeContent.isShow">
           <node-info
             @initInfo="initInfo"
             :node-list="nodeInfo"
@@ -176,8 +176,8 @@
         ]).then(axios.spread((userResp, reposResp) => {
           this.addList = userResp.data;
           this.addList.forEach((item, index) => {
-            this.$set(item, 'indexInfo', index);
-            this.$set(item, 'statusInfo', 'WAIT');
+            item['indexInfo'] = index;
+            item['statusInfo'] = 'WAIT';
             this.nodeList.forEach(node => {
               if (item.id === node.state_id) {
                 item.statusInfo = node.status;
@@ -227,8 +227,8 @@
       // 轮询线条颜色数据
       intervalLines() {
         this.addList.forEach((item, index) => {
-          this.$set(item, 'indexInfo', index);
-          this.$set(item, 'statusInfo', 'WAIT');
+          item['indexInfo'] = index;
+          item['statusInfo'] = 'WAIT';
           this.nodeList.forEach(node => {
             if (item.id === node.state_id) {
               item.statusInfo = node.status;

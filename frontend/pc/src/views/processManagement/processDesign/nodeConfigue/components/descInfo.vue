@@ -79,7 +79,7 @@
   };
 </script>
 <style lang='scss' scoped>
-/deep/ .bk-textarea-wrapper {
+::v-deep  .bk-textarea-wrapper {
   height: 70px;
   .bk-form-textarea {
     height: 100%;

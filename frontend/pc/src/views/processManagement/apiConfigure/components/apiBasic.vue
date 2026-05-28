@@ -72,17 +72,17 @@
           :size="'small'">
           <bk-table-column :label="$t(`m.systemConfig['参数名称']`)" prop="name"></bk-table-column>
           <bk-table-column :label="$t(`m.systemConfig['必选']`)">
-            <template slot-scope="props">
+            <template #default="props">
               <span>{{props.row.is_necessary ? $t('m.systemConfig["是"]') : $t('m.systemConfig["否"]')}}</span>
             </template>
           </bk-table-column>
           <bk-table-column :label="$t(`m.systemConfig['示例']`)">
-            <template slot-scope="props">
+            <template #default="props">
               <span :title="props.row.sample">{{props.row.sample || '--'}}</span>
             </template>
           </bk-table-column>
           <bk-table-column :label="$t(`m.systemConfig['备注']`)">
-            <template slot-scope="props">
+            <template #default="props">
               <span :title="props.row.desc">{{props.row.desc || '--'}}</span>
             </template>
           </bk-table-column>
@@ -94,7 +94,7 @@
           :data="bodyTableData"
           :size="'small'">
           <bk-table-column :label="$t(`m.systemConfig['名称']`)">
-            <template slot-scope="props">
+            <template #default="props">
               <div class="bk-more">
                 <span :style="{ paddingLeft: 20 * props.row.level + 'px' }"></span>
                 <span class="bk-icon tree-expanded-icon icon-right-shape"
@@ -108,12 +108,12 @@
           </bk-table-column>
           <bk-table-column :label="$t(`m.systemConfig['类型']`)" prop="type"></bk-table-column>
           <bk-table-column :label="$t(`m.systemConfig['必选']`)">
-            <template slot-scope="props">
+            <template #default="props">
               <span>{{props.row.is_necessary ? $t('m.systemConfig["是"]') : $t('m.systemConfig["否"]')}}</span>
             </template>
           </bk-table-column>
           <bk-table-column :label="$t(`m.systemConfig['备注']`)">
-            <template slot-scope="props">
+            <template #default="props">
               <span :title="props.row.desc">{{props.row.desc || '--'}}</span>
             </template>
           </bk-table-column>
@@ -129,7 +129,7 @@
           :data="responseTableData"
           :size="'small'">
           <bk-table-column :label="$t(`m.systemConfig['名称']`)">
-            <template slot-scope="props">
+            <template #default="props">
               <div class="bk-more">
                 <span :style="{ paddingLeft: 20 * props.row.level + 'px' }"></span>
                 <span class="bk-icon tree-expanded-icon icon-right-shape"
@@ -143,12 +143,12 @@
           </bk-table-column>
           <bk-table-column :label="$t(`m.systemConfig['类型']`)" prop="type"></bk-table-column>
           <bk-table-column :label="$t(`m.systemConfig['必选']`)">
-            <template slot-scope="props">
+            <template #default="props">
               <span>{{props.row.is_necessary ? $t('m.systemConfig["是"]') : $t('m.systemConfig["否"]')}}</span>
             </template>
           </bk-table-column>
           <bk-table-column :label="$t(`m.systemConfig['备注']`)">
-            <template slot-scope="props">
+            <template #default="props">
               <span :title="props.row.desc">{{props.row.desc || '--'}}</span>
             </template>
           </bk-table-column>
@@ -159,10 +159,12 @@
 </template>
 
 <script>
-  import mixins from '../../../commonMix/mixins_api.js';
+  import { useMixinsApi } from '@/composables/useMixinsApi';
 
   export default {
-    mixins: [mixins],
+    setup() {
+      return { ...useMixinsApi() };
+    },
     props: {
       apiDetailInfo: {
         type: Object,

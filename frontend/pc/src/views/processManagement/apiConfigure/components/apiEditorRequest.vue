@@ -128,14 +128,16 @@
 <script>
   import apiRequestBody from './apiRequestBody.vue';
   import ace from '../../../commonComponent/aceEditor/index.js';
-  import mixins from '../../../commonMix/mixins_api.js';
+  import { useMixinsApi } from '@/composables/useMixinsApi';
 
   export default {
+    setup() {
+      return { ...useMixinsApi() };
+    },
     components: {
       apiRequestBody,
       ace,
     },
-    mixins: [mixins],
     props: {
       detailInfoOri: {
         type: Object,
@@ -211,7 +213,7 @@
         },
         // setter
         set(newVal) {
-          this.$set(this.$parent.DetailInfo, 'treeDataList', newVal);
+          this.$parent.DetailInfo['treeDataList'] = newVal;
         },
       },
     },
@@ -306,7 +308,7 @@
           parentInfo: this.bodyInfo.checkInfo,
         };
         if (!node.children || !node.children.length) {
-          this.$set(node, 'children', []);
+          node['children'] = [];
           node.children = node.children.splice(0, node.children.length);
           node.has_children = true;
           node.showChildren = true;

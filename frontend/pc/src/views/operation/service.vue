@@ -32,7 +32,7 @@
           :clearable="false"
           @toggle="onServicePanelToggle"
           @selected="onServiceChange">
-          <div slot="trigger" class="selected-service" :class="{ 'panel-open': isServicePanelShow }">
+          <template #trigger><div class="selected-service" :class="{ 'panel-open': isServicePanelShow }">
             <span class="service-name">{{ serviceName }}</span>
             <i class="bk-icon icon-down-shape trigger-icon"></i>
           </div>
@@ -59,17 +59,17 @@
         <summary-card
           :title="$t(`m.operation['单据总数']`)"
           :card-data="{ total: summaryData.total.count, week: summaryData.week.ticket }">
-          <i class="bk-icon icon-order-shape" slot="icon"></i>
+          <template #icon><i class="bk-icon icon-order-shape"></i></template>
         </summary-card>
         <summary-card
           :title="$t(`m.operation['业务总数']`)"
           :card-data="{ total: summaryData.total.biz_count, week: summaryData.week.biz }">
-          <i class="bk-icon icon-folder-open-shape" slot="icon"></i>
+          <template #icon><i class="bk-icon icon-folder-open-shape"></i></template>
         </summary-card>
         <summary-card
           :title="$t(`m.operation['用户总数']`)"
           :card-data="{ total: summaryData.total.user_count, week: summaryData.week.user }">
-          <i class="bk-icon icon-user-shape" slot="icon"></i>
+          <template #icon><i class="bk-icon icon-user-shape"></i></template>
         </summary-card>
       </div>
       <div class="service-statistics statistics-section">
@@ -313,7 +313,7 @@
     mounted() {
       document.querySelector('.section-content').addEventListener('scroll', this.handleDateSelectorPosition, false);
     },
-    beforeDestroy() {
+    beforeUnmount() {
       document.querySelector('.section-content').removeEventListener('scroll', this.handleDateSelectorPosition, false);
     },
     methods: {
@@ -569,7 +569,7 @@
         }
     }
     .service-statistics {
-        /deep/ .bk-table {
+        ::v-deep  .bk-table {
             td, th {
                 height: 30px;
                 border-bottom-color: #ffffff;

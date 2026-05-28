@@ -55,7 +55,7 @@
   import { errorHandler } from '../../../utils/errorHandler';
   import { deepClone } from '../../../utils/util';
   import { mapState } from 'vuex';
-  import fieldMix from '@/views/commonMix/field.js';
+  import { useField } from '@/composables/useField';
 
   export default {
     name: 'TicketDetailsIframe',
@@ -63,7 +63,7 @@
       NoTicketContent,
       leftTicketContent,
     },
-    mixins: [fieldMix],
+    setup() { return { ...useField() }; },
     inject: ['reload'],
     provide() {
       return {
@@ -114,7 +114,7 @@
         this.$store.commit('ticket/setHasTicketNodeOptAuth', this.hasNodeOptAuth);
       }
     },
-    beforeDestroy() {
+    beforeUnmount() {
       this.clearTicketTimer();
     },
     methods: {
@@ -226,7 +226,7 @@
         if (this.openFunction.FIRST_STATE_SWITCH) {
           this.firstStateFields = copyList.find(item => item.state_id === Number(this.ticketInfo.first_state_id)).fields;
           this.firstStateFields.forEach(item => {
-            this.$set(item, 'val', (item.value || ''));
+            item['val'] = (item.value || '');
             this.conditionField(item, this.firstStateFields);
           });
         }

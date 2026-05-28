@@ -207,7 +207,7 @@
         this.currentNode = node;
         // 往数组中添加数据属性
         const showValue = Boolean(node.showMore);
-        this.$set(node, 'showMore', showValue);
+        node['showMore'] = showValue;
         // 操作节点时往数据中添加
         if (!this.moveFlag) {
           // 点击节点操作(将点击节点的操作放到右键上实现)

@@ -100,15 +100,17 @@
 <script>
   import apiRunConfig from './apiRunConfig.vue';
   import ace from '../../../commonComponent/aceEditor/index.js';
-  import mixins from '../../../commonMix/mixins_api.js';
+  import { useMixinsApi } from '@/composables/useMixinsApi';
   import { errorHandler } from '../../../../utils/errorHandler';
 
   export default {
+    setup() {
+      return { ...useMixinsApi() };
+    },
     components: {
       apiRunConfig,
       ace,
     },
-    mixins: [mixins],
     props: {
       apiDetailInfoCommon: {
         type: Object,

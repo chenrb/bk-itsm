@@ -396,7 +396,7 @@
   </div>
 </template>
 <script>
-  import commonMix from '../../../../commonMix/common.js';
+  import { useCommonMix } from '@/composables/useCommonMix';
   import dataSource from './dataSource.vue';
   import dataContent from './dataContent.vue';
   import customTableData from './customTableData.vue';
@@ -416,7 +416,7 @@
       defaultValue,
       hiddenConditions,
     },
-    mixins: [commonMix],
+    setup() { return { ...useCommonMix() }; },
     props: {
       formAlign: {
         type: String,
@@ -711,7 +711,7 @@
         // 在不同的数据源里面添加不同的desc
         this.globalChoise.source_type.forEach(item => {
           const descInfo = item.typeName === 'CUSTOM' ? this.$t('m.treeinfo[\'自定义数据每行的name和key都不能相同。\']') : this.$t('m.treeinfo[\'接口中的数据详情\']');
-          this.$set(item, 'desc', descInfo);
+          item['desc'] = descInfo;
         });
         if (!this.nodesList) {
           this.getFrontNodesList();
@@ -1186,7 +1186,7 @@
           if (this.formInfo.type === 'FILE') {
             params.choice = {};
             this.fileList.forEach(file => {
-              this.$set(params.choice, file.key, file);
+              params.choice[file.key] = file;
             });
           } else {
             // 不同的数据源传递的数据不同

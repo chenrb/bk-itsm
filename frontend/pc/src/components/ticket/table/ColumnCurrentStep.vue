@@ -32,7 +32,7 @@
         class="bk-current-step">
         {{row.current_steps[0].name}}
       </span>
-      <div slot="content" style="max-width: 200px;">
+      <template #content><div style="max-width: 200px;">
         <span class="bk-current-step auto-width"
           v-for="(othernode, otherNodeIndex) in row.current_steps"
           :key="otherNodeIndex">
@@ -57,7 +57,7 @@
   };
 </script>
 <style lang='scss' scoped>
-.current-steps-wrap /deep/ {
+.current-steps-wrap ::v-deep  {
     .bk-tooltip, .bk-tooltip-ref {
         width: 100%;
     }

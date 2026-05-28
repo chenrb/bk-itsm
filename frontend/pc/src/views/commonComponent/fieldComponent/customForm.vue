@@ -37,7 +37,7 @@
 </template>
 
 <script>
-  import mixins from '../../commonMix/field.js';
+  import { useField } from '@/composables/useField';
   import RenderView from '../../../components/renderview/RenderView';
 
   export default {
@@ -45,7 +45,7 @@
     components: {
       RenderView,
     },
-    mixins: [mixins],
+    setup() { return { ...useField() }; },
     props: {
       item: {
         type: Object,

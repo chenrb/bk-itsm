@@ -41,7 +41,7 @@
             :ext-cls="'bk-editor-table'">
             <bk-table-column :label="$t(`m.treeinfo['字段名']`)" prop="name"></bk-table-column>
             <bk-table-column :label="$t(`m.treeinfo['参数值']`)" width="400">
-              <template slot-scope="props">
+              <template #default="props">
                 <span>{{props.row.value || '--'}}</span>
               </template>
             </bk-table-column>

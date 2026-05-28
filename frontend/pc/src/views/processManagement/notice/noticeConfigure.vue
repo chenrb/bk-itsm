@@ -45,7 +45,7 @@
         :size="'small'">
         <bk-table-column type="index" label="No." align="center" width="60"></bk-table-column>
         <bk-table-column :render-header="$renderHeader" :show-overflow-tooltip="true" :label="$t(`m.deployPage['通知类型']`)">
-          <template slot-scope="props">
+          <template #default="props">
             <template v-if="hasPermission(['notification_manage'], $store.state.project.projectAuthActions)">
               <span class="bk-lable-primary" @click="editorInfo(props.row)">{{props.row.action_name}}</span>
             </template>
@@ -55,13 +55,13 @@
         <bk-table-column :render-header="$renderHeader" :show-overflow-tooltip="true" :label="$t(`m.slaContent['更新时间']`)" prop="update_at"></bk-table-column>
         <bk-table-column :render-header="$renderHeader" :show-overflow-tooltip="true" :label="$t(`m.deployPage['更新人']`)" prop="updated_by"></bk-table-column>
         <bk-table-column :show-overflow-tooltip="true" :label="$t(`m.deployPage['操作']`)" width="150">
-          <template slot-scope="props">
+          <template #default="props">
             <bk-button theme="primary" v-cursor="{ active: !hasPermission(['notification_manage'], $store.state.project.projectAuthActions) }" :disabled="!hasPermission(['notification_manage'], $store.state.project.projectAuthActions)" text @click="editorInfo(props.row)">
               {{ $t('m.deployPage["编辑"]') }}
             </bk-button>
           </template>
         </bk-table-column>
-        <div class="empty" slot="empty">
+        <template #empty><div class="empty">
           <empty
             :is-error="listError"
             @onRefresh="getNoticeList()">
@@ -72,12 +72,12 @@
     <!-- 编辑右侧弹窗 -->
     <div class="bk-add-data">
       <bk-sideslider
-        :is-show.sync="noticeInfo.show"
+        v-model:is-show="noticeInfo.show"
         :title="noticeInfo.title"
         :quick-close="true"
         :before-close="closeSideslider"
         :width="noticeInfo.width">
-        <div slot="content" style="padding: 20px 34px;" v-if="noticeInfo.show">
+        <template #content><div style="padding: 20px 34px;" v-if="noticeInfo.show">
           <editor-notice
             ref="editorNotice"
             :check-id="checkId"
@@ -93,7 +93,7 @@
 <script>
   import { errorHandler } from '../../../utils/errorHandler';
   import editorNotice from './editorNotice.vue';
-  import permission from '@/mixins/permission.js';
+  import { usePermission } from '@/composables/usePermission';
   import { mapState } from 'vuex';
   import Empty from '../../../components/common/Empty.vue';
   import _ from 'lodash';
@@ -104,7 +104,7 @@
       editorNotice,
       Empty,
     },
-    mixins: [permission],
+    setup() { return { ...usePermission() }; },
     data() {
       return {
         isDataLoading: true,

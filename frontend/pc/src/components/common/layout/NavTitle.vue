@@ -78,13 +78,13 @@
                 margin: 0 auto;
             }
         }
-        /deep/ .nav-tab {
+        ::v-deep  .nav-tab {
             background: #fff;
             .bk-tab-label-wrapper {
                 padding-left: 10px;
             }
         }
-        /deep/ .nav-step {
+        ::v-deep  .nav-step {
             top: 0;
             left: 0;
             position: absolute;

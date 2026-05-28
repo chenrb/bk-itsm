@@ -375,11 +375,11 @@ pre {
 
 /* 会签节点处理人tooltip样式特殊处理 */
 .bk-processor-wrapper{
-    /deep/ .light-theme{
+    ::v-deep  .light-theme{
         box-shadow:0 0 5px 0 rgba(0,0,0,0.09);
         border:1px solid rgba(220,222,229,1);
     }
-    /deep/ .light-theme[x-placement^=top] .tippy-arrow {
+    ::v-deep  .light-theme[x-placement^=top] .tippy-arrow {
         border-top: 1px solid rgba(220,222,229,1)!important;
         border-right: 1px solid rgba(220,222,229,1)!important;
         border-bottom: 1px solid transparent!important;
@@ -390,7 +390,7 @@ pre {
         transform: rotate(135deg);
         bottom: -11px;
     }
-    /deep/ .light-theme[x-placement^=bottom] .tippy-arrow {
+    ::v-deep  .light-theme[x-placement^=bottom] .tippy-arrow {
         border-top: 1px solid transparent!important;
         border-right: 1px solid transparent!important;
         border-bottom: 1px solid rgba(220,222,229,1)!important;

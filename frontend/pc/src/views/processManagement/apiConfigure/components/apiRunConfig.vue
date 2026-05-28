@@ -23,19 +23,18 @@
 <template>
   <div class="bk-api-run-config">
     <bk-input v-model="DetailInfo.path" :disabled="trueStatus">
-      <template slot="prepend">
+      <template #prepend>
+      </template>
+      <template #append>
         <bk-dropdown-menu class="group-text"
           ref="requestwayDrop"
-          slot="append"
           :font-size="'normal'"
           :disabled="trueStatus">
-          <bk-button type="primary" slot="dropdown-trigger">
+          <template #dropdown-trigger><bk-button type="primary">
             <span> {{ DetailInfo.method }} </span>
             <i :class="['bk-icon icon-angle-down']"></i>
           </bk-button>
         </bk-dropdown-menu>
-      </template>
-      <template slot="append">
         <bk-button style="border: none; height: 30px; border-radius: 0;"
           data-test-id="apiDetail_button_sendRequset"
           :theme="'primary'"
@@ -49,7 +48,7 @@
       <bk-collapse v-model="activeName">
         <bk-collapse-item name="1" :ext-cls="'bk-border-line'">
           Query
-          <template slot="content" v-if="DetailInfo.req_params && DetailInfo.req_params.length">
+          <template #content v-if="DetailInfo.req_params && DetailInfo.req_params.length">
             <ul class="mb10">
               <li v-for="(item, index) in DetailInfo.req_params" :key="index" class="bk-run-content">
                 <bk-input style="width: 130px; margin-right: 10px;"
@@ -73,7 +72,7 @@
         </bk-collapse-item>
         <bk-collapse-item name="2">
           Body
-          <div slot="content" class="mb10">
+          <template #content><div class="mb10">
             <ace
               :value="bodyDetailConfig.value"
               :width="bodyDetailConfig.width"
@@ -94,13 +93,15 @@
 <script>
   import { errorHandler } from '../../../../utils/errorHandler.js';
   import ace from '../../../commonComponent/aceEditor/index.js';
-  import mixins from '../../../commonMix/mixins_api.js';
+  import { useMixinsApi } from '@/composables/useMixinsApi';
 
   export default {
+    setup() {
+      return { ...useMixinsApi() };
+    },
     components: {
       ace,
     },
-    mixins: [mixins],
     props: {
       apiDetailInfoCommon: {
         type: Object,

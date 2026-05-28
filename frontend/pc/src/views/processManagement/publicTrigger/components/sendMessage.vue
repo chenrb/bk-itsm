@@ -28,7 +28,7 @@
         v-bind="panel"
         :key="index"
         :test-posi-id="panel.key">
-        <template slot="label">
+        <template #label>
           <bk-checkbox style="float: left; margin: 0px 8px 0 0;"
             :true-value="trueStatus"
             :false-value="falseStatus"
@@ -95,12 +95,12 @@
     },
     created() {
       this.itemInfo.sub_components.forEach(item => {
-        this.$set(item, 'checked', (item.checked || false));
+        item['checked'] = (item.checked || false);
         if (item.checked) {
           this.activeName = item.name;
         }
-        this.$set(item, 'label', item.name);
-        this.$set(item, 'icon', '');
+        item['label'] = item.name;
+        item['icon'] = '';
         switch (item.key) {
           case 'send_email_message':
             item.icon = 'icon-email';
@@ -138,7 +138,7 @@
     @import '../../../../scss/mixins/clearfix.scss';
 
     .bk-send-message {
-        /deep/ .bk-tab-label-item{
+        ::v-deep  .bk-tab-label-item{
             min-width: 200px;
             .bk-tab-label {
                 padding: 0 5px;

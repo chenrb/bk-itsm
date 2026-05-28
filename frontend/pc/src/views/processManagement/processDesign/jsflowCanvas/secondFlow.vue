@@ -39,10 +39,10 @@
       @onNodeMoveStop="onNodeMoveStop"
       @onNodeMoving="onNodeMoving"
       @onOverlayClick="onOverlayClick">
-      <template slot="palettePanel">
+      <template #palettePanel>
         <Palette></Palette>
       </template>
-      <template slot="nodeTemplate" slot-scope="{ node }">
+      <template #nodeTemplate="{ node }">
         <node-template
           ref="templateNode"
           :node="node"
@@ -59,10 +59,10 @@
     <!-- 线条配置右侧弹窗 -->
     <div class="bk-configu-line">
       <bk-sideslider
-        :is-show.sync="customLine.isShow"
+        v-model:is-show="customLine.isShow"
         :title="customLine.title"
         :width="customLine.width">
-        <div slot="content" v-if="customLine.isShow">
+        <template #content><div v-if="customLine.isShow">
           <lineConfigue
             :custom-line="customLine"
             :flow-info="flowInfo"
@@ -227,7 +227,7 @@
             showMore: false,
             nodeInfo: item,
           });
-          this.$set(this.nodeInfo, `node_${item.id}`, item);
+          this.nodeInfo[`node_${item.id}`] = item;
         });
         this.lineList.forEach((item) => {
           this.canvasData.lines.push({
@@ -248,7 +248,7 @@
         this.canvasData.nodes.forEach((item) => {
           valueList.forEach((node) => {
             if (item.nodeInfo.id === node) {
-              this.$set(item.nodeInfo, 'errorInfo', true);
+              item.nodeInfo['errorInfo'] = true;
             }
           });
         });
@@ -705,7 +705,7 @@
         };
         await this.$store.dispatch('deployCommon/creatNode', { params }).then((res) => {
           // 为新增的元素添加属性值
-          this.$set(node, 'nodeInfo', res.data);
+          node['nodeInfo'] = res.data;
           return true;
         })
           .catch((res) => {

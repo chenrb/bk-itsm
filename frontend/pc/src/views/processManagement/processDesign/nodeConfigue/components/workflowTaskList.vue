@@ -126,7 +126,7 @@
         theme="primary"
         width="660"
         :mask-close="false">
-        <div slot="header" class="trigger-dialog-header">
+        <template #header><div class="trigger-dialog-header">
           <span>{{$t(`m.taskTemplate['选择任务模板']`)}}</span>
           <div class="bk-search-key">
             <bk-input
@@ -160,7 +160,7 @@
             </li>
           </ul>
         </div>
-        <div slot="footer" class="trigger-dialog-footer">
+        <template #footer><div class="trigger-dialog-footer">
           <bk-checkbox :value="Boolean((taskDialogInfo.list.length === citeList.length) && taskDialogInfo.list.length)"
             :ext-cls="'checkbox'"
             :disabled="!taskDialogInfo.list.length"
@@ -453,7 +453,7 @@
         margin-right: 5px;
     }
     .config-form-item {
-        /deep/ .icon-exclamation-circle-shape.tooltips-icon {
+        ::v-deep  .icon-exclamation-circle-shape.tooltips-icon {
             left: 463px;
             right: inherit !important;
             top: 21px;

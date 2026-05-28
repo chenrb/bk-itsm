@@ -171,7 +171,7 @@
           .then((res) => {
             this.billList = res.data;
             this.billList.forEach((item) => {
-              this.$set(item, 'disabled', !item.is_valid);
+              item['disabled'] = !item.is_valid;
             });
             // 默认初始化选中一个
             if (this.billList.length) {

@@ -150,7 +150,7 @@
       width="560"
       :draggable="false"
       @confirm="highlightSettingConfirm">
-      <p slot="header" style="text-align: left;">
+      <template #header><p style="text-align: left;">
         {{$t(`m.slaContent["单据高亮设置"]`)}}
       </p>
       <div class="bk-highlight-setting">
@@ -174,7 +174,7 @@
 <script>
   import collapseTransition from '../../../utils/collapse-transition';
   import memberSelect from '../../../views/commonComponent/memberSelect';
-  import commonMix from '../../../views/commonMix/common.js';
+  import { useCommonMix } from '@/composables/useCommonMix';
   import { isEmpty } from '@/utils/util.js';
 
   export default {
@@ -183,7 +183,7 @@
       collapseTransition,
       memberSelect,
     },
-    mixins: [commonMix],
+    setup() { return { ...useCommonMix() }; },
     props: {
       forms: {
         type: Array,
@@ -447,14 +447,14 @@
         .slot-content {
             flex: 1;
         }
-        /deep/ .bk-form-control {
+        ::v-deep  .bk-form-control {
             width: 400px;
             margin-left: 5px;
             .bk-form-input {
                 width: 400px;
             }
         }
-        /deep/ .filter-btn {
+        ::v-deep  .filter-btn {
             height: 32px;
             width: 32px;
             display: flex;

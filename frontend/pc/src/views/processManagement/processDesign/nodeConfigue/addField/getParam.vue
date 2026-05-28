@@ -27,17 +27,17 @@
       :size="'small'">
       <bk-table-column :label="$t(`m.treeinfo['名称']`)" prop="name"></bk-table-column>
       <bk-table-column :label="$t(`m.treeinfo['必选']`)">
-        <template slot-scope="props">
+        <template #default="props">
           {{ props.row.is_necessary ? $t(`m.treeinfo["是"]`) : $t(`m.treeinfo["否"]`) }}
         </template>
       </bk-table-column>
       <bk-table-column :label="$t(`m.treeinfo['备注']`)" width="150">
-        <template slot-scope="props">
+        <template #default="props">
           <span :title="props.row.desc">{{props.row.desc || '--'}}</span>
         </template>
       </bk-table-column>
       <bk-table-column :label="$t(`m.treeinfo['参数值']`)" width="300">
-        <template slot-scope="props">
+        <template #default="props">
           <template v-if="isStatic">
             {{props.row.value || '--'}}
           </template>
@@ -81,7 +81,7 @@
                   :name="option.name">
                 </bk-option>
                 <template v-if="entry !== 'addField'">
-                  <div slot="extension" @click="addNewItem(props.row)" style="cursor: pointer;">
+                  <template #extension><div @click="addNewItem(props.row)" style="cursor: pointer;">
                     <i class="bk-icon icon-plus-circle mr10"></i>{{ $t('m.treeinfo["添加变量"]') }}
                   </div>
                 </template>

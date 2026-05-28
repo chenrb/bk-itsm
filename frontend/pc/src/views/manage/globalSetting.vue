@@ -239,10 +239,10 @@
             </div>
         </div> -->
     <bk-sideslider
-      :is-show.sync="versionLogData.show"
+      v-model:is-show="versionLogData.show"
       :title="versionLogData.title"
       :width="versionLogData.width">
-      <div class="p20" slot="content" v-if="versionLogData.show">
+      <template #content><div class="p20" v-if="versionLogData.show">
         <version-log :version-log-data="versionLogData"></version-log>
       </div>
     </bk-sideslider>
@@ -251,14 +251,14 @@
 <script>
   import { errorHandler } from '../../utils/errorHandler';
   import versionLog from '../systemConfig/component/versionLog.vue';
-  import permission from '@/mixins/permission.js';
+  import { usePermission } from '@/composables/usePermission';
 
   export default {
     name: 'attachmentStorage',
     components: {
       versionLog,
     },
-    mixins: [permission],
+    setup() { return { ...usePermission() }; },
     data() {
       return {
         clearStorageTime: localStorage.getItem('clearStorageTime') || this.$t('m.home["暂无"]'),

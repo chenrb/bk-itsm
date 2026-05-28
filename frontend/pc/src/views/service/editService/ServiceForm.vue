@@ -28,6 +28,7 @@
           data-test-id="service_draggable_serviceFormDrag"
           handle=".dragElement"
           :value="formList"
+          item-key="id"
           :group="{
             name: 'view-form',
             pull: false,
@@ -35,7 +36,7 @@
           }"
           @end="onRowDragEnd"
           @add="onHalfRowDragToRow">
-          <template v-for="(form, index) in formList">
+          <template #item="{ element: form, index }">
             <!-- 半行表单 -->
             <half-row-form
               v-if="Array.isArray(form)"
@@ -55,22 +56,21 @@
               @onEditConfirm="onEditConfirm">
             </half-row-form>
             <!-- 全行表单 -->
-            <template v-else>
-              <form-view-item
-                :data-id="form.id"
-                :key="form.id"
-                :fields="forms"
-                :form="form"
-                :add-field-status="addFieldStatus"
-                :crt-form="crtForm"
-                @onFormEditClick="onFormEditClick"
-                @onFormCloneClick="onFormCloneClick"
-                @onFormDeleteClick="$emit('fieldDelete', $event)">
-                <div class="dragElement" slot="draggable">
-                  <i class="bk-itsm-icon icon-move-new"></i>
-                </div>
-              </form-view-item>
-            </template>
+            <form-view-item
+              v-else
+              :data-id="form.id"
+              :key="form.id"
+              :fields="forms"
+              :form="form"
+              :add-field-status="addFieldStatus"
+              :crt-form="crtForm"
+              @onFormEditClick="onFormEditClick"
+              @onFormCloneClick="onFormCloneClick"
+              @onFormDeleteClick="$emit('fieldDelete', $event)">
+              <template #draggable><div class="dragElement">
+                <i class="bk-itsm-icon icon-move-new"></i>
+              </div>
+            </form-view-item>
           </template>
         </draggable>
       </bk-form>
@@ -333,7 +333,7 @@
         }
     }
 }
-/deep/ .drag-entry {
+::v-deep  .drag-entry {
     position: relative;
     width: 100%;
     height: 0;

@@ -60,7 +60,7 @@
               v-for="(panel, index) in field.value"
               v-bind="panel"
               :key="index">
-              <template slot="label">
+              <template #label>
                 <i class="bk-icon" :class="[panel.icon]"></i>
                 <span class="panel-name">{{ panel.label }}</span>
               </template>
@@ -81,7 +81,7 @@
             :data="apiTableData"
             :size="'small'">
             <bk-table-column :label="$t(`m.treeinfo['名称']`)" min-width="150">
-              <template slot-scope="props">
+              <template #default="props">
                 <div class="bk-more">
                   <span :style="{ paddingLeft: 20 * props.row.level + 'px' }">
                     <span
@@ -96,17 +96,17 @@
               </template>
             </bk-table-column>
             <bk-table-column :label="'类型'">
-              <template slot-scope="props">
+              <template #default="props">
                 {{ props.row.type }}
               </template>
             </bk-table-column>
             <bk-table-column :label="$t(`m.treeinfo['备注']`)" width="120">
-              <template slot-scope="props">
+              <template #default="props">
                 <span :title="props.row.desc">{{props.row.desc || '--'}}</span>
               </template>
             </bk-table-column>
             <bk-table-column :label="$t(`m.treeinfo['参数值']`)" width="280">
-              <template slot-scope="props">
+              <template #default="props">
                 <span>{{props.row.value}}</span>
               </template>
             </bk-table-column>
@@ -123,10 +123,12 @@
 
 <script>
   import { errorHandler } from '@/utils/errorHandler.js';
-  import mixins from '../../../commonMix/mixins_api.js';
+  import { useMixinsApi } from '@/composables/useMixinsApi';
   export default {
     name: 'taskHistoryDetail',
-    mixins: [mixins],
+    setup() {
+      return { ...useMixinsApi() };
+    },
     props: {
       historyId: {
         type: [String, Number],
@@ -227,9 +229,9 @@
       },
       giveMessageData() {
         this.historyInfo.fields[0].value.forEach(item => {
-          this.$set(item, 'checked', (item.checked || false));
-          this.$set(item, 'label', item.name);
-          this.$set(item, 'icon', '');
+          item['checked'] = (item.checked || false);
+          item['label'] = item.name;
+          item['icon'] = '';
           switch (item.code) {
             case 'send_email_message':
               item.icon = 'icon-email';
@@ -254,9 +256,9 @@
             if (field.key === 'api_source') {
               field.value = `${backValue.remote_system_name}/${backValue.name}`;
             } else {
-              this.$set(field, 'apiContent', backValue);
-              this.$set(field.apiContent, 'bodyTableData', []);
-              this.$set(field.apiContent, 'treeDataList', {});
+              field['apiContent'] = backValue;
+              field.apiContent['bodyTableData'] = [];
+              field.apiContent['treeDataList'] = {};
               field.apiContent.treeDataList = await this.jsonschemaToList({
                 root: JSON.parse(JSON.stringify(field.apiContent.req_body)),
               });
@@ -413,14 +415,14 @@
                     display: flex;
                     align-items: center;
                     margin-bottom: 12px;
-                    /deep/ .bk-table-body-wrapper{
+                    ::v-deep  .bk-table-body-wrapper{
                         @include scroller;
                     }
-                    /deep/.bk-tab-label-item{
+                    ::v-deep .bk-tab-label-item{
                         min-width: 130px;
                         box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.1);
                     }
-                    /deep/ .bk-tab-border-card{
+                    ::v-deep  .bk-tab-border-card{
                         width: 100%;
                     }
                 }
@@ -441,7 +443,7 @@
         width: calc(100% - 125px);
         word-break: break-all;
     }
-    /deep/ .bk-tab > .bk-tab-section {
+    ::v-deep  .bk-tab > .bk-tab-section {
         border: 1px solid #dcdee5;
         border-top: none;
     }

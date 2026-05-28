@@ -28,7 +28,7 @@
       :ext-cls="'bk-editor-table'">
       <bk-table-column :label="$t(`m.treeinfo['字段名']`)" prop="name"></bk-table-column>
       <bk-table-column :label="$t(`m.treeinfo['参数值']`)" width="400">
-        <template slot-scope="props">
+        <template #default="props">
           <span>{{props.row.value || '--'}}</span>
         </template>
       </bk-table-column>
@@ -41,7 +41,7 @@
                 <bk-table-column :label="$t(`m.treeinfo['字段类型']`)" prop="custom_type"></bk-table-column>
             </template>
             <bk-table-column :label="$t(`m.treeinfo['参数值']`)" width="400">
-                <template slot-scope="props">
+                <template #default="props">
                     <template v-if="!isStatic">
                         <div style="width: 120px; position: absolute; top: 5px; left: 15px;">
                             <bk-select v-model="props.row.source_type"
@@ -75,7 +75,7 @@
                                     :id="option.key"
                                     :name="option.name">
                                 </bk-option>
-                                <div slot="extension" @click="addNewItem(props.row)" style="cursor: pointer;">
+                                <template #extension><div @click="addNewItem(props.row)" style="cursor: pointer;">
                                     <i class="bk-icon icon-plus-circle mr10"></i>{{ $t('m.treeinfo["添加变量"]') }}
                                 </div>
                             </bk-select>
@@ -97,7 +97,7 @@
         v-model="formData"
         :hooked="hookedVarList"
         @configLoadingChange="configLoading = $event">
-        <template slot="tagHook" slot-scope="{ scheme }">
+        <template #tagHook="{ scheme }">
           <div class="hook-area">
             <bk-checkbox
               :disabled="disabled || disabledRenderForm"
@@ -127,10 +127,10 @@
     </div>
     <div class="bk-add-slider" v-if="sliderInfo.show && isStatic === false">
       <bk-sideslider
-        :is-show.sync="sliderInfo.show"
+        v-model:is-show="sliderInfo.show"
         :title="sliderInfo.title"
         :width="sliderInfo.width">
-        <div class="p20" slot="content">
+        <template #content><div class="p20">
           <add-field
             :change-info="changeInfo"
             :sosp-info="showTabData"
@@ -327,7 +327,7 @@
         }
       },
       changeTicketformDisable(val) {
-        this.$set(this.$refs.renderForm.formOption, 'formEdit', val);
+        this.$refs.renderForm.formOption['formEdit'] = val;
       },
       onSelectVar(val, scheme) {
         this.formData[scheme.tag_code] = `\${${val}}`;
@@ -386,13 +386,13 @@
         cursor: pointer;
     }
 }
-/deep/ .el-input__inner {
+::v-deep  .el-input__inner {
     width: 60%;
 }
-/deep/ .rf-tag-hook {
+::v-deep  .rf-tag-hook {
     top: 40px;
 }
-/deep/ .rf-tag-form {
+::v-deep  .rf-tag-form {
     width: 76%;
 }
 </style>

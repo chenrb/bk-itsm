@@ -145,7 +145,7 @@
     margin-top: 4px;
     word-break: break-all;
 }
-/deep/ .table-label {
+::v-deep  .table-label {
   font-size: 14px;
 }
 .bread-crumbs {
@@ -168,7 +168,7 @@
     }
 }
 // 提示 icon
-/deep/ .bk-itsm-icon.icon-itsm-icon-help {
+::v-deep  .bk-itsm-icon.icon-itsm-icon-help {
     font-size: 12px;
     cursor: pointer;
 }

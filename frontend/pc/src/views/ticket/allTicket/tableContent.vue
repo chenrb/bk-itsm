@@ -34,7 +34,7 @@
       <bk-table-column
         prop="remind_btn"
         width="30">
-        <template slot-scope="{ row }">
+        <template #default="{ row }">
           <bk-popover :content="!row.hasAttention ? $t(`m.manageCommon['关注单据']`) : $t(`m.manageCommon['取消关注']`)"
             :interactive="false"
             placement="top">
@@ -63,7 +63,8 @@
         :show-overflow-tooltip="true"
         :sortable="field.sortable"
         :prop="field.prop">
-        <div slot-scope="{ row }">
+        <template #default="{ row }">
+          <div>
           <!-- 单号 -->
           <template v-if="field.id === 'id'">
             <column-sn :row="row" :from="from"></column-sn>
@@ -124,7 +125,8 @@
           <template v-else>
             <span :title="row[field.id]">{{ row[field.id] || '--' }}</span>
           </template>
-        </div>
+          </div>
+        </template>
       </bk-table-column>
 
       <bk-table-column type="setting">
@@ -136,7 +138,7 @@
           @setting-change="handleSettingChange">
         </bk-table-setting-content>
       </bk-table-column>
-      <div class="empty" slot="empty">
+      <template #empty><div class="empty">
         <empty
           :is-error="listError"
           :is-search="true"
@@ -220,7 +222,7 @@
         handler(val) {
           this.allTicketList = val.map((item) => {
             const attention = (item.followers || []).some(name => name === window.username);
-            this.$set(item, 'hasAttention', attention);
+            item['hasAttention'] = attention;
             return item;
           });
         },
@@ -452,7 +454,7 @@
         height: 22px;
         line-height: 20px;
     }
-    .current-steps-wrap /deep/ {
+    .current-steps-wrap ::v-deep  {
          .bk-tooltip, .bk-tooltip-ref {
             width: 100%;
         }
@@ -481,7 +483,7 @@
         color: #3a84ff;
         padding: 0 5px;
     }
-    /deep/ .bk-table-pagination-wrapper {
+    ::v-deep  .bk-table-pagination-wrapper {
         background-color: #fff;
     }
 </style>

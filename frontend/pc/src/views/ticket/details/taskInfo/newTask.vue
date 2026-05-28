@@ -105,7 +105,7 @@
         :basic-infomation="basicInfomation"
       ></field-info>
     </div>
-    <div slot="footer" class="bk-submit-task">
+    <template #footer><div class="bk-submit-task">
       <bk-button
         :theme="'primary'"
         :title="$t(`m.task['确认']`)"
@@ -130,8 +130,8 @@
 <script>
   import fieldInfo from '@/views/managePage/billCom/fieldInfo.vue';
   import DealPerson from '@/views/processManagement/processDesign/nodeConfigue/components/dealPerson';
-  import commonMix from '@/views/commonMix/common.js';
-  import apiFieldsWatch from '@/views/commonMix/api_fields_watch.js';
+  import { useCommonMix } from '@/composables/useCommonMix';
+  import { useApiFieldsWatch } from '@/composables/useApiFieldsWatch';
   import { errorHandler } from '@/utils/errorHandler';
   import { deepClone } from '@/utils/util';
 
@@ -141,7 +141,7 @@
       fieldInfo,
       DealPerson,
     },
-    mixins: [apiFieldsWatch, commonMix],
+    setup() { return { ...useApiFieldsWatch(), ...useCommonMix() }; },
     props: {
       basicInfomation: {
         type: Object,
@@ -230,8 +230,8 @@
               if (item.type === 'CASCADE') {
                 item.type = 'SELECT';
               }
-              this.$set(item, 'showFeild', true);
-              this.$set(item, 'val', item.value || '');
+              item['showFeild'] = true;
+              item['val'] = item.value || '';
             });
             this.isNecessaryToWatch(
               { fields: this.fieldList },
@@ -267,8 +267,8 @@
               if (item.type === 'CASCADE') {
                 item.type = 'SELECT';
               }
-              this.$set(item, 'showFeild', true);
-              this.$set(item, 'val', item.value || '');
+              item['showFeild'] = true;
+              item['val'] = item.value || '';
             });
             this.isNecessaryToWatch(
               { fields: this.fieldList },
@@ -311,11 +311,7 @@
             if (item.type === 'SOPS_TEMPLATE') {
               const sopsContent = deepClone(item.sopsContent);
               sopsContent.constants.forEach((contentItem) => {
-                this.$set(
-                  contentItem,
-                  'value',
-                  sopsContent.formData[contentItem.key]
-                );
+                contentItem['value'] = sopsContent.formData[contentItem.key];
               });
               params.fields[item.key] = {
                 id: sopsContent.id,
@@ -487,8 +483,8 @@
     z-index: 1;
 }
 .deal-person {
-    /deep/ .first-level,
-    /deep/ .second-level {
+    ::v-deep  .first-level,
+    ::v-deep  .second-level {
         width: calc(50% - 8px);
         margin-right: 8px;
         .bk-form-width {

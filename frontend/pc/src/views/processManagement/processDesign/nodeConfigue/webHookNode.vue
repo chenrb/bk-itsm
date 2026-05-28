@@ -45,26 +45,27 @@
             :placeholder="isStatus ? $t(`m['以http://或https://开头(引用变量忽略), 输入“{{”可选择引用变量']`) : $t(`m['请输入']`)"
             :disabled="disable"
             @change="handleUrlChange">
+            <template #prepend>
             <bk-dropdown-menu
               ref="dropdown"
               class="group-text"
-              slot="prepend"
               :font-size="'medium'"
               @show="isDropdownShow = true"
               @hide="isDropdownShow = false">
-              <bk-button type="primary" slot="dropdown-trigger">
+              <template #dropdown-trigger><bk-button type="primary">
                 <template v-for="(item, index) in requestOptions">
                   <span v-if="curEq === item" :key="index">{{item}}</span>
                 </template>
                 <i :class="['bk-icon icon-angle-down',{ 'icon-flip': isDropdownShow }]"></i>
               </bk-button>
-              <ul class="bk-dropdown-list" slot="dropdown-content">
+              <template #dropdown-content><ul class="bk-dropdown-list">
                 <li v-for="(item, index) in requestOptions"
                   :key="index">
                   <a href="javascript:;" @click="selectRequsetOpt(item)">{{ item }}</a>
                 </li>
               </ul>
             </bk-dropdown-menu>
+            </template>
           </bk-input>
           <div v-show="filterVariableList.length !== 0" class="select-variables">
             <ul>
@@ -98,17 +99,17 @@
           <bk-table :data="returnReslut"
             :size="'small'">
             <bk-table-column :label="$t(`m['变量名称']`)">
-              <template slot-scope="props">
+              <template #default="props">
                 <bk-input :behavior="'simplicity'" v-model="props.row.name" :disabled="disable" @change="changeReturnInput(props.row, props.$index)"></bk-input>
               </template>
             </bk-table-column>
             <bk-table-column :label="$t(`m['来源']`)">
-              <template slot-scope="props">
+              <template #default="props">
                 <bk-input :behavior="'simplicity'" v-model="props.row.ref_path" :disabled="disable" :placeholder="$t(`m['输入变量来源，如：resp.message']`)" @change="changeReturnInput(props.row, props.$index)"></bk-input>
               </template>
             </bk-table-column>
             <bk-table-column :label="$t(`m['操作']`)" width="100">
-              <template slot-scope="props" v-if="!disable && isShowDelete !== returnReslut.indexOf(props.row)">
+              <template #default="props" v-if="!disable && isShowDelete !== returnReslut.indexOf(props.row)">
                 <i class="bk-itsm-icon icon-flow-other-add result-icon" @click="addReturnReslut"></i>
                 <i class="bk-itsm-icon icon-flow-other-reduc result-icon"
                   :class="{ 'no-delete': retrunResultIsEmtry }"
@@ -490,13 +491,13 @@
         background-color: #FAFBFD;
         overflow: auto;
         @include scroller;
-        /deep/ .common-section-card-label {
+        ::v-deep  .common-section-card-label {
             display: none;
         }
-        /deep/ .common-section-card-body {
+        ::v-deep  .common-section-card-body {
             padding: 20px;
         }
-        /deep/ .bk-form-width {
+        ::v-deep  .bk-form-width {
             width: 448px;
         }
         .piprline-title {

@@ -44,17 +44,12 @@
 <script>
   function registerFields() {
     const fieldComponents = {};
-    const fieldFiles = require.context(
-      '../../commonComponent/fieldComponent/',
-      false,
-      /\w+\.vue$/
-    );
-    fieldFiles.keys().forEach((key) => {
-      const componentConfig = fieldFiles(key);
+    const fieldFiles = import.meta.glob('../../commonComponent/fieldComponent/*.vue', { eager: true });
+    for (const path in fieldFiles) {
+      const componentConfig = fieldFiles[path];
       const comp = componentConfig.default;
       fieldComponents[`CW-${comp.name}`] = comp;
-    });
-
+    }
     return fieldComponents;
   }
 

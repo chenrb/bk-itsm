@@ -481,14 +481,14 @@
         this.hookedVarList[key] = value;
         const cur = this.constants.find(item => item.key === key);
         const init = this.initFormDate[key];
-        this.$set(cur, 'value', init.value);
+        cur['value'] = init.value;
       },
       processingVariables(vars) {
         const constants = vars;
         constants.sort((a, b) => a.index - b.index);
         // 设置每个变量的hook
         constants.map(item => {
-          this.$set(this.hookedVarList, item.key, false);
+          this.hookedVarList[item.key] = false;
         });
         if (Object.prototype.hasOwnProperty.call(this.configur.extras, 'sops_info')) {
           constants.forEach(item => {
@@ -496,7 +496,7 @@
             if (!curConstant) return;
             this.constantDefaultValue[item.key] = deepClone(curConstant.value);
             if (curConstant.is_quoted) {
-              this.$set(this.hookedVarList, item.key, true);
+              this.hookedVarList[item.key] = true;
               item.value = `\${${curConstant.value}}`;
             } else {
               item.value = curConstant.value;
@@ -651,14 +651,14 @@
         background-color: #FAFBFD;
         overflow: auto;
         @include scroller;
-        /deep/ .common-section-card-label {
+        ::v-deep  .common-section-card-label {
             display: none;
         }
-        /deep/ .common-section-card-body {
+        ::v-deep  .common-section-card-body {
             width: 100%;
             padding: 20px;
         }
-        /deep/ .bk-form-width {
+        ::v-deep  .bk-form-width {
             width: 448px;
         }
         .sops-params-title {

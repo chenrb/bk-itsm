@@ -28,11 +28,11 @@
 <script>
   import { mapState } from 'vuex';
   import { errorHandler } from '@/utils/errorHandler';
-  import permission from '@/mixins/permission.js';
+  import { usePermission } from '@/composables/usePermission';
 
   export default {
     name: 'ProjectHome',
-    mixins: [permission],
+    setup() { return { ...usePermission() }; },
     data() {
       return {
         projectDetailLoading: false,

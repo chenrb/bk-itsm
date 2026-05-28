@@ -54,14 +54,15 @@
                     </span>
                   </li>
                   <bk-dropdown-menu trigger="click" class="trigger-dropdown" :disabled="!citable">
+                    <template #dropdown-trigger>
                     <div
                       class="bk-trigger-add"
-                      slot="dropdown-trigger"
                       :title="$t(`m.taskTemplate['添加触发器']`)"
                       @click="handleAddTrigger">
                       <i class="bk-icon icon-plus"></i>
                     </div>
-                    <ul class="bk-dropdown-list" slot="dropdown-content">
+                    </template>
+                    <template #dropdown-content><ul class="bk-dropdown-list">
                       <li><a href="javascript:;" data-test-id="taskTemplate-li-addTrigger" @click="openNew('add')">{{$t(`m.taskTemplate['新建']`)}}</a></li>
                       <li><a href="javascript:;" data-test-id="taskTemplate-li-quoteCommonTrigger" @click="openNew('cite')">{{$t(`m.taskTemplate['引用公共触发器']`)}}</a></li>
                     </ul>
@@ -78,7 +79,7 @@
           theme="primary"
           width="660"
           :mask-close="false">
-          <div slot="header" class="trigger-dialog-header">
+          <template #header><div class="trigger-dialog-header">
             <span>{{$t(`m.taskTemplate['引用公共触发器']`)}}</span>
             <div class="bk-search-key">
               <bk-input
@@ -114,7 +115,7 @@
               </ul>
             </template>
           </div>
-          <div slot="footer" class="trigger-dialog-footer">
+          <template #footer><div class="trigger-dialog-footer">
             <bk-checkbox :value="Boolean((triggerDialogInfo.list.length === citeList.length) && triggerDialogInfo.list.length)"
               :ext-cls="'checkbox'"
               :disabled="!triggerDialogInfo.list.length"
@@ -140,12 +141,12 @@
       <!-- 新增触发器 -->
       <template>
         <bk-sideslider
-          :is-show.sync="triggerSliderInfo.isShow"
+          v-model:is-show="triggerSliderInfo.isShow"
           :title="triggerSliderInfo.title"
           :width="triggerSliderInfo.width"
           :quick-close="true"
           :before-close="handleBeforeClose">
-          <div slot="content" v-bkloading="{ isLoading: triggerSliderInfo.addLoading }" style="min-height: 300px;">
+          <template #content><div v-bkloading="{ isLoading: triggerSliderInfo.addLoading }" style="min-height: 300px;">
             <add-trigger
               v-if="triggerSliderInfo.isShow"
               :node-type="nodeType"
@@ -508,7 +509,7 @@
     .trigger-dropdown.bk-dropdown-menu {
       float: left;
       cursor: pointer;
-      /deep/ .bk-dropdown-trigger * {
+      ::v-deep  .bk-dropdown-trigger * {
         cursor: pointer;
       }
     }

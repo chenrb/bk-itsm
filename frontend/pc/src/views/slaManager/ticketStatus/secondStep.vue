@@ -32,13 +32,13 @@
       :size="'small'"
       v-bkloading="{ isLoading: isDataLoading }">
       <bk-table-column :render-header="$renderHeader" :label="$t(`m.slaContent['状态名']`)" :min-width="150" :show-overflow-tooltip="true">
-        <template slot-scope="props">
+        <template #default="props">
           <span :title="nameFilter(props.row.name)">{{ nameFilter(props.row.name) }}</span>
         </template>
       </bk-table-column>
       <template v-for="item in statusOwnList">
         <bk-table-column :render-header="$renderHeader" :label="localeCookie ? item.name : item.flow_status" :key="item.id" :show-overflow-tooltip="true">
-          <template slot-scope="props">
+          <template #default="props">
             <template v-if="props.row.checkBoxStatus">
               <bk-checkbox class="bk-outline-none"
                 v-model="props.row.checkBoxStatus[item.key]"
@@ -51,7 +51,7 @@
         </bk-table-column>
       </template>
       <bk-table-column :label="$t(`m.slaContent['开启自动流转']`)">
-        <template slot-scope="props">
+        <template #default="props">
           <bk-checkbox class="bk-outline-none"
             v-model="props.row.is_auto"
             :true-value="trueStatus"
@@ -64,7 +64,7 @@
           </i>
         </template>
       </bk-table-column>
-      <div class="empty" slot="empty">
+      <template #empty><div class="empty">
         <empty :is-error="listError" @onRefresh="getTypeStatus()"> </empty>
       </div>
     </bk-table>
@@ -99,9 +99,11 @@
       :mask-close="autoConfigDialog.autoClose"
       @confirm="confirmFn"
       @cancel="cancelFn">
-      <p slot="header">
+      <template #header>
+        <p>
         {{ $t(`m.slaContent['自动流转设置']`) }}
       </p>
+      </template>
       <div class="bk-auto-conten">
         <bk-form
           :label-width="200"
@@ -119,19 +121,19 @@
               :font-size="'normal'"
               :type="'number'"
               :min="0">
+              <template #append>
               <bk-dropdown-menu class="group-text"
                 @show="dropdownShow"
                 @hide="dropdownHide"
-                slot="append"
                 :font-size="'normal'"
                 ref="dropdown">
-                <bk-button type="primary" slot="dropdown-trigger">
+                <template #dropdown-trigger><bk-button type="primary">
                   <span v-for="(time, timeIndex) in timeList" :key="timeIndex">
                     <template v-if="isAutoTemp.info.timeSpace === time.id">{{ time.name }}</template>
                   </span>
                   <i :class="['bk-icon icon-angle-down',{ 'icon-flip': isDropdownShow }]"></i>
                 </bk-button>
-                <ul class="bk-dropdown-list" slot="dropdown-content">
+                <template #dropdown-content><ul class="bk-dropdown-list">
                   <li v-for="(time, timeIndex) in timeList" :key="timeIndex">
                     <a href="javascript:;" @click="timeHandler(time)">{{ time.name }}</a>
                   </li>
@@ -162,11 +164,11 @@
 
 <script>
   import { errorHandler } from '../../../utils/errorHandler.js';
-  import commonMix from '../../commonMix/common.js';
+  import { useCommonMix } from '@/composables/useCommonMix';
   import cookie from 'cookie';
   export default {
     name: 'secondStep',
-    mixins: [commonMix],
+    setup() { return { ...useCommonMix() }; },
     props: {
       statusType: {
         type: String,
@@ -217,7 +219,7 @@
       // 将数据转换
       this.dataList = this.dataList.filter(item => !item.is_over);
       this.dataList.forEach(item => {
-        this.$set(item, 'checkBoxStatus', {});
+        item['checkBoxStatus'] = {};
         this.statusOwnList.forEach(statusItem => {
           item.checkBoxStatus[statusItem.key] = item.can_flow_to.indexOf(statusItem.id) !== -1;
         });
@@ -301,8 +303,8 @@
       async listAddFlow() {
         this.isDataLoading = true;
         this.dataList.forEach(item => {
-          this.$set(item, 'can_flow_to', []);
-          this.$set(item, 'is_auto', false);
+          item['can_flow_to'] = [];
+          item['is_auto'] = false;
         });
         await this.$store.dispatch('ticketStatus/getTypeFlow', this.statusType).then((res) => {
           const flowList = res.data;

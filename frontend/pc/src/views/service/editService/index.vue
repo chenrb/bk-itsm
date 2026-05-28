@@ -25,7 +25,7 @@
     <nav-title :show-icon="true"
       :title-name="serviceInfo.name || $t(`m['新建服务']`)"
       @goBack="onBackIconClick">
-      <div slot="step">
+      <template #step><div>
         <bk-steps ext-cls="steps-icon"
           data-test-id="service_steps_serviceEditStep"
           :controllable="true"

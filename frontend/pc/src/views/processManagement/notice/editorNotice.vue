@@ -317,15 +317,15 @@
 </template>
 
 <script>
-  import commonMix from '../../commonMix/common.js';
   import insertText from '@/utils/insertText.js';
   import { errorHandler } from '../../../utils/errorHandler.js';
-  import permission from '@/mixins/permission.js';
+  import { usePermission } from '@/composables/usePermission';
+  import { useCommonMix } from '@/composables/useCommonMix';
   import { deepClone } from '../../../utils/util';
 
   export default {
     name: 'editorNotice',
-    mixins: [commonMix, permission],
+    setup() { return { ...usePermission(), ...useCommonMix() }; },
     props: {
       checkId: {
         type: String,

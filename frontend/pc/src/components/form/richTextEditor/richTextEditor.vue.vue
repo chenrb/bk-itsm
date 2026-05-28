@@ -61,10 +61,24 @@
   import { Editor, Viewer } from '@toast-ui/vue-editor';
   // 国际化
   import '@toast-ui/editor/dist/i18n/zh-cn.js';
-  // 需要代码高亮的语言
-  const codelanguage = ['javascript', 'java', 'python', 'shell', 'powershell', 'markdown'];
-  codelanguage.forEach((item) => {
-    hljs.registerLanguage(item, require(`highlight.js/lib/languages/${item}`));
+  // 需要代码高亮的语言 - static imports for Vite compatibility
+  import hljsJavascript from 'highlight.js/lib/languages/javascript';
+  import hljsJava from 'highlight.js/lib/languages/java';
+  import hljsPython from 'highlight.js/lib/languages/python';
+  import hljsShell from 'highlight.js/lib/languages/shell';
+  import hljsPowershell from 'highlight.js/lib/languages/powershell';
+  import hljsMarkdown from 'highlight.js/lib/languages/markdown';
+
+  const codelanguage = {
+    javascript: hljsJavascript,
+    java: hljsJava,
+    python: hljsPython,
+    shell: hljsShell,
+    powershell: hljsPowershell,
+    markdown: hljsMarkdown,
+  };
+  Object.entries(codelanguage).forEach(([name, lang]) => {
+    hljs.registerLanguage(name, lang);
   });
   export default {
     name: 'RichTextEditor',
@@ -122,7 +136,7 @@
     mounted() {
       window.addEventListener('resize', this.handleScreenChange);
     },
-    beforeDestroy() {
+    beforeUnmount() {
       window.removeEventListener('resize', this.handleScreenChange);
     },
     methods: {
@@ -174,7 +188,7 @@
 </script>
 
 <style lang='scss' scoped>
-    /deep/ .cus-change-mode {
+    ::v-deep  .cus-change-mode {
         font-size: 12px;
         text-align: right;
         background-color: #f9f9f9;
@@ -201,7 +215,7 @@
             color: #63656E;
         }
     }
-    /deep/ {
+    ::v-deep  {
         .tui-editor-defaultUI,
         .tui-editor-contents {
             font-family: inherit;

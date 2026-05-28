@@ -310,7 +310,7 @@
       },
       async onFirstLevelChange(type) {
         // 清空二级数据
-        this.$set(this.formData, 'levelSecond', []);
+        this.formData['levelSecond'] = [];
         this.setDeaultSecondLeve(type);
         this.getSecondLevelList(type);
       },
@@ -370,7 +370,7 @@
           // 操作角色组织架构
           this.organizationList = res.data;
           this.organizationList.forEach(item => {
-            this.$set(item, 'route', []);
+            item['route'] = [];
           });
         })
           .catch((res) => {
@@ -491,7 +491,7 @@
     }
     .inline-auto-width {
         display: flex;
-        &.no-second  /deep/ {
+        &.no-second  ::v-deep  {
             .second-level {
                 display: none;
             }

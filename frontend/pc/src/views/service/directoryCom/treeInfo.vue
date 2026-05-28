@@ -96,7 +96,7 @@
     <!-- 新增条目 -->
     <bk-dialog
       width="480"
-      :value.sync="addDirectory.show"
+      v-model:value="addDirectory.show"
       :title="addDirectory.title"
       :mask-close="false"
       :auto-close="false"
@@ -143,9 +143,9 @@
 </template>
 <script>
   import tree from './commonTree/tree.vue';
-  import commonMix from '../../commonMix/common.js';
   import { errorHandler } from '../../../utils/errorHandler';
-  import permission from '@/mixins/permission.js';
+  import { usePermission } from '@/composables/usePermission';
+  import { useCommonMix } from '@/composables/useCommonMix';
   import Empty from '../../../components/common/Empty.vue';
 
   export default {
@@ -154,7 +154,7 @@
       tree,
       Empty,
     },
-    mixins: [commonMix, permission],
+    setup() { return { ...usePermission(), ...useCommonMix() }; },
     props: {
       treeInfo: {
         type: Object,
@@ -226,7 +226,7 @@
           this.treeList.forEach(item => {
             this.recordCheckFn(item);
             if (!this.firstStatus) {
-              this.$set(item, 'selected', true);
+              item['selected'] = true;
             }
           });
           this.firstStatus = true;
@@ -308,7 +308,7 @@
           }
         });
         if (this.treeInfo.node.id === tree.id) {
-          this.$set(tree, 'selected', true);
+          tree['selected'] = true;
         }
         if (tree.children === null || (tree.children && !tree.children.length)) {
           return;
@@ -319,18 +319,18 @@
       },
       getNodeTree(tree) {
         if (this.parentIds.includes(tree.id)) {
-          this.$set(tree, 'expanded', true);
+          tree['expanded'] = true;
         }
         if (this.$route.query.catalog_id === tree.id && tree.id !== 1) {
-          this.$set(tree, 'expanded', true);
-          this.$set(tree, 'selected', true);
+          tree['expanded'] = true;
+          tree['selected'] = true;
         }
         if (tree.children === null || (tree.children && !tree.children.length)) {
           return;
         }
         tree.children.forEach(item => {
           if (item.parent_id === tree.id && this.$route.query.catalog_id === item.id) {
-            this.$set(tree, 'expanded', true);
+            tree['expanded'] = true;
           }
           this.getNodeTree(item);
         });

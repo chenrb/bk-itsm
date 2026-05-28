@@ -36,7 +36,7 @@
           :sub-title="emptyTip.subTitle"
           :desc="emptyTip.desc"
           :links="emptyTip.links">
-          <template slot="btns">
+          <template #btns>
             <bk-button
               data-test-id="slaPattern_button_createPermission"
               v-cursor="{ active: !hasPermission(['sla_calendar_create'], $store.state.project.projectAuthActions) }"
@@ -115,9 +115,11 @@
 
 <script>
   import { errorHandler } from '../../utils/errorHandler';
-  import permission from '@/mixins/permission.js';
+  import { usePermission } from '@/composables/usePermission';
   import addModel from './addModel.vue';
   import EmptyTip from '../project/components/emptyTip.vue';
+  import applySvg from '../../images/illustration/apply.svg';
+  import startServiceSvg from '../../images/illustration/start-service.svg';
 
   export default {
     name: 'slaManager',
@@ -125,7 +127,7 @@
       addModel,
       EmptyTip,
     },
-    mixins: [permission],
+    setup() { return { ...usePermission() }; },
     data() {
       return {
         isDataLoading: false,
@@ -151,12 +153,12 @@
           subTitle: this.$t('m[\'SLA（即服务级别协议）是服务支撑团队与组织机构内最终用户之间的“服务合同”。通常，SLA 是通过定义所提供的服务必须遵守的质量标准以及交付服务的时间表来建立对服务和服务质量的清晰理解；加快服务响应时间、减少等待时长、降低运营成本，一套合理且适用的 SLA 将是您实现这些目标的最佳选择。\']'),
           desc: [
             {
-              src: require('../../images/illustration/apply.svg'),
+              src: applySvg,
               title: this.$t('m[\'设计服务模式并制定协议\']'),
               content: this.$t('m[\'通常我们会先设定团队的服务时间段，然后进一步配置在规定的服务时间段内，针对不同的服务工单紧急程度约定响应和处理时长，为的是保障用户的服务体验、提升用户满意度。\']'),
             },
             {
-              src: require('../../images/illustration/start-service.svg'),
+              src: startServiceSvg,
               title: this.$t('m[\'为服务配置合适的 SLA\']'),
               content: this.$t('m[\'接下来就是为不同的服务配置合适的 SLA 了，因为很多服务的处理流程中可能会需要多个不同职能团队来处理，所以我们支持在一个服务内针对不同的流程区间设置差异化的服务协议，满足对不同服务团队的SLA要求。\']'),
             },

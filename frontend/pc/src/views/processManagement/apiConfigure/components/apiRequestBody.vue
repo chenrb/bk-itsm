@@ -264,7 +264,7 @@
         this.$emit('deleteLine', item);
       },
       changeType(item) {
-        this.$set(item, 'children', []);
+        item['children'] = [];
         if (item.type === 'array') {
           this.addChildLine(item);
         }

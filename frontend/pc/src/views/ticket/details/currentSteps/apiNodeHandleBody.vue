@@ -195,7 +195,7 @@
     mounted() {
       this.getNodeLog();
     },
-    beforeDestroy() {
+    beforeUnmount() {
       // this.clearFloatBtn()
     },
     methods: {

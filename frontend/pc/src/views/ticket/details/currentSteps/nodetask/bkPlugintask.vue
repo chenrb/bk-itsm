@@ -53,12 +53,12 @@
           };
           this.$store.dispatch('bkPlugin/getPluginDetail', params).then((res) => {
             this.constantList = Object.keys(this.nodeInfo.contexts.build_params.inputs).map(item => {
-              this.$set(this.formData, item, this.nodeInfo.contexts.build_params.inputs[item]);
-              this.$set(this.rules, item, [{
+              this.formData[item] = this.nodeInfo.contexts.build_params.inputs[item];
+              this.rules[item] = [{
                 required: true,
                 message: i18n.t('m.treeinfo["字段必填"]'),
                 trigger: 'blur',
-              }]);
+              }];
               return {
                 name: res.data.inputs.properties[item].title,
                 key: item,
@@ -145,10 +145,10 @@
     }
     .bk-basic-node {
         padding: 0;
-        /deep/ .common-section-card-block {
+        ::v-deep  .common-section-card-block {
             display: block;
         }
-        /deep/ .common-section-card-body {
+        ::v-deep  .common-section-card-body {
             padding: 0;
         }
     }

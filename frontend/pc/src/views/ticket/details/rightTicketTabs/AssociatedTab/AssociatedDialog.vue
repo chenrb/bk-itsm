@@ -98,7 +98,7 @@
             min-width="140"
             :render-header="$renderHeader"
           >
-            <template slot-scope="props">
+            <template #default="props">
               <span
                 class="bk-lable-primary"
                 @click="checkOne(props.row)"
@@ -114,7 +114,7 @@
             :show-overflow-tooltip="true"
             :render-header="$renderHeader"
           >
-            <template slot-scope="props">
+            <template #default="props">
               <span :title="props.row.title">
                 {{ props.row.title || "--" }}
               </span>
@@ -138,7 +138,7 @@
             :render-header="$renderHeader"
             min-width="120"
           >
-            <template slot-scope="props">
+            <template #default="props">
               <span
                 :title="props.row.current_status_display"
                 class="bk-status-color-info"
@@ -148,7 +148,7 @@
               </span>
             </template>
           </bk-table-column>
-          <div class="empty" slot="empty">
+          <template #empty><div class="empty">
             <empty
               :is-error="listError"
               @onRefresh="getList()">
@@ -220,7 +220,7 @@
 <script>
   import SelectService from './SelectService.vue';
   import fieldInfo from '@/views/managePage/billCom/fieldInfo.vue';
-  import apiFieldsWatch from '@/views/commonMix/api_fields_watch';
+  import { useApiFieldsWatch } from '@/composables/useApiFieldsWatch';
   import axios from 'axios';
   import { errorHandler } from '../../../../../utils/errorHandler';
   import { deepClone } from '../../../../../utils/util';
@@ -233,7 +233,7 @@
       fieldInfo,
       Empty,
     },
-    mixins: [apiFieldsWatch],
+    setup() { return { ...useApiFieldsWatch() }; },
     props: {
       ticketInfo: {
         type: Object,
@@ -426,14 +426,10 @@
           ])
           .then(axios.spread((firstResp, allResp) => {
             firstResp.data.forEach((item) => {
-              this.$set(item, 'val', '');
+              item['val'] = '';
               item.type =                                item.type === 'CASCADE' ? 'SELECT' : item.type;
-              this.$set(item, 'showFeild', true);
-              this.$set(
-                item,
-                'service',
-                this.$refs.SelectService.formData.key
-              );
+              item['showFeild'] = true;
+              item['service'] = this.$refs.SelectService.formData.key;
               allResp.data.forEach((tempResItem) => {
                 if (item.key === tempResItem.key) {
                   item.val = tempResItem.value || '';

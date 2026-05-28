@@ -34,7 +34,7 @@
         :sub-title="emptyTip.subTitle"
         :desc="emptyTip.desc"
         :links="emptyTip.links">
-        <template slot="btns">
+        <template #btns>
           <bk-button
             data-test-id="triggers_button_create_permission"
             :theme="'primary'"
@@ -109,12 +109,13 @@
     <!-- 新建触发器弹窗 -->
     <div class="bk-add-slider">
       <bk-sideslider
-        :is-show.sync="sliderInfo.show"
+        v-model:is-show="sliderInfo.show"
         :title="sliderInfo.title"
         :quick-close="true"
         :before-close="closeSideslider"
         :width="sliderInfo.width">
-        <div slot="content"
+        <template #content>
+          <div
           v-bkloading="{ isLoading: sliderInfo.addLoading }"
           style="min-height: 300px;">
           <add-trigger
@@ -132,11 +133,13 @@
 </template>
 <script>
   import { errorHandler } from '../../../utils/errorHandler';
-  import permission from '@/mixins/permission.js';
+  import { usePermission } from '@/composables/usePermission';
   import addTrigger from './addTrigger.vue';
   import EmptyTip from '../../project/components/emptyTip.vue';
   import Empty from '../../../components/common/Empty.vue';
   import _ from 'lodash';
+  import setTriggerSvg from '../../../images/illustration/set-trigger.svg';
+  import autoExcuteSvg from '../../../images/illustration/auto-excute.svg';
 
   export default {
     name: 'publicTrigger',
@@ -145,7 +148,7 @@
       EmptyTip,
       Empty,
     },
-    mixins: [permission],
+    setup() { return { ...usePermission() }; },
     props: {
       projectId: String,
     },
@@ -175,12 +178,12 @@
           subTitle: this.$t('m[\'有些情况下，我们需要在服务特殊的人员或情境时，让流程相关的服务人员感知到高优处理级别、响应时长等要求，并严阵以待！<触发器>可以设置在服务流程中，当服务信息满足指定条件后，自动触发某些预设好的指令。\']'),
           desc: [
             {
-              src: require('../../../images/illustration/set-trigger.svg'),
+              src: setTriggerSvg,
               title: this.$t('m[\'设置触发器的规则和动作\']'),
               content: this.$t('m[\'<触发器>可以设置通用的事件、亦或是服务流程中的特定事件触发，支持复杂的多条分支和多层嵌套条件判断，并配置对应的处理动作，如API自动调用、或者更改服务单据的字段信息等等...\']'),
             },
             {
-              src: require('../../../images/illustration/auto-excute.svg'),
+              src: autoExcuteSvg,
               title: this.$t('m[\'事件触发满足时自动执行\']'),
               content: this.$t('m[\'当用户或系统行为满足条件后，触发器会按照用户预设的动作自动执行；触发器可以帮助用户快速的为一些公共事件或人员，在全局的服务流程范围内设置同样的处理逻辑。\']'),
             },

@@ -464,7 +464,7 @@
 }
 
 .auto-with-form-item {
-    /deep/ .bk-form-content {
+    ::v-deep  .bk-form-content {
         display: flex;
         .bk-select {
             flex: 1;
@@ -509,7 +509,7 @@
         margin-top: 20px;
     }
 }
-/deep/ .common-section-card-desc {
+::v-deep  .common-section-card-desc {
     width: 100%;
 }
 </style>

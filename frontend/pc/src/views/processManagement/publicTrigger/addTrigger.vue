@@ -205,7 +205,7 @@
   </div>
 </template>
 <script>
-  import commonMix from '../../commonMix/common.js';
+  import { useCommonMix } from '@/composables/useCommonMix';
   import triggerCondition from './components/triggerCondition.vue';
   import responseCondition from './components/responseCondition.vue';
   import { errorHandler } from '../../../utils/errorHandler.js';
@@ -217,7 +217,7 @@
       triggerCondition,
       responseCondition,
     },
-    mixins: [commonMix],
+    setup() { return { ...useCommonMix() }; },
     props: {
       projectId: String,
       triggerInfo: {
@@ -513,7 +513,7 @@
               responseItem.wayInfo.field_schema.forEach(field => {
                 item.params.forEach(itemFiled => {
                   if (field.key === itemFiled.key) {
-                    this.$set(field, 'value', itemFiled.value);
+                    field['value'] = itemFiled.value;
                   }
                 });
               });
@@ -544,8 +544,8 @@
                 } else {
                   item.params.forEach(itemFiled => {
                     if (field.key === itemFiled.key) {
-                      this.$set(field, 'value', itemFiled.value);
-                      this.$set(field, 'ref_type', itemFiled.ref_type);
+                      field['value'] = itemFiled.value;
+                      field['ref_type'] = itemFiled.ref_type;
                     }
                   });
                 }
@@ -678,7 +678,7 @@
           // 响应事件
           item.responseList.forEach(responseItem => {
             // 动作名称
-            this.$set(responseItem, 'wayStatus', !responseItem.way);
+            responseItem['wayStatus'] = !responseItem.way;
             // 内容
             if (responseItem.wayInfo.field_schema) {
               // 这里区分三种

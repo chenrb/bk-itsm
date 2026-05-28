@@ -68,19 +68,21 @@
 </template>
 
 <script>
-  import mixins from '../../commonMix/mixins_api.js';
+  import { useMixinsApi } from '@/composables/useMixinsApi';
   import apiTree from './apiTree.vue';
   import apiTable from './apiTable.vue';
   import apiContent from './apiContent.vue';
   import { errorHandler } from '../../../utils/errorHandler.js';
 
   export default {
+    setup() {
+      return { ...useMixinsApi() };
+    },
     components: {
       apiTree,
       apiTable,
       apiContent,
     },
-    mixins: [mixins],
     props: {
       projectId: String,
       title: {

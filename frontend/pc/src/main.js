@@ -21,44 +21,14 @@
  */
 
 import "./public-path";
-import Vue from "vue";
-// import Vuex from 'vuex'
+import { createApp } from "vue";
+import { createPinia } from "pinia";
 import cookie from "cookie";
 import $ from "jquery";
 import * as monaco from "monaco-editor";
-// magicBox引入及国际化
-import bkMagic, { locale, lang } from "bk-magic-vue";
-import "bk-magic-vue/dist/bk-magic-vue.min.css";
-import {
-  Input,
-  InputNumber,
-  Select,
-  Radio,
-  RadioGroup,
-  RadioButton,
-  Checkbox,
-  CheckboxGroup,
-  Button,
-  Option,
-  OptionGroup,
-  Table,
-  TableColumn,
-  DatePicker,
-  TimePicker,
-  TimeSelect,
-  Upload,
-  Tree,
-  Loading,
-  Container,
-  Row,
-  Col,
-  Pagination,
-  Tooltip,
-  Cascader,
-} from "element-ui";
-import enLocale from "element-ui/lib/locale/lang/en";
-import zhLocale from "element-ui/lib/locale/lang/zh-CN";
-import locales from "element-ui/lib/locale";
+// bkui-vue (BlueKing Vue 3 component library)
+import bkui from "bkui-vue";
+import "bkui-vue/dist/style.css";
 import VueDOMPurifyHTML from 'vue-dompurify-html';
 // view components
 import App from "./App";
@@ -71,102 +41,69 @@ import i18n from "./i18n/index.js";
 import store from "./store";
 // 自定义指令
 import directives from "./directives";
-Vue.use(directives);
-import vClickOutside from "v-click-outside";
-Vue.use(vClickOutside);
+import { cursor } from "./directives/cursor.js";
+import ace from "brace";
+import { renderHeader } from './utils/util';
+import "brace/mode/javascript";
+import "brace/mode/python";
+import "brace/mode/json";
+import "brace/mode/yaml";
+import "brace/theme/monokai";
+import "brace/theme/textmate";
+import "brace/theme/solarized_dark";
 
 window.$ = $;
 window.monaco = monaco;
 
-Vue.use(bkMagic);
+const app = createApp({
+  i18n,
+  router,
+  store,
+  render: () => App(),
+});
 
-Vue.use(Input);
-Vue.use(InputNumber);
-Vue.use(Select);
-Vue.use(Radio);
-Vue.use(RadioGroup);
-Vue.use(RadioButton);
-Vue.use(Checkbox);
-Vue.use(CheckboxGroup);
-Vue.use(Button);
-Vue.use(Option);
-Vue.use(OptionGroup);
-Vue.use(Table);
-Vue.use(TableColumn);
-Vue.use(DatePicker);
-Vue.use(TimeSelect);
-Vue.use(TimePicker);
-Vue.use(Upload);
-Vue.use(Tree);
-Vue.use(Loading.directive);
-Vue.use(Container);
-Vue.use(Row);
-Vue.use(Col);
-Vue.use(Pagination);
-Vue.use(Tooltip);
-Vue.use(Cascader);
+// 注册插件
+const pinia = createPinia();
+app.use(pinia);
+app.use(store);
+app.use(router);
+app.use(i18n);
+app.use(bkui);
+app.use(VueDOMPurifyHTML);
 
-Vue.use(VueDOMPurifyHTML);
+// 注册自定义指令
+app.directive('clickOut', directives.clickOut);
+app.directive('focus', directives.focus);
+app.directive('anchor', directives.anchor);
+app.directive('cursorIndex', directives.cursorIndex);
+app.directive('bk-focus', directives.bkFocus);
+app.directive('cursor', cursor);
 
-const ace = require("brace");
-const { renderHeader } = require('./utils/util')
-Vue.prototype.$ace = ace;
-Vue.prototype.$cookie = cookie;
-Vue.prototype.$renderHeader = renderHeader;
-require("brace/mode/javascript");
-require("brace/mode/python");
-require("brace/mode/json");
-require("brace/mode/yaml");
-require("brace/theme/monokai");
-require("brace/theme/textmate");
-require("brace/theme/solarized_dark");
+// 全局属性
+app.config.globalProperties.$ace = ace;
+app.config.globalProperties.$cookie = cookie;
+app.config.globalProperties.$renderHeader = renderHeader;
 
-Vue.use(renderForm);
-Vue.component("app-exception", Exception);
-Vue.component("arrows-left-icon", ArrowsLeftIcon);
+// renderForm 来自外部脚本 /js/renderform/index.js
+if (typeof renderForm !== 'undefined') {
+  app.use(renderForm);
+}
+
+// 全局组件
+app.component("app-exception", Exception);
+app.component("arrows-left-icon", ArrowsLeftIcon);
 
 // 国际化
 const localeCookie = cookie.parse(document.cookie).blueking_language || "zh-cn";
-// magicbox 组件国际化
-if (localeCookie === "en") {
-  locale.use(lang.enUS);
-  locales.use(enLocale);
-} else {
-  locale.use(lang.zhCN);
-  locales.use(zhLocale);
-}
 
 store.commit("setLanguage", localeCookie);
 
-// Vue.use(bkMagic)
-Vue.use(bkMagic, {
-  i18n: function (path, options) {
-    const value = i18n.t(path, options);
-    if (value !== null && value !== undefined) {
-      return value;
-    }
-    return "";
-  },
-});
-
-locale.i18n((key, value) => i18n.t(key, value));
-
-store.dispatch('getPlatformPreData').then(()=> {
-  const app = new Vue({
-    el: "#app",
-    i18n,
-    router,
-    store,
-    components: {
-      App,
-    },
-    template: "<App/>",
-  });
-
+store.dispatch('getPlatformPreData').then(() => {
+  app.mount("#app");
   window.app = app;
-}).catch(error =>{
+}).catch(error => {
   console.warn(error);
-})
+});
 
 
 

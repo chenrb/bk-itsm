@@ -144,9 +144,9 @@
         @show="isDropdownShow = true"
         @hide="isDropdownShow = false"
       >
+        <template #dropdown-trigger>
         <div
           class="dropdown-trigger-btn"
-          slot="dropdown-trigger"
           style="width: auto"
         >
           <span>{{ $t(`m.newCommon['更多操作']`) }}</span>
@@ -157,7 +157,7 @@
             ]"
           ></i>
         </div>
-        <ul class="bk-dropdown-list-cus" slot="dropdown-content">
+        <template #dropdown-content><ul class="bk-dropdown-list-cus">
           <li>
             <bk-button
               data-test-id="ticket_button_ticketPrint"
@@ -589,18 +589,18 @@
     .operation-group {
         margin-left: auto;
         .operation-refresh {
-            /deep/ .icon-refresh {
+            ::v-deep  .icon-refresh {
                 transition: all 1s;
                 font-size: 14px;
                 vertical-align: 1px;
             }
             &.rotate {
-                /deep/ .icon-refresh {
+                ::v-deep  .icon-refresh {
                     transform: rotate(360deg);
                 }
             }
             &.not-rotate {
-                /deep/ .icon-refresh {
+                ::v-deep  .icon-refresh {
                     transform: rotate(0);
                 }
             }
@@ -628,7 +628,7 @@
             border-color: #979ba5;
         }
         .bk-dropdown-menu-cus {
-            /deep/ .bk-dropdown-content {
+            ::v-deep  .bk-dropdown-content {
                 overflow: visible;
             }
             .bk-dropdown-list-cus {

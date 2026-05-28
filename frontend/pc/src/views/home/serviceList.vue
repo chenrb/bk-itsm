@@ -271,7 +271,7 @@
             const list = type === 'latest' ? this.allList : this.latestList;
             const serviceItem = list.find(item => item.id === service.id);
             if (serviceItem) {
-              this.$set(serviceItem, 'favorite', !curStatus); // 修改当前数据对应的源数据收藏状态
+              serviceItem['favorite'] = !curStatus; // 修改当前数据对应的源数据收藏状态
             }
           }
         })
@@ -393,7 +393,7 @@
             overflow: hidden;
         }
     }
-    /deep/ .bk-tab-section {
+    ::v-deep  .bk-tab-section {
         padding: 16px 0 0;
     }
     .recently-content {

@@ -130,10 +130,10 @@
     </template>
     <basic-card>
       <bk-sideslider
-        :is-show.sync="sliderInfo.show"
+        v-model:is-show="sliderInfo.show"
         :title="sliderInfo.title"
         :width="sliderInfo.width">
-        <div class="p20" slot="content" v-if="sliderInfo.show">
+        <template #content><div class="p20" v-if="sliderInfo.show">
           <add-field
             @getRelatedFields="getRelatedFields"
             :change-info="changeInfo"
@@ -179,7 +179,7 @@
   import responseDataNode from './autoComponents/responseDataNode.vue';
   import nodeCondition from './autoComponents/nodeCondition.vue';
   import addField from './addField/index.vue';
-  import mixins from '../../../commonMix/mixins_api.js';
+  import { useMixinsApi } from '@/composables/useMixinsApi';
   import commonTriggerList from '../../taskTemplate/components/commonTriggerList';
   import dealPerson from './components/dealPerson.vue';
   import BasicCard from '@/components/common/layout/BasicCard.vue';
@@ -198,7 +198,9 @@
       BasicCard,
       descInfo,
     },
-    mixins: [mixins],
+    setup() {
+      return { ...useMixinsApi() };
+    },
     props: {
       // 流程信息
       flowInfo: {
@@ -759,27 +761,27 @@
         background-color: #FAFBFD;
         overflow: auto;
         @include scroller;
-        /deep/ .common-section-card-block {
+        ::v-deep  .common-section-card-block {
             display: flex;
             flex-direction: column;
         }
-        /deep/ .common-section-card-label {
+        ::v-deep  .common-section-card-label {
             width: 100%;
             padding: 0 24px;
             .common-section-card-desc {
                 width: 100%;
             }
         }
-        /deep/ .bk-polling {
+        ::v-deep  .bk-polling {
             margin-top: -25px;
         }
-        /deep/ .common-section-card-body {
+        ::v-deep  .common-section-card-body {
             padding: 20px;
         }
-        /deep/ .bk-form-width {
+        ::v-deep  .bk-form-width {
             width: 446px;
         }
-        /deep/ .common-section-card-block {
+        ::v-deep  .common-section-card-block {
             box-shadow: 0 0;
         }
         .api-params-title {

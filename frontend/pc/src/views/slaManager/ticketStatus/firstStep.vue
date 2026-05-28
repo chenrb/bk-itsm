@@ -36,19 +36,19 @@
     </div>
     <bk-table :data="statusTable" :size="'small'" v-bkloading="{ isLoading: isDataLoading }">
       <bk-table-column :render-header="$renderHeader" :show-overflow-tooltip="true" :label="$t(`m.slaContent['状态名']`)" :min-width="150">
-        <template slot-scope="props">
+        <template #default="props">
           <span class="bk-lable-primary" @click="statusDialog('edit', props.row, props.$index)">
             {{ props.row.name }}
           </span>
         </template>
       </bk-table-column>
       <bk-table-column :show-overflow-tooltip="true" :label="$t(`m.slaContent['状态说明']`)" width="200">
-        <template slot-scope="props">
+        <template #default="props">
           {{ props.row.desc || "--" }}
         </template>
       </bk-table-column>
       <bk-table-column :render-header="$renderHeader" :label="$t(`m.slaContent['起始状态']`)" :show-overflow-tooltip="true">
-        <template slot-scope="props">
+        <template #default="props">
           <template v-if="props.row.flow_status === 'RUNNING' && !props.row.is_over">
             <bk-radio v-model="props.row.is_start" @change="selectOrigin(props.row)"> </bk-radio>
           </template>
@@ -66,7 +66,7 @@
         </template>
       </bk-table-column>
       <bk-table-column :render-header="$renderHeader" :label="$t(`m.slaContent['结束状态']`)">
-        <template slot-scope="props">
+        <template #default="props">
           <template v-if="props.row.flow_status === 'RUNNING' && !props.row.is_start">
             <bk-checkbox
               class="bk-outline-none"
@@ -92,7 +92,7 @@
         </template>
       </bk-table-column>
       <bk-table-column :render-header="$renderHeader" :label="$t(`m.slaContent['状态颜色']`)">
-        <template slot-scope="props">
+        <template #default="props">
           <span
             class="status-color"
             :title="props.row.color_hex"
@@ -102,7 +102,7 @@
         </template>
       </bk-table-column>
       <bk-table-column :label="$t(`m.treeinfo['操作']`)" width="150">
-        <template slot-scope="props">
+        <template #default="props">
           <bk-button theme="primary" text @click="statusDialog('edit', props.row, props.$index)">
             {{ $t('m.slaContent["编辑"]') }}
           </bk-button>
@@ -118,7 +118,7 @@
           </template>
         </template>
       </bk-table-column>
-      <div class="empty" slot="empty">
+      <template #empty><div class="empty">
         <empty :is-error="listError" @onRefresh="getTypeStatusList()"> </empty>
       </div>
     </bk-table>
@@ -157,7 +157,7 @@
           :required="true">
           <div v-bk-clickoutside="closePickers" @click="showPickers">
             <bk-input :placeholder="$t(`m.slaContent['请选择颜色']`)" v-model="addTemp.color_hex">
-              <template slot="prepend">
+              <template #prepend>
                 <div class="color-pick-color" :style="{ backgroundColor: addTemp.color_hex || '#3A84FF' }"></div>
               </template>
             </bk-input>
@@ -190,13 +190,13 @@
 
 <script>
 import { errorHandler } from "../../../utils/errorHandler.js";
-import commonMix from "../../commonMix/common.js";
+import { useCommonMix } from "@/composables/useCommonMix";
 import cookie from "cookie";
 import Empty from "../../../components/common/Empty.vue";
 
 export default {
   name: "firstStep",
-  mixins: [commonMix],
+  setup() { return { ...useCommonMix() }; },
   components: {
     Empty,
   },

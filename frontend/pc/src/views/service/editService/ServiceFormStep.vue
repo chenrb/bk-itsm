@@ -109,7 +109,7 @@
               :service-info="serviceInfo"
               :node-id="createTicketNodeId"
               :forms="ticketNodeForm"
-              :crt-form.sync="crtForm"
+              v-model:crt-form="crtForm"
               @dragUpdateList="dragUpdateList"
               @onAddFormClick="onAddFormClick"
               @addField="addField"
@@ -205,7 +205,7 @@
     </bk-dialog>
     <!-- 选择服务模板 -->
     <choose-service-template-dialog
-      :is-show.sync="isShowChooseSerTempDialog"
+      v-model:is-show="isShowChooseSerTempDialog"
       :create-info="currCreateFormWay"
       :service-id="serviceId"
       @updateServiceSource="updateServiceSource">
@@ -216,7 +216,7 @@
 <script>
   import { mapState } from 'vuex';
   import { errorHandler } from '../../../utils/errorHandler.js';
-  import commonMix from '../../commonMix/common.js';
+  import { useCommonMix } from '@/composables/useCommonMix';
   import { deepClone } from '../../../utils/util.js';
   import SelectTree from '../../../components/form/selectTree/index.vue';
   import ServiceForm from './ServiceForm.vue';
@@ -258,7 +258,7 @@
       ChooseServiceTemplateDialog,
       FormEditItem,
     },
-    mixins: [commonMix],
+    setup() { return { ...useCommonMix() }; },
     props: {
       type: {
         type: String,
@@ -823,11 +823,11 @@
 @import '~@/scss/mixins/scroller.scss';
 @import '~@/scss/mixins/ellipsis.scss';
 .field-tab {
-    /deep/ .bk-tab-label-wrapper {
+    ::v-deep  .bk-tab-label-wrapper {
         display: flex;
         justify-content: center;
     }
-    /deep/ .bk-tab-section {
+    ::v-deep  .bk-tab-section {
         position: relative;
         padding: 0;
         height: calc(100vh - 268px);

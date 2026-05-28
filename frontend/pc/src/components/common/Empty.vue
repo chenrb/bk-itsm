@@ -36,6 +36,10 @@
 </template>
 
 <script>
+  import emptyImg from '../../images/empty.png';
+  import errorImg from '../../images/error.png';
+  import searchEmptyImg from '../../images/search-empty.png';
+
   export default {
     name: 'Empty',
     props: {
@@ -57,9 +61,9 @@
       return {
         titleMap,
         pictures: {
-          empty: require('../../images/empty.png'),
-          500: require('../../images/error.png'),
-          'search-empty': require('../../images/search-empty.png'),
+          empty: emptyImg,
+          500: errorImg,
+          'search-empty': searchEmptyImg,
         },
       };
     },

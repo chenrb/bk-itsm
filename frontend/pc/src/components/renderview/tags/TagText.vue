@@ -43,7 +43,7 @@
 </template>
 
 <script>
-  import { getFormMixins } from '../formMixins';
+  import { useFormMixins, COMMON_ATTRS } from '@/composables/useFormMixins';
   import Sideslider from '../sideslider/sideslider.js';
 
   const textAttrs = {
@@ -58,7 +58,14 @@
   };
   export default {
     name: 'TagText',
-    mixins: [getFormMixins(textAttrs)],
+    setup() {
+      return { ...useFormMixins() };
+    },
+    props: {
+      ...COMMON_ATTRS,
+      styles: textAttrs.styles,
+    },
+    inject: ['getContext'],
     data() {
       return {};
     },

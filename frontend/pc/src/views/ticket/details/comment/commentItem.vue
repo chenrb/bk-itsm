@@ -286,7 +286,7 @@
     opacity: 1;
     color: #c4c6cc;
 }
-/deep/ .bk-dialog-body {
+::v-deep  .bk-dialog-body {
         text-align: center;
     }
     .icon-info-fail {

@@ -54,7 +54,7 @@
         :data="tableList"
         :size="'small'">
         <bk-table-column :label="$t(`m.task['顺序']`)" :min-width="minWidth">
-          <template slot-scope="props">
+          <template #default="props">
             <template v-if="props.row.orderStatus">
               <span class="bk-task-order" @click="changeOrderStatus(props.row)">{{props.row.order}}</span>
             </template>
@@ -75,24 +75,24 @@
           </template>
         </bk-table-column>
         <bk-table-column :label="$t(`m.task['任务名称']`)">
-          <template slot-scope="props">
+          <template #default="props">
             <span :title="props.row.name">{{props.row.name || '--'}}</span>
           </template>
         </bk-table-column>
         <bk-table-column :label="$t(`m.task['处理人']`)">
-          <template slot-scope="props">
+          <template #default="props">
             <span :title="props.row.processor_users">{{props.row.processor_users || '--'}}</span>
           </template>
         </bk-table-column>
         <bk-table-column :label="$t(`m.task['任务类型']`)">
-          <template slot-scope="props">
+          <template #default="props">
             <span>
               {{props.row.component_type === 'NORMAL' ? $t(`m.task['普通任务']`) : $t(`m.task['标准运维任务']`)}}
             </span>
           </template>
         </bk-table-column>
         <bk-table-column :label="$t(`m.task['操作']`)" min-width="120">
-          <template slot-scope="props">
+          <template #default="props">
             <bk-button theme="primary"
               text
               @click="editorLibrary(props.row)">
@@ -132,10 +132,10 @@
     </div>
     <!-- 编辑列表数据弹窗 -->
     <bk-sideslider
-      :is-show.sync="tableContent.show"
+      v-model:is-show="tableContent.show"
       :title="tableContent.title"
       :width="tableContent.width">
-      <div class="bk-task-library" slot="content" v-if="tableContent.show">
+      <template #content><div class="bk-task-library" v-if="tableContent.show">
         <bk-form :ext-cls="'mb10'"
           :label-width="200"
           form-type="vertical">
@@ -178,8 +178,8 @@
 <script>
   import fieldInfo from '../../managePage/billCom/fieldInfo.vue';
   import DealPerson from '../../processManagement/processDesign/nodeConfigue/components/dealPerson';
-  import commonMix from '../../commonMix/common.js';
-  import apiFieldsWatch from '../../commonMix/api_fields_watch.js';
+  import { useCommonMix } from '@/composables/useCommonMix';
+  import { useApiFieldsWatch } from '@/composables/useApiFieldsWatch';
   import { errorHandler } from '@/utils/errorHandler';
 
   export default {
@@ -188,7 +188,7 @@
       fieldInfo,
       DealPerson,
     },
-    mixins: [apiFieldsWatch, commonMix],
+    setup() { return { ...useApiFieldsWatch(), ...useCommonMix() }; },
     props: {
       basicInfomation: {
         type: Object,
@@ -277,8 +277,8 @@
         this.$store.dispatch('taskFlow/getLibraryInfo', { params, id }).then((res) => {
           this.tableList = res.data;
           this.tableList.forEach((item) => {
-            this.$set(item, 'orderStatus', true);
-            this.$set(item, 'orderInfo', item.order);
+            item['orderStatus'] = true;
+            item['orderInfo'] = item.order;
           });
         })
           .catch((res) => {
@@ -331,8 +331,8 @@
           if (item.type === 'CASCADE') {
             item.type = 'SELECT';
           }
-          this.$set(item, 'showFeild', true);
-          this.$set(item, 'val', item.value || '');
+          item['showFeild'] = true;
+          item['val'] = item.value || '';
         });
         this.isNecessaryToWatch({ fields: this.tableContent.content.fields }, 'submit');
         // 处理人数据
@@ -462,7 +462,7 @@
         }
     }
     .deal-person {
-        /deep/ .bk-form-width {
+        ::v-deep  .bk-form-width {
             width: 300px;
         }
     }

@@ -22,12 +22,12 @@
 
 <template>
   <bk-sideslider
-    :is-show.sync="isShow"
+    v-model:is-show="isShow"
     :quick-close="true"
     :title="title"
     :width="width"
     ext-cls="ui-sideslider">
-    <div slot="content">
+    <template #content><div>
       <render-view
         :form-data="formData"
         :context="context">

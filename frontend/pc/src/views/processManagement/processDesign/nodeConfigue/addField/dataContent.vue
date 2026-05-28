@@ -126,19 +126,21 @@
   import postParam from './postParam.vue';
   import responseData from './responseData.vue';
   import getRpcParam from './getRpcParam.vue';
-  import mixins from '../../../../commonMix/mixins_api.js';
+  import { useMixinsApi } from '@/composables/useMixinsApi';
   import { errorHandler } from '../../../../../utils/errorHandler';
   import { deepClone } from '../../../../../utils/util';
 
   export default {
     name: 'dataContent',
+    setup() {
+      return { ...useMixinsApi() };
+    },
     components: {
       getParam,
       postParam,
       responseData,
       getRpcParam,
     },
-    mixins: [mixins],
     props: {
       formInfo: {
         type: Object,

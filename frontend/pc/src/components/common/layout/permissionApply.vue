@@ -39,7 +39,7 @@
 </template>
 <script>
   import PermissionContent from './PermissionContent.vue';
-  import permission from '@/mixins/permission.js';
+  import { usePermission } from '@/composables/usePermission';
   import _ from 'lodash';
   import { errorHandler } from '@/utils/errorHandler.js';
 
@@ -48,7 +48,7 @@
     components: {
       PermissionContent,
     },
-    mixins: [permission],
+    setup() { return { ...usePermission() }; },
     props: {
       permissionData: {
         type: Object,

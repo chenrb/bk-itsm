@@ -130,8 +130,8 @@
         const typeList = ['SELECT', 'RADIO', 'MULTISELECT', 'CHECKBOX'];
         if (typeList.some(item => item === checkItem.type)) {
           // 数据字典
-          this.$set(this.item, 'loading', true);
-          this.$set(this.item, 'options', []);
+          this.item['loading'] = true;
+          this.item['options'] = [];
           if (checkItem.source_type === 'DATADICT') {
             this.$store.dispatch('datadict/get_data_by_key', {
               key: checkItem.source_uri,

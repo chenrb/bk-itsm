@@ -39,25 +39,28 @@
           :data-rowindex="rowIndex"
           :value="group"
           :key="index"
+          item-key="id"
           :group="{
             name: 'view-form',
             put: halfRowFormPut
           }"
           @add="$emit('onHalfRowDragToHalfRow', $event)">
-          <div class="half-form-item" v-for="item in group" :key="item.id" :data-id="item.id">
-            <form-view-item
-              :fields="fields"
-              :form="item"
-              :add-field-status="addFieldStatus"
-              :crt-form="crtForm"
-              @onFormEditClick="$emit('onFormEditClick', $event)"
-              @onFormCloneClick="$emit('onFormCloneClick', $event)"
-              @onFormDeleteClick="$emit('onFormDeleteClick', $event)">
-              <div class="view-form" slot="draggable">
-                <i class="bk-itsm-icon icon-move-new"></i>
-              </div>
-            </form-view-item>
-          </div>
+          <template #item="{ element: item }">
+            <div class="half-form-item" :data-id="item.id">
+              <form-view-item
+                :fields="fields"
+                :form="item"
+                :add-field-status="addFieldStatus"
+                :crt-form="crtForm"
+                @onFormEditClick="$emit('onFormEditClick', $event)"
+                @onFormCloneClick="$emit('onFormCloneClick', $event)"
+                @onFormDeleteClick="$emit('onFormDeleteClick', $event)">
+                <template #draggable><div class="view-form">
+                  <i class="bk-itsm-icon icon-move-new"></i>
+                </div>
+              </form-view-item>
+            </div>
+          </template>
         </draggable>
       </template>
     </div>
@@ -145,7 +148,7 @@
             .form-drag-wrap {
                 width: 50%;
                 &:first-child {
-                    /deep/ .form-view-item {
+                    ::v-deep  .form-view-item {
                         justify-content: flex-end;
                         .form-view-content {
                             // padding-right: 34px;
@@ -153,13 +156,13 @@
                     }
                 }
                 &:nth-child(2n) {
-                    /deep/ .form-view-content {
+                    ::v-deep  .form-view-content {
                         // padding-left: 20px;
                     }
                 }
             }
             .half-form-item {
-                /deep/ .form-view-item {
+                ::v-deep  .form-view-item {
                     display: flex;
                     border: none;
                     .form-view-content {

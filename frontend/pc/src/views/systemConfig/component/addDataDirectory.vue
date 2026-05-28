@@ -90,7 +90,7 @@
       <bk-table-column :label="$t(`m.systemConfig['编码']`)" prop="key"></bk-table-column>
       <bk-table-column :label="$t(`m.systemConfig['排序']`)" prop="order"></bk-table-column>
       <bk-table-column :label="$t(`m.systemConfig['操作']`)" width="120">
-        <template slot-scope="props">
+        <template #default="props">
           <bk-button theme="primary" text @click="openDataDialog(props.row)">
             {{ $t('m.systemConfig["编辑"]') }}
           </bk-button>
@@ -122,10 +122,12 @@
       :auto-close="dictDataTable.autoClose"
       :mask-close="dictDataTable.autoClose"
       @confirm="submitDictionary">
-      <p slot="header">
+      <template #header>
+        <p>
         {{ dictDataTable.formInfo.id
           ? $t('m.systemConfig["编辑字典数据"]') : $t('m.systemConfig["新增字典数据"]') }}
       </p>
+      </template>
       <div class="bk-add-project bk-add-module">
         <bk-form
           :label-width="200"

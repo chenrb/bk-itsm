@@ -535,7 +535,7 @@
           this.finishCondition.expressions[0].expressions.push(JSON.parse(JSON.stringify(this.passRateExpression)));
           this.giveTooltip(this.passRateExpression);
         }
-        this.$set(this.formInfo, 'can_deliver', this.configur.can_deliver === true);
+        this.formInfo['can_deliver'] = this.configur.can_deliver === true;
         if (this.formInfo.ticket_type === 'custom') {
           getSecondLevelList = this.getSecondLevelList();
         }
@@ -845,7 +845,7 @@
 <style lang='scss' scoped>
     @import '../../../../scss/mixins/scroller.scss';
     .automatic-processing-form {
-        /deep/ .bk-form-content {
+        ::v-deep  .bk-form-content {
             .bk-form-checkbox {
                 display: block;
                 margin-top: 12px;
@@ -865,10 +865,10 @@
         background-color: #FAFBFD;
         overflow: auto;
         @include scroller;
-        /deep/ .common-section-card-label {
+        ::v-deep  .common-section-card-label {
             display: none;
         }
-        /deep/ .common-section-card-body {
+        ::v-deep  .common-section-card-body {
             padding: 20px;
         }
 
@@ -890,7 +890,7 @@
             }
         }
 
-        /deep/ .bk-form-width {
+        ::v-deep  .bk-form-width {
             width: 448px;
         }
         .inline-form-width {
@@ -953,12 +953,12 @@
 
                             .bk-form-item-cus{
                                 margin-top: 8px;
-                                /deep/ .bk-form-content{
+                                ::v-deep  .bk-form-content{
                                     display: inline-flex;
                                     align-items: center;
                                 }
 
-                                /deep/ .bk-select-dropdown{
+                                ::v-deep  .bk-select-dropdown{
                                     width: 100%;
                                 }
 

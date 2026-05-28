@@ -54,17 +54,17 @@
           @selection-change="handleSelectedTaskChange">
           <bk-table-column type="selection" width="60"></bk-table-column>
           <bk-table-column :label="$t(`m.task['任务名称']`)" prop="name">
-            <template slot-scope="props">
+            <template #default="props">
               <span class="task-name" @click="onTaskNameClick(props.row)">{{ props.row.name }}</span>
             </template>
           </bk-table-column>
           <bk-table-column :label="$t(`m.task['处理人']`)" prop="processors">
-            <template slot-scope="props">
+            <template #default="props">
               <span>{{ props.row.processors.replace(/^(,|，)+|(,|，)+$/g, '') }}</span>
             </template>
           </bk-table-column>
           <bk-table-column :label="$t(`m.task['任务类型']`)">
-            <template slot-scope="props">
+            <template #default="props">
               {{ getTaskZhName(props.row.component_type) }}
             </template>
           </bk-table-column>
@@ -80,11 +80,11 @@
       </bk-button>
     </div>
     <bk-sideslider
-      :is-show.sync="viewTaskInfo.show"
+      v-model:is-show="viewTaskInfo.show"
       :width="800"
       :quick-close="true"
       :title="$t(`m.task['查看任务']`)">
-      <div slot="content" class="view-task-sideslider">
+      <template #content><div class="view-task-sideslider">
         <bk-form :ext-cls="'mb10'"
           :label-width="200"
           form-type="vertical">
@@ -114,7 +114,7 @@
 <script>
   import { errorHandler } from '../../../../../utils/errorHandler';
   import { TASK_TEMPLATE_TYPES } from '@/constants/task.js';
-  import apiFieldsWatch from '@/views/commonMix/api_fields_watch.js';
+  import { useApiFieldsWatch } from '@/composables/useApiFieldsWatch';
   import fieldInfo from '@/views/managePage/billCom/fieldInfo.vue';
   import DealPerson from '@/views/processManagement/processDesign/nodeConfigue/components/dealPerson';
 
@@ -124,7 +124,7 @@
       fieldInfo,
       DealPerson,
     },
-    mixins: [apiFieldsWatch],
+    setup() { return { ...useApiFieldsWatch() }; },
     props: {
       ticketInfo: {
         type: Object,
@@ -282,8 +282,8 @@
         };
         const fields = row.fields.filter(item => item.type !== 'COMPLEX-MEMBERS');
         fields.forEach(item => {
-          this.$set(item, 'showFeild', true);
-          this.$set(item, 'val', item.value || '');
+          item['showFeild'] = true;
+          item['val'] = item.value || '';
         });
         this.isNecessaryToWatch({ fields }, 'submit');
         this.viewTaskInfo.item.fields = fields;

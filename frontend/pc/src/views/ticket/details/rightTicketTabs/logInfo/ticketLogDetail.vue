@@ -33,10 +33,10 @@
       "
     >
       <template v-if="logInfo">
-        <div slot="header" class="slide-title">
+        <template #header><div class="slide-title">
           {{ logInfo.from_state_name || logInfo.message }}
         </div>
-        <div class="p20" slot="content">
+        <template #content><div class="p20">
           <div class="bk-timeline-user-content">
             <div class="bk-area-show-back">
               <!-- 基础信息 -->

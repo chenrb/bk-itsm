@@ -38,8 +38,8 @@
         :align="col.align || 'left'"
         :prop="col.key"
         :width="('width' in col) ? col.width : 'auto'">
-        <div
-          slot-scope="props"
+        <template #default="props">
+          <div
           :class="{ 'padding-right-adjust': col.align === 'right' && col.sort }">
           <div v-if="col.key === 'order'" class="order" :class="getOrderCls(props.$index)">
             <span class="order-num">{{ getRowOrder(props.$index) }}</span>
@@ -62,9 +62,10 @@
             <span v-if="col.link" class="link" @click="handlerCellClick(col, props.row)">{{ props.row[col.key] }}</span>
             <span v-else>{{ props.row[col.key] }}</span>
           </template>
-        </div>
+          </div>
+        </template>
       </bk-table-column>
-      <div class="empty" slot="empty">
+      <template #empty><div class="empty">
         <empty
           :is-error="listError"
           :is-search="searchToggle"

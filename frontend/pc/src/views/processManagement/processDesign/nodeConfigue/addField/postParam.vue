@@ -26,7 +26,7 @@
       :data="tableList"
       :size="'small'">
       <bk-table-column :label="$t(`m.treeinfo['名称']`)" min-width="200">
-        <template slot-scope="props">
+        <template #default="props">
           <div class="bk-more">
             <span :style="{ paddingLeft: 20 * props.row.level + 'px' }">
               <span
@@ -42,17 +42,17 @@
       </bk-table-column>
       <bk-table-column :label="$t(`m.treeinfo['类型']`)" prop="type"></bk-table-column>
       <bk-table-column :label="$t(`m.treeinfo['是否必须']`)">
-        <template slot-scope="props">
+        <template #default="props">
           {{ props.row.is_necessary ? $t(`m.treeinfo["是"]`) : $t(`m.treeinfo["否"]`) }}
         </template>
       </bk-table-column>
       <bk-table-column :label="$t(`m.treeinfo['备注']`)" width="100">
-        <template slot-scope="props">
+        <template #default="props">
           <span :title="props.row.desc">{{props.row.desc || '--'}}</span>
         </template>
       </bk-table-column>
       <bk-table-column :label="$t(`m.treeinfo['参数值']`)" width="300">
-        <template slot-scope="props">
+        <template #default="props">
           <template v-if="isStatic && (props.row.type !== 'object') && (props.row.type !== 'array')">
             {{props.row.customValue || '--'}}
           </template>
@@ -105,7 +105,7 @@
                     :name="option.name">
                   </bk-option>
                   <template v-if="entry !== 'addField'">
-                    <div slot="extension" @click="addNewItem(props.row)" style="cursor: pointer;">
+                    <template #extension><div @click="addNewItem(props.row)" style="cursor: pointer;">
                       <i class="bk-icon icon-plus-circle"></i>{{ $t('m.treeinfo["添加变量"]') }}
                     </div>
                   </template>
@@ -126,11 +126,13 @@
 </template>
 
 <script>
-  import mixins from '../../../../commonMix/mixins_api.js';
+  import { useMixinsApi } from '@/composables/useMixinsApi';
 
   export default {
     name: 'postParam',
-    mixins: [mixins],
+    setup() {
+      return { ...useMixinsApi() };
+    },
     props: {
       // body参数配置信息
       changeInfo: {

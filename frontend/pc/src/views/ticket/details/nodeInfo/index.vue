@@ -243,7 +243,7 @@
             const setTimeoutFunc = setTimeout(() => {
               this.getTicketNodeInfo(this.openNodeInfo);
             }, 10000);
-            this.$once('hook:beforeDestroy', () => {
+            this.$once('hook:beforeUnmount', () => {
               clearInterval(setTimeoutFunc);
             });
           }

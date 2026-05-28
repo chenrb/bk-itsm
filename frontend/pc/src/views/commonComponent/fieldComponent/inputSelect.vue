@@ -40,7 +40,7 @@
           <span>{{option.name}}</span>
           <i class="bk-icon icon-close" v-if="option.can_delete" @click.stop="handleDeleteOption(option.key)"></i>
         </bk-option>
-        <div slot="extension">
+        <template #extension><div>
           <div class="plus-content" @click="addStatus = !addStatus">
             <i class="bk-icon icon-plus-circle"></i>新增
           </div>
@@ -70,12 +70,12 @@
 </template>
 
 <script>
-  import mixins from '../../commonMix/field.js';
+  import { useField } from '@/composables/useField';
   import pinyin from 'pinyin';
 
   export default {
     name: 'INPUTSELECT',
-    mixins: [mixins],
+    setup() { return { ...useField() }; },
     props: {
       item: {
         type: Object,
@@ -192,7 +192,7 @@
         display: flex;
         align-items: center;
         flex-wrap: nowrap;
-        /deep/ .bk-form-item{
+        ::v-deep  .bk-form-item{
             display: inline-flex;
             align-items: center;
             width: 30%;

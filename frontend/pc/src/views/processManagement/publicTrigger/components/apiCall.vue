@@ -148,7 +148,7 @@
         const apiContent = this.apiList.filter(item => item.id === arguments[0])[0];
         this.item.wayInfo.field_schema.forEach(item => {
           item.apiContent = apiContent;
-          this.$set(item.apiContent, 'bodyTableData', []);
+          item.apiContent['bodyTableData'] = [];
         });
         this.apiId = value;
         setTimeout(() => {
@@ -169,7 +169,7 @@
               schema.systemId = backValue.remote_system;
             } else {
               schema.apiContent = backValue;
-              this.$set(schema.apiContent, 'bodyTableData', []);
+              schema.apiContent['bodyTableData'] = [];
             }
           });
           this.getApiTableList(backValue.remote_system);

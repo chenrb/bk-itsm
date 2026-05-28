@@ -31,7 +31,7 @@
             :max-height="450">
             <template v-for="title in item.choice">
               <bk-table-column :label="title.name" :key="title.key">
-                <template slot-scope="props">
+                <template #default="props">
                   <span :title="props.row[title.key]">{{ props.row[title.key] }}</span>
                 </template>
               </bk-table-column>
@@ -46,7 +46,7 @@
             :size="'small'">
             <template v-for="column in item.meta.columns">
               <bk-table-column :label="column.name" :key="column.key">
-                <template slot-scope="props">
+                <template #default="props">
                   <span :title="props.row[column.key]">{{ getCustomTableDisplayValue(column, props.row) || '--' }}</span>
                 </template>
               </bk-table-column>
@@ -170,7 +170,7 @@
             item.value = typeof item.value === 'string' ? JSON.parse(item.value) : item.value;
           }
           if (item.type === 'FILE') {
-            this.$set(item, 'fileShow', []);
+            item['fileShow'] = [];
             const temp = JSON.parse(item.value);
             for (const key in temp) {
               item.fileShow.push({ ...temp[key], key });

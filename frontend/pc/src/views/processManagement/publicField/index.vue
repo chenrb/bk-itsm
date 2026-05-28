@@ -34,7 +34,7 @@
         :sub-title="emptyTip.subTitle"
         :desc="emptyTip.desc"
         :links="emptyTip.links">
-        <template slot="btns">
+        <template #btns>
           <bk-button :theme="'primary'"
             data-test-id="field_button_createField"
             v-cursor="{ active: !hasPermission(createFieldPerm, curPermission) }"
@@ -93,7 +93,7 @@
           @page-change="handlePageChange"
           @page-limit-change="handlePageLimitChange">
           <bk-table-column :render-header="$renderHeader" :show-overflow-tooltip="true" :label="$t(`m.treeinfo['字段名称']`)" min-width="150">
-            <template slot-scope="props">
+            <template #default="props">
               <bk-button
                 v-if="!hasPermission(
                   editFieldPerm,
@@ -115,29 +115,29 @@
             </template>
           </bk-table-column>
           <bk-table-column :label="$t(`m.treeinfo['唯一标识']`)" min-width="150">
-            <template slot-scope="props">
+            <template #default="props">
               <span :title="props.row.key">{{ props.row.key || '--' }}</span>
             </template>
           </bk-table-column>
           <bk-table-column :render-header="$renderHeader" :show-overflow-tooltip="true" :label="$t(`m.treeinfo['字段类型']`)" min-width="150">
-            <template slot-scope="props">
+            <template #default="props">
               <span :title="typeTransition(props.row.type)">
                 {{ typeTransition(props.row.type) || '--' }}
               </span>
             </template>
           </bk-table-column>
           <bk-table-column :render-header="$renderHeader" :show-overflow-tooltip="true" :label="$t(`m.treeinfo['字段值']`)" width="220">
-            <template slot-scope="props">
+            <template #default="props">
               <span :title="valueTransition(props.row)">{{ valueTransition(props.row) || '--' }}</span>
             </template>
           </bk-table-column>
           <bk-table-column :render-header="$renderHeader" :show-overflow-tooltip="true" :label="$t(`m.treeinfo['字段描述']`)" width="150">
-            <template slot-scope="props">
+            <template #default="props">
               <span :title="props.row.desc">{{ props.row.desc || '--' }}</span>
             </template>
           </bk-table-column>
           <bk-table-column :render-header="$renderHeader" :show-overflow-tooltip="true" :label="$t(`m.treeinfo['最近更新人']`)" width="150">
-            <template slot-scope="props">
+            <template #default="props">
               <span :title="props.row.updated_by">{{ props.row.updated_by || '--' }}</span>
             </template>
           </bk-table-column>
@@ -147,12 +147,12 @@
             :show-overflow-tooltip="true"
             :sort-orders="['descending', 'ascending', null]"
             :label="$t(`m.treeinfo['最近更新时间']`)" width="150">
-            <template slot-scope="props">
+            <template #default="props">
               <span :title="props.row.update_at">{{ props.row.update_at || '--' }}</span>
             </template>
           </bk-table-column>
           <bk-table-column :label="$t(`m.treeinfo['操作']`)" width="150" fixed="right">
-            <template slot-scope="props">
+            <template #default="props">
               <!-- 编辑 -->
               <bk-button
                 v-if="!hasPermission(
@@ -199,7 +199,7 @@
               </bk-button>
             </template>
           </bk-table-column>
-          <div class="empty" slot="empty">
+          <template #empty><div class="empty">
             <empty
               :is-error="listError"
               :is-search="!searchToggle"
@@ -213,12 +213,12 @@
     <!-- 新增字段 -->
     <div class="bk-add-slider">
       <bk-sideslider
-        :is-show.sync="sliderInfo.show"
+        v-model:is-show="sliderInfo.show"
         :title="sliderInfo.title"
         :quick-close="true"
         :before-close="closeSideslider"
         :width="sliderInfo.width">
-        <div class="p20" slot="content" v-if="sliderInfo.show">
+        <template #content><div class="p20" v-if="sliderInfo.show">
           <add-field
             ref="addField"
             :change-info="changeInfo"
@@ -236,8 +236,8 @@
 </template>
 <script>
   import i18n from '@/i18n/index.js';
-  import commonMix from '../../commonMix/common.js';
-  import permission from '@/mixins/permission.js';
+  import { usePermission } from '@/composables/usePermission';
+  import { useCommonMix } from '@/composables/useCommonMix';
   import searchInfo from '../../commonComponent/searchInfo/searchInfo.vue';
   import addField from '../processDesign/nodeConfigue/addField';
   import EmptyTip from '../../project/components/emptyTip.vue';
@@ -245,6 +245,8 @@
   // import { deepClone } from '../../../utils/util';
   import Empty from '../../../components/common/Empty.vue';
   import _ from 'lodash';
+  import fieldSvg from '../../../images/illustration/field.svg';
+  import useFieldSvg from '../../../images/illustration/use-field.svg';
 
   export default {
     name: 'publicField',
@@ -254,7 +256,7 @@
       EmptyTip,
       Empty,
     },
-    mixins: [commonMix, permission],
+    setup() { return { ...usePermission(), ...useCommonMix() }; },
     props: {
       projectId: String,
       title: {
@@ -342,12 +344,12 @@
           subTitle: this.$t('m[\'「字段」是服务表单设计的必要元素之一，将一些常用的字段沉淀下来提供给不同的服务引用，对后续的统一管理维护可以起到很大的帮助！\']'),
           desc: [
             {
-              src: require('../../../images/illustration/field.svg'),
+              src: fieldSvg,
               title: this.$t('m[\'设计字段的数据结构\']'),
               content: this.$t('m[\'在创建字段时，需要根据字段含义配置字段名、填写方式（如文本框、选择器）、是否必填、校验规则、用户提示等等，尽可能的贴合服务场景进行友好的用户体验设计。\']'),
             },
             {
-              src: require('../../../images/illustration/use-field.svg'),
+              src: useFieldSvg,
               title: this.$t('m[\'在服务表单中使用它\']'),
               content: this.$t('m[\'在设计服务的填写表单时，可以从已经沉淀的字段元素列表中挑选符合场景的字段，从而达到相同含义的字段可以跨服务间进行统一的配置，提高管理效率。\']'),
             },
@@ -680,7 +682,7 @@
 </script>
 
 <style lang='scss' scoped>
-    .filter-btn /deep/ .icon-search-more {
+    .filter-btn ::v-deep  .icon-search-more {
         font-size: 14px;
     }
 </style>

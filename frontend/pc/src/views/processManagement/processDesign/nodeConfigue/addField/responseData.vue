@@ -146,16 +146,18 @@
 </template>
 
 <script>
-  import mixins from '../../../../commonMix/mixins_api.js';
+  import { useMixinsApi } from '@/composables/useMixinsApi';
   import exportTree from './exportApiTree.vue';
   import _ from 'lodash';
 
   export default {
     name: 'responseData',
+    setup() {
+      return { ...useMixinsApi() };
+    },
     components: {
       exportTree,
     },
-    mixins: [mixins],
     props: {
       changeInfo: {
         type: Object,
@@ -551,26 +553,26 @@
       showTree(index) {
         if (!index) {
           const levelList = this.organization.assignorPerson.map(item => item.level);
-          this.$set(this.maxLevelTree, 0, Math.max(...levelList) - 1);
+          this.maxLevelTree[0] = Math.max(...levelList) - 1;
         } else {
           const levelList = this.selectInfo.selectkeylist.map(item => item.level);
-          this.$set(this.maxLevelTree, 1, Math.max(...levelList) - 1);
-          this.$set(this.maxLevelTree, 2, Math.max(...levelList) - 1);
+          this.maxLevelTree[1] = Math.max(...levelList) - 1;
+          this.maxLevelTree[2] = Math.max(...levelList) - 1;
         }
         const temp = this.organizaInfo.assignorShow[index];
         for (let i = 0; i < 3; i++) {
-          this.$set(this.organizaInfo.assignorShow, i, false);
+          this.organizaInfo.assignorShow[i] = false;
         }
-        this.$set(this.organizaInfo.assignorShow, index, !temp);
+        this.organizaInfo.assignorShow[index] = !temp;
       },
       closeOther0() {
-        this.$set(this.organizaInfo.assignorShow, 0, false);
+        this.organizaInfo.assignorShow[0] = false;
       },
       closeOther1() {
-        this.$set(this.organizaInfo.assignorShow, 1, false);
+        this.organizaInfo.assignorShow[1] = false;
       },
       closeOther2() {
-        this.$set(this.organizaInfo.assignorShow, 2, false);
+        this.organizaInfo.assignorShow[2] = false;
       },
       recordCheckFn(tree) {
         tree.checkInfo = false;
@@ -621,7 +623,7 @@
         this.closeTree(index);
       },
       closeTree(index) {
-        this.$set(this.organizaInfo.assignorShow, index, false);
+        this.organizaInfo.assignorShow[index] = false;
       },
       toggleChildren() {
         arguments[0].showChildren = !arguments[0].showChildren;

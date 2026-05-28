@@ -34,7 +34,7 @@
         :sub-title="emptyTip.subTitle"
         :desc="emptyTip.desc"
         :links="emptyTip.links">
-        <template slot="btns">
+        <template #btns>
           <bk-button theme="primary"
             data-test-id="userGroup_button_create_permission"
             v-cursor="{ active: !hasPermission(['user_group_create'], $store.state.project.projectAuthActions) }"
@@ -85,33 +85,33 @@
           :size="'small'">
           <!--<bk-table-column type="index" label="NO." align="center" width="60"></bk-table-column>-->
           <bk-table-column :label="$t(`m.common['ID']`)" min-width="60">
-            <template slot-scope="props">
+            <template #default="props">
               <span :title="props.row.id">{{ props.row.id || '--' }}</span>
             </template>
           </bk-table-column>
 
           <bk-table-column :render-header="$renderHeader" :show-overflow-tooltip="true" :label="$t(`m['角色组名']`)" width="200">
-            <template slot-scope="props">
+            <template #default="props">
               <span :title="props.row.name">{{ props.row.name || '--' }}</span>
             </template>
           </bk-table-column>
           <bk-table-column :render-header="$renderHeader" :show-overflow-tooltip="true" :label="$t(`m.user['人员']`)">
-            <template slot-scope="props">
+            <template #default="props">
               <span :title="props.row.members">{{props.row.members}}</span>
             </template>
           </bk-table-column>
           <bk-table-column :render-header="$renderHeader" :show-overflow-tooltip="true" :label="$t(`m.common['创建人']`)">
-            <template slot-scope="props">
+            <template #default="props">
               <span :title="props.row.creator">{{props.row.creator || '--'}}</span>
             </template>
           </bk-table-column>
           <bk-table-column :render-header="$renderHeader" :show-overflow-tooltip="true" :label="$t(`m.common['负责人']`)">
-            <template slot-scope="props">
+            <template #default="props">
               <span :title="props.row.owners">{{props.row.owners || '--'}}</span>
             </template>
           </bk-table-column>
           <bk-table-column :label="$t(`m.user['操作']`)" width="150" fixed="right">
-            <template slot-scope="props">
+            <template #default="props">
               <bk-button
                 data-test-id="userGroup_button_edit"
                 v-cursor="{ active: !hasPermission(['user_group_edit'], [...props.row.auth_actions, ...$store.state.project.projectAuthActions]) }"
@@ -137,7 +137,7 @@
               </bk-button>
             </template>
           </bk-table-column>
-          <div class="empty" slot="empty">
+          <template #empty><div class="empty">
             <empty
               :is-error="listError"
               :is-search="!searchToggle"
@@ -159,7 +159,7 @@
       :auto-close="openDialog.autoClose"
       :mask-close="openDialog.autoClose"
       @confirm="submitUser">
-      <p slot="header">{{ itemContent.id ? $t('m["修改自定义角色组"]') : $t('m["新增自定义角色组"]') }}</p>
+      <template #header><p>{{ itemContent.id ? $t('m["修改自定义角色组"]') : $t('m["新增自定义角色组"]') }}</p></template>
       <div class="bk-add-project bk-add-module">
         <bk-form
           :label-width="200"
@@ -190,10 +190,12 @@
 </template>
 <script>
   import memberSelect from '../commonComponent/memberSelect';
-  import permission from '@/mixins/permission.js';
+  import { usePermission } from '@/composables/usePermission';
   import { errorHandler } from '../../utils/errorHandler';
   import EmptyTip from '../project/components/emptyTip.vue';
   import Empty from '../../components/common/Empty.vue';
+  import settingGroupSvg from '../../images/illustration/setting-group.svg';
+  import useGroupSvg from '../../images/illustration/use-group.svg';
 
   export default {
     components: {
@@ -201,7 +203,7 @@
       EmptyTip,
       Empty,
     },
-    mixins: [permission],
+    setup() { return { ...usePermission() }; },
     data() {
       return {
         // 二次点击
@@ -244,12 +246,12 @@
           subTitle: this.$t('m[\'同一个职能团队可能会出现在多个不同的服务处理流程中，为了达到人员配置的一致性管理目的，你只需将对应的人员设置到同一个<用户组>中即可，这样便可以在不同的服务中配置引用它。\']'),
           desc: [
             {
-              src: require('../../images/illustration/setting-group.svg'),
+              src: settingGroupSvg,
               title: this.$t('m[\'配置用户组的名称和成员\']'),
               content: this.$t('m[\'你只需要为其设计一个合理的名称（如：行政仓库管理员、IT技术人员、等等...），并将相应的成员加入到该用户组中即可。\']'),
             },
             {
-              src: require('../../images/illustration/use-group.svg'),
+              src: useGroupSvg,
               title: this.$t('m[\'在服务流程配置中使用它\']'),
               content: this.$t('m[\'服务的处理流程节点中，你可以在处理人、关注人等跟人员属性有关的字段中使用<用户组>；这种“引用”的逻辑，可以达到在一个地方编辑，所有引用方同时更新的效果，提升配置管理的效率。\']'),
             },
@@ -286,8 +288,8 @@
           this.tableList = res.data;
           this.searchToggle = res.data.length !== 0;
           this.tableList.forEach((item) => {
-            this.$set(item, 'staffInputValue', item.members ? item.members.split(',') : []);
-            this.$set(item, 'ownersInputValue', item.owners ? item.owners.split(',') : []);
+            item['staffInputValue'] = item.members ? item.members.split(',') : [];
+            item['ownersInputValue'] = item.owners ? item.owners.split(',') : [];
           });
         })
           .catch((res) => {

@@ -51,7 +51,7 @@
         @page-change="handlePageChange"
         @page-limit-change="handlePageLimitChange">
         <bk-table-column prop="name" :render-header="$renderHeader" :show-overflow-tooltip="true" :label="$t(`m['项目名称']`)">
-          <template slot-scope="props">
+          <template #default="props">
             <div class="name-wrap">
               <span
                 class="prefix-icon"
@@ -64,14 +64,14 @@
         </bk-table-column>
         <bk-table-column :render-header="$renderHeader" :show-overflow-tooltip="true" prop="key" :label="$t(`m['项目代号']`)"></bk-table-column>
         <bk-table-column :render-header="$renderHeader" :show-overflow-tooltip="true" prop="desc" :label="$t(`m['项目说明']`)">
-          <template slot-scope="props">
+          <template #default="props">
             {{ props.row.desc || '--' }}
           </template>
         </bk-table-column>
         <bk-table-column :show-overflow-tooltip="true" prop="creator" :label="$t(`m['创建人']`)"></bk-table-column>
         <bk-table-column :show-overflow-tooltip="true" :sortable="true" prop="create_at" :label="$t(`m['创建时间']`)"></bk-table-column>
         <bk-table-column :label="$t(`m['操作']`)" fixed="right">
-          <template slot-scope="props">
+          <template #default="props">
             <bk-button
               v-cursor="{ active: !hasPermission(['project_edit'], props.row.auth_actions) }"
               text
@@ -99,7 +99,7 @@
             </div>
           </template>
         </bk-table-column>
-        <div class="empty" slot="empty">
+        <template #empty><div class="empty">
           <empty
             :is-error="listError"
             :is-search="searchToggle"
@@ -136,7 +136,7 @@
 <script>
   import i18n from '@/i18n/index.js';
   import { errorHandler } from '@/utils/errorHandler.js';
-  import permission from '@/mixins/permission.js';
+  import { usePermission } from '@/composables/usePermission';
   import EditProjectDialog from './editProjectDialog.vue';
   import Empty from '../../components/common/Empty.vue';
 
@@ -146,7 +146,7 @@
       EditProjectDialog,
       Empty,
     },
-    mixins: [permission],
+    setup() { return { ...usePermission() }; },
     data() {
       return {
         keyword: '',
@@ -370,7 +370,7 @@
             margin-bottom: 18px;
         }
         .project-table {
-            /deep/.bk-link .bk-link-text {
+            ::v-deep .bk-link .bk-link-text {
                 font-size: 12px;
                 line-height: 1;
             }

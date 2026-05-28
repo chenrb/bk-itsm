@@ -27,14 +27,14 @@
       <div class="bk-api-button">
         <template v-if="!disableImport">
           <bk-dropdown-menu class="mr10 access-btn" @show="dropdownShow" @hide="dropdownHide" ref="apiDropdown">
-            <div
-              slot="dropdown-trigger"
+            <template #dropdown-trigger>
+              <div
               class="dropdown-trigger-btn"
               style="padding-left: 12px;">
               <span style="font-size: 14px;">{{ $t(`m.systemConfig['API接入']`)}}</span>
               <i :class="['bk-icon icon-angle-down',{ 'icon-flip': isDropdownShow }]"></i>
             </div>
-            <ul class="bk-dropdown-list" slot="dropdown-content">
+            <template #dropdown-content><ul class="bk-dropdown-list">
               <li>
                 <a href="javascript:;"
                   v-cursor="{ active: !hasPermission(targetPerms, curPerms) }"
@@ -103,12 +103,12 @@
       </bk-table-column>
       <!--<bk-table-column type="index" label="No." align="center" width="60"></bk-table-column>-->
       <bk-table-column :label="$t(`m.common['ID']`)" min-width="60">
-        <template slot-scope="props">
+        <template #default="props">
           <span :title="props.row.id">{{ props.row.id || '--' }}</span>
         </template>
       </bk-table-column>
       <bk-table-column :render-header="$renderHeader" :show-overflow-tooltip="true" :label="$t(`m.systemConfig['接口名称']`)" min-width="150">
-        <template slot-scope="props">
+        <template #default="props">
           <!-- :disabled="props.row.is_builtin || !!props.row.count" -->
           <span class="bk-lable-primary"
             data-test-id="api_span_apiTableViewDetail"
@@ -121,20 +121,20 @@
         </template>
       </bk-table-column>
       <bk-table-column :render-header="$renderHeader" :show-overflow-tooltip="true" :label="$t(`m.systemConfig['接口路径']`)" min-width="250">
-        <template slot-scope="props">
+        <template #default="props">
           <span class="bk-table-type">{{props.row.method}}</span>
           <span :title="props.row.path">{{props.row.path || '--'}}</span>
         </template>
       </bk-table-column>
       <bk-table-column :render-header="$renderHeader" :show-overflow-tooltip="true" :label="$t(`m.systemConfig['接口分类']`)" min-width="100">
-        <template slot-scope="props">
+        <template #default="props">
           <span :title="systemName(props.row.remote_system)">
             {{systemName(props.row.remote_system) || '--'}}
           </span>
         </template>
       </bk-table-column>
       <bk-table-column :render-header="$renderHeader" :show-overflow-tooltip="true" :label="$t(`m.systemConfig['状态']`)" min-width="60">
-        <template slot-scope="props">
+        <template #default="props">
           <span :title="props.row.is_activated ? $t(`m.systemConfig['启用']`) : $t(`m.systemConfig['关闭']`)">
             {{props.row.is_activated ? $t(`m.systemConfig['启用']`) : $t(`m.systemConfig['关闭']`)}}
           </span>
@@ -142,19 +142,19 @@
       </bk-table-column>
 
       <bk-table-column :render-header="$renderHeader" :show-overflow-tooltip="true" :label="$t(`m.common['负责人']`)">
-        <template slot-scope="props">
+        <template #default="props">
           <span :title="props.row.owners">{{props.row.owners || '--'}}</span>
         </template>
       </bk-table-column>
       <bk-table-column :render-header="$renderHeader" :show-overflow-tooltip="true" :label="$t(`m.common['创建人']`)">
-        <template slot-scope="props">
+        <template #default="props">
           <span :title="props.row.creator">{{props.row.creator || '--'}}</span>
         </template>
       </bk-table-column>
 
       <bk-table-column :render-header="$renderHeader" :show-overflow-tooltip="true" :label="$t(`m.systemConfig['接入数']`)" prop="count" width="80"></bk-table-column>
       <bk-table-column :show-overflow-tooltip="true" :label="$t(`m.systemConfig['操作']`)" width="150" fixed="right">
-        <template slot-scope="props">
+        <template #default="props">
           <bk-button theme="primary" text
             data-test-id="api_button_apiTableExportApi"
             :title="$t(`m.systemConfig['导出']`)"
@@ -182,7 +182,7 @@
           </bk-button>
         </template>
       </bk-table-column>
-      <div class="empty" slot="empty">
+      <template #empty><div class="empty">
         <empty
           status="500"
           :is-error="listError"
@@ -193,12 +193,12 @@
       </div>
     </bk-table>
     <bk-sideslider
-      :is-show.sync="entryInfo.show"
+      v-model:is-show="entryInfo.show"
       :title="entryInfo.title"
       :width="entryInfo.width"
       :quick-close="true"
       :before-close="handleBeforeClose">
-      <div slot="content" style="padding: 20px" v-if="entryInfo.show">
+      <template #content><div style="padding: 20px" v-if="entryInfo.show">
         <add-api-info
           :first-level-info="firstLevelInfo"
           :path-list="pathList"
@@ -214,7 +214,7 @@
 <script>
   import { errorHandler } from '../../../utils/errorHandler';
   import addApiInfo from './addApiInfo.vue';
-  import permission from '@/mixins/permission.js';
+  import { usePermission } from '@/composables/usePermission';
   import useModalCloseConfirmation from '@/utils/use-modal-close-confirmation';
   import Empty from '../../../components/common/Empty.vue';
 
@@ -223,7 +223,7 @@
       addApiInfo,
       Empty,
     },
-    mixins: [permission],
+    setup() { return { ...usePermission() }; },
     props: {
       treeList: {
         type: Array,

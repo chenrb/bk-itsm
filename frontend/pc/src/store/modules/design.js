@@ -20,7 +20,6 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE
  */
 
-import Vue from "vue";
 import ajax from "../../utils/ajax";
 import bus from "../../utils/bus";
 

@@ -133,7 +133,7 @@
             class="mr10">
             {{$t(`m.common['存为模板']`)}}
           </bk-button>
-          <div slot="content" style="width: 320px;">
+          <template #content><div style="width: 320px;">
             <h3 class="save-title">{{$t(`m.common['存为模板']`)}}</h3>
             <bk-form
               width="320"
@@ -153,7 +153,7 @@
         </bk-popover>
       </div>
     </div>
-    <create-ticket-dialog :is-show.sync="isCreateTicketDialogShow"></create-ticket-dialog>
+    <create-ticket-dialog v-model:is-show="isCreateTicketDialogShow"></create-ticket-dialog>
     <create-ticket-success
       v-if="isRemindPageShow"
       :router-info="routerInfo"
@@ -164,10 +164,10 @@
 <script>
   import { mapState } from 'vuex';
   import NavTitle from '@/components/common/layout/NavTitle';
-  import apiFieldsWatchMixin from '@/views/commonMix/api_fields_watch.js';
+  import { useApiFieldsWatch } from '@/composables/useApiFieldsWatch';
   import FieldInfo from '@/views/managePage/billCom/fieldInfo.vue';
   import CreateTicketDialog from '@/components/common/modal/CreateTicketDialog.vue';
-  import commonMix from '@/views/commonMix/common.js';
+  import { useCommonMix } from '@/composables/useCommonMix';
   import { errorHandler } from '@/utils/errorHandler';
   import { deepClone } from '../../utils/util';
   import memberSelect from '@/views/commonComponent/memberSelect';
@@ -182,7 +182,7 @@
       CreateTicketDialog,
       CreateTicketSuccess,
     },
-    mixins: [apiFieldsWatchMixin, commonMix],
+    setup() { return { ...useApiFieldsWatch(), ...useCommonMix() }; },
     inject: ['reload'],
     data() {
       return {
@@ -293,11 +293,11 @@
               item.type = 'SELECT';
             }
             if (item.key === 'priority' && !priorityReadonly) {
-              this.$set(item, 'is_readonly', false);
+              item['is_readonly'] = false;
             }
-            this.$set(item, 'showFeild', true);
-            this.$set(item, 'val', item.key in this.$route.query ? this.$route.query[item.key] : item.value);
-            this.$set(item, 'service', this.service.key);
+            item['showFeild'] = true;
+            item['val'] = item.key in this.$route.query ? this.$route.query[item.key] : item.value;
+            item['service'] = this.service.key;
           });
           this.isNecessaryToWatch({ fields: this.fieldList }, 'submit', () => {
             // TO IMPROVE 加载完成、重新赋值， isNecessaryToWatch 会去异步加载 choice 数据

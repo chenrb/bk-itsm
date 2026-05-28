@@ -70,7 +70,7 @@
     </div>
     <!-- 操作日志详情 sideslider -->
     <ticket-log-detail
-      :log-info.sync="dispalyLogInfo"
+      v-model:log-info="dispalyLogInfo"
       :show="!!dispalyLogInfo"
       @close="
         () => {
@@ -84,16 +84,17 @@
 <script>
   import ticketLogDetail from './logInfo/ticketLogDetail';
   import { errorHandler } from '@/utils/errorHandler';
-  import fieldMix from '@/views/commonMix/field.js';
+  import { useField } from '@/composables/useField';
   import { mapState } from 'vuex';
   import i18n from '@/i18n/index.js';
+  import orderFinishedImg from '@/images/orderFinished.png';
 
   export default {
     name: 'LogTab',
     components: {
       ticketLogDetail,
     },
-    mixins: [fieldMix],
+    setup() { return { ...useField() }; },
     props: {
       ticketInfo: Object,
       isShowSla: Boolean,
@@ -105,7 +106,7 @@
         loading: false,
         list: [],
         isShowDetail: false,
-        imgUrl: require('@/images/orderFinished.png'),
+        imgUrl: orderFinishedImg,
         commentInfo: {},
         processorList: [],
       };
@@ -260,7 +261,7 @@
   }
 }
 .log-time-line {
-  /deep/ {
+  ::v-deep  {
     .bk-timeline-title,
     .bk-timeline-content {
       font-size: 12px;

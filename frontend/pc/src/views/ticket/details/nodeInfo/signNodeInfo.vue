@@ -134,7 +134,7 @@
         };
         await this.$store.dispatch('apiRemote/get_sign_logs', params).then((res) => {
           res.data.forEach((item) => {
-            this.$set(item, 'showMore', false);
+            item['showMore'] = false;
           });
           this.logs = res.data;
           this.logs.reverse();

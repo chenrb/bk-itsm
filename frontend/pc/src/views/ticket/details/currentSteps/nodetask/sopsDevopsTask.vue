@@ -102,7 +102,7 @@
     watch: {
       pipelineConstants(val) {
         val.map((item) => {
-          this.$set(this.pipelineData, item.key, item.value);
+          this.pipelineData[item.key] = item.value;
         });
       },
     },
@@ -306,10 +306,10 @@
 }
 .bk-basic-node {
   padding: 0;
-  /deep/ .common-section-card-block {
+  ::v-deep  .common-section-card-block {
     display: block;
   }
-  /deep/ .common-section-card-body {
+  ::v-deep  .common-section-card-body {
     padding: 0;
   }
 }

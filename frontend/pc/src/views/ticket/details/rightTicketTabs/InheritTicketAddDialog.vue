@@ -78,7 +78,7 @@
           align="center"
           :render-header="renderRadio"
         >
-          <template slot-scope="props">
+          <template #default="props">
             <bk-checkbox
               v-if="templateInfo.inheritType === 'chooseChild'"
               :value="props.row.check"
@@ -97,7 +97,7 @@
           :label="$t(`m.newCommon['单号']`)"
           min-width="120"
         >
-          <template slot-scope="props">
+          <template #default="props">
             <span
               class="bk-lable-primary"
               @click="openNewPage(props.row)"
@@ -124,7 +124,7 @@
           :label="$t(`m.manageCommon['状态']`)"
           min-width="80"
         >
-          <template slot-scope="props">
+          <template #default="props">
             <span
               :title="props.row.current_status_display"
               class="bk-status-color-info"
@@ -348,18 +348,10 @@
             this.pagination.count = res.data.count;
 
             this.tabInfoList.forEach((item) => {
-              this.$set(item, 'check', false);
-              this.$set(
-                item,
-                'chooseMotherDisabled',
-                item.related_type === 'slave'
-              );
-              this.$set(
-                item,
-                'chooseChildDisabled',
-                item.related_type === 'master'
-                  || item.related_type === 'slave'
-              );
+              item['check'] = false;
+              item['chooseMotherDisabled'] = item.related_type === 'slave';
+              item['chooseChildDisabled'] = item.related_type === 'master'
+                  || item.related_type === 'slave';
             });
           })
           .catch((res) => {

@@ -256,7 +256,7 @@
       // 清除不符合value id的选中状态
       recordCheckFn(list = this.roles.viewTreeDataList) {
         list.forEach((tree) => {
-          this.$set(tree, 'checkInfo', false);
+          tree['checkInfo'] = false;
           if (tree.children && tree.children.length) {
             this.recordCheckFn(tree.children);
           }
@@ -274,12 +274,12 @@
       },
       toggleChildren(item, type) {
         if (type === 'view') {
-          this.$set(item, 'showChildren', !item.showChildren);
+          item['showChildren'] = !item.showChildren;
           this.$store.dispatch('cdeploy/getTreeInfoChildren', { id: item.id }).then((res) => {
             res.data.children.forEach(tree => {
               this.setCheckedValue(tree, 'view');
             });
-            this.$set(item, 'children', res.data.children || []);
+            item['children'] = res.data.children || [];
           });
         }
       },
@@ -296,8 +296,8 @@
         });
       },
       setCheckedValue(tree, type) {
-        this.$set(tree, 'checkInfo', false);
-        this.$set(tree, 'has_children', tree.has_children);
+        tree['checkInfo'] = false;
+        tree['has_children'] = tree.has_children;
         if (String(this.recipientItem.value) === String(tree.id) && type === 'view') {
           tree.checkInfo = true;
           this.checked = tree;
@@ -305,8 +305,8 @@
           return;
         }
         if (tree.has_children) {
-          this.$set(tree, 'showChildren', false);
-          this.$set(tree, 'children', []);
+          tree['showChildren'] = false;
+          tree['children'] = [];
         }
       },
       showTree(type) {
@@ -319,7 +319,7 @@
         this.roles.viewTreeOpen = false;
       },
       concatName() {
-        this.$set(this.roles.viewtree, 'showName', this.roles.viewtree.full_name);
+        this.roles.viewtree['showName'] = this.roles.viewtree.full_name;
       },
       addRecipient() {
         this.itemInfo.value.splice(this.recipientIndex + 1, 0, {

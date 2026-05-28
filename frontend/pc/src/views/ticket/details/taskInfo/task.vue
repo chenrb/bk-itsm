@@ -30,8 +30,8 @@
           @show="dropdownShow = true"
           @hide="dropdownShow = false"
         >
+          <template #dropdown-trigger>
           <bk-button
-            slot="dropdown-trigger"
             v-bk-tooltips="$t(`m.task['点击创建任务']`)"
           >
             <span>{{ $t(`m.task['新建任务']`) }}</span>
@@ -42,9 +42,9 @@
               ]"
             ></i>
           </bk-button>
+          <template #dropdown-content>
           <ul
             class="bk-dropdown-list bk-dropdown-list-cus"
-            slot="dropdown-content"
           >
             <li>
               <a
@@ -128,7 +128,7 @@
           :min-width="minWidth"
           :sortable="'custom'"
         >
-          <template slot-scope="props">
+          <template #default="props">
             <template v-if="!basicInfomation.can_create_task">
               <span :title="props.row.order">{{
                 props.row.order
@@ -173,7 +173,7 @@
         </bk-table-column>
         <!-- </template> -->
         <bk-table-column :label="$t(`m.task['任务名称']`)">
-          <template slot-scope="props">
+          <template #default="props">
             <span
               v-bk-tooltips.top="{ content: props.row.name, allowHTML: false }"
               class="task-name"
@@ -184,14 +184,14 @@
           </template>
         </bk-table-column>
         <bk-table-column :label="$t(`m.task['处理人']`)">
-          <template slot-scope="props">
+          <template #default="props">
             <span v-bk-tooltips.top="{ content: props.row.processor_users, allowHTML: false }">{{
               props.row.processor_users || "--"
             }}</span>
           </template>
         </bk-table-column>
         <bk-table-column :label="$t(`m.task['状态']`)">
-          <template slot-scope="props">
+          <template #default="props">
             <span
               class="bk-status-color-info"
               :class="{
@@ -212,7 +212,7 @@
           </template>
         </bk-table-column>
         <bk-table-column :label="$t(`m.task['操作']`)" min-width="120">
-          <template slot-scope="props">
+          <template #default="props">
             <bk-button
               theme="primary"
               text
@@ -337,13 +337,13 @@
       </bk-table>
     </div>
     <bk-sideslider
-      :is-show.sync="taskInfo.show"
+      v-model:is-show="taskInfo.show"
       :quick-close="true"
       :title="taskInfo.title"
       :width="taskInfo.width"
     >
+      <template #content>
       <div
-        slot="content"
         v-bkloading="{ isLoading: taskInfo.addLoading }"
         style="min-height: 300px"
       >
@@ -359,10 +359,10 @@
     </bk-sideslider>
     <bk-sideslider
       :quick-close="true"
-      :is-show.sync="dealTaskInfo.show"
+      v-model:is-show="dealTaskInfo.show"
       :width="dealTaskInfo.width"
     >
-      <div slot="header">
+      <template #header><div>
         <task-handle-trigger
           v-if="dealTaskInfo.show"
           :task-info="dealTaskInfo.itemContent"
@@ -370,8 +370,8 @@
           @close-slider="dealTaskInfo.show = false"
         ></task-handle-trigger>
       </div>
+      <template #content>
       <div
-        slot="content"
         v-bkloading="{ isLoading: dealTaskInfo.addLoading }"
         style="min-height: 300px"
       >
@@ -387,13 +387,13 @@
       </div>
     </bk-sideslider>
     <bk-sideslider
-      :is-show.sync="libraryInfo.show"
+      v-model:is-show="libraryInfo.show"
       :title="libraryInfo.title"
       :quick-close="true"
       :width="libraryInfo.width"
     >
+      <template #content>
       <div
-        slot="content"
         v-bkloading="{ isLoading: libraryInfo.loading }"
       >
         <task-library
@@ -588,8 +588,8 @@
           .then((res) => {
             this.taskList = res.data;
             this.taskList.forEach((item) => {
-              this.$set(item, 'orderStatus', true);
-              this.$set(item, 'orderInfo', item.order);
+              item['orderStatus'] = true;
+              item['orderInfo'] = item.order;
             });
             this.minWidth = 80;
           })
@@ -794,7 +794,7 @@
 
 .bk-dropdown-menu-cus {
     float: left;
-    /deep/ .bk-dropdown-content {
+    ::v-deep  .bk-dropdown-content {
         overflow: visible;
     }
     .bk-dropdown-list-cus {
@@ -890,7 +890,7 @@
         color: #979ba5;
     }
     .task-table-wrap {
-        /deep/ .cell {
+        ::v-deep  .cell {
             white-space: nowrap !important;
         }
         .order-opt-btns {

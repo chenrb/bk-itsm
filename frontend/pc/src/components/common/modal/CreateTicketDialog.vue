@@ -93,7 +93,7 @@
                   <p class="text">
                     <template v-if="!searchModel">
                       <span>{{ $t(`m.common['暂无服务，']`) }}</span>
-                      <router-link :to="{ name: 'projectServiceList', query: { project_id: $store.state.project.id } }" @click.native="onCloseDialog">{{ $t(`m.taskTemplate['立即创建']`) }}</router-link>
+                      <router-link :to="{ name: 'projectServiceList', query: { project_id: $store.state.project.id } }" @click="onCloseDialog">{{ $t(`m.taskTemplate['立即创建']`) }}</router-link>
                     </template>
                     <span v-else>{{ $t(`m.common['无匹配服务']`) }}</span>
                   </p>
@@ -223,7 +223,7 @@
           favorite: !service.favorite,
         }).then((res) => {
           if (res.result) {
-            this.$set(service, 'favorite', !service.favorite);
+            service['favorite'] = !service.favorite;
           }
           this.$bkMessage({
             message: service.favorite ? this.$t('m.manageCommon[\'收藏成功\']') : this.$t('m.manageCommon[\'取消成功\']'),
@@ -303,12 +303,12 @@
         padding: 0 4px;
         background-color: #f5f7fa;
     }
-    /deep/ .bk-form-input {
+    ::v-deep  .bk-form-input {
         border: 0px;
         border-bottom: 1px solid  #9a9ba5;
         border-radius: 0;
     }
-    /deep/.search-result {
+    ::v-deep .search-result {
         li {
             display: flex;
             justify-content: flex-end;
@@ -337,7 +337,7 @@
             overflow: hidden;
         }
     }
-    /deep/ .bk-tab-section {
+    ::v-deep  .bk-tab-section {
         padding: 16px 0 0;
     }
     .service-content {
@@ -466,7 +466,7 @@
         }
     }
     .favorite-desc-tooltip, .service-title-desc-tooltip {
-        /deep/ .tippy-tooltip .tippy-arrow {
+        ::v-deep  .tippy-tooltip .tippy-arrow {
             bottom: -8px;
         }
     }

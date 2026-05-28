@@ -88,6 +88,7 @@
 <script>
   import editor from './editor.vue';
   import commentItem from './commentItem.vue';
+  import boxImg from '@/images/box.png';
   export default {
     name: 'ticketComment',
     components: {
@@ -132,7 +133,7 @@
         editType: '',
         isEdit: false,
         flash: {},
-        imgUrl: require('@/images/box.png'),
+        imgUrl: boxImg,
         isReplyComment: false,
         replyCommnetId: '',
         replyContent: {
@@ -249,9 +250,9 @@
           const heights = Array.from(commentListDom.childNodes).slice(0, curCommentIndex)
             .map(item => item.clientHeight);
           const sumHeight = heights.reduce((pre, cur) => pre + cur);
-          this.$set(this.flash, curComment.parent__id, true);
+          this.flash[curComment.parent__id] = true;
           const timer = setTimeout(() => {
-            this.$set(this.flash, curComment.parent__id, false);
+            this.flash[curComment.parent__id] = false;
             clearTimeout(timer);
           }, 2000);
           commentListDom.scrollTop = sumHeight + 340 + baseInfoDom.offsetHeight;

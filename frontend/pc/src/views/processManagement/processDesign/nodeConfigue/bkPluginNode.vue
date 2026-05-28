@@ -129,7 +129,7 @@
           <bk-table-column :label="$t(`m['名称']`)" prop="title"></bk-table-column>
           <bk-table-column label="key" prop="key"></bk-table-column>
           <bk-table-column :label="$t(`m['设置为全局变量']`)">
-            <template slot-scope="props">
+            <template #default="props">
               <bk-checkbox @change="onchangeOutputCheck($event, props)" v-model="outputsVarList[props.row.key]"></bk-checkbox>
             </template>
           </bk-table-column>
@@ -333,10 +333,10 @@
           const outputs_var_list = this.configur.extras.outputs_var_list || {};
           const input_var_list = this.configur.extras.input_var_list || {};
           Object.keys(outputs_var_list).map(item => {
-            this.$set(this.outputsVarList, item, outputs_var_list[item]);
+            this.outputsVarList[item] = outputs_var_list[item];
           });
           Object.keys(input_var_list).map(item => {
-            this.$set(this.hookVarList, item, input_var_list[item]);
+            this.hookVarList[item] = input_var_list[item];
             if (input_var_list[item]) {
               this.hookSelectList[item] = this.formData[item];
             }
@@ -401,7 +401,7 @@
       },
       handleVarClick(item, path) {
         this.formData[path] = `{{${item.key}}}`;
-        this.$set(this.hookedVarList, path, false);
+        this.hookedVarList[path] = false;
         this.formKey = new Date().getTime();
       },
       onSelectplugin(value) {
@@ -552,13 +552,13 @@
         background-color: #FAFBFD;
         overflow: unset;
         @include scroller;
-        /deep/ .common-section-card-label {
+        ::v-deep  .common-section-card-label {
             display: none;
         }
-        /deep/ .common-section-card-body {
+        ::v-deep  .common-section-card-body {
             padding: 20px;
         }
-        /deep/ .bk-form-width {
+        ::v-deep  .bk-form-width {
             width: 448px;
         }
         .bk-params-title {
@@ -575,10 +575,10 @@
         }
         .bk-form-plugin {
             padding: 20px;
-            /deep/ .bk-schema-form-group {
+            ::v-deep  .bk-schema-form-group {
                 overflow: unset !important;
             }
-            /deep/ .bk-form-content {
+            ::v-deep  .bk-form-content {
                 display: flex;
                 align-items: center;
                 .bk-form-control {

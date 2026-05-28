@@ -106,14 +106,14 @@
 <script>
   import { errorHandler } from '../../utils/errorHandler';
   import priorityTable from './priorityTable/priorityTable.vue';
-  import permission from '@/mixins/permission.js';
+  import { usePermission } from '@/composables/usePermission';
 
   export default {
     name: 'priority',
     components: {
       priorityTable,
     },
-    mixins: [permission],
+    setup() { return { ...usePermission() }; },
     data() {
       return {
         serviceTypeList: [],

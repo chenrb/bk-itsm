@@ -41,7 +41,7 @@
           :data="dataList"
           :size="'small'">
           <bk-table-column :render-header="$renderHeader" :show-overflow-tooltip="true" :label="$t(`m.slaContent['服务类型']`)" width="100">
-            <template slot-scope="props">
+            <template #default="props">
               <span
                 v-cursor="{ active: !hasPermission(['ticket_state_manage']) }"
                 :class="['bk-lable-primary', {
@@ -54,22 +54,22 @@
             </template>
           </bk-table-column>
           <bk-table-column :render-header="$renderHeader" :show-overflow-tooltip="true" :label="$t(`m.slaContent['单据状态']`)">
-            <template slot-scope="props">
+            <template #default="props">
               <span :title="props.row.ticket_status">{{ props.row.ticket_status || '--' }}</span>
             </template>
           </bk-table-column>
           <bk-table-column :render-header="$renderHeader" :show-overflow-tooltip="true" :label="$t(`m.slaContent['更新时间']`)" prop="update_at">
-            <template slot-scope="props">
+            <template #default="props">
               <span :title="props.row.update_at">{{ props.row.update_at || '--' }}</span>
             </template>
           </bk-table-column>
           <bk-table-column :render-header="$renderHeader" :show-overflow-tooltip="true" :label="$t(`m.slaContent['更新人']`)" width="120">
-            <template slot-scope="props">
+            <template #default="props">
               <span :title="props.row.updated_by">{{ props.row.updated_by || '--' }}</span>
             </template>
           </bk-table-column>
           <bk-table-column :label="$t(`m.slaContent['操作']`)" width="150" fixed="right">
-            <template slot-scope="props">
+            <template #default="props">
               <bk-button theme="primary"
                 v-if="!props.row.configured"
                 v-cursor="{ active: !hasPermission(['ticket_state_manage']) }"
@@ -91,7 +91,7 @@
               </bk-button>
             </template>
           </bk-table-column>
-          <div class="empty" slot="empty">
+          <template #empty><div class="empty">
             <empty
               :is-error="listError"
               @onRefresh="getTypeStatusList()">
@@ -140,7 +140,7 @@
   import { errorHandler } from '../../utils/errorHandler';
   import firstStep from './ticketStatus/firstStep';
   import secondStep from './ticketStatus/secondStep';
-  import permission from '@/mixins/permission.js';
+  import { usePermission } from '@/composables/usePermission';
   import Empty from '../../components/common/Empty.vue';
 
   export default {
@@ -150,7 +150,7 @@
       secondStep,
       Empty,
     },
-    mixins: [permission],
+    setup() { return { ...usePermission() }; },
     data() {
       return {
         isDataLoading: false,

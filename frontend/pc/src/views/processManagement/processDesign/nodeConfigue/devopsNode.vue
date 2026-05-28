@@ -124,17 +124,17 @@
       <bk-table :data="returnReslut"
         :size="'small'">
         <bk-table-column :label="$t(`m['变量名称']`)">
-          <template slot-scope="props">
+          <template #default="props">
             <bk-input :behavior="'simplicity'" v-model="props.row.name" :disabled="disable" @change="changeReturnInput(props.row, props.$index)"></bk-input>
           </template>
         </bk-table-column>
         <bk-table-column :label="$t(`m['来源']`)">
-          <template slot-scope="props">
+          <template #default="props">
             <bk-input :behavior="'simplicity'" v-model="props.row.ref_path" :disabled="disable" :placeholder="$t(`m['输入变量来源，如：resp.message']`)" @change="changeReturnInput(props.row, props.$index)"></bk-input>
           </template>
         </bk-table-column>
         <bk-table-column :label="$t(`m['操作']`)" width="100">
-          <template slot-scope="props" v-if="!disable && isShowDelete !== returnReslut.indexOf(props.row)">
+          <template #default="props" v-if="!disable && isShowDelete !== returnReslut.indexOf(props.row)">
             <i class="bk-itsm-icon icon-flow-other-add result-icon" @click="addReturnReslut"></i>
             <i class="bk-itsm-icon icon-flow-other-reduc result-icon"
               :class="{ 'no-delete': retrunResultIsEmtry }"
@@ -311,8 +311,8 @@
             this.returnReslut = this.configur.extras.devops_info.outputs.length !== 0 ? [...this.configur.extras.devops_info.outputs, ...this.returnReslut] : [{ name: '', ref_path: '', check: false }];
             this.getExcludeRoleTypeList();
             this.configur.extras.devops_info.constants.forEach(item => {
-              this.$set(this.hookVarList, item.key, item.checked);
-              this.$set(this.hookSelectList, item.key, item.checked ? item.value : '');
+              this.hookVarList[item.key] = item.checked;
+              this.hookSelectList[item.key] = item.checked ? item.value : '';
             });
             this.getPipelineInfo(1);
           }
@@ -434,7 +434,7 @@
           this.pipelineFormList = res[0].data.properties;
           res[0].data.properties.forEach(item => {
             if (init) item.defaultValue = this.configur.extras.devops_info.constants.filter(ite => ite.name === item.id)[0].value;
-            this.$set(this.pipelineData, item.id, this.hookVarList[item.id] ? `\${${item.defaultValue}}` : item.defaultValue);
+            this.pipelineData[item.id] = this.hookVarList[item.id] ? `\${${item.defaultValue}}` : item.defaultValue;
             this.pipelineRules[item.id] = [{
               required: item.required,
               message: i18n.t('m.treeinfo["字段必填"]'),
@@ -543,14 +543,14 @@
         background-color: #FAFBFD;
         overflow: auto;
         @include scroller;
-        /deep/ .common-section-card-label {
+        ::v-deep  .common-section-card-label {
             display: none;
         }
-        /deep/ .common-section-card-body {
+        ::v-deep  .common-section-card-body {
             width: 100%;
             padding: 20px;
         }
-        /deep/ .bk-form-width {
+        ::v-deep  .bk-form-width {
             width: 448px;
         }
         .piprline-title {
@@ -583,7 +583,7 @@
     }
     .pipelineForm {
         margin-bottom: 10px;
-        /deep/ .bk-form-content {
+        ::v-deep  .bk-form-content {
             display: flex;
             align-items: center;
             .bk-form-control {

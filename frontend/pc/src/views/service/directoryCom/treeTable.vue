@@ -79,9 +79,9 @@
             <th style="min-width: 100px;">{{ $t('m.serviceConfig["操作"]') }}</th>
           </tr>
         </thead>
-        <draggable tag="tbody" v-model="listInfo" @end="updateInfo" handle=".move-handler-content">
-          <template v-if="listInfo.length">
-            <tr v-for="(item, index) in listInfo" :key="index"
+        <draggable tag="tbody" v-model="listInfo" item-key="id" @end="updateInfo" handle=".move-handler-content">
+          <template #item="{ element: item, index }">
+            <tr v-if="listInfo.length"
               :class="{ 'move-handler-content': !searchInfo.key }">
               <td>
                 <!-- <i class="bk-icon icon-move-new move-handler" v-if="!searchInfo.key"></i> -->
@@ -124,7 +124,7 @@
               </td>
             </tr>
           </template>
-          <template v-else>
+          <template v-if="!listInfo.length">
             <tr v-cloak>
               <td colspan="10" class="bk-none-content">
                 <i class="bk-table-empty-icon bk-icon icon-empty"></i>
@@ -145,7 +145,7 @@
             <bk-table-column type="index" label="No." align="center" width="60"></bk-table-column>
             <bk-table-column :label="$t(`m.serviceConfig['服务名称']`)" prop="name" min-width="180"></bk-table-column>
             <bk-table-column :label="$t(`m.serviceConfig['服务类型']`)">
-                <template slot-scope="props">
+                <template #default="props">
                     <span v-for="node in serviceTypesMap"
                         v-if="props.row.key === node.key"
                         :key="node.key">
@@ -154,7 +154,7 @@
                 </template>
             </bk-table-column>
             <bk-table-column :label="$t(`m.serviceConfig['状态']`)">
-                <template slot-scope="props">
+                <template #default="props">
                     <span class="bk-status-color"
                         :class="{ 'bk-status-gray': !props.row.is_valid }"></span>
                     <span style="margin-left: 5px;">
@@ -163,12 +163,12 @@
                 </template>
             </bk-table-column>
             <bk-table-column :label="$t(`m.serviceConfig['服务说明']`)" width="150">
-                <template slot-scope="props">
+                <template #default="props">
                     {{ props.row.desc || '--' }}
                 </template>
             </bk-table-column>
             <bk-table-column :label="$t(`m.serviceConfig['操作']`)" width="150">
-                <template slot-scope="props">
+                <template #default="props">
                     <bk-button theme="primary" text @click="deleteOne(props.row)">
                         {{ $t('m.serviceConfig["移除"]') }}
                     </bk-button>
@@ -177,11 +177,11 @@
         </bk-table> -->
     <!-- 新增服务 -->
     <bk-sideslider
-      :is-show.sync="entryInfo.show"
+      v-model:is-show="entryInfo.show"
       :title="entryInfo.title"
       :width="entryInfo.width"
       :quick-close="true">
-      <div slot="content" style="padding: 20px" v-if="entryInfo.show">
+      <template #content><div style="padding: 20px" v-if="entryInfo.show">
         <bk-table
           v-bkloading="{ isLoading: isDataLoading }"
           :data="entryInfo.listInfo"
@@ -195,7 +195,7 @@
           <bk-table-column type="index" label="NO." align="center" width="60"></bk-table-column>
           <bk-table-column :label="$t(`m.serviceConfig['服务名称']`)" prop="name" min-width="180"></bk-table-column>
           <bk-table-column :label="$t(`m.serviceConfig['服务类型']`)">
-            <template slot-scope="props">
+            <template #default="props">
               <span v-for="node in serviceTypesMap"
                 v-if="props.row.key === node.key"
                 :key="node.key">
@@ -327,7 +327,7 @@
         this.$store.dispatch('catalogService/getServices', params).then((res) => {
           this.listInfo = res.data;
           this.listInfo.forEach((item) => {
-            this.$set(item, 'checkValue', false);
+            item['checkValue'] = false;
           });
         })
           .catch((res) => {

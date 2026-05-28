@@ -1,7 +1,7 @@
 @import '../../scss/mixins/scroller.scss';
 // .my-ticket-page {
 //     min-height: 400px;
-//     /deep/ .bk-tab-section {
+//     ::v-deep  .bk-tab-section {
 //         padding: 0;
 //     }
 // }
@@ -25,11 +25,11 @@
 .table-link {
     color: #3a84ff;
     vertical-align: baseline;
-    /deep/ .bk-link-text {
+    ::v-deep  .bk-link-text {
         font-size: 12px;
     }
 }
-/deep/ .bk-tab-label-item {
+::v-deep  .bk-tab-label-item {
     .panel-name,
     .panel-count {
         display: inline-block;

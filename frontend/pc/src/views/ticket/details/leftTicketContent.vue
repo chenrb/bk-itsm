@@ -22,7 +22,7 @@
                         <div class="ticket-creator">
                             <span>提单人: {{ ticketInfo.creator}}</span><span>提单时间: {{ ticketInfo.create_at}}</span>
                         </div>
-                        <div slot="content" class="f13">
+                        <template #content><div class="f13">
                             <basic-information
                                 ref="basicInfo"
                                 v-if="ticketId && !loading.ticketLoading && !loading.nodeInfoLoading"
@@ -35,14 +35,14 @@
       </div>
     </div>
     <div class="current-step-content" v-bkloading="{ isLoading: currentStepLoading }">
-      <bk-tab :active.sync="stepActiveTab" type="unborder-card" v-if="!currentStepLoading" :validate-active="true">
+      <bk-tab v-model:active="stepActiveTab" type="unborder-card" v-if="!currentStepLoading" :validate-active="true">
         <!-- 当前步骤 -->
         <bk-tab-panel
           v-if="hasNodeOptAuth || isShowAssgin || currSetpIsIframe"
           name="currentStep"
           :label="$t(`m['单据处理']`)">
           <!-- 当前节点 -->
-          <template slot="label">
+          <template #label>
             <span class="panel-name">{{ $t(`m['单据处理']`) }}</span>
             <i class="panel-count">{{ currStepNodeNum }}</i>
           </template>
@@ -109,9 +109,9 @@
   import OrderPreview from './OrderPreview.vue';
   import CurrentSteps from './currentSteps/index.vue';
   import { deepClone } from '@/utils/util';
-  import commonMix from '@/views/commonMix/common.js';
-  import fieldMix from '@/views/commonMix/field.js';
-  import apiFieldsWatch from '@/views/commonMix/api_fields_watch.js';
+  import { useCommonMix } from '@/composables/useCommonMix';
+  import { useField } from '@/composables/useField';
+  import { useApiFieldsWatch } from '@/composables/useApiFieldsWatch';
   import WangEditor from './comment/index.vue';
 
   export default {
@@ -122,7 +122,7 @@
       CurrentSteps,
       WangEditor,
     },
-    mixins: [commonMix, fieldMix, apiFieldsWatch],
+    setup() { return { ...useCommonMix(), ...useField(), ...useApiFieldsWatch() }; },
     props: {
       commentId: [Number, String],
       commentList: Array,
@@ -213,8 +213,8 @@
 
         // 隐藏字段显示隐藏判断逻辑
         this.allFieldList.forEach(item => {
-          this.$set(item, 'showFeild', !!item.show_type);
-          this.$set(item, 'val', (item.value || ''));
+          item['showFeild'] = !!item.show_type;
+          item['val'] = (item.value || '');
         });
         // 关联数据展示的逻辑处理
         this.allFieldList.forEach(item => {
@@ -223,9 +223,9 @@
         this.currentStepList.forEach((item) => {
           if (item.fields && item.fields.length) {
             item.fields.forEach(node => {
-              this.$set(node, 'service', this.ticketInfo.service_type);
+              node['service'] = this.ticketInfo.service_type;
               if (node.key === 'current_status') {
-                this.$set(node, 'ticket_status', this.ticketInfo.current_status);
+                node['ticket_status'] = this.ticketInfo.current_status;
               }
             });
             this.isNecessaryToWatch(item, '');
@@ -263,7 +263,7 @@
         min-height: 54px;
         box-shadow: 0px 2px 6px 0px rgba(0,0,0,0.1);
         background: #ffffff;
-        /deep/ .bk-tab-section {
+        ::v-deep  .bk-tab-section {
             padding: 0;
         }
         .ticket-creator {
@@ -297,7 +297,7 @@
         .hide{
             height: 0;
         }
-        /deep/ .bk-icon {
+        ::v-deep  .bk-icon {
             // line-height: 54px;
         }
     }
@@ -307,7 +307,7 @@
         padding: 10px;
         box-shadow: 0px 2px 6px 0px rgba(0,0,0,0.1);
         background: #ffffff;
-        /deep/ .bk-tab-section {
+        ::v-deep  .bk-tab-section {
             padding: 0;
         }
         .panel-count {
@@ -323,7 +323,7 @@
             color: #fff;
             background-color: #C4C6CC;
         }
-        /deep/ .bk-tab-label-item.active {
+        ::v-deep  .bk-tab-label-item.active {
             .panel-count {
                 color: #3a84ff;
                 background: #e1ecff;
@@ -331,7 +331,7 @@
         }
     }
 }
-/deep/ .bk-dialog {
+::v-deep  .bk-dialog {
     top: 120px;
 }
 .bk-order-preview {

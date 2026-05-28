@@ -98,13 +98,13 @@
           @page-change="handlePageChange"
           @page-limit-change="handlePageLimitChange">
           <bk-table-column :label="$t(`m.common['ID']`)" min-width="60">
-            <template slot-scope="props">
+            <template #default="props">
               <span :title="props.row.id">{{ props.row.id || '--' }}</span>
             </template>
           </bk-table-column>
 
           <bk-table-column :label="$t(`m.deployPage['流程名']`)" min-width="200">
-            <template slot-scope="props">
+            <template #default="props">
               <span class="bk-lable-primary"
                 @click="onFlowEdit(props.row)"
                 :title="props.row.name">
@@ -113,32 +113,32 @@
             </template>
           </bk-table-column>
           <bk-table-column :label="$t(`m.deployPage['说明']`)" min-width="200">
-            <template slot-scope="props">
+            <template #default="props">
               <span :title="props.row.desc">{{ props.row.desc || '--' }}</span>
             </template>
           </bk-table-column>
           <bk-table-column :label="$t(`m.common['负责人']`)">
-            <template slot-scope="props">
+            <template #default="props">
               <span :title="props.row.owners">{{props.row.owners || '--'}}</span>
             </template>
           </bk-table-column>
           <bk-table-column :label="$t(`m.common['创建人']`)">
-            <template slot-scope="props">
+            <template #default="props">
               <span :title="props.row.creator">{{props.row.creator || '--'}}</span>
             </template>
           </bk-table-column>
           <bk-table-column :label="$t(`m.common['更新人']`)" min-width="100">
-            <template slot-scope="props">
+            <template #default="props">
               <span :title="props.row.updated_by">{{ props.row.updated_by || '--' }}</span>
             </template>
           </bk-table-column>
           <bk-table-column :label="$t(`m.deployPage['更新时间']`)" width="180">
-            <template slot-scope="props">
+            <template #default="props">
               <span :title="props.row.update_at">{{ props.row.update_at || '--' }}</span>
             </template>
           </bk-table-column>
           <bk-table-column :label="$t(`m.deployPage['状态']`)" width="80">
-            <template slot-scope="props">
+            <template #default="props">
               <span class="bk-status-color"
                 :class="{ 'bk-status-gray':
                   !props.row.is_enabled, 'bk-status-primary': props.row.is_draft }">
@@ -154,7 +154,7 @@
             </template>
           </bk-table-column>
           <bk-table-column :label="$t(`m.deployPage['操作']`)" width="300">
-            <template slot-scope="props">
+            <template #default="props">
               <bk-button
                 v-cursor="{ active: !hasPermission(['workflow_manage'], props.row.auth_actions) }"
                 text
@@ -232,13 +232,13 @@
               :normal-color="normalColor">
             </preview>
           </div>
-          <div slot="footer">
+          <template #footer><div>
             <bk-button
               theme="default"
               @click="processInfo.isShow = false">
               {{ $t('m.deployPage["关闭"]') }}
             </bk-button>
-          </div>
+          </div></template>
         </bk-dialog>
         <!-- 部署确认 -->
         <bk-dialog
@@ -250,7 +250,7 @@
           :auto-close="deployInfo.autoClose"
           :mask-close="deployInfo.autoClose"
           @confirm="submitForm">
-          <p slot="header">{{ $t(`m.deployPage["确认部署"]`) }}</p>
+          <template #header><p>{{ $t(`m.deployPage["确认部署"]`) }}</p></template>
           <div class="bk-add-project">
             <bk-form
               :label-width="200"
@@ -276,10 +276,10 @@
 </template>
 <script>
   import axios from 'axios';
-  import commonMix from '../../../commonMix/common.js';
+  import { useCommonMix } from '@/composables/useCommonMix';
   import searchInfo from '../../../commonComponent/searchInfo/searchInfo.vue';
   import preview from '../../../commonComponent/preview';
-  import permission from '@/mixins/permission.js';
+  import { usePermission } from '@/composables/usePermission';
   import { errorHandler } from '../../../../utils/errorHandler.js';
 
   export default {
@@ -288,7 +288,7 @@
       searchInfo,
       preview,
     },
-    mixins: [commonMix, permission],
+    setup() { return { ...usePermission(), ...useCommonMix() }; },
     data() {
       return {
         // 组件升级数据更新
@@ -683,7 +683,7 @@
 
 <style lang='scss' scoped>
 .filter-btn {
-    /deep/ .icon-search-more {
+    ::v-deep  .icon-search-more {
         font-size: 14px;
     }
 }

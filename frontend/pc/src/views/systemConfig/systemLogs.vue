@@ -70,7 +70,7 @@
         @select="handleSelect">
         <bk-table-column type="selection" width="60" align="center"></bk-table-column>
         <bk-table-column :label="$t(`m.systemConfig['接口地址']`)" width="350">
-          <template slot-scope="props">
+          <template #default="props">
             <span class="bk-lable-primary"
               :title="props.row.url"
               @click="seeLogs(props.row)">
@@ -79,32 +79,32 @@
           </template>
         </bk-table-column>
         <bk-table-column :label="$t(`m.systemConfig['请求方法']`)">
-          <template slot-scope="props">
+          <template #default="props">
             <span :title="props.row.method">{{ props.row.method || '--' }}</span>
           </template>
         </bk-table-column>
         <bk-table-column :label="$t(`m.systemConfig['状态']`)">
-          <template slot-scope="props">
+          <template #default="props">
             <span :title="props.row.status_code">{{ props.row.status_code}}</span>
           </template>
         </bk-table-column>
         <bk-table-column :label="$t(`m.systemConfig['请求时间']`)">
-          <template slot-scope="props">
+          <template #default="props">
             <span :title="props.row.date_created">{{ props.row.date_created || '--' }}</span>
           </template>
         </bk-table-column>
         <bk-table-column :label="$t(`m.systemConfig['耗时']`)">
-          <template slot-scope="props">
+          <template #default="props">
             <span :title="props.row.duration">{{ props.row.duration || '--' }}</span>
           </template>
         </bk-table-column>
         <bk-table-column :label="$t(`m.systemConfig['接口ID']`)">
-          <template slot-scope="props">
+          <template #default="props">
             <span :title="props.row.api_instance_id">{{ props.row.api_instance_id}}</span>
           </template>
         </bk-table-column>
         <bk-table-column :label="$t(`m.systemConfig['操作']`)" width="150">
-          <template slot-scope="props">
+          <template #default="props">
             <bk-button
               theme="primary"
               text
@@ -118,11 +118,11 @@
     <!-- 查看详情 -->
     <div class="bk-logs">
       <bk-sideslider
-        :is-show.sync="customSettings.isShow"
+        v-model:is-show="customSettings.isShow"
         :title="customSettings.title"
         :quick-close="true"
         :width="customSettings.width">
-        <div class="p20" slot="content" v-if="customSettings.isShow">
+        <template #content><div class="p20" v-if="customSettings.isShow">
           <logs-info :logs-object="customSettings.logsObject"></logs-info>
         </div>
       </bk-sideslider>
@@ -132,7 +132,7 @@
 <script>
   import searchInfo from '../commonComponent/searchInfo/searchInfo.vue';
   import logsInfo from './component/logsInfo.vue';
-  import commonMix from '../commonMix/common.js';
+  import { useCommonMix } from '@/composables/useCommonMix';
   import { errorHandler } from '../../utils/errorHandler';
 
   export default {
@@ -141,7 +141,7 @@
       searchInfo,
       logsInfo,
     },
-    mixins: [commonMix],
+    setup() { return { ...useCommonMix() }; },
     data() {
       return {
         isDataLoading: false,
@@ -319,7 +319,7 @@
 </script>
 
 <style lang='scss' scoped>
-    .filter-btn /deep/ .icon-search-more {
+    .filter-btn ::v-deep  .icon-search-more {
         font-size: 14px;
     }
 </style>

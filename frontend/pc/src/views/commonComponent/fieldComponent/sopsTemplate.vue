@@ -79,12 +79,14 @@
                 {{ $t(`m.flowManager["预览"]`) }}
               </span>
             </bk-option>
-            <div slot="extension"
+            <template #extension>
+              <div
               class="add-sops-scheme"
               @click="jumpToSopsSelectSchemePage">
               <i class="bk-icon icon-plus"></i>
               {{ $t(`m.newCommon['创建执行方案']`) }}
             </div>
+            </template>
           </bk-select>
           <div v-if="item.sopsContent.id" class="reload-template-plan" @click="onReloadPlanBtnClick">
             <i class="bk-icon icon-refresh"></i>
@@ -128,7 +130,7 @@
         :hooked="hookedVarList"
         v-model="item.sopsContent.formData"
         @configLoadingChange="configLoading = $event">
-        <template slot="tagHook" slot-scope="{ scheme }">
+        <template #tagHook="{ scheme }">
           <div class="hook-area">
             <bk-checkbox
               :disabled="disabled || disabledRenderForm"
@@ -174,14 +176,14 @@
   import NoData from '../../../components/common/NoData.vue';
   import { errorHandler } from '../../../utils/errorHandler';
   import { deepClone } from '../../../utils/util.js';
-  import mixins from '../../commonMix/field.js';
-  import commonMix from '../../commonMix/common.js';
+  import { useField } from '@/composables/useField';
+  import { useCommonMix } from '@/composables/useCommonMix';
   export default {
     name: 'SOPS_TEMPLATE',
     components: {
       NoData,
     },
-    mixins: [mixins, commonMix],
+    setup() { return { ...useCommonMix(), ...useField() }; },
     props: {
       item: {
         type: Object,
@@ -260,7 +262,7 @@
     },
     created() {
       if (!this.item.sopsContent) {
-        this.$set(this.item, 'sopsContent', {
+        this.item['sopsContent'] = {
           id: '',
           sopsTask: {
             id: '',
@@ -281,7 +283,7 @@
             site_url: window.SITE_URL_SOPS + window.PREFIX_SOPS,
           },
           constants: [],
-        });
+        };
       }
       this.rules.id = this.checkCommonRules('select').select;
       this.rules.sopsTaskId = this.checkCommonRules('select').select;
@@ -580,7 +582,7 @@
       },
       // 引用/取消引用变量
       onHookChange(val, scheme) {
-        this.$set(this.hookedVarList, scheme.tag_code, val);
+        this.hookedVarList[scheme.tag_code] = val;
         const constantItem = this.item.sopsContent.constants.find(item => item.key === scheme.tag_code);
         constantItem.is_quoted = val;
         if (val) {
@@ -644,7 +646,7 @@
     text-align: center;
     cursor: pointer;
 }
-.sops-plan-option /deep/ .bk-option-content{
+.sops-plan-option ::v-deep  .bk-option-content{
     display: flex;
     justify-content: space-between;
     .preview-sops-plan {
@@ -682,7 +684,7 @@
         cursor: pointer;
     }
 }
-/deep/ .rf-form-item{
+::v-deep  .rf-form-item{
     .rf-tag-hook {
         top: 40px;
     }
@@ -693,7 +695,7 @@
         margin-right: 316px;
     }
 }
-/deep/ .rf-form-group {
+::v-deep  .rf-form-group {
     .rf-tag-hook {
         top: 40px;
     }

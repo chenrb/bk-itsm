@@ -20,5 +20,6 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE
  */
 
-// eslint-disable-next-line
-__webpack_public_path__ = window.BK_STATIC_URL + '/'
+// Vite handles publicPath via the `base` config option.
+// window.BK_STATIC_URL is used in production builds by the backend.
+// For development, Vite serves assets from root automatically.

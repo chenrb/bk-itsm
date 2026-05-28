@@ -70,8 +70,8 @@
 
 <script>
   import { errorHandler } from '@/utils/errorHandler.js';
-  import mixins from '@/views/commonMix/field.js';
-  import apiFieldsWatch from '@/views/commonMix/api_fields_watch.js';
+  import { useField } from '@/composables/useField';
+  import { useApiFieldsWatch } from '@/composables/useApiFieldsWatch';
   import CurrentStepItem from './CurrentStepItem.vue';
 
   export default {
@@ -79,7 +79,7 @@
     components: {
       CurrentStepItem,
     },
-    mixins: [mixins, apiFieldsWatch],
+    setup() { return { ...useField(), ...useApiFieldsWatch() }; },
     props: {
       // 单据信息
       basicInfomation: {

@@ -175,7 +175,7 @@
         fileList.forEach((it) => {
           if ((!it.errorMsg) && it.responseData.data) {
             for (const key in it.responseData.data.succeed_files) {
-              this.$set(this.tempObj, key, it.responseData.data.succeed_files[key]);
+              this.tempObj[key] = it.responseData.data.succeed_files[key];
             }
           }
         });

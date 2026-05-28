@@ -276,7 +276,7 @@
 
 <script>
   import i18n from '@/i18n/index.js';
-  import apiFieldsWatch from '@/views/commonMix/api_fields_watch.js';
+  import { useApiFieldsWatch } from '@/composables/useApiFieldsWatch';
   import { TASK_TEMPLATE_TYPES } from '@/constants/task.js';
   import { errorHandler } from '../../../../utils/errorHandler';
   import taskStatus from '../currentSteps/nodetask/TaskStatus.vue';
@@ -363,7 +363,7 @@
       fieldInfo,
       fieldPreview,
     },
-    mixins: [apiFieldsWatch],
+    setup() { return { ...useApiFieldsWatch() }; },
     props: {
       taskInfo: {
         type: Object,
@@ -462,8 +462,8 @@
             this.createFields = res.data.fields.create_fields.filter(item => !this.specialFieldTypes.includes(item.type));
             this.createTaskTemplateFields =                        res.data.fields.create_fields.filter(item => ['SOPS_TEMPLATE', 'DEVOPS_TEMPLATE'].includes(item.type));
             this.createTaskTemplateFields.forEach((item) => {
-              this.$set(item, 'showFeild', true);
-              this.$set(item, 'val', item.value || '');
+              item['showFeild'] = true;
+              item['val'] = item.value || '';
             });
             this.isNecessaryToWatch(
               { fields: this.createFields },
@@ -476,8 +476,8 @@
               if (item.type === 'CASCADE') {
                 item.type = 'SELECT';
               }
-              this.$set(item, 'showFeild', true);
-              this.$set(item, 'val', item.value || '');
+              item['showFeild'] = true;
+              item['val'] = item.value || '';
             });
             this.isNecessaryToWatch(
               { fields: this.dealFields },
@@ -495,8 +495,8 @@
               if (item.type === 'CASCADE') {
                 item.type = 'SELECT';
               }
-              this.$set(item, 'showFeild', true);
-              this.$set(item, 'val', item.value || '');
+              item['showFeild'] = true;
+              item['val'] = item.value || '';
             });
             this.isNecessaryToWatch(
               { fields: this.confirmFields },
@@ -556,11 +556,7 @@
         submitField.forEach((item) => {
           if (item.type === 'SOPS_TEMPLATE') {
             item.sopsContent.constants.forEach((contentItem) => {
-              this.$set(
-                contentItem,
-                'value',
-                item.sopsContent.formData[contentItem.key]
-              );
+              contentItem['value'] = item.sopsContent.formData[contentItem.key];
             });
             params.fields.push({
               key: item.key,

@@ -114,7 +114,7 @@
 </template>
 
 <script>
-  import commonMix from '../../commonMix/common.js';
+  import { useCommonMix } from '@/composables/useCommonMix';
   import priorityConfigur from './priorityConfigur.vue';
   import eventRemind from './eventRemind.vue';
   export default {
@@ -123,7 +123,7 @@
       priorityConfigur,
       eventRemind,
     },
-    mixins: [commonMix],
+    setup() { return { ...useCommonMix() }; },
     props: {
       modelList: {
         type: Array,

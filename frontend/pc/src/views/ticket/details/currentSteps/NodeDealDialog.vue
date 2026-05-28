@@ -113,7 +113,7 @@
 </template>
 
 <script>
-  import commonMix from '@/views/commonMix/common.js';
+  import { useCommonMix } from '@/composables/useCommonMix';
   import DealPerson from '@/views/processManagement/processDesign/nodeConfigue/components/dealPerson';
 
   export default {
@@ -121,7 +121,7 @@
     components: {
       DealPerson,
     },
-    mixins: [commonMix],
+    setup() { return { ...useCommonMix() }; },
     props: {
       openFormInfo: {
         type: Object,
@@ -313,11 +313,11 @@
 </script>
 
 <style lang="scss" scoped>
-/deep/ .bk-dialog-header-inner {
+::v-deep  .bk-dialog-header-inner {
   text-align: left;
 }
 .deal-person {
-  /deep/ .bk-form-width {
+  ::v-deep  .bk-form-width {
     width: 100%;
   }
 }

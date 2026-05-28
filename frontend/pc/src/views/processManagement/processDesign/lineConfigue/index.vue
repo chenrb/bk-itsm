@@ -280,8 +280,8 @@
 </template>
 <script>
   import templateNode from './templateNode.vue';
-  import apiFieldsWatch from '../../../commonMix/api_fields_watch.js';
-  import commonMix from '../../../commonMix/common.js';
+  import { useCommonMix } from '@/composables/useCommonMix';
+  import { useApiFieldsWatch } from '@/composables/useApiFieldsWatch';
   import commonTriggerList from '../../taskTemplate/components/commonTriggerList';
   import { errorHandler } from '../../../../utils/errorHandler';
   import { isEmpty } from '@/utils/util';
@@ -291,7 +291,7 @@
       templateNode,
       commonTriggerList,
     },
-    mixins: [apiFieldsWatch, commonMix],
+    setup() { return { ...useApiFieldsWatch(), ...useCommonMix() }; },
     props: {
       customLine: {
         type: Object,
@@ -470,11 +470,11 @@
       },
       dealList() {
         this.lineInfo.expressions.forEach((item) => {
-          this.$set(item, 'checkInfo', false);
+          item['checkInfo'] = false;
           item.expressions.forEach((node) => {
             node.type = node.type || 'STRING';
             node.choiceList = '';
-            this.$set(node, 'betweenList', []);
+            node['betweenList'] = [];
             node.betweenList = this.checkBetweenList(node.type);
             if (node.type === 'SELECT' || node.type === 'MULTISELECT' || node.type === 'RADIO' || node.type === 'CHECKBOX' || node.type === 'MEMBERS' || node.type === 'TREESELECT' || node.type === 'INT') {
               this.fieldList.forEach((info) => {
@@ -489,7 +489,7 @@
                   if (node.type === 'MULTISELECT' || node.type === 'CHECKBOX' || node.type === 'MEMBERS' || node.type === 'TREESELECT') {
                     node.value = Array.isArray(node.value) ? node.value : node.value.split(',');
                   }
-                  this.$set(node, 'multiSelect', !(node.type === 'SELECT' || node.type === 'RADIO'));
+                  node['multiSelect'] = !(node.type === 'SELECT' || node.type === 'RADIO');
                 }
               });
             }
@@ -537,14 +537,14 @@
             id: choice.key,
             name: choice.name,
           }));
-          this.$set(nodeItem, 'multiSelect', !(nodeItem.type === 'SELECT' || nodeItem.type === 'RADIO'));
+          nodeItem['multiSelect'] = !(nodeItem.type === 'SELECT' || nodeItem.type === 'RADIO');
         } else {
           nodeItem.choiceList = '';
-          this.$set(nodeItem, 'multiSelect', false);
+          nodeItem['multiSelect'] = false;
         }
         nodeItem.value = nodeItem.multiSelect ? [] : '';
         const betweenList = this.checkBetweenList(nodeItem.type);
-        this.$set(arguments[2], 'betweenList', betweenList);
+        arguments[2]['betweenList'] = betweenList;
         nodeItem.condition = '';
       },
       // 新增关系组
@@ -704,7 +704,7 @@
         border-color: #ff5555;
     }
     .no-label{
-        /deep/.bk-label{
+        ::v-deep .bk-label{
             display: none;
         }
     }

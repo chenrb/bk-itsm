@@ -200,7 +200,7 @@
 </script>
 <style lang='scss' scoped>
 .recipient-person {
-    /deep/ .bk-form-width {
+    ::v-deep  .bk-form-width {
         width: 100%;
     }
 }

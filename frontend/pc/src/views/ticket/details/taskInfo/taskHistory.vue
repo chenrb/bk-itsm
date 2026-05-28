@@ -26,21 +26,21 @@
       <bk-collapse v-model="activeName">
         <bk-collapse-item name="ticket">
           {{$t(`m['单据触发器']`)}}
-          <div slot="content" class="f13">
+          <template #content><div class="f13">
             <bk-table
               :header-cell-attributes="headerCellAttributes"
               :data="ticketAction"
               :size="'small'"
               @sort-change="orderingClick">
               <bk-table-column :label="$t(`m.task['执行时间']`)" :render-header="$renderHeader" :show-overflow-tooltip="true" :sortable="'custom'">
-                <template slot-scope="props">
+                <template #default="props">
                   <span :title="props.row.end_time">
                     {{props.row.end_time || '--'}}
                   </span>
                 </template>
               </bk-table-column>
               <bk-table-column :label="$t(`m.task['响应动作']`)" :render-header="$renderHeader" :show-overflow-tooltip="true">
-                <template slot-scope="props">
+                <template #default="props">
                   <span
                     :title="props.row.display_name"
                     style="color: #3A84FF;cursor: pointer"
@@ -50,7 +50,7 @@
                 </template>
               </bk-table-column>
               <bk-table-column :label="$t(`m.task['执行状态']`)" :render-header="$renderHeader" :show-overflow-tooltip="true" :sortable="'custom'">
-                <template slot-scope="props">
+                <template #default="props">
                   <span class="bk-status-success"
                     :class="{ 'bk-status-failed': props.row.status === 'FAILED' }"
                     :title="props.row.status_name">
@@ -59,13 +59,13 @@
                 </template>
               </bk-table-column>
               <bk-table-column :label="$t(`m.task['操作人']`)" :render-header="$renderHeader" :show-overflow-tooltip="true">
-                <template slot-scope="props">
+                <template #default="props">
                   <span :title="props.row.operator_username">
                     {{props.row.operator_username || '--'}}
                   </span>
                 </template>
               </bk-table-column>
-              <div class="empty" slot="empty">
+              <template #empty><div class="empty">
                 <empty
                   :is-error="listError"
                   @onRefresh="getHistoryList()">
@@ -76,20 +76,20 @@
         </bk-collapse-item>
         <bk-collapse-item :name="item.name" v-for="item in nodeActions" :key="item.name">
           {{$t(`m['节点']`) + '：' + item.name}}
-          <div slot="content" class="f13">
+          <template #content><div class="f13">
             <bk-table
               :data="item.actions"
               :size="'small'"
               @sort-change="orderingClick">
               <bk-table-column :label="$t(`m.task['执行时间']`)" :show-overflow-tooltip="true" :sortable="'custom'">
-                <template slot-scope="props">
+                <template #default="props">
                   <span :title="props.row.end_time">
                     {{props.row.end_time || '--'}}
                   </span>
                 </template>
               </bk-table-column>
               <bk-table-column :label="$t(`m.task['响应动作']`)" :show-overflow-tooltip="true">
-                <template slot-scope="props">
+                <template #default="props">
                   <span
                     :title="props.row.display_name"
                     style="color: #3A84FF;cursor: pointer"
@@ -99,7 +99,7 @@
                 </template>
               </bk-table-column>
               <bk-table-column :label="$t(`m.task['执行状态']`)" :show-overflow-tooltip="true" :sortable="'custom'">
-                <template slot-scope="props">
+                <template #default="props">
                   <span class="bk-status-success"
                     :class="{ 'bk-status-failed': props.row.status === 'FAILED' }"
                     :title="props.row.status_name">
@@ -108,13 +108,13 @@
                 </template>
               </bk-table-column>
               <bk-table-column :label="$t(`m.task['操作人']`)" :show-overflow-tooltip="true">
-                <template slot-scope="props">
+                <template #default="props">
                   <span :title="props.row.operator_username">
                     {{props.row.operator_username || '--'}}
                   </span>
                 </template>
               </bk-table-column>
-              <div class="empty" slot="empty">
+              <template #empty><div class="empty">
                 <empty
                   :is-error="listError"
                   @onRefresh="getHistoryList()">
@@ -125,21 +125,21 @@
         </bk-collapse-item>
         <bk-collapse-item name="transition">
           {{$t(`m['线条触发器']`)}}
-          <div slot="content" class="f13">
+          <template #content><div class="f13">
             <bk-table
               :header-cell-attributes="headerCellAttributes"
               :data="transitionAction"
               :size="'small'"
               @sort-change="orderingClick">
               <bk-table-column :label="$t(`m.task['执行时间']`)" :render-header="$renderHeader" :show-overflow-tooltip="true" :sortable="'custom'">
-                <template slot-scope="props">
+                <template #default="props">
                   <span :title="props.row.end_time">
                     {{props.row.end_time || '--'}}
                   </span>
                 </template>
               </bk-table-column>
               <bk-table-column :label="$t(`m.task['响应动作']`)" :render-header="$renderHeader" :show-overflow-tooltip="true">
-                <template slot-scope="props">
+                <template #default="props">
                   <span
                     :title="props.row.display_name"
                     style="color: #3A84FF;cursor: pointer"
@@ -149,7 +149,7 @@
                 </template>
               </bk-table-column>
               <bk-table-column :label="$t(`m.task['执行状态']`)" :render-header="$renderHeader" :show-overflow-tooltip="true" :sortable="'custom'">
-                <template slot-scope="props">
+                <template #default="props">
                   <span class="bk-status-success"
                     :class="{ 'bk-status-failed': props.row.status === 'FAILED' }"
                     :title="props.row.status_name">
@@ -158,13 +158,13 @@
                 </template>
               </bk-table-column>
               <bk-table-column :label="$t(`m.task['操作人']`)" :render-header="$renderHeader" :show-overflow-tooltip="true">
-                <template slot-scope="props">
+                <template #default="props">
                   <span :title="props.row.operator_username">
                     {{props.row.operator_username || '--'}}
                   </span>
                 </template>
               </bk-table-column>
-              <div class="empty" slot="empty">
+              <template #empty><div class="empty">
                 <empty
                   :is-error="listError"
                   @onRefresh="getHistoryList()">
@@ -177,11 +177,11 @@
     </div>
     <!-- 任务记录详情 -->
     <bk-sideslider
-      :is-show.sync="historyDetail.isShow"
+      v-model:is-show="historyDetail.isShow"
       :title="historyDetail.title"
       :width="historyDetail.width"
       :quick-close="true">
-      <div slot="content">
+      <template #content><div>
         <history-detail v-if="historyDetail.isShow"
           :history-id="historyDetail.id"
           :basic-infomation="basicInfomation"

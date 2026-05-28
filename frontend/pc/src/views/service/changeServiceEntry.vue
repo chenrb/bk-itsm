@@ -139,7 +139,7 @@
 </template>
 
 <script>
-  import commonMix from '../commonMix/common.js';
+  import { useCommonMix } from '@/composables/useCommonMix';
   import memberSelect from '../commonComponent/memberSelect';
   import SelectTree from '../../components/form/selectTree';
   import DealPerson from '../processManagement/processDesign/nodeConfigue/components/dealPerson';
@@ -153,7 +153,7 @@
       SelectTree,
       DealPerson,
     },
-    mixins: [commonMix],
+    setup() { return { ...useCommonMix() }; },
     props: {
       // 弹窗内容
       addDirectory: {
@@ -399,7 +399,7 @@
 </script>
 <style lang="scss" scoped>
 .display-range {
-    /deep/ .bk-form-width {
+    ::v-deep  .bk-form-width {
         width: 303px;
     }
 }

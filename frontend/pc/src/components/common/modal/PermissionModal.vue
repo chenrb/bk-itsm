@@ -32,7 +32,7 @@
     @cancel="onCloseDialog">
     <permission-content :permission-data="permissionData">
     </permission-content>
-    <div class="permission-footer" slot="footer">
+    <template #footer><div class="permission-footer">
       <div class="button-group">
         <bk-button theme="primary" :loading="loading" @click="goToApply">{{hasClicked ? $t(`m.common['已申请']`) : $t(`m.common['去申请']`)}}</bk-button>
         <bk-button theme="default" @click="onCloseDialog">{{$t(`m['取消']`)}}</bk-button>
@@ -43,6 +43,7 @@
 <script>
   import { errorHandler } from '@/utils/errorHandler.js';
   import PermissionContent from '../layout/PermissionContent.vue';
+  import lockRadiusImg from '../../../images/lock-radius.svg';
   export default {
     name: 'permissionModal',
     components: {
@@ -54,7 +55,7 @@
         hasClicked: false,
         permissionData: {},
         loading: false,
-        lock: require('../../../images/lock-radius.svg'),
+        lock: lockRadiusImg,
       };
     },
     watch: {

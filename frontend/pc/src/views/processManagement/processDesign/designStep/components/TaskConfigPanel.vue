@@ -238,7 +238,7 @@
         if (!createNodeId) {
           return;
         }
-        this.$set(item, 'dealLoading', true);
+        item['dealLoading'] = true;
         return this.$store.dispatch('deployCommon/getOrderedStates', { id: createNodeId }).then((res) => {
           item.dealList = res.data;
         })
@@ -246,7 +246,7 @@
             errorHandler(res, this);
           })
           .finally(() => {
-            this.$set(item, 'dealLoading', false);
+            item['dealLoading'] = false;
           });
       },
       getAllDealNodeIds() {
@@ -326,7 +326,7 @@
             margin-bottom: 10px;
             font-size: 12px;
             color: #63656e;
-            /deep/ .bk-label .bk-label-text {
+            ::v-deep  .bk-label .bk-label-text {
                 font-size: 12px;
             }
         }

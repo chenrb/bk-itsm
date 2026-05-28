@@ -40,11 +40,11 @@
 </template>
 
 <script>
-  import mixins from '../../commonMix/field.js';
+  import { useField } from '@/composables/useField';
 
   export default {
     name: 'INT',
-    mixins: [mixins],
+    setup() { return { ...useField() }; },
     props: {
       item: {
         type: Object,

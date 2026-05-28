@@ -92,7 +92,7 @@
                     :confirm-text="$t(`m.slaContent['确定']`)"
                     :cancel-text="$t(`m.slaContent['取消']`)"
                     @confirm="timeItem.name = timeItemNameTemplate">
-                    <div slot="content">
+                    <template #content><div>
                       <bk-input v-model.trim="timeItemNameTemplate"
                         style="width:226px"
                         maxlength="120"
@@ -170,7 +170,7 @@
                     :confirm-text="$t(`m.slaContent['确定']`)"
                     :cancel-text="$t(`m.slaContent['取消']`)"
                     @confirm="timeItem.name = timeItemNameTemplate">
-                    <div slot="content">
+                    <template #content><div>
                       <bk-input v-model.trim="timeItemNameTemplate"
                         style="width:226px"
                         maxlength="120"
@@ -262,7 +262,7 @@
                     :confirm-text="$t(`m.slaContent['确定']`)"
                     :cancel-text="$t(`m.slaContent['取消']`)"
                     @confirm="timeItem.name = timeItemNameTemplate">
-                    <div slot="content">
+                    <template #content><div>
                       <bk-input v-model.trim="timeItemNameTemplate"
                         style="width:226px"
                         maxlength="120"
@@ -346,9 +346,11 @@
       :auto-close="timeInfo.autoClose"
       :mask-close="timeInfo.autoClose"
       @confirm="TimeFrameComfirm">
-      <p slot="header">
+      <template #header>
+        <p>
         {{tempTime.isEdit ? $t(`m.slaContent["修改时段"]`) : $t(`m.slaContent["添加时段"]`)}}
       </p>
+      </template>
       <div class="bk-add-project bk-add-module">
         <bk-form
           :label-width="200"
@@ -382,10 +384,10 @@
 
 <script>
   import { errorHandler } from '../../utils/errorHandler.js';
-  import commonMix from '../commonMix/common.js';
+  import { useCommonMix } from '@/composables/useCommonMix';
   export default {
     name: 'addModel',
-    mixins: [commonMix],
+    setup() { return { ...useCommonMix() }; },
     props: {
       changeInfo: {
         type: Object,

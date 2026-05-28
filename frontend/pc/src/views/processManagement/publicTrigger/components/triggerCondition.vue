@@ -145,7 +145,7 @@
     mounted() {
       this.keyList = this.triggerVariables;
       // 初始化内置触发条件检查参数
-      this.$set(this.triggerRules, 'checkStatus', false);
+      this.triggerRules['checkStatus'] = false;
     },
     methods: {
       // 新增和删除行
@@ -201,7 +201,7 @@
         node.conditionList = this.globalChoise.trigger_methods[lowerType];
         this.getConditionList(checkItem, node);
         node.condition = '';
-        this.$set(node, 'conditionType', '');
+        node['conditionType'] = '';
         node.type = checkItem.type;
         const multiType = ['MEMBERS', 'MEMBER', 'MULTI_MEMBERS', 'MULTISELECT', 'CHECKBOX'];
         node.value = multiType.some(item => item === node.type) ? [] : '';
@@ -209,15 +209,15 @@
       changeCondition(node) {
         // 获取选中的项
         const checkItem = node.conditionList.filter(item => item.name === node.condition)[0];
-        this.$set(node, 'conditionType', checkItem.input_type);
+        node['conditionType'] = checkItem.input_type;
       },
       // 根据条件的不同，填充不同的conditionList数据
       getConditionList(checkItem, node) {
         const typeList = ['SELECT', 'RADIO', 'MULTISELECT', 'CHECKBOX'];
         if (typeList.some(item => item === checkItem.type)) {
           // 数据字典
-          this.$set(node, 'loading', true);
-          this.$set(node, 'options', []);
+          node['loading'] = true;
+          node['options'] = [];
           if (checkItem.source_type === 'DATADICT') {
             this.$store.dispatch('datadict/get_data_by_key', {
               key: checkItem.source_uri,

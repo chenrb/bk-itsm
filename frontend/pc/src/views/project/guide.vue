@@ -27,7 +27,7 @@
       :sub-title="emptyTip.subTitle"
       :desc="emptyTip.desc"
       :links="emptyTip.links">
-      <template slot="btns">
+      <template #btns>
         <bk-button theme="primary"
           v-cursor="{ active: !hasPermission(['project_create']) }"
           :class="{
@@ -44,26 +44,28 @@
 <script>
   import EmptyTip from '../project/components/emptyTip.vue';
   import bus from '@/utils/bus';
-  import permission from '@/mixins/permission.js';
+  import { usePermission } from '@/composables/usePermission';
+  import applySvg from '../../images/illustration/apply.svg';
+  import startServiceSvg from '../../images/illustration/start-service.svg';
 
   export default {
     name: 'ProjectGuidePage',
     components: {
       EmptyTip,
     },
-    mixins: [permission],
+    setup() { return { ...usePermission() }; },
     data() {
       return {
         emptyTip: {
           title: this.$t('m[\'你当前没有任何项目权限，你可以\']'),
           desc: [
             {
-              src: require('../../images/illustration/apply.svg'),
+              src: applySvg,
               title: this.$t('m[\'申请已有项目权限 或 创建新项目\']'),
               content: this.$t('m[\'流程服务以“项目”维度来隔离不同服务团队的资源，根据你的需求选择创建全新的项目，或者申请已存在项目的访问权限来使用/管理你的服务吧。\']'),
             },
             {
-              src: require('../../images/illustration/start-service.svg'),
+              src: startServiceSvg,
               title: this.$t('m[\'开始使用流程服务\']'),
               content: this.$t('m[\'在这里，你可以按需定制化设计服务流程，来满足不同场景的 IT服务诉求，设置 SLA 保障流程的质量把控，帮助企业规范、高效的管理各种应用场景的流程。\']'),
             },

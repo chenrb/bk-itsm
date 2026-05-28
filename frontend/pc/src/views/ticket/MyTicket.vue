@@ -26,10 +26,10 @@
     v-bkloading="{ isLoading: tabLoading || countLoading }"
   >
     <nav-title :title-name="$t(`m.navigation['我的工单']`)">
+      <template #tab>
       <bk-tab
         v-if="!countLoading"
-        slot="tab"
-        :active.sync="activePanel"
+        v-model:active="activePanel"
         type="unborder-card"
         @tab-change="handleTabChange"
       >
@@ -38,7 +38,7 @@
           v-bind="panel"
           :key="index"
         >
-          <template slot="label">
+          <template #label>
             <span class="panel-name">{{ panel.label }}</span>
             <span
               class="panel-count"
@@ -56,6 +56,7 @@
           </template>
         </bk-tab-panel>
       </bk-tab>
+      </template>
     </nav-title>
     <div class="table-wrap">
       <advanced-search
@@ -105,7 +106,7 @@
           width="60"
           :selectable="canSelected"
         >
-          <template slot-scope="props">
+          <template #default="props">
             <bk-checkbox
               v-if="props.row.waiting_approve"
               v-model="props.row.checkStatus"
@@ -116,7 +117,7 @@
         </bk-table-column>
         <!-- 关注单据 -->
         <bk-table-column prop="remind_btn" width="30">
-          <template slot-scope="{ row }">
+          <template #default="{ row }">
             <bk-popover
               :content="
                 !row.hasAttention
@@ -151,7 +152,7 @@
           :sortable="field.sortable"
           :prop="field.prop"
         >
-          <template slot-scope="props">
+          <template #default="props">
             <!-- 单号 -->
             <column-sn
               v-if="field.id === 'id'"
@@ -263,7 +264,7 @@
     </div>
     <!-- 审批弹窗 -->
     <approval-dialog
-      :is-show.sync="isApprovalDialogShow"
+      v-model:is-show="isApprovalDialogShow"
       :approval-info="approvalInfo"
       @cancel="onApprovalDialogHidden"
     >
@@ -297,7 +298,7 @@
   import ExportTicketDialog from '@/components/ticket/ExportTicketDialog.vue';
   import AdvancedSearch from '@/components/form/advancedSearch/NewAdvancedSearch';
   import EvaluationTicketModal from '@/components/ticket/evaluation/EvaluationTicketModal.vue';
-  import ticketListMixins from '@/mixins/ticketList.js';
+  import { useTicketList } from '@/composables/useTicketList';
 
   const PANELS = [
     {
@@ -480,7 +481,7 @@
       EvaluationTicketModal,
       ExportTicketDialog,
     },
-    mixins: [ticketListMixins],
+    setup() { return { ...useTicketList() }; },
     data() {
       return {
         panels: PANELS,
@@ -613,17 +614,17 @@
               this.ticketList = resp.data.items.map((item) => {
                 const attention = (item.followers || []).some(name => name === window.username);
 
-                this.$set(item, 'hasAttention', attention);
-                this.$set(item, 'checkStatus', false);
+                item['hasAttention'] = attention;
+                item['checkStatus'] = false;
                 return item;
               });
               if (['todo', 'approval'].includes(type)) {
-                this.$set(this.tabCount, type, resp.data.count);
+                this.tabCount[type] = resp.data.count;
               }
               this.pagination.count = resp.data.count;
               this.reloadCount();
               // 异步加载列表中的某些字段信息
-              this.__asyncReplaceTicketListAttr(this.ticketList);
+              this.asyncReplaceTicketListAttr(this.ticketList);
             }
           })
           .catch((res) => {
@@ -937,7 +938,7 @@
 @import "../../scss/mixins/scroller.scss";
 .my-ticket-page {
     min-height: 400px;
-    /deep/ .bk-tab-section {
+    ::v-deep  .bk-tab-section {
         padding: 0;
     }
 }
@@ -960,11 +961,11 @@
 .table-link {
     color: #3a84ff;
     vertical-align: baseline;
-    /deep/ .bk-link-text {
+    ::v-deep  .bk-link-text {
         font-size: 12px;
     }
 }
-/deep/ .bk-tab-label-item {
+::v-deep  .bk-tab-label-item {
     .panel-name,
     .panel-count {
         display: inline-block;
@@ -1068,7 +1069,7 @@
         }
     }
 }
-/deep/ .bk-tab-label-item {
+::v-deep  .bk-tab-label-item {
     border-bottom: 2px solid #3a84ff;
 }
 </style>

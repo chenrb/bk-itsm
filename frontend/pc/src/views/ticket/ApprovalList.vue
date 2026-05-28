@@ -63,7 +63,7 @@
         @page-limit-change="handlePageLimitChange"
         @select-all="handleSelectAll">
         <bk-table-column type="selection" width="60" :selectable="canSelected">
-          <template slot-scope="props">
+          <template #default="props">
             <bk-checkbox
               v-if="props.row.waiting_approve"
               v-model="props.row.checkStatus"
@@ -76,7 +76,7 @@
         <bk-table-column
           prop="remind_btn"
           width="30">
-          <template slot-scope="{ row }">
+          <template #default="{ row }">
             <bk-popover :content="!row.hasAttention ? $t(`m.manageCommon['关注单据']`) : $t(`m.manageCommon['取消关注']`)"
               :interactive="false"
               placement="top">
@@ -101,7 +101,7 @@
           :min-width="field.minWidth"
           :sortable="field.sortable"
           :prop="field.prop">
-          <template slot-scope="props">
+          <template #default="props">
             <!-- 单号 -->
             <column-sn v-if="field.id === 'id'" from="myApprovalTicket" :row="props.row"></column-sn>
             <!-- 当前步骤 -->
@@ -151,7 +151,7 @@
             @setting-change="handleSettingChange">
           </bk-table-setting-content>
         </bk-table-column>
-        <div class="empty" slot="empty">
+        <template #empty><div class="empty">
           <empty
             :is-error="listError"
             :is-search="searchToggle"
@@ -170,7 +170,7 @@
     </div>
     <!-- 审批弹窗 -->
     <approval-dialog
-      :is-show.sync="isApprovalDialogShow"
+      v-model:is-show="isApprovalDialogShow"
       :is-batch="isBatch"
       :approval-info="approvalInfo"
       :selected-list="selectedList"
@@ -194,7 +194,7 @@
   import ExportTicketDialog from '@/components/ticket/ExportTicketDialog.vue';
   import ApprovalDialog from '@/components/ticket/ApprovalDialog.vue';
   import i18n from '@/i18n/index.js';
-  import ticketListMixins from './ticketListMixins.js';
+  import { useTicketListMixins } from '@/composables/useTicketListMixins';
   import Empty from '../../components/common/Empty.vue';
 
   const COLUMN_LIST = [
@@ -264,7 +264,7 @@
       ApprovalDialog,
       Empty,
     },
-    mixins: [ticketListMixins],
+    setup() { return { ...useTicketListMixins() }; },
     props: {
       isIframe: Boolean,
       serviceId: [Number, String],

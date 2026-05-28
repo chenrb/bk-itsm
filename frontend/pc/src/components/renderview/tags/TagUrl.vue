@@ -6,19 +6,19 @@
     </template>
     <span v-else>{{ form.label || '--' }}</span>
     <bk-sideslider
-      :is-show.sync="isSideSliderOpen"
+      v-model:is-show="isSideSliderOpen"
       :quick-close="true"
       :title="text"
       :width="800"
       ext-cls="custom-form-iframe-sideslider">
-      <div slot="content" class="custom-form-iframe-content">
+      <template #content><div class="custom-form-iframe-content">
         <iframe :src="form.value" frameborder="0"></iframe>
       </div>
     </bk-sideslider>
   </div>
 </template>
 <script>
-  import { getFormMixins } from '../formMixins';
+  import { useFormMixins, COMMON_ATTRS } from '@/composables/useFormMixins';
 
   const textAttrs = {
     styles: {
@@ -32,7 +32,13 @@
   };
   export default {
     name: 'TagUrl',
-    mixins: [getFormMixins(textAttrs)],
+    setup() {
+      return { ...useFormMixins() };
+    },
+    props: {
+      ...COMMON_ATTRS,
+      styles: textAttrs.styles,
+    },
     data() {
       return {
         isSideSliderOpen: false,

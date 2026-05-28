@@ -43,14 +43,14 @@
 </template>
 
 <script>
-  import mixins from '../../commonMix/field.js';
+  import { useField } from '@/composables/useField';
   import memberSelect from '../memberSelect';
   import businessCard from '@/components/common/BusinessCard.vue';
 
   export default {
     name: 'MEMBER',
     components: { memberSelect, businessCard },
-    mixins: [mixins],
+    setup() { return { ...useField() }; },
     props: {
       item: {
         type: Object,
@@ -98,7 +98,7 @@
     @import '../../../scss/mixins/scroller.scss';
     .member-form-item {
         position: relative;
-        /deep/ .business-popover {
+        ::v-deep  .business-popover {
             position: absolute;
             right: 10px;
             top: 0px;

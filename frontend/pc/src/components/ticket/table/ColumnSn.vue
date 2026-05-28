@@ -36,7 +36,7 @@
       :theme="'light'"
       :on-show="getInheritTicket">
       <i class="bk-itsm-icon icon-it-new-inherit"></i>
-      <div slot="content">
+      <template #content><div>
         <template v-if="!inheritLoading">
           <!-- 母单 -->
           <template v-if="parent && parent.id">
@@ -79,7 +79,7 @@
       :theme="'light'"
       :on-show="getAssociatedTickets">
       <i class="bk-itsm-icon icon-it-new-associate"></i>
-      <div slot="content">
+      <template #content><div>
         <template v-if="!associateLoading">
           <div v-if="associates">
             <p class="inherit-title">{{$t('m.newCommon["关联单"]')}}({{associates.length}})</p>

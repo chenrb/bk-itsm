@@ -69,27 +69,27 @@
         @page-change="handlePageChange"
         @page-limit-change="handlePageLimitChange">
         <bk-table-column :label="$t(`m.basicModule['模型名称']`)">
-          <template slot-scope="props">
+          <template #default="props">
             <span :title="props.row.name">{{ props.row.name || '--' }}</span>
           </template>
         </bk-table-column>
         <bk-table-column :label="$t(`m.basicModule['模型描述']`)" width="150">
-          <template slot-scope="props">
+          <template #default="props">
             <span :title="props.row.desc">{{ props.row.desc || '--' }}</span>
           </template>
         </bk-table-column>
         <bk-table-column :label="$t(`m.deployPage['更新时间']`)" prop="update_at">
-          <template slot-scope="props">
+          <template #default="props">
             <span :title="props.row.update_at">{{ props.row.update_at || '--' }}</span>
           </template>
         </bk-table-column>
         <bk-table-column :label="$t(`m.treeinfo['更新人']`)">
-          <template slot-scope="props">
+          <template #default="props">
             <span :title="props.row.updated_by">{{props.row.updated_by || '--'}}</span>
           </template>
         </bk-table-column>
         <bk-table-column :label="$t(`m.treeinfo['操作']`)" width="150">
-          <template slot-scope="props">
+          <template #default="props">
             <bk-button theme="primary" text @click="openField(props.row)">
               {{ $t('m.deployPage["编辑"]') }}
             </bk-button>
@@ -107,10 +107,10 @@
     <!-- 新增字段 -->
     <div class="bk-add-slider">
       <bk-sideslider
-        :is-show.sync="sliderInfo.show"
+        v-model:is-show="sliderInfo.show"
         :title="sliderInfo.title"
         :width="sliderInfo.width">
-        <div slot="content" v-bkloading="{ isLoading: addLoading }" style="min-height: 300px;">
+        <template #content><div v-bkloading="{ isLoading: addLoading }" style="min-height: 300px;">
           <add-basic-module
             v-if="!addLoading && sliderInfo.show"
             :public-list="publicList"
@@ -122,7 +122,7 @@
   </div>
 </template>
 <script>
-  import commonMix from '../../commonMix/common.js';
+  import { useCommonMix } from '@/composables/useCommonMix';
   import addBasicModule from './addBasicModule.vue';
   import searchInfo from '../../commonComponent/searchInfo/searchInfo.vue';
   import { errorHandler } from '../../../utils/errorHandler.js';
@@ -133,7 +133,7 @@
       searchInfo,
       addBasicModule,
     },
-    mixins: [commonMix],
+    setup() { return { ...useCommonMix() }; },
     data() {
       return {
         // 数据
@@ -309,7 +309,7 @@
 </script>
 
 <style lang='scss' scoped>
-    .filter-btn /deep/ .icon-search-more {
+    .filter-btn ::v-deep  .icon-search-more {
         font-size: 14px;
     }
 </style>

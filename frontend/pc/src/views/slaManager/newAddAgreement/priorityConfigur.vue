@@ -63,7 +63,7 @@
                 :id="option.id"
                 :name="option.name">
               </bk-option>
-              <div slot="extension" @click="handleCreate" style="cursor: pointer;">
+              <template #extension><div @click="handleCreate" style="cursor: pointer;">
                 <i class="bk-icon icon-plus-circle"></i>{{$t(`m.slaContent['跳转新建']`)}}
               </div>
             </bk-select>
@@ -85,20 +85,20 @@
               :font-size="'normal'"
               :type="'number'"
               :min="0">
+              <template #append>
               <bk-dropdown-menu class="group-text"
                 @show="dropdownShow(item, 'resp')"
                 @hide="dropdownHide(item, 'resp')"
                 :ref="'dropdown' + index"
                 :key="'dropdown' + index"
-                slot="append"
                 :font-size="'normal'">
-                <bk-button type="primary" slot="dropdown-trigger" :ext-cls="'cus-width'">
+                <template #dropdown-trigger><bk-button type="primary" :ext-cls="'cus-width'">
                   <span v-for="(time, timeIndex) in timeList" :key="timeIndex">
                     <template v-if="item.reply_unit === time.id">{{ time.name }}</template>
                   </span>
                   <i :class="['bk-icon icon-angle-down',{ 'icon-flip': item.isRespDropdownShow }]"></i>
                 </bk-button>
-                <ul class="bk-dropdown-list" slot="dropdown-content">
+                <template #dropdown-content><ul class="bk-dropdown-list">
                   <li v-for="(time, timeIndex) in timeList" :key="timeIndex">
                     <a href="javascript:;" data-test-id="slaAgreement-a-timeHandler" @click="timeHandler('reply_unit', time, item, index, 0)">{{ time.name }}</a>
                   </li>
@@ -124,19 +124,19 @@
               :font-size="'normal'"
               :type="'number'"
               :min="0">
-              <bk-dropdown-menu class="group-text"
+                <template #append>
+                <bk-dropdown-menu class="group-text"
                 @show="dropdownShow(item, 'deal')"
                 @hide="dropdownHide(item, 'deal')"
                 :ref="'dropdown' + index"
-                slot="append"
                 :font-size="'normal'">
-                <bk-button type="primary" slot="dropdown-trigger" :ext-cls="'cus-width'">
+                <template #dropdown-trigger><bk-button type="primary" :ext-cls="'cus-width'">
                   <span v-for="(time, timeIndex) in timeList" :key="timeIndex">
                     <template v-if="item.handle_unit === time.id">{{ time.name }}</template>
                   </span>
                   <i :class="['bk-icon icon-angle-down',{ 'icon-flip': item.isDealDropdownShow }]"></i>
                 </bk-button>
-                <ul class="bk-dropdown-list" slot="dropdown-content">
+                <template #dropdown-content><ul class="bk-dropdown-list">
                   <li v-for="(time, timeIndex) in timeList" :key="timeIndex">
                     <a href="javascript:;" @click="timeHandler('handle_unit', time, item, index, 1)">{{ time.name }}</a>
                   </li>
@@ -151,10 +151,10 @@
 </template>
 
 <script>
-  import commonMix from '../../commonMix/common.js';
+  import { useCommonMix } from '@/composables/useCommonMix';
   export default {
     name: 'priorityConfigur',
-    mixins: [commonMix],
+    setup() { return { ...useCommonMix() }; },
     props: {
       modelList: {
         type: Array,
@@ -380,7 +380,7 @@
                     border-right: none;
                 }
             }
-            /deep/ .bk-label {
+            ::v-deep  .bk-label {
                 display: none;
             }
         }

@@ -381,7 +381,7 @@
             // 工作流
             this.jdList = res.data.state.slice(1, res.data.state.length);
             this.jdList = this.jdList.map((item) => {
-              this.$set(item, 'table_data', []);
+              item['table_data'] = [];
               if (!item.fields) {
                 item.fields = [];
               }
@@ -596,7 +596,7 @@
 
         .bk-RICHTEXT {
             width: 100%;
-            /deep/ img {
+            ::v-deep  img {
                 width: 100%;
             }
         }

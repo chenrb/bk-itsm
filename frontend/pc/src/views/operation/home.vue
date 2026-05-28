@@ -35,22 +35,22 @@
       <summary-card
         :title="$t(`m.operation['单据总数']`)"
         :card-data="{ total: summaryData.total.count, week: summaryData.week.ticket }">
-        <i class="bk-icon icon-order-shape" slot="icon"></i>
+        <template #icon><i class="bk-icon icon-order-shape"></i></template>
       </summary-card>
       <summary-card
         :title="$t(`m.operation['服务总数']`)"
         :card-data="{ total: summaryData.total.service_count, week: summaryData.week.service }">
-        <i class="bk-icon icon-heart-shape" slot="icon"></i>
+        <template #icon><i class="bk-icon icon-heart-shape"></i></template>
       </summary-card>
       <summary-card
         :title="$t(`m.operation['业务总数']`)"
         :card-data="{ total: summaryData.total.biz_count, week: summaryData.week.biz }">
-        <i class="bk-icon icon-folder-open-shape" slot="icon"></i>
+        <template #icon><i class="bk-icon icon-folder-open-shape"></i></template>
       </summary-card>
       <summary-card
         :title="$t(`m.operation['用户总数']`)"
         :card-data="{ total: summaryData.total.user_count, week: summaryData.week.user }">
-        <i class="bk-icon icon-user-shape" slot="icon"></i>
+        <template #icon><i class="bk-icon icon-user-shape"></i></template>
       </summary-card>
     </div>
     <div class="global-statistics statistics-section">
@@ -507,7 +507,7 @@
     mounted() {
       this.$parent.$el.addEventListener('scroll', this.handleDateSelectorPosition, false);
     },
-    beforeDestroy() {
+    beforeUnmount() {
       this.$parent.$el.removeEventListener('scroll', this.handleDateSelectorPosition, false);
     },
     methods: {
@@ -981,7 +981,7 @@
                 width: 60%;
             }
         }
-        /deep/ .bk-table {
+        ::v-deep  .bk-table {
             td, th {
                 height: 40px;
             }
@@ -999,7 +999,7 @@
                 margin-right: 0;
             }
         }
-        /deep/ .bk-table {
+        ::v-deep  .bk-table {
             td, th {
                 height: 30px;
                 border-bottom-color: #ffffff;

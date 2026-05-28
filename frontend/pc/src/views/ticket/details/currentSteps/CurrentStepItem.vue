@@ -78,7 +78,7 @@
               class="bk-processor-check">
               {{ nodeInfo.is_sequential ? $t(`m.newCommon['点击查看']`) : $t(`m.newCommon['查看会签顺序']`) }}
             </span>
-            <div class="bk-processor-content" slot="content">
+            <template #content><div class="bk-processor-content">
               <div v-for="(processor, pIndex) in nodeInfo.tasks" :key="pIndex" class="bk-processor-one">
                 <div v-if="nodeInfo.is_sequential && pIndex" class="bk-arrow">
                   <i class="bk-itsm-icon icon-arrow-long arrow-cus"></i>
@@ -176,11 +176,11 @@
                   :font-size="'medium'"
                   @show="isDropdownShow = true"
                   @hide="isDropdownShow = false">
-                  <bk-button class="node-trigger-btn" slot="dropdown-trigger" style="width:auto;">
+                  <template #dropdown-trigger><bk-button class="node-trigger-btn" style="width:auto;">
                     <span>{{ $t('m.newCommon["更多操作"]') }}</span>
                     <i :class="['bk-icon icon-angle-down',{ 'icon-flip': isDropdownShow }]"></i>
                   </bk-button>
-                  <ul class="bk-dropdown-list" slot="dropdown-content">
+                  <template #dropdown-content><ul class="bk-dropdown-list">
                     <li v-for="(trigger, tIndex) in triggers" :key="tIndex">
                       <a href="javascript:;" @click="openTriggerDialog(trigger)">{{trigger.display_name}}</a>
                     </li>
@@ -237,11 +237,11 @@
               :font-size="'medium'"
               @show="isDropdownShow = true"
               @hide="isDropdownShow = false">
-              <bk-button class="node-trigger-btn" slot="dropdown-trigger" style="width:auto;">
+              <template #dropdown-trigger><bk-button class="node-trigger-btn" style="width:auto;">
                 <span>{{ $t('m.newCommon["更多操作"]') }}</span>
                 <i :class="['bk-icon icon-angle-down',{ 'icon-flip': isDropdownShow }]"></i>
               </bk-button>
-              <ul class="bk-dropdown-list" slot="dropdown-content">
+              <template #dropdown-content><ul class="bk-dropdown-list">
                 <li v-for="(trigger, tIndex) in triggers" :key="tIndex">
                   <a href="javascript:;" @click="openTriggerDialog(trigger)">{{trigger.display_name}}</a>
                 </li>
@@ -284,7 +284,7 @@
   import NodeDealDialog from './NodeDealDialog.vue';
   import NodeTaskList from './nodetask/NodeTaskList.vue';
   import sopsAndDevopsTask from './nodetask/sopsDevopsTask.vue';
-  import commonMix from '@/views/commonMix/common.js';
+  import { useCommonMix } from '@/composables/useCommonMix';
   import { errorHandler } from '@/utils/errorHandler.js';
   import { convertTimeArrToMS, convertTimeArrToString, convertMStoString } from '@/utils/util.js';
   import i18n from '@/i18n/index.js';
@@ -303,7 +303,7 @@
       sopsAndDevopsTask,
       bkPluginTask,
     },
-    mixins: [commonMix],
+    setup() { return { ...useCommonMix() }; },
     inject: ['reload'],
     props: {
       ticketInfo: {
@@ -496,7 +496,7 @@
           const url = template_source === 'common' ? 'taskFlow/getSopsCommonPreview' : 'taskFlow/getSopsPreview';
           const res = await this.$store.dispatch(url, params);
           const constants = Object.keys(res.data.pipeline_tree.constants).map(item => {
-            this.$set(this.hookedVarList, item, false);
+            this.hookedVarList[item] = false;
             this.constantDefaultValue[item] = this.nodeInfo.contexts.task_params.constants[item];
             res.data.pipeline_tree.constants[item].value = this.nodeInfo.contexts.task_params.constants[item];
             return res.data.pipeline_tree.constants[item];
@@ -751,12 +751,12 @@
             this.triggerInfo.wayInfo.field_schema.forEach(schema => {
               const cur = curTrigger.find(item => item.key === schema.key);
               if (schema.key === 'api_source') {
-                this.$set(schema, 'systemId', '');
-                this.$set(schema, 'apiId', '');
-                this.$set(schema, 'value', cur.value);
+                schema['systemId'] = '';
+                schema['apiId'] = '';
+                schema['value'] = cur.value;
               } else {
-                this.$set(schema, 'apiContent', {});
-                this.$set(schema, 'value', cur.value);
+                schema['apiContent'] = {};
+                schema['value'] = cur.value;
               }
             });
           } else {
@@ -787,7 +787,7 @@
                   valueInfo.push(itemValue);
                 }
               }
-              this.$set(schema, 'value', valueInfo);
+              schema['value'] = valueInfo;
               // 对于发通知的数据格式
               if (schema.type === 'SUBCOMPONENT' && schema.sub_components && schema.sub_components.length) {
                 schema.sub_components.forEach(subComponent => {
@@ -834,7 +834,7 @@
                         ];
                       }
                     }
-                    this.$set(subField, 'value', subFieldValue);
+                    subField['value'] = subFieldValue;
                   });
                 });
               }

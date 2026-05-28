@@ -49,7 +49,7 @@
     mounted() {
       this.countDown();
     },
-    beforeDestroy() {
+    beforeUnmount() {
       clearInterval(this.timer);
     },
     methods: {

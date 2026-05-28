@@ -185,11 +185,11 @@
     },
     created() {
       if (!this.item.devopsContent) {
-        this.$set(this.item, 'devopsContent', {
+        this.item['devopsContent'] = {
           project_id: '',
           pipeline_id: '',
           variables: {},
-        });
+        };
       }
     },
     mounted() {
@@ -250,7 +250,7 @@
           const { variables } = this.item.devopsContent;
           res.data.properties.forEach((item) => {
             if (!Object.prototype.hasOwnProperty.call(variables, item.id)) {
-              this.$set(variables, item.id, item.defaultValue || '');
+              variables[item.id] = item.defaultValue || '';
             }
           });
           this.resetFormRules();
@@ -328,7 +328,7 @@
     &:nth-child(2n){
         margin-right: 8px;
     }
-    /deep/ .bk-form-content .form-error-tip {
+    ::v-deep  .bk-form-content .form-error-tip {
         position: absolute;
     }
 }

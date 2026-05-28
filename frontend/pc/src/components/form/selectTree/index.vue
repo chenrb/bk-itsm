@@ -121,8 +121,8 @@
         }
       },
       setCheckedValue(tree) {
-        this.$set(tree, 'checkInfo', false);
-        this.$set(tree, 'has_children', !!(tree.children && tree.children.length));
+        tree['checkInfo'] = false;
+        tree['has_children'] = !!(tree.children && tree.children.length);
         if (this.value && String(this.value) === String(tree.id)) {
           tree.checkInfo = true;
           this.checked = tree;
@@ -130,15 +130,15 @@
           return;
         }
         if (tree.has_children) {
-          this.$set(tree, 'showChildren', false);
+          tree['showChildren'] = false;
           tree.children.forEach((item) => {
             this.setCheckedValue(item);
           });
         }
       },
       openChildren(tree) {
-        this.$set(tree, 'showChildren', false);
-        this.$set(tree, 'showChildren', this.checked.route.some(item => String(item.id) === String(tree.id)));
+        tree['showChildren'] = false;
+        tree['showChildren'] = this.checked.route.some(item => String(item.id) === String(tree.id));
         if (!(tree.children && tree.children.length)) {
           return;
         }
@@ -167,21 +167,21 @@
         this.checked = tree;
         this.setDispalyName();
         this.cancelAllSectedStatus();
-        this.$set(tree, 'checkInfo', true);
+        tree['checkInfo'] = true;
         this.$emit('selected', tree.id);
         this.$emit('change', deepClone(tree));
         this.closeTree();
       },
       cancelAllSectedStatus(list = this.displayList) {
         list.forEach((tree) => {
-          this.$set(tree, 'checkInfo', false);
+          tree['checkInfo'] = false;
           if (tree.children && tree.children.length) {
             this.cancelAllSectedStatus(tree.children);
           }
         });
       },
       toggleChildren(item) {
-        this.$set(item, 'showChildren', !item.showChildren);
+        item['showChildren'] = !item.showChildren;
       },
     },
   };

@@ -79,7 +79,7 @@
   import TableContent from './tableContent';
   import ExportTicketDialog from '@/components/ticket/ExportTicketDialog.vue';
   import { errorHandler } from '../../../utils/errorHandler';
-  import ticketListMixins from '@/mixins/ticketList.js';
+  import { useTicketList } from '@/composables/useTicketList';
 
   export default {
     name: 'AllTicket',
@@ -89,7 +89,7 @@
       TableContent,
       ExportTicketDialog,
     },
-    mixins: [ticketListMixins],
+    setup() { return { ...useTicketList() }; },
     props: {
       projectId: String,
       from: String,
@@ -250,7 +250,7 @@
           .then((res) => {
             this.ticketList = res.data.items;
             // 异步加载列表中的某些字段信息
-            this.__asyncReplaceTicketListAttr(this.ticketList);
+            this.asyncReplaceTicketListAttr(this.ticketList);
             // 分页
             this.pagination.current = res.data.page;
             this.pagination.count = res.data.count;
@@ -385,7 +385,7 @@
       height: calc(100vh - 186px);
     }
   }
-  /deep/ .bk-tab-section {
+  ::v-deep  .bk-tab-section {
     padding: 0;
     background-color: #f5f7fa;
   }
@@ -420,7 +420,7 @@
       }
     }
   }
-  /deep/ .bk-tab-label-wrapper {
+  ::v-deep  .bk-tab-label-wrapper {
     box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.1);
   }
   .ticket-content {
@@ -499,7 +499,7 @@
   .bk-form-item {
     width: 50%;
     min-height: 32px;
-    /deep/ .bk-form-content {
+    ::v-deep  .bk-form-content {
       width: auto;
       min-height: 32px;
       margin-left: 150px;

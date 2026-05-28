@@ -100,7 +100,7 @@
             type="selection"
             width="60"
             align="center">
-            <template slot-scope="props">
+            <template #default="props">
               <template v-if="!hasPermission(['service_manage'], [...$store.state.project.projectAuthActions, ...props.row.auth_actions])">
                 <div style="height: 100%; display: flex; justify-content: center; align-items: center;">
                   <span
@@ -130,7 +130,8 @@
             :min-width="field.minWidth"
             :render-header="$renderHeader"
             :prop="field.id">
-            <div slot-scope="{ row }">
+            <template #default="{ row }">
+              <div>
               <template v-if="field.id === 'name'">
                 <span
                   v-if="!hasPermission(['service_manage'], [...$store.state.project.projectAuthActions, ...row.auth_actions])"
@@ -257,10 +258,11 @@
               <template v-else>
                 <span :title="row[field.id]">{{row[field.id] || '--'}}</span>
               </template>
-            </div>
+              </div>
+            </template>
           </bk-table-column>
           <bk-table-column :label="$t(`m.serviceConfig['操作']`)" width="120" fixed="right">
-            <template slot-scope="props">
+            <template #default="props">
               <!-- sla -->
               <template v-if="openFunction.SLA_SWITCH">
                 <bk-button
@@ -313,7 +315,7 @@
               <!-- 删除 -->
               <bk-popover placement="bottom" theme="light">
                 <i class="bk-itsm-icon icon-move-new"></i>
-                <div slot="content" style="white-space: normal;">
+                <template #content><div style="white-space: normal;">
                   <bk-button
                     style="font-size: 12px;"
                     data-test-id="service_button_deleteService1"
@@ -367,7 +369,7 @@
               @setting-change="handleSettingChange">
             </bk-table-setting-content>
           </bk-table-column>
-          <div class="empty" slot="empty">
+          <template #empty><div class="empty">
             <empty
               :is-error="listError"
               :is-search="searchToggle"
@@ -421,8 +423,8 @@
   import { mapState } from 'vuex';
   import NavTitle from '@/components/common/layout/NavTitle';
   import searchInfo from '../commonComponent/searchInfo/searchInfo.vue';
-  import permission from '@/mixins/permission.js';
-  import commonMix from '@/views/commonMix/common.js';
+  import { usePermission } from '@/composables/usePermission';
+  import { useCommonMix } from '@/composables/useCommonMix';
   import { errorHandler } from '../../utils/errorHandler';
   import treeInfo from './directoryCom/treeInfo.vue';
   import { deepClone } from '../../utils/util';
@@ -490,7 +492,7 @@
       Empty,
       // selectTree
     },
-    mixins: [permission, commonMix],
+    setup() { return { ...usePermission(), ...useCommonMix() }; },
     data() {
       return {
         treeInfo: {
@@ -833,7 +835,7 @@
             if (Object.keys(res.data).length > 0) {
               this.dataList = res.data.items;
               this.dataList.forEach(item => {
-                this.$set(item, 'checkStatus', false);
+                item['checkStatus'] = false;
               });
               // 分页
               this.pagination.current = res.data.page;
@@ -1213,7 +1215,7 @@
         float: left;
         transition: width 0.5s ease-in;
         width: calc(100% - 288px);
-        /deep/ .bk-table-body-wrapper {
+        ::v-deep  .bk-table-body-wrapper {
             background: #ffffff;
         }
     }
@@ -1231,7 +1233,7 @@
         width: 400px;
     }
 }
-.filter-btn /deep/ .icon-search-more {
+.filter-btn ::v-deep  .icon-search-more {
     font-size: 14px;
 }
 .bk-form-checkbox {
