@@ -47,7 +47,7 @@ class TicketViewTest(TestCase):
             return_value=True,
         )
         self.patcher_batch_resource_multi_actions_allowed = mock.patch(
-            "itsm.auth_iam.utils.IamRequest.batch_resource_multi_actions_allowed",
+            "itsm.component.utils.iam_stub.IamRequest.batch_resource_multi_actions_allowed",
             return_value={"1": {"ticket_view": True}},
         )
         self.patcher_transform_username = mock.patch(

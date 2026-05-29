@@ -29,7 +29,6 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.request import Request
 from rest_framework.fields import empty
 
-from common.template.template import Template
 from itsm.component.constants import (
     EMPTY_STRING,
     LEN_LONG,
@@ -37,16 +36,12 @@ from itsm.component.constants import (
     ACTION_OPERATE,
     ACTION_CONFIRM,
     CREATE,
-    SOPS_TASK,
     SOPS_TEMPLATE_KEY,
     VERSION,
-    DEVOPS_TASK,
 )
 from itsm.component.drf.viewsets import ModelViewSet
-from itsm.component.esb.esbclient import client_backend
-from itsm.component.exceptions import ComponentCallError
 from itsm.component.utils.basic import dotted_name, normal_name
-from itsm.task.models import Task, TaskField, TaskLib, SopsTask, TaskLibTasks, SubTask
+from itsm.task.models import Task, TaskField, TaskLib, TaskLibTasks
 from itsm.ticket.validators import regex_validate
 
 from itsm.ticket.models.ticket import Ticket
@@ -205,45 +200,6 @@ class TaskSerializer(serializers.ModelSerializer):
             confirm_fields = TaskFieldSerializer(
                 instance.confirm_fields, many=True
             ).data
-            if instance.component_type == SOPS_TASK:
-                sops_task = SopsTask.objects.get(task_id=instance.id)
-                try:
-                    detail = client_backend.sops.get_task_detail(
-                        {
-                            "bk_biz_id": sops_task.bk_biz_id,
-                            "task_id": sops_task.sops_task_id,
-                        }
-                    )
-                except Exception:
-                    raise ComponentCallError(_("标准运维获取任务详情失败"))
-                outputs = instance.ticket.get_ticket_global_output()
-                for field in create_fields:
-                    if field["key"] == SOPS_TEMPLATE_KEY:
-                        sops_constants = {}
-                        for sops_constant in detail["constants"].values():
-                            sops_constants[sops_constant["key"]] = sops_constant[
-                                "value"
-                            ]
-                        for constant in field["value"]["constants"]:
-                            if constant.get("is_quoted", False):
-                                current_value = Template(constant["value"]).render(
-                                    **outputs
-                                )
-                                changed = (
-                                    current_value != sops_constants[constant["key"]]
-                                    if constant["key"] in sops_constants
-                                    else False
-                                )
-                                constant["changed"] = changed
-                            else:
-                                constant["changed"] = False
-                                constant["value"] = sops_constants.get(
-                                    constant["key"], constant.get("value", "")
-                                )
-                        field["display_value"]["constants"] = field["value"][
-                            "constants"
-                        ]
-                data["sops_task_url"] = sops_task.sops_task_url
             data["fields"] = {
                 "create_fields": create_fields,
                 "operate_fields": operate_fields,
@@ -281,31 +237,6 @@ class TaskListSerializer(serializers.ModelSerializer):
 
     def __init__(self, instance=None, data=empty, **kwargs):
         super(TaskListSerializer, self).__init__(instance, data, **kwargs)
-        # 针对批量获取的内容，可以在init的时候进行处理，避免每个数据的序列化都要去拉取接口
-        self.sops_tasks = self.get_sops_tasks()
-        self.devops_tasks = self.get_devops_tasks()
-
-    def get_sops_tasks(self):
-        tasks = [] if self.instance is None else self.instance
-        task_ids = [task.id for task in tasks]
-        sops_task_ids = SopsTask.objects.filter(task_id__in=task_ids).values(
-            "task_id", "sops_task_url"
-        )
-        sops_task_map = {}
-        for sops_task in sops_task_ids:
-            sops_task_map[sops_task["task_id"]] = sops_task["sops_task_url"]
-        return sops_task_map
-
-    def get_devops_tasks(self):
-        tasks = [] if self.instance is None else self.instance
-        task_ids = [task.id for task in tasks]
-        sub_task_ids = SubTask.objects.filter(task_id__in=task_ids).values(
-            "task_id", "sub_task_url"
-        )
-        sub_task_map = {}
-        for sub_task in sub_task_ids:
-            sub_task_map[sub_task["task_id"]] = sub_task["sub_task_url"]
-        return sub_task_map
 
     def to_representation(self, instance):
         data = super(TaskListSerializer, self).to_representation(instance)
@@ -315,10 +246,6 @@ class TaskListSerializer(serializers.ModelSerializer):
             data["can_process"] = instance.can_process(
                 self.context["request"].user.username
             )
-        if instance.component_type in [SOPS_TASK, DEVOPS_TASK]:
-            data["task_url"] = self.sops_tasks.get(
-                str(data["id"]), ""
-            ) or self.devops_tasks.get(str(data["id"]), "")
         return data
 
 

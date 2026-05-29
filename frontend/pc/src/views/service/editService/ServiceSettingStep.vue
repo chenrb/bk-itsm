@@ -74,15 +74,6 @@
         <bk-form data-test-id="service_form_serviceSettingNotification" form-type="vertical" :model="formData" class="service-setting-form">
           <bk-form-item :label="$t(`m.treeinfo['通知方式']`)">
             <bk-checkbox-group v-model="formData.notify">
-              <!-- <bk-checkbox :value="'WEIXIN'" :ext-cls="'mr40'">
-                                {{ $t(`m.treeinfo["企业微信"]`) }}
-                            </bk-checkbox>
-                            <bk-checkbox :value="'EMAIL'" :ext-cls="'mr40'">
-                                {{ $t(`m.treeinfo["邮件"]`) }}
-                            </bk-checkbox>
-                            <bk-checkbox :value="'SMS'">
-                                {{ $t('m.treeinfo["手机短信"]') }}
-                            </bk-checkbox> -->
               <bk-checkbox v-for="item in noticeType" :key="item.id" :value="item.typeName" :ext-cls="'mr40'">
                 {{ item.name }}
               </bk-checkbox>
@@ -226,11 +217,6 @@
           { name: this.$t('m.treeinfo[\'指定节点前可以撤回\']'), id: 'specify_node', key: 3 },
         ],
         displayRangeTypes: ['OPEN', 'ORGANIZATION', 'GENERAL', 'API'],
-        // notifyList: [
-        //     { name: this.$t(`m.treeinfo["企业微信"]`), type: 'WEIXIN' },
-        //     { name: this.$t(`m.treeinfo["邮件"]`), type: 'EMAIL' },
-        //     { name: this.$t(`m.treeinfo["SMS短信"]`), type: 'SMS' }
-        // ],
         nodeListLoading: false,
         nodeList: [],
         formData: {
@@ -243,7 +229,7 @@
           otherSettings: [],
           notify_rule: 'ONCE',
           notify_freq: '',
-          notify: ['WEIXIN', 'EMAIL'],
+          notify: ['EMAIL'],
           is_auto_approve: false,
         },
         superviseTypes: ['PERSON', 'GENERAL', 'STARTER'],

@@ -142,19 +142,17 @@
     setup() { return { ...usePermission() }; },
     data() {
       return {
-        acticeTab: 'WEIXIN',
+        acticeTab: 'EMAIL',
         isShowEdit: false,
         isEdit: false,
         editNoticeId: '',
         remindWayList: [
-          { id: 'WEIXIN', name: this.$t('m.treeinfo["企业微信"]') },
           { id: 'EMAIL', name: this.$t('m.treeinfo["邮件"]') },
           { id: 'SMS', name: this.$t('m.treeinfo["手机短信"]') },
         ],
         noticeList: [],
         // 先写死，后续添加自定义
         noticeTypeLIST: [
-          { id: 'WEIXIN', name: this.$t('m.treeinfo["企业微信"]') },
           { id: 'EMAIL', name: this.$t('m.treeinfo["邮件"]') },
           { id: 'SMS', name: this.$t('m.treeinfo["手机短信"]') },
         ],

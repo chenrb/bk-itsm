@@ -61,9 +61,6 @@ urlpatterns = [
     re_path(r"^ticket_status/", include("itsm.ticket_status.urls")),
     # Trigger Module
     re_path(r"^trigger/", include("itsm.trigger.urls")),
-    # iam
-    re_path(r"^iam/", include("itsm.auth_iam.urls")),
-    # iam
     re_path(r"^project/", include("itsm.project.urls")),
     # 人员选择器
     re_path(r"^c/compapi/v2/usermanage/fs_list_users/$", get_batch_users),

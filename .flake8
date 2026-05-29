@@ -1,5 +1,5 @@
 [flake8]
-exclude = 
+exclude =
     .git,
     __pycache__,
     *migrations*,
@@ -7,19 +7,15 @@ exclude =
     docs,
     build,
     pipeline,
-    *weixin/core/*,
     account,
     blueking,
     tests,
     wiki,
     frontend/*,
-    django_signal_valve,
     business_rules,
     requests_tracker,
     blueapps,
     flower,
-    monitors,
-    sops_proxy,
     itsm/tests/,
     itsm/ticket/views/sql_file.py,
     

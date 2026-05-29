@@ -54,8 +54,6 @@ from itsm.component.constants import (
     RUNNING,
     STATUS_CHOICES,
     TABLE,
-    TASK_SOPS_STATE,
-    TASK_DEVOPS_STATE,
     TASK_STATE,
     TASK_STATUS_DICT,
     SIGN_STATE,
@@ -253,28 +251,6 @@ class StatusSerializer(serializers.ModelSerializer):
                     remote_info["req_params"] = inst.query_params
                 else:
                     remote_info["req_body"] = inst.query_params
-            data["api_info"] = remote_info
-        elif inst.state["type"] == TASK_SOPS_STATE:
-            remote_info = {
-                "sops_info": self.build_sops_info(
-                    inst.state["extras"]["sops_info"],
-                    data["contexts"].get("task_params", {}),
-                ),
-                "sops_result": TASK_STATUS_DICT.get(data["status"], _("执行中")),
-                "sops_task_url": data["contexts"].get("task_url", ""),
-                "error_message": inst.error_message,
-            }
-            data["api_info"] = remote_info
-        elif inst.state["type"] == TASK_DEVOPS_STATE:
-            remote_info = {
-                "devops_info": self.build_devops_info(
-                    inst.state["extras"]["devops_info"],
-                    data["contexts"].get("build_params", {}),
-                ),
-                "devops_result": TASK_STATUS_DICT.get(data["status"], _("执行中")),
-                "devops_build_url": data["contexts"].get("build_url", ""),
-                "error_message": inst.error_message,
-            }
             data["api_info"] = remote_info
         elif inst.state["type"] == WEBHOOK_STATE:
             data["api_info"] = {

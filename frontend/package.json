@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "cd pc/ && npm run build && cd ../weixin && npm run build"
+    "build": "cd pc/ && npm run build"
   },
   "author": "",
   "license": "ISC"

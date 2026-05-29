@@ -60,7 +60,6 @@ from itsm.component.constants import (
     SIGN_STATE,
     APPROVAL_STATE,
     TASK_STATE,
-    TASK_SOPS_STATE,
 )
 from itsm.component.drf.mixins import ObjectManagerMixin
 from itsm.component.utils.basic import create_version_number, list_by_separator
@@ -605,7 +604,6 @@ class WorkflowVersion(WorkflowBase):
             SIGN_STATE,
             APPROVAL_STATE,
             TASK_STATE,
-            TASK_SOPS_STATE,
         ]
         for state_id in list(OrderedDict.fromkeys(state_id_list)):
             state_info = self.states[str(state_id)]

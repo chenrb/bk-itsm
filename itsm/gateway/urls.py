@@ -44,40 +44,4 @@ urlpatterns = [
         r"^usermanage/get_department_users_count/$", views.get_department_users_count
     ),
     re_path(r"^usermanage/get_user_info/$", views.get_user_info),
-    re_path(r"^sops/get_user_project_list/$", views.get_user_project_list),
-    re_path(r"^sops/get_template_list/$", views.get_template_list),
-    re_path(r"^sops/get_template_detail/$", views.get_template_detail),
-    re_path(r"^sops/get_unfinished_sops_tasks/$", views.get_unfinished_sops_tasks),
-    re_path(r"^sops/get_sops_tasks/$", views.get_sops_tasks),
-    re_path(r"^sops/get_sops_tasks_detail/$", views.get_sops_tasks_detail),
-    re_path(r"^sops/get_sops_template_schemes/$", views.get_sops_template_schemes),
-    re_path(r"^sops/get_sops_preview_task_tree/$", views.get_sops_preview_task_tree),
-    re_path(
-        r"^sops/get_sops_preview_common_task_tree/$",
-        views.get_sops_preview_common_task_tree,
-    ),
-    re_path(r"^devops/get_user_pipeline_list/$", views.get_user_pipeline_list),
-    re_path(r"^devops/get_user_projects/$", views.get_user_projects),
-    re_path(
-        r"^devops/get_pipeline_build_start_info/$", views.get_pipeline_build_start_info
-    ),
-    re_path(r"^devops/get_user_pipeline_detail/$", views.get_user_pipeline_detail),
-    re_path(r"^devops/get_pipeline_build_list/$", views.get_pipeline_build_list),
-    re_path(r"^devops/start_user_pipeline/$", views.start_user_pipeline),
-    re_path(
-        r"^devops/get_user_pipeline_build_status/$",
-        views.get_user_pipeline_build_status,
-    ),
-    re_path(
-        r"^devops/get_user_pipeline_build_detail/$",
-        views.get_user_pipeline_build_detail,
-    ),
-    re_path(
-        r"^devops/get_pipeline_build_artifactory/$",
-        views.get_pipeline_build_artifactory,
-    ),
-    re_path(
-        r"^devops/get_pipeline_build_artifactory_download_url/$",
-        views.get_pipeline_build_artifactory_download_url,
-    ),
 ]

@@ -93,9 +93,6 @@
       <bk-form :label-width="170" :model="noticeData">
         <bk-form-item :label="$t(`m.treeinfo['通知方式']`)">
           <bk-checkbox-group v-model="noticeData.notify">
-            <bk-checkbox :value="'WEIXIN'" :ext-cls="'mr30'">
-              <img class="notice-option-icon" :src="qwIcon" style="width: 20px" /> {{ $t(`m.treeinfo["企业微信"]`) }}
-            </bk-checkbox>
             <bk-checkbox :value="'EMAIL'" :ext-cls="'mr30'">
               <img class="notice-option-icon" :src="emailIcon" style="width: 20px" /> {{ $t(`m.treeinfo["邮件"]`) }}
             </bk-checkbox>
@@ -239,7 +236,6 @@
   import BasicCard from '@/components/common/layout/BasicCard.vue';
   import { usePermission } from '@/composables/usePermission';
   import { errorHandler } from '../../../../utils/errorHandler.js';
-  import qwIcon from '../../../../images/qw.svg';
   import emailIcon from '../../../../images/email.svg';
 
   export default {
@@ -299,7 +295,7 @@
           personList: [],
           notify_rule: '',
           notify_freq: '',
-          notify: ['WEIXIN', 'EMAIL'],
+          notify: ['EMAIL'],
         },
         // 催办角色
         roles: {
@@ -307,7 +303,6 @@
           supChildList: [],
         },
         notifyList: [
-          { name: this.$t('m.treeinfo["企业微信"]'), type: 'WEIXIN' },
           { name: this.$t('m.treeinfo["邮件"]'), type: 'EMAIL' },
           { name: this.$t('m.treeinfo["SMS短信"]'), type: 'SMS' },
         ],
@@ -345,7 +340,6 @@
         // 校验
         rules: {},
         showMoreConfig: false,
-        qwIcon: qwIcon,
         emailIcon: emailIcon,
       };
     },

@@ -24,20 +24,18 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
 import base64
-import os
 import pstats
 import time
 from io import StringIO
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.utils.deprecation import MiddlewareMixin
 from pyinstrument import Profiler
 
 from common.log import logger
 from common.mymako import render_mako_context
-from itsm.component.constants import EXEMPT_HTTPS_REDIRECT
 from itsm.iadmin.contants import SERVICE_SWITCH
 from itsm.iadmin.models import SystemSettings
 
@@ -227,40 +225,10 @@ class NginxAuthProxy(MiddlewareMixin):
         return None
 
 
-class HttpResponseIndexRedirect(HttpResponseRedirect):
-    def __init__(self, redirect_to, *args, **kwargs):
-        super(HttpResponseIndexRedirect, self).__init__(redirect_to, *args, **kwargs)
-        self["Location"] = os.path.join(
-            settings.WEIXIN_APP_EXTERNAL_HOST, redirect_to.lstrip("/")
-        )
-
-
 class HttpsMiddleware(MiddlewareMixin):
     def process_request(self, request):
         if settings.ENVIRONMENT == "dev":
             return None
-
-        if settings.RUN_VER == "ieod":
-            # 对于openapi 跳转豁免
-            if request.path.startswith(EXEMPT_HTTPS_REDIRECT):
-                return None
-
-            # 如果发现不是woa过来的域名
-            if (
-                settings.WEIXIN_APP_EXTERNAL_HOST
-                and settings.WEIXIN_APP_EXTERNAL_HOST.find(request.get_host()) == -1
-            ):
-                # 如果 host的值和HTTP_REFERER一致，则跳转
-                # 如果是从开发者中心中出来的，此时有HTTP_REFERER
-                if (
-                    "HTTP_REFERER" not in request.META
-                    or request.get_host() in request.META.get("HTTP_REFERER", "")
-                ):
-                    logger.info("执行跳转: request.path = {}".format(request.path))
-                    return HttpResponseIndexRedirect(request.path)
-
-            if not request.is_secure():
-                return HttpResponseIndexRedirect(request.path)
 
         return None
 

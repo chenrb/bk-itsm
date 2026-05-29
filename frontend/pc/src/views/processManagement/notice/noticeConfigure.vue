@@ -109,11 +109,10 @@
       return {
         isDataLoading: true,
         remindWayList: [
-          { id: 'WEIXIN', name: this.$t('m.treeinfo["企业微信"]') },
           { id: 'EMAIL', name: this.$t('m.treeinfo["邮件"]') },
           { id: 'SMS', name: this.$t('m.treeinfo["手机短信"]') },
         ],
-        checkId: 'WEIXIN',
+        checkId: 'EMAIL',
         noticeList: [],
         noticeInfo: {
           show: false,

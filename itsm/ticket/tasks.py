@@ -451,7 +451,7 @@ def collection_near_users():
 def build_email_message(tickets):
     def build_ticket_url(ticket_id):
         return "{site_url}/#/ticket/{ticket_id}/".format(
-            site_url=settings.TICKET_NOTIFY_HOST.rstrip("/"), ticket_id=ticket_id
+            site_url=settings.FRONTEND_URL.rstrip("/"), ticket_id=ticket_id
         )
 
     data = []

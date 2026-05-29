@@ -28,7 +28,7 @@ import datetime
 
 from itsm.component.decorators import login_exempt
 from django.conf import settings
-from django.http import JsonResponse, HttpResponseRedirect
+from django.http import JsonResponse
 from django.shortcuts import render
 from django.utils.translation import gettext as _, get_language
 from django.views.decorators.http import require_GET
@@ -37,7 +37,6 @@ from common.template.template import Template
 from itsm.iadmin.contants import NOTICE_CENTER_SWITCH
 from itsm.iadmin.models import SystemSettings
 from itsm.project.models import UserProjectAccessRecord
-from config.default import FRONTEND_URL
 from itsm.role.models import BKUserRole, UserRole
 
 
@@ -59,15 +58,6 @@ def _get_footer():
         _("技术支持"), _("社区论坛"), _("产品官网")
     )
     return getattr(settings, "FOOTER", None) or default_footer
-
-
-class HttpResponseIndexRedirect(HttpResponseRedirect):
-    def __init__(self, redirect_to, *args, **kwargs):
-        super(HttpResponseIndexRedirect, self).__init__(redirect_to, *args, **kwargs)
-        self["Location"] = os.path.join(
-            settings.WEIXIN_APP_EXTERNAL_HOST.replace("https", "http"),
-            redirect_to.lstrip("/"),
-        )
 
 
 def init(request):
@@ -107,26 +97,7 @@ def index(request):
     TITLE = _get_title()
     LOGIN_URL = settings.LOGIN_URL
 
-    # 如果发现不是woa过来的域名
-    if (
-        settings.WEIXIN_APP_EXTERNAL_HOST
-        and settings.WEIXIN_APP_EXTERNAL_HOST.find(request.get_host()) == -1
-    ):
-        # 如果 host的值和HTTP_REFERER一致，则跳转
-        # 如果是从开发者中心中出来的，此时有HTTP_REFERER
-        if "HTTP_REFERER" not in request.META or request.get_host() in request.META.get(
-            "HTTP_REFERER", ""
-        ):
-            return HttpResponseIndexRedirect(request.path)
-
-    # 默认为当前pass host
     BK_USER_MANAGE_HOST = settings.BK_USER_MANAGE_HOST
-    # 如果来源域名非微信外网域名，则使用的BK_USER_MANAGE_HOST地址
-    if (
-        settings.WEIXIN_APP_EXTERNAL_HOST
-        and settings.WEIXIN_APP_EXTERNAL_HOST.find(request.get_host()) == -1
-    ):
-        BK_USER_MANAGE_HOST = FRONTEND_URL
 
     try:
         notice_center_switch_value = SystemSettings.objects.get(
@@ -151,8 +122,6 @@ def index(request):
         "index.html",
         {
             "is_vip": "true",
-            "BK_CC_HOST": settings.BK_CC_HOST,
-            "BK_JOB_HOST": settings.BK_JOB_HOST,
             "CUSTOM_TITLE": TITLE,
             "USE_LOG": "true",
             "LOGIN_URL": LOGIN_URL,
@@ -163,13 +132,11 @@ def index(request):
             "TAM_PROJECT_ID": settings.TAM_PROJECT_ID,
             "DOC_URL": doc_url,
             "BK_DOC_CENTER_HOST": settings.BK_DOC_CENTER_HOST,
-            "SOPS_URL": settings.SOPS_SITE_URL,
             "NOTICE_CENTER_SWITCH": notice_center_switch_value,
             "BK_SHARED_RES_URL": settings.BK_SHARED_RES_URL,
             "BK_PLATFORM_NAME": settings.BK_PLATFORM_NAME,
             "VERSION": version,
             "BKAPP_CSRF_COOKIE_NAME": settings.CSRF_COOKIE_NAME,
-            "BKAPP_CI_ENABLED": settings.BKAPP_CI_ENABLED,
         },
     )
 

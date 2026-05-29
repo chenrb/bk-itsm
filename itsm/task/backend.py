@@ -32,7 +32,7 @@ from collections import OrderedDict, defaultdict
 
 from django.db import transaction
 
-from itsm.component.constants import TASK_PI_PREFIX, SOPS_TASK, NEW, QUEUE, DEVOPS_TASK
+from itsm.component.constants import TASK_PI_PREFIX, NEW, QUEUE
 from itsm.task.models import Task
 from itsm.task.serializers import TaskSerializer
 from pipeline.builder import ServiceActivity, Var
@@ -163,15 +163,7 @@ class TaskPipelineWrapper(object):
     @staticmethod
     def build_component_for_task(task):
         """组装任务组件"""
-        # 标准运维任务
-        if task["component_type"] == SOPS_TASK:
-            act = ServiceActivity("sops_task")
-        # 蓝盾任务
-        elif task["component_type"] == DEVOPS_TASK:
-            act = ServiceActivity("devops_task")
-        # 普通任务
-        else:
-            act = ServiceActivity("normal_task")
+        act = ServiceActivity("itsm_auto")
 
         act.component.inputs.task_id = Var(type=Var.PLAIN, value=str(task["id"]))
         return act.component_dict()

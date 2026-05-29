@@ -52,7 +52,6 @@ from itsm.component.constants import (
     SIGN_STATE,
     APPROVAL_STATE,
     TASK_STATE,
-    TASK_SOPS_STATE,
 )
 from itsm.component.utils.basic import create_version_number, get_random_key
 from itsm.postman.models import RemoteApiInstance
@@ -351,7 +350,7 @@ class State(Model):
         exclude_states.extend([item.id for item in pre_states])
         filter_type = [NORMAL_STATE, SIGN_STATE, APPROVAL_STATE]
         if contain_auto == "true":
-            filter_type.extend([TASK_STATE, TASK_SOPS_STATE])
+            filter_type.extend([TASK_STATE])
         allow_create_task_states = self.workflow.states.filter(type__in=filter_type)
         post_states = allow_create_task_states.exclude(id__in=exclude_states).exclude(
             is_builtin=True

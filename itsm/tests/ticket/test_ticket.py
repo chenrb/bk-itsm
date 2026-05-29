@@ -96,7 +96,7 @@ class TicketTest(TestCase):
         self.assertEqual(rsp.data["message"], "success")
 
     @override_settings(MIDDLEWARE=("itsm.tests.middlewares.OverrideMiddleware",))
-    @mock.patch("itsm.auth_iam.utils.IamRequest.batch_resource_multi_actions_allowed")
+    @mock.patch("itsm.component.utils.iam_stub.IamRequest.batch_resource_multi_actions_allowed")
     @mock.patch("itsm.role.models.get_user_departments")
     @mock.patch("itsm.ticket.permissions.TicketPermissionValidate.has_permission")
     @mock.patch(
@@ -163,7 +163,7 @@ class TicketTest(TestCase):
         self.assertEqual(["admin"], list_rsp.data["data"]["items"][0]["followers"])
 
     @override_settings(MIDDLEWARE=("itsm.tests.middlewares.OverrideTestMiddleware",))
-    @mock.patch("itsm.auth_iam.utils.IamRequest.batch_resource_multi_actions_allowed")
+    @mock.patch("itsm.component.utils.iam_stub.IamRequest.batch_resource_multi_actions_allowed")
     @mock.patch("itsm.role.models.get_user_departments")
     def test_list_follower(
         self, patch_get_user_departments, patch_batch_resource_multi_actions_allowed
@@ -473,7 +473,7 @@ class TicketTest(TestCase):
         self.assertEqual(ticket_id, list_rsp.data["data"]["id"])
 
     @override_settings(MIDDLEWARE=("itsm.tests.middlewares.OverrideTestMiddleware",))
-    @mock.patch("itsm.auth_iam.utils.IamRequest.resource_multi_actions_allowed")
+    @mock.patch("itsm.component.utils.iam_stub.IamRequest.resource_multi_actions_allowed")
     @mock.patch("itsm.ticket.serializers.ticket.get_bk_users")
     @mock.patch("itsm.component.utils.misc.get_bk_users")
     def test_operate(
@@ -618,7 +618,7 @@ class TicketTest(TestCase):
     @override_settings(
         MIDDLEWARE=("itsm.tests.middlewares.OverrideMiddleware",), ENVIRONMENT="dev"
     )
-    @mock.patch("itsm.auth_iam.utils.IamRequest")
+    @mock.patch("itsm.component.utils.iam_stub.IamRequest")
     @mock.patch("itsm.ticket.serializers.ticket.get_bk_users")
     @mock.patch("itsm.component.utils.misc.get_bk_users")
     @mock.patch("itsm.ticket.permissions.TicketPermissionValidate.has_permission")

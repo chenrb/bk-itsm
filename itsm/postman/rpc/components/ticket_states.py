@@ -31,7 +31,6 @@ from itsm.component.constants import (
     FLOW_STATES,
     NORMAL_STATE,
     TASK_STATE,
-    TASK_SOPS_STATE,
     SIGN_STATE,
 )
 from itsm.component.dlls.component import BaseComponentForm
@@ -71,7 +70,7 @@ class GetTicketFields(BaseComponent):
             raise
         payload = StateSerializer(
             current_workflow.states.filter(
-                type__in=[NORMAL_STATE, TASK_STATE, TASK_SOPS_STATE, SIGN_STATE],
+                type__in=[NORMAL_STATE, TASK_STATE, SIGN_STATE],
                 is_builtin=False,
             ),
             many=True,

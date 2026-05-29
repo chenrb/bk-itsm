@@ -35,10 +35,8 @@ from itsm.component.constants import (
     PERSON,
     PROCESSOR_CHOICES,
     STATE_TYPE_CHOICES,
-    TASK_SOPS_STATE,
     TASK_STATE,
     LEN_LONG,
-    TASK_DEVOPS_STATE,
 )
 from itsm.component.exceptions import ParamError
 from itsm.component.utils.basic import dotted_name, dotted_property
@@ -278,16 +276,6 @@ class StateSerializer(serializers.ModelSerializer):
             self.validators = [
                 StatePollValidator(),
                 StateGlobalVariablesValidator(self.instance),
-            ]
-            return super(StateSerializer, self).run_validation(data)
-        elif self.instance.type == TASK_SOPS_STATE:
-            self.validators = [
-                SopsStateValidator(self.instance),
-            ]
-            return super(StateSerializer, self).run_validation(data)
-        elif self.instance.type == TASK_DEVOPS_STATE:
-            self.validators = [
-                DevSopsStateValidator(self.instance),
             ]
             return super(StateSerializer, self).run_validation(data)
         else:

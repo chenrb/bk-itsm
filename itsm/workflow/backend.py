@@ -51,7 +51,6 @@ from itsm.component.constants import (
     VIRTUAL_STATE,
     TICKET_GLOBAL_VARIABLES,
     APPROVAL_STATE,
-    TASK_DEVOPS_STATE,
     WEBHOOK_STATE,
     BK_PLUGIN_STATE,
 )
@@ -129,8 +128,7 @@ class PipelineWrapper(object):
                 type=Var.PLAIN, value=str(state.get("poll_interval", 1))
             )
         elif state["type"] == TASK_SOPS_STATE:
-            act = ServiceActivity("bk_sops")
-        # 开始节点state['type'] == NORMAL_STATE and state['is_builtin']
+            act = ServiceActivity("itsm_auto")
         elif state["type"] == NORMAL_STATE and state["is_builtin"]:
             act = ServiceActivity("itsm_create")
         elif state["type"] == VIRTUAL_STATE:
@@ -138,7 +136,7 @@ class PipelineWrapper(object):
         elif state["type"] == SIGN_STATE:
             act = ServiceActivity("itsm_sign")
         elif state["type"] == TASK_DEVOPS_STATE:
-            act = ServiceActivity("bk_devops")
+            act = ServiceActivity("itsm_auto")
         elif state["type"] == WEBHOOK_STATE:
             act = ServiceActivity("itsm_webhook")
         elif state["type"] == BK_PLUGIN_STATE:
@@ -606,11 +604,9 @@ class PipelineWrapper(object):
                     NORMAL_STATE,
                     ROUTER_STATE,
                     TASK_STATE,
-                    TASK_SOPS_STATE,
                     SIGN_STATE,
                     VIRTUAL_STATE,
                     APPROVAL_STATE,
-                    TASK_DEVOPS_STATE,
                     WEBHOOK_STATE,
                     BK_PLUGIN_STATE,
                 ]:

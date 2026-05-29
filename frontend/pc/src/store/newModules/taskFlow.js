@@ -70,22 +70,9 @@ export default {
         return res;
       });
     },
-    getSopsTask({ commit, state, dispatch }, params) {
-      return ajax.get(`/gateway/sops/get_sops_tasks/`, { params: params }).then((response) => {
-        const res = response.data;
-        return res;
-      });
-    },
     // 获取标准运维未执行的任务
     getSopsUnfinishedTask({ commit, state, dispatch }, params) {
       return ajax.get(`/gateway/sops/get_unfinished_sops_tasks/`, { params: params }).then((response) => {
-        const res = response.data;
-        return res;
-      });
-    },
-    // 获取标准运维任务详情
-    getSopsTaskDetail({ commit, state, dispatch }, params) {
-      return ajax.get(`/gateway/sops/get_sops_tasks_detail/`, { params: params }).then((response) => {
         const res = response.data;
         return res;
       });
@@ -96,13 +83,6 @@ export default {
     },
     getSopsCommonPreview({ commit }, params) {
       return ajax.post(`/gateway/sops/get_sops_preview_common_task_tree/`, params).then((response) => response.data);
-    },
-    // 同步标准运维任务状态
-    syncSopsTaskStatus({ commit, state, dispatch }, params) {
-      return ajax.get(`/task/tasks/sync_task_status/`, { params: params }).then((response) => {
-        const res = response.data;
-        return res;
-      });
     },
     // 根据条件获取任务列表
     getTaskList({ commit, state, dispatch }, params) {

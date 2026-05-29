@@ -162,9 +162,8 @@
             remindRuleValue: 20,
             remindRuleUnit: '%',
             receivers: '',
-            notify_type_list: ['email', 'weixin'],
+            notify_type_list: ['email'],
             email_notify: '',
-            weixin_notify: '',
             notify_rule: 'once',
             notify_freq: 10,
             freq_unit: '%',
@@ -178,9 +177,8 @@
             remindRuleValue: 20,
             remindRuleUnit: '%',
             receivers: '',
-            notify_type_list: ['email', 'weixin'],
+            notify_type_list: ['email'],
             email_notify: '',
-            weixin_notify: '',
             notify_rule: 'once',
             notify_freq: 10,
             freq_unit: '%',
@@ -194,9 +192,8 @@
             isCheck: false,
             remindRuleText: this.$t('m[\'响应时长超出协议标准还未响应时\']'),
             receivers: '',
-            notify_type_list: ['email', 'weixin'],
+            notify_type_list: ['email'],
             email_notify: '',
-            weixin_notify: '',
             notify_rule: 'once',
             notify_freq: 10,
             freq_unit: '%',
@@ -208,9 +205,8 @@
             isCheck: false,
             remindRuleText: this.$t('m[\'处理时长超出协议标准还未解决时\']'),
             receivers: '',
-            notify_type_list: ['email', 'weixin'],
+            notify_type_list: ['email'],
             email_notify: '',
-            weixin_notify: '',
             notify_rule: 'once',
             notify_freq: 10,
             freq_unit: '%',
@@ -232,20 +228,6 @@
       },
     },
     watch: {
-      // emailNotifyEventList: {
-      //     handler: function (list) {
-      //         this.wacthEventList('testPriority1', 'email', list)
-      //         this.wacthEventList('testPriority3', 'email', list)
-      //     },
-      //     immediate: true
-      // },
-      // weixinNotifyEventList: {
-      //     handler: function (list) {
-      //         this.wacthEventList('testPriority1', 'weixin', list)
-      //         this.wacthEventList('testPriority3', 'weixin', list)
-      //     },
-      //     immediate: true
-      // }
       'changeInfo.is_reply_need'(val) {
         if (!val) {
           this.$refs.priorityConfigur.clearFromError();

@@ -287,16 +287,12 @@ class Action(Model):
             "freq_unit": "%",  # ["%", "m", "h", "d"]
             "notify": [
                 {
-                    "notify_type": "weixin",
+                    "notify_type": "email",
                     "notify_template": 1
                 },
                 {
-                    "notify_type": "email",
-                    "notify_template": 2
-                },
-                {
                     "notify_type": "sms",
-                    "notify_template": 3
+                    "notify_template": 2
                 }
             ]
         }

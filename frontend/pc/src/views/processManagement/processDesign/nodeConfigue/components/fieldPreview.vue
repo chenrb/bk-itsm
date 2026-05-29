@@ -57,7 +57,6 @@
   import tree from '../../../../commonComponent/fieldComponent/tree.vue';
   import file from '../../../../commonComponent/fieldComponent/file.vue';
   import cascade from '../../../../commonComponent/fieldComponent/cascade.vue';
-  import sopsTemplate from '../../../../commonComponent/fieldComponent/sopsTemplate.vue';
   import complexMembers from '../../../../commonComponent/fieldComponent/complexMembers.vue';
   import customForm from '../../../../commonComponent/fieldComponent/customForm.vue';
 
@@ -83,7 +82,6 @@
       'CW-TREESELECT': tree,
       'CW-FILE': file,
       'CW-CASCADE': cascade,
-      'CW-SOPS_TEMPLATE': sopsTemplate,
       'CW-COMPLEX-MEMBERS': complexMembers,
       'CW-CUSTOM-FORM': customForm,
     },

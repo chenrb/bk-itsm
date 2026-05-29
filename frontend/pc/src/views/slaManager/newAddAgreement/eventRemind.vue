@@ -96,7 +96,6 @@
             <!-- <bk-checkbox v-for="notice in noticeType" :key="notice.id" :value="notice.typeName.toLowerCase()" style="margin-bottom: 12px">
                             {{ notice.name }}
                         </bk-checkbox> -->
-            <bk-checkbox :value="'weixin'">{{$t('m.treeinfo["企业微信"]')}}</bk-checkbox>
             <bk-form-item
               data-test-id="slaAgreement-select-emailNotifyEventList"
               class="cus-email"
@@ -110,19 +109,6 @@
                 :popover-width="150"
                 searchable>
                 <bk-option v-for="option in notifyEventList['email']"
-                  :key="option.id"
-                  :id="option.id"
-                  :name="option.name">
-                </bk-option>
-              </bk-select>
-            </bk-form-item>
-            <bk-form-item
-              data-test-id="slaAgreement-select-weixinNotifyEventList"
-              class="cus-weixin"
-              v-if="item.notify_type_list.indexOf('weixin') !== -1"
-              :property="'weixin_notify'">
-              <bk-select :clearable="false" :placeholder="$t(`m.slaContent['请选择通知事件']`)" size="small" v-model="item.weixin_notify" searchable>
-                <bk-option v-for="option in notifyEventList['weixin']"
                   :key="option.id"
                   :id="option.id"
                   :name="option.name">
@@ -261,15 +247,6 @@
               validator: (v) => !!v,
             },
           ],
-          weixin_notify: [
-            {
-              message: '字段必填',
-              required: true,
-              type: 'string',
-              trigger: 'blur',
-              validator: (v) => !!v,
-            },
-          ],
         },
         iconOffset: 75,
       };
@@ -302,13 +279,11 @@
           this.priorityList = [];
           let pushData = {};
           let emailNotify = '';
-          let weixinNotify = '';
           this.modelPriority.forEach(item => {
             pushData = item;
             parentInfo.action_policies.forEach(policie => {
               if (policie.type === item.type) {
                 emailNotify = policie.actions[0].config.notify.find(notifyObj => notifyObj.notify_type === 'email');
-                weixinNotify = policie.actions[0].config.notify.find(notifyObj => notifyObj.notify_type === 'weixin');
                 pushData = {
                   ...item,
                   isCheck: true,
@@ -316,7 +291,6 @@
                   receivers: policie.actions[0].config.receivers,
                   notify_type_list: policie.actions[0].config.notify.map(notifyObj => notifyObj.notify_type),
                   email_notify: emailNotify && emailNotify.notify_template,
-                  weixin_notify: weixinNotify && weixinNotify.notify_template,
                   notify_rule: policie.actions[0].config.notify_rule,
                   notify_freq: policie.actions[0].config.notify_freq,
                   freq_unit: policie.actions[0].config.freq_unit,
@@ -498,15 +472,6 @@
                     min-height: none;
                 }
             }
-            .cus-weixin {
-                position: absolute;
-                left: 56px;
-                top: 18px;
-                display: inline-block;
-                width: 60%;
-                margin-left: 20px;
-                vertical-align: middle;
-            }
             ::v-deep  .bk-label {
                 display: none;
             }
@@ -518,7 +483,7 @@
 </style>
 
 <style lang="scss">
-.cus-email,.cus-weixin {
+.cus-email {
     .bk-form-content {
         .tooltips-icon {
             top: 5px;

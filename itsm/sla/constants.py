@@ -44,13 +44,6 @@ SLA_HANDLE_WARNING_TEMPLATE_SMS = """
 当前步骤：${running_status}
 """
 
-SLA_HANDLE_WARNING_TEMPLATE_WEIXIN = """
-根据SLA服务协议约定的处理时长要求，工单【${sn}】已达到服务处理预警提醒，请尽量在约定服务时间内完成交付。以下为工单信息：
-单号：${sn}
-标题：${title}
-当前步骤：${running_status}
-"""
-
 SLA_HANDLE_OVERTIME_TEMPLATE_EMAIL = """
 根据SLA服务协议约定的处理时长要求，工单【${sn}】服务处理已超时，请尽量在约定服务时间内完成交付。以下为工单信息：
 单号：${sn}
@@ -60,13 +53,6 @@ SLA_HANDLE_OVERTIME_TEMPLATE_EMAIL = """
 """
 
 SLA_HANDLE_OVERTIME_TEMPLATE_SMS = """
-根据SLA服务协议约定的处理时长要求，工单【${sn}】服务处理已超时，请尽量在约定服务时间内完成交付。以下为工单信息：
-单号：${sn}
-标题：${title}
-当前步骤：${running_status}
-"""
-
-SLA_HANDLE_OVERTIME_TEMPLATE_WEIXIN = """
 根据SLA服务协议约定的处理时长要求，工单【${sn}】服务处理已超时，请尽量在约定服务时间内完成交付。以下为工单信息：
 单号：${sn}
 标题：${title}
@@ -88,13 +74,6 @@ SLA_REPLY_WARNING_TEMPLATE_SMS = """
 当前步骤：${running_status}
 """
 
-SLA_REPLY_WARNING_TEMPLATE_WEIXIN = """
-根据SLA服务协议约定的处理时长要求，工单【${sn}】已达到服务响应预警提醒，请尽量在约定服务时间内完成交付。以下为工单信息：
-单号：${sn}
-标题：${title}
-当前步骤：${running_status}
-"""
-
 SLA_REPLY_OVERTIME_TEMPLATE_EMAIL = """
 根据SLA服务协议约定的处理时长要求，工单【${sn}】服务响应已超时，请尽量在约定服务时间内完成交付。以下为工单信息：
 单号：${sn}
@@ -104,13 +83,6 @@ SLA_REPLY_OVERTIME_TEMPLATE_EMAIL = """
 """
 
 SLA_REPLY_OVERTIME_TEMPLATE_SMS = """
-根据SLA服务协议约定的处理时长要求，工单【${sn}】服务响应已超时，请尽量在约定服务时间内完成交付。以下为工单信息：
-单号：${sn}
-标题：${title}
-当前步骤：${running_status}
-"""
-
-SLA_REPLY_OVERTIME_TEMPLATE_WEIXIN = """
 根据SLA服务协议约定的处理时长要求，工单【${sn}】服务响应已超时，请尽量在约定服务时间内完成交付。以下为工单信息：
 单号：${sn}
 标题：${title}

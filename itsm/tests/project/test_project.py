@@ -47,7 +47,7 @@ class TestProject(TestCase):
         ServiceCatalog.objects.all().delete()
 
     @override_settings(MIDDLEWARE=("itsm.tests.middlewares.OverrideMiddleware",))
-    @mock.patch("itsm.auth_iam.utils.grant_instance_creator_related_actions")
+    @mock.patch("itsm.component.utils.iam_stub.grant_instance_creator_related_actions")
     def test_create_project(self, grant_instance_creator_related_actions):
         grant_instance_creator_related_actions.return_value = True
         resp = self.client.post("/api/project/projects/", {})
@@ -74,7 +74,7 @@ class TestProject(TestCase):
         )
 
     @override_settings(MIDDLEWARE=("itsm.tests.middlewares.OverrideMiddleware",))
-    @mock.patch("itsm.auth_iam.utils.grant_instance_creator_related_actions")
+    @mock.patch("itsm.component.utils.iam_stub.grant_instance_creator_related_actions")
     @mock.patch("itsm.component.drf.permissions.IamAuthPermit.has_permission")
     @mock.patch("itsm.component.drf.permissions.IamAuthPermit.iam_auth")
     def test_update_records(
@@ -161,7 +161,7 @@ class TestMigrationProjectAuthz(TestCase):
     @mock.patch("itsm.component.drf.permissions.IamAuthPermit.has_permission",
                 return_value=True)
     @mock.patch(
-        "itsm.auth_iam.utils.IamRequest.batch_resource_multi_actions_allowed"
+        "itsm.component.utils.iam_stub.IamRequest.batch_resource_multi_actions_allowed"
     )
     def test_migration_rejects_when_target_project_not_authorized(
         self, mock_batch, _permit
@@ -187,7 +187,7 @@ class TestMigrationProjectAuthz(TestCase):
     @mock.patch("itsm.component.drf.permissions.IamAuthPermit.has_permission",
                 return_value=True)
     @mock.patch(
-        "itsm.auth_iam.utils.IamRequest.batch_resource_multi_actions_allowed"
+        "itsm.component.utils.iam_stub.IamRequest.batch_resource_multi_actions_allowed"
     )
     @mock.patch(
         "itsm.project.handler.migration_handler.MigrationHandlerDispatcher.migrate"

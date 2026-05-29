@@ -31,8 +31,8 @@ NORMAL_STATE = "NORMAL"
 SIGN_STATE = "SIGN"
 APPROVAL_STATE = "APPROVAL"
 TASK_STATE = "TASK"
-TASK_SOPS_STATE = "TASK-SOPS"
-TASK_DEVOPS_STATE = "TASK-DEVOPS"
+TASK_SOPS_STATE = "TASK-SOPS"  # deprecated: kept for backward compat with existing DB records
+TASK_DEVOPS_STATE = "TASK-DEVOPS"  # deprecated: kept for backward compat with existing DB records
 ROUTER_STATE = "ROUTER"
 ROUTER_P_STATE = "ROUTER-P"
 COVERAGE_STATE = "COVERAGE"
@@ -46,8 +46,6 @@ NORMAL_STATES = [
     START_STATE,
     NORMAL_STATE,
     TASK_STATE,
-    TASK_SOPS_STATE,
-    TASK_DEVOPS_STATE,
     WEBHOOK_STATE,
     BK_PLUGIN_STATE,
     SIGN_STATE,
@@ -61,8 +59,6 @@ STATE_TYPE_CHOICES = [
     (SIGN_STATE, "会签节点"),
     (APPROVAL_STATE, "审批节点"),
     (TASK_STATE, "自动节点"),
-    (TASK_SOPS_STATE, "标准运维节点"),
-    (TASK_DEVOPS_STATE, "蓝盾任务节点"),
     (WEBHOOK_STATE, "WebHook节点"),
     (BK_PLUGIN_STATE, "蓝鲸插件节点"),
     (ROUTER_STATE, "分支网关节点(菱形)"),

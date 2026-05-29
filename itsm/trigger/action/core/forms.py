@@ -138,16 +138,6 @@ class SMSMessageForms(BaseForm):
     content = StringField(name="内容", field_type="TEXT")
 
 
-class WechatMessageForms(BaseForm):
-    """
-    发送通知的输入数据格式
-    """
-
-    title = StringField(name="微信主题")
-    receivers = MemberField(name="收件人", field_type="MULTI_MEMBERS")
-    content = StringField(name="内容", field_type="TEXT", is_tips=True, tips="文本格式支持html，如果需要换行，请在行尾加&lt;br/&gt;")
-
-
 class EmailMessageForms(BaseForm):
     """
     发送邮件通知的输入数据格式

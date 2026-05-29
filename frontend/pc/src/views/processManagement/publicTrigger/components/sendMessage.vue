@@ -108,9 +108,6 @@
           case 'send_sms_message':
             item.icon = 'icon-mobile';
             break;
-          case 'send_wechat_message':
-            item.icon = 'icon-weixin';
-            break;
         }
         // item.name = item.key
       });

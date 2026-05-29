@@ -99,7 +99,6 @@ from itsm.component.constants import (
     SUSPEND_OPERATE,
     SYS,
     SYSTEM_OPERATE,
-    TASK_SOPS_STATE,
     TASK_STATE,
     TERMINATE_OPERATE,
     TERMINATED,
@@ -140,7 +139,6 @@ from itsm.component.constants import (
     ASSIGN_LEADER,
     TIME_DELTA,
     LEN_XX_LONG,
-    TASK_DEVOPS_STATE,
     WEBHOOK_STATE,
     BK_PLUGIN_STATE,
     SUSPENDED,
@@ -231,7 +229,7 @@ from platform_config import BaseTicket
 
 from .basic import Model
 from ..utils import filter_sensitive_info
-from ...auth_iam.utils import IamRequest
+from itsm.component.utils.iam_stub import IamRequest
 
 
 class SignTask(Model):
@@ -1170,8 +1168,6 @@ class Status(Model):
         stop_status = copy.deepcopy(self.STOPPED_STATUS)
         if self.type in [
             TASK_STATE,
-            TASK_SOPS_STATE,
-            TASK_DEVOPS_STATE,
             WEBHOOK_STATE,
             BK_PLUGIN_STATE,
         ]:
@@ -1562,7 +1558,7 @@ class Ticket(Model, BaseTicket):
     def ticket_url(self):
         if not self.notify_url:
             return "{site_url}/#/ticket/{ticket_id}/".format(
-                site_url=settings.TICKET_NOTIFY_HOST.rstrip("/"),
+                site_url=settings.FRONTEND_URL.rstrip("/"),
                 ticket_id=self.id,
             )
         return self.notify_url
@@ -1607,7 +1603,7 @@ class Ticket(Model, BaseTicket):
         self.notify_url = "{site_url}/{flag}/ticket/{ticket_id}/?token={token}&step_id={step_id}".format(
             # noqa
             flag=flag,
-            site_url=settings.TICKET_NOTIFY_HOST.rstrip("/"),
+            site_url=settings.FRONTEND_URL.rstrip("/"),
             ticket_id=self.id,
             token=ticket_token,
             step_id=status.id,
@@ -3324,8 +3320,6 @@ class Ticket(Model, BaseTicket):
                 if state.type
                 in [
                     TASK_STATE,
-                    TASK_SOPS_STATE,
-                    TASK_DEVOPS_STATE,
                     WEBHOOK_STATE,
                     BK_PLUGIN_STATE,
                 ]
@@ -3853,7 +3847,7 @@ class Ticket(Model, BaseTicket):
         task_processors = []
         for node_status in self.node_status.filter(
             Q(status__in=Status.CAN_OPERATE_STATUS)
-            | Q(status=FAILED, type__in=[TASK_STATE, TASK_SOPS_STATE])
+            | Q(status=FAILED, type=TASK_STATE)
         ):
             # Get all types node processors
             if node_status.type in [SIGN_STATE, APPROVAL_STATE]:

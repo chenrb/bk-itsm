@@ -30,7 +30,7 @@ from itsm.trigger.models import ActionSchema, Trigger, TriggerRule, Action
 from itsm.trigger.rules.manager import TriggerRuleManager
 from itsm.trigger.signal import trigger_signal
 from itsm.component.constants import SOURCE_TICKET
-from itsm.component.notify import WeixinNotifier, EmailNotifier, SmsNotifier
+from itsm.component.notify import EmailNotifier, SmsNotifier
 
 
 class SubComponentTriggerTestCase(TestCase):
@@ -71,26 +71,6 @@ class SubComponentTriggerTestCase(TestCase):
                             ],
                             "inputs": ["title", "content"],
                         },
-                        {
-                            "key": "send_wechat_message",
-                            "params": [
-                                {"key": "title", "value": "【ITSM通知】您有待处理工单${sn}", "ref_type": "import"},
-                                {"key": "content", "value": "工单编号:${sn} 标题：${title}", "ref_type": "import"},
-                                {
-                                    "key": "receivers",
-                                    "value": [
-                                        {
-                                            "ref_type": "reference",
-                                            "value": {
-                                                "member_type": "VARIABLE",
-                                                "members": "current_processors,creator",
-                                            },
-                                        }
-                                    ],
-                                },
-                            ],
-                            "inputs": ["content"],
-                        },
                     ],
                 }
             ],
@@ -129,9 +109,7 @@ class SubComponentTriggerTestCase(TestCase):
 
     # @mock.patch.object(EmailNotifier, "send")
     # @mock.patch.object(SmsNotifier, "send")
-    # @mock.patch.object(WeixinNotifier, "send")
-    # def test_true_trigger(self, mock_send_weixin, mock_send_sms, mock_send_email):
-    #     mock_send_weixin.return_value = None
+    # def test_true_trigger(self, mock_send_sms, mock_send_email):
     #     mock_send_sms.return_value = None
     #     mock_send_email.return_value = None
     #     context = {

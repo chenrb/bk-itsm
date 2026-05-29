@@ -47,7 +47,6 @@ from itsm.component.constants import (
     SELECT_TYPE_CHOICES,
     SHOW_BY_CONDITION,
     TABLE,
-    TASK_SOPS_STATE,
     TASK_STATE,
     TICKET_GLOBAL_VARIABLES,
     SOURCE_WORKFLOW,
@@ -157,25 +156,6 @@ def related_states_validate(field_key, workflow_states):
         ):
             raise ParamError(
                 _("该字段正在被【{}】节点引用，请先取消引用").format(task_state.name)
-            )
-
-    sops_states = StateExtrasSerializer(
-        workflow_states.filter(type=TASK_SOPS_STATE, is_draft=False), many=True
-    ).data
-    for state in sops_states:
-        keys = []
-        if state["extras"]["sops_info"]["bk_biz_id"]["value_type"] == "variable":
-            keys.append(state["extras"]["sops_info"]["bk_biz_id"]["value"])
-        keys.extend(
-            [
-                constant["value"]
-                for constant in state["extras"]["sops_info"]["constants"]
-                if constant["value_type"] == "variable"
-            ]
-        )
-        if field_key in keys:
-            raise ParamError(
-                _("该字段正在被【{}】节点引用，请先取消引用").format(state["name"])
             )
 
 
