@@ -109,7 +109,6 @@ class TaskViewSet(component_viewsets.ModelViewSet):
         with transaction.atomic():
             fields = serializer.validated_data.pop("fields", {})
             instance = serializer.save(creator=username)
-            instance.create_sub_task(fields=fields, operator=username, data=data)
             instance.do_after_create(fields)
         instance.create_task_pipeline(
             need_start
@@ -176,20 +175,6 @@ class TaskViewSet(component_viewsets.ModelViewSet):
                     task_field.save()
 
                 instance = serializer.save(**update_info)
-                if instance.component_type == "SOPS":
-                    try:
-                        instance.update_sops_task(
-                            fields=fields["sops_templates"], operator=username
-                        )
-                    except ComponentCallError as error:
-                        return Response(
-                            {
-                                "result": False,
-                                "message": error.message,
-                                "data": error.ERROR_CODE,
-                                "code": ComponentCallError.ERROR_CODE_INT,
-                            }
-                        )
             else:
                 serializer.save(**update_info)
 
@@ -277,12 +262,6 @@ class TaskViewSet(component_viewsets.ModelViewSet):
 
         serializer = TaskRetrySerializer(data=request.data, context={"task": task})
         serializer.is_valid(raise_exception=True)
-
-        # 覆盖sops_template字段
-        sops_templates = serializer.validated_data[SOPS_TEMPLATE_KEY]
-        task.create_fields.filter(key=SOPS_TEMPLATE_KEY).update(
-            _value=json.dumps(sops_templates)
-        )
 
         fields = serializer.validated_data["fields"]
 
