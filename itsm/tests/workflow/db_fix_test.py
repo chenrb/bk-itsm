@@ -30,7 +30,7 @@ from django.forms import model_to_dict
 
 from itsm.component.constants import DEFAULT_STRING
 from itsm.component.utils.basic import create_version_number
-from itsm.helper.utils import time_this_function
+from common.utils import time_this_function
 from itsm.service.models import CatalogService, DictData, OldSla, Service, ServiceCatalog, SysDict
 from itsm.ticket.models import Ticket
 from itsm.workflow.models import Workflow, WorkflowSnap, WorkflowVersion

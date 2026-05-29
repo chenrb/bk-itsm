@@ -7,5 +7,4 @@ urlpatterns = [
     re_path(r"^$", index),
     re_path(r"^init/$", init),
     re_path(r"^core/footer/$", get_footer),
-    re_path(r"^helper/", include("itsm.helper.urls")),
 ]

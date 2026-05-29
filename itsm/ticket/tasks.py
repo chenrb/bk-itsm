@@ -57,7 +57,7 @@ from itsm.component.utils.basic import now, namedtuplefetchall, dotted_name
 from itsm.component.utils.lock import share_lock
 from itsm.component.notify import EmailNotifier
 from itsm.component.utils.client_backend_query import get_biz_choices
-from itsm.helper.utils import AutoSchedules
+from itsm.ticket.schedule_monitor import AutoSchedules
 from itsm.iadmin.models import SystemSettings
 from itsm.sla_engine.constants import TO_SECOND
 from itsm.role.models import UserRole

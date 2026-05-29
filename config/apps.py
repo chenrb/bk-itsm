@@ -4,8 +4,6 @@
 AUTH_USER_MODEL = "users.User"
 
 INSTALLED_APPS = (
-    # itsm helper 注册首位
-    "itsm.helper",
     # 用户模型
     "itsm.component.users",
     # Django 内置

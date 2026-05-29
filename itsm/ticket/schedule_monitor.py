@@ -1,50 +1,14 @@
 # -*- coding: utf-8 -*-
-"""
-Tencent is pleased to support the open source community by making BK-ITSM 蓝鲸流程服务 available.
-
-Copyright (C) 2025 Tencent.  All rights reserved.
-
-BK-ITSM 蓝鲸流程服务 is licensed under the MIT License.
-
-License for BK-ITSM 蓝鲸流程服务:
---------------------------------------------------------------------
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
-documentation files (the "Software"), to deal in the Software without restriction, including without limitation
-the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software,
-and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial
-portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
-LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-"""
-
+"""Pipeline 轮询任务卡顿检测与自动修复"""
 import json
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-from functools import wraps
 
 from django.conf import settings
 
 from common.log import logger
 from itsm.ticket.models import Ticket
 from pipeline.engine.models import Data, ScheduleService, Status, PipelineProcess
-
-
-def time_this_function(func):
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        start = datetime.now()
-        result = func(*args, **kwargs)
-        end = datetime.now()
-        print((func.__name__, (end - start).seconds))
-        return result
-
-    return wrapper
 
 
 @dataclass

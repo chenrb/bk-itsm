@@ -22,6 +22,8 @@ NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+from functools import wraps
+from datetime import datetime
 from typing import Pattern, List
 from urllib.parse import urlparse
 
@@ -100,6 +102,18 @@ def texteditor_escape(str_escape, unsupported_tags=None):
 def cmp(a, b):
     """适配py2的cmp方法"""
     return (a > b) - (a < b)
+
+
+def time_this_function(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        start = datetime.now()
+        result = func(*args, **kwargs)
+        end = datetime.now()
+        print((func.__name__, (end - start).seconds))
+        return result
+
+    return wrapper
 
 
 def is_safe_url(url, allow_pattern: Pattern = None):

@@ -5,7 +5,6 @@ import os
 CELERYD_CONCURRENCY = os.getenv("BK_CELERYD_CONCURRENCY", 2)
 
 CELERY_IMPORTS = (
-    "itsm.helper.tasks",
     "itsm.ticket.tasks",
     "itsm.service.tasks",
     "itsm.sla_engine.monitor",
