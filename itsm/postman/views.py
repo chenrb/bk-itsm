@@ -40,7 +40,7 @@ from itsm.component.drf import viewsets as component_viewsets
 from itsm.component.drf.exception import ValidationError
 from itsm.component.drf.mixins import DynamicListModelMixin
 from itsm.postman.permissions import RemoteApiPermit, RemoteApiInstancePermit, RpcApiPermit
-from itsm.component.esb.backend_component import bk
+from itsm.component.platform_client.http import bk
 from itsm.component.exceptions import NotAllowedError, ParamError, RpcAPIError
 from itsm.component.utils.client_backend_query import get_components, get_systems
 from itsm.component.utils.misc import JsonEncoder

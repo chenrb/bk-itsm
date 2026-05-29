@@ -50,7 +50,7 @@ from itsm.component.constants import (
 )
 from itsm.component.drf.mixins import ObjectManagerMixin
 from itsm.component.db import managers
-from itsm.component.esb.esbclient import client_backend
+from itsm.component.platform_client.http import client_backend
 from itsm.component.utils.basic import dotted_name, list_by_separator
 from itsm.component.utils.client_backend_query import (
     get_bk_business,

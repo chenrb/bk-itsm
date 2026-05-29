@@ -32,7 +32,7 @@ from itsm.component.constants import (
     NOTIFY_TYPE_CHOICES,
     BUILTIN_NOTIFY_TYPE,
 )
-from itsm.component.esb.esbclient import client_backend
+from itsm.component.platform_client.http import client_backend
 
 
 def translate_constant_2(constant):

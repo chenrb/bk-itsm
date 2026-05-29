@@ -35,7 +35,15 @@ from itsm.component.decorators import login_exempt
 from common.log import logger
 from common.cipher import AESVerification
 from common.redis import Cache
-from itsm.component.bkchat.utils import proceed_fast_approval, build_bkchat_summary
+# bkchat stubs — decoupled
+def proceed_fast_approval(request):
+    logger.warning("proceed_fast_approval stub called — BKChat decoupled")
+    return None
+
+
+def build_bkchat_summary(ticket):
+    logger.warning("build_bkchat_summary stub called — BKChat decoupled")
+    return ""
 from itsm.component.constants import (
     API,
     QUEUEING,

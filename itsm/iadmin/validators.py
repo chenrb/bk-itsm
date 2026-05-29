@@ -31,7 +31,7 @@ from django.conf import settings
 from django.utils.translation import gettext as _
 
 from common.log import logger
-from itsm.component.esb.esbclient import client_backend
+from itsm.component.platform_client.http import client_backend
 from itsm.component.exceptions import (
     AnnexStoreValidateError,
     ComponentCallError,

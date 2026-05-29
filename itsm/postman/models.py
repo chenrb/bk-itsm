@@ -50,7 +50,7 @@ from itsm.component.constants import (
 )
 from itsm.component.db import managers
 from itsm.component.drf.mixins import ObjectManagerMixin
-from itsm.component.esb.backend_component import bk
+from itsm.component.platform_client.http import bk
 from itsm.component.exceptions import DeleteError, ParamError, IamPermissionDenied
 from itsm.component.utils.conversion import (
     build_params_by_mako_template,

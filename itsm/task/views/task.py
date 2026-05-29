@@ -39,7 +39,6 @@ from itsm.component.constants import (
     EMPTY_INT,
     JSON_HANDLE_FIELDS,
     EMPTY_LIST,
-    SOPS_TEMPLATE_KEY,
     RUNNING,
     ACTION_OPERATE,
     SKIPPED,

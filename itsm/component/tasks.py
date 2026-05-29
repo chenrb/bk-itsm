@@ -29,7 +29,7 @@ from celery import shared_task
 from django.core.cache import cache
 from django.conf import settings
 from itsm.component.constants import CACHE_10MIN, CACHE_5MIN
-from itsm.component.esb.esbclient import client_backend
+from itsm.component.platform_client.http import client_backend
 from itsm.component.utils.lock import share_lock
 from itsm.component.exceptions import ComponentCallError
 

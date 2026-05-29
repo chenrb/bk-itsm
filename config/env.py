@@ -4,7 +4,7 @@ import os
 
 from config import APP_CODE, BASE_DIR, PROJECT_ROOT  # noqa
 
-# TODO: 兼容垫片 — 后续逐步清理所有引用
+# 平台地址（通过环境变量配置，用于向后兼容）
 BK_PAAS_HOST = os.environ.get("BK_PAAS_HOST", "http://127.0.0.1")
 BK_PAAS_INNER_HOST = os.environ.get("BK_PAAS_INNER_HOST", BK_PAAS_HOST)
 BK_URL = BK_PAAS_HOST

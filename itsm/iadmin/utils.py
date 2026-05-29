@@ -24,12 +24,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
 from common.utils import cmp
-from itsm.helper.tasks import _db_fix_from_1_1_22_to_2_1_x, _db_fix_from_2_1_x_to_2_2_1
 
 from .models import SystemSettings
 from .contants import TRIGGER_SWITCH, SWITCH_OFF
 
-MIGRATE_VERSIONS = {"2.2.1": [_db_fix_from_2_1_x_to_2_2_1], "2.1.17": [_db_fix_from_1_1_22_to_2_1_x]}
+MIGRATE_VERSIONS = {}
 
 
 def version_cmp(version1, version2):

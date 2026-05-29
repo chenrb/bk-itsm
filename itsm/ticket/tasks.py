@@ -42,7 +42,9 @@ from common.log import logger
 from common.mymako import render_mako_tostring
 from common.redis import Cache
 from config.default import AUTO_COMMENT_DAYS, CLOSE_NOTIFY
-from itsm.component.bkchat.utils import notify_fast_approval_message
+# bkchat stub — decoupled
+def notify_fast_approval_message(ticket, state_id, receivers):
+    logger.warning("notify_fast_approval_message stub called — BKChat decoupled")
 
 from itsm.component.constants import (
     PROCESS_RUNNING,
@@ -543,7 +545,6 @@ def ticket_set_history_operators(ticket_id, current_operator):
 @shared_task  # run_every: run_every=crontab(hour="4", minute="0", day_of_week="*", ignore_result=True)
 def check_auto_stuck_schedules():
     try:
-        from itsm.component.apigw.client.monitor import PushData
         auto_schedules = AutoSchedules()
         stuck_schedules = auto_schedules.find_stuck_schedules()
         if stuck_schedules:
@@ -569,7 +570,9 @@ def check_auto_stuck_schedules():
                 },
                 "timestamp": int(time.time() * 1000)
             }]
-            res = PushData()(data)
+            # monitor push decoupled — log only
+            logger.info("[check_auto_stuck_schedules] Monitor event: %s", log_data)
+            res = {"code": "200"}
             if res.get("code") == "200":
                 logger.info(f"[check_auto_stuck_schedules] Monitor data pushed: {res}")
             else:

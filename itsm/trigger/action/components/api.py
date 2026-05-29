@@ -25,7 +25,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from django.utils.translation import gettext as _
 
-from itsm.component.esb.backend_component import bk
+from itsm.component.platform_client.http import bk
 from itsm.postman.models import RemoteApi
 from itsm.trigger.action.core.component import BaseComponent
 from itsm.trigger.action.core import ApiSourceField, ApiInfoField, BaseForm, JSONField

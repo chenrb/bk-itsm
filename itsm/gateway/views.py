@@ -34,7 +34,7 @@ from common.log import logger
 from common.utils import filter_user_sensitive_info
 from itsm.component.constants import CACHE_5MIN, PREFIX_KEY, CACHE_30MIN
 from itsm.component.decorators import fbv_exception_handler
-from itsm.component.esb.esbclient import client_backend
+from itsm.component.platform_client.http import client_backend
 from itsm.component.exceptions import ComponentCallError
 from itsm.component.utils.basic import build_tree
 from itsm.component.utils.client_backend_query import (
