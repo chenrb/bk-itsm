@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-BK-ITSM (蓝鲸流程服务) is a Vue 2 IT Service Management application built on the BlueKing platform. This is the **PC frontend** located at `frontend/pc/`. A sibling WeChat frontend exists at `frontend/weixin/`.
+BK-ITSM (蓝鲸流程服务) is a Vue 3 IT Service Management application. This is the **PC frontend** located at `frontend/pc/`.
 
 ## Commands
 
@@ -19,24 +19,23 @@ npm run lint         # ESLint with auto-fix on src/
 
 ### Dev Server Setup
 
-The dev server requires local hosts configuration. Edit `vite.config.js` to set `HOST` and `SET_URL`, then add a hosts entry like `127.0.0.1 dev.paas.bking.com`. The proxy forwards `/api/*`, `/openapi/*`, `/core/`, and `/sops/*` to the backend.
+The dev server requires local hosts configuration. Edit `vite.config.js` to set `HOST` and `SET_URL`, then add a hosts entry like `127.0.0.1 dev.paas.bking.com`. The proxy forwards `/api/*`, `/openapi/*`, `/core/` to the backend.
 
 ## Architecture
 
 ### Entry & Initialization
 
-`src/main.js` bootstraps Vue with Vuex, Router, and vue-i18n. Before mount, it dispatches `getPlatformPreData` (hits `init/` API). It globally registers **bk-magic-vue** (primary UI library) and selected **Element UI** components. Build system is **Vite** with `vite-plugin-vue2`. Static asset paths are managed via Vite's `base` config.
+`src/main.js` bootstraps Vue 3 with Vuex 4, Vue Router 4, and vue-i18n. Before mount, it dispatches `getPlatformPreData` (hits `init/` API). It globally registers UI components. Build system is **Vite 4** with `@vitejs/plugin-vue`. Static asset paths are managed via Vite's `base` config.
 
 ### Routing
 
 - **Mode:** hash (`#` in URLs)
-- **Base path:** managed by `@blueking/sub-saas` for sub-app integration; iframe routes use empty base
 - **Modules:** `src/router/modules/` — `common.js`, `workbench.js`, `project.js`, `manage.js`
 - **Key routes:** `/ticket` (ticket management), `/process` (process design), `/operation/data` (analytics), system config routes
 
 ### State Management
 
-Single Vuex store at `src/store/index.js` with ~40 namespaced modules in `src/store/modules/`. A separate `src/store/newModules/` contains `taskFlow`, `trigger`, and `user` modules. Root state holds `user`, `language`, `platformInfo`, `openFunction` (feature flags), and utility functions.
+Single Vuex 4 store at `src/store/index.js` with ~40 namespaced modules in `src/store/modules/`. A separate `src/store/newModules/` contains `taskFlow`, `trigger`, and `user` modules. Root state holds `user`, `language`, `platformInfo`, `openFunction` (feature flags), and utility functions.
 
 ### API Layer
 
@@ -58,38 +57,32 @@ There is no separate `src/api/` directory. All API calls live inside Vuex store 
 
 ### i18n
 
-Three locales: `zh-cn` (default), `en`, `ja`. Language packs in `src/i18n/lang/`. Language determined by `blueking_language` cookie. Both bk-magic-vue and Element UI locales are configured separately.
+Three locales: `zh-cn` (default), `en`, `ja`. Language packs in `src/i18n/lang/`. Language determined by `blueking_language` cookie.
 
 ### Key Libraries
 
 | Purpose | Library |
 |---|---|
-| UI | bk-magic-vue 2.5 + Element UI 2.4 |
+| UI | bk-magic-vue + Element UI |
 | Flow design | jsplumb |
 | Code editors | monaco-editor, brace (Ace) |
 | Charts | @blueking/bkcharts |
 | Rich text | wangeditor, @toast-ui/vue-editor |
 | Drag & drop | vuedraggable |
-| Platform integration | @blueking/sub-saas, @blueking/platform-config |
 
 ## Code Conventions
 
-- **Indent:** 2 spaces (tabs in Prettier config, but ESLint enforces 2-space indent for JS/Vue)
-- **Quotes:** double quotes in HTML attributes, no strict enforcement in JS
-- **Semicolons:** used but `no-extra-semi` enforced
+- **Indent:** 2 spaces
 - **`no-var` / `prefer-const`** enforced
-- **`camelcase: off`** — backend API fields are often snake_case, so camelCase is not enforced on variables
 - **`vue/order-in-components: error`** — components must follow the specified property order
-- **`vue/no-v-html: off`** — v-html is allowed
 - **Line endings:** LF (unix)
-- **Max line length:** effectively 120 (not enforced as error)
 - **ESLint config:** extends `eslint-config-tencent` + `plugin:vue/recommended`
 - **Component names:** PascalCase for route components, kebab-case in templates
+- Node.js >= 16.0.0 required
 
 ## Production Build Notes
 
-- Build tool: Vite 4 + `vite-plugin-vue2`
-- Output goes to `../../../static/` (three levels up from `frontend/pc/`)
+- Build tool: Vite 4 + `@vitejs/plugin-vue`
+- Output goes to `../../../static/`
 - `window.SITE_URL` controls API path prefix
 - `window.BK_STATIC_URL` controls static asset path prefix
-- Node.js >= 16.0.0 required
