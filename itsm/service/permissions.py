@@ -26,7 +26,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from django.utils.translation import gettext as _
 from rest_framework import permissions
 
-from itsm.auth_iam.utils import IamRequest
+from itsm.component.utils.iam_stub import IamRequest
 from itsm.component.drf import permissions as perm
 from itsm.component.drf.exception import ValidationError
 from itsm.component.drf.permissions import IamAuthPermit

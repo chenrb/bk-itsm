@@ -49,7 +49,7 @@ from itsm.component.decorators import (
 from itsm.component.drf.permissions import IamAuthPermit
 from itsm.component.utils.response import Fail, Success
 from itsm.iadmin.models import SystemSettings
-from weixin.core.decorators import weixin_login_exempt
+from itsm.component.decorators import login_exempt
 
 logger = logging.getLogger("app")
 
@@ -194,7 +194,7 @@ def upload(request):
     return Success({"succeed_files": succeed_files}, code=code).json()
 
 
-@weixin_login_exempt
+@login_exempt
 @validate_filepath_settings
 @require_GET
 @validate_file_name

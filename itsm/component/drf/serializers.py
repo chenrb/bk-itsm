@@ -41,7 +41,7 @@ from rest_framework import serializers
 from rest_framework.fields import empty
 
 from common.log import logger
-from itsm.auth_iam.utils import IamRequest
+from itsm.component.utils.iam_stub import IamRequest
 from itsm.component.constants import DEFAULT_PROJECT_PROJECT_KEY
 
 

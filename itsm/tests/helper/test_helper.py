@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.test import TestCase
-from blueapps.core.celery.celery import app
+from config import celery_app as app
 
 
 class TestHelper(TestCase):

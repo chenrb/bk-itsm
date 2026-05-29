@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.http import JsonResponse
 
-from blueapps.account.decorators import login_exempt
+from itsm.component.decorators import login_exempt
 from django.views.decorators.http import require_GET
 
 from itsm.monitor.healthz.processor import metric

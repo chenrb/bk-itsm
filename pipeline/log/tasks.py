@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 
 import logging
 
-from blueapps.contrib.celery_tools.periodic import periodic_task
+from celery import shared_task
 from celery.schedules import crontab
 from django.conf import settings
 
@@ -22,7 +22,7 @@ from pipeline.log.models import LogEntry
 logger = logging.getLogger(__name__)
 
 
-@periodic_task(run_every=(crontab(minute=0, hour=0)), ignore_result=True)
+@shared_task  # run_every: run_every=(crontab(minute=0, hour=0), ignore_result=True)
 def clean_expired_log():
     expired_interval = getattr(settings, "LOG_PERSISTENT_DAYS", None)
 

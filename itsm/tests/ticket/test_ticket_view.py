@@ -27,7 +27,7 @@ import json
 import mock
 from django.test import TestCase, override_settings
 
-from blueapps.core.celery.celery import app
+from config import celery_app as app
 from itsm.service.models import CatalogService
 from itsm.ticket.models import Ticket, AttentionUsers
 from pipeline.engine.models import FunctionSwitch

@@ -2,6 +2,11 @@
 """业务环境变量配置"""
 import os
 
+# 用户查询适配器（替代原 adapter/config/sites/open/api）
+ADAPTER_API = __import__(
+    "itsm.component.utils.user_adapter", fromlist=["get_batch_users", "get_all_users"]
+)
+
 # business_rules
 DEFAULT_VARIABLE_NAME = "variable_by_name"
 
@@ -10,13 +15,6 @@ BKAPP_ITSM_ADMIN = os.environ.get("BKAPP_ITSM_ADMIN", "")
 INIT_SUPERUSER = set(
     ["admin"] + [u for u in BKAPP_ITSM_ADMIN.split(",") if u]
 )
-
-# 微信/企业微信
-OUT_LINK = os.environ.get("BKAPP_OUT_LINK", "https://test.bksaas.com/")
-WX_QY_AGENTID = os.environ.get("BKAPP_WX_QY_AGENTID", None)
-WX_QY_CORPSECRET = os.environ.get("BKAPP_WX_QY_CORPSECRET", None)
-WX_USER = os.environ.get("BKAPP_WX_USER", None)
-USE_X_FORWARDED_HOST = True
 
 # 自定义
 CUSTOM_TITLE = os.environ.get("BKAPP_CUSTOM_TITLE", None)

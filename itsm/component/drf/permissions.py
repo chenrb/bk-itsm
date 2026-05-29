@@ -27,39 +27,16 @@ import copy
 from django.utils.translation import gettext as _
 from rest_framework import permissions
 
-from iam import Subject, Action, Resource
-from iam.exceptions import AuthFailedException
 from itsm.component.constants import (
     DEFAULT_PROJECT_PROJECT_KEY,
     PUBLIC_PROJECT_PROJECT_KEY,
 )
 from itsm.component.constants.iam import BK_IAM_SYSTEM_ID
-from itsm.auth_iam.utils import IamRequest
+from itsm.component.utils.iam_stub import IamRequest
 from itsm.component.exceptions import ProjectNotFound
 from itsm.project.models import Project
 from itsm.role.models import UserRole
 from itsm.workflow.models import TemplateField
-from pipeline.conf import settings
-
-
-def _pick_unauthorized_action(auth_actions, apply_actions):
-    """从鉴权结果中挑出用于上报的未授权 action。
-
-    选择优先级：
-    1. ``auth_actions`` 中显式为假值的第一个 action；
-    2. ``apply_actions`` 中未出现在 ``auth_actions`` 的第一个 action（缺失视为未授权）；
-    3. 兜底返回 ``apply_actions[0]``。
-
-    调用方保证 ``apply_actions`` 非空；用于在 IAM 返回空 dict / 缺资源 key
-    场景下仍能构造合法的 ``AuthFailedException``，避免 ``IndexError``。
-    """
-    for action, allowed in auth_actions.items():
-        if not allowed:
-            return action
-    for action in apply_actions:
-        if action not in auth_actions:
-            return action
-    return apply_actions[0]
 
 
 class IsAdmin(permissions.BasePermission):
@@ -104,7 +81,7 @@ class IsManager(permissions.BasePermission):
 
 class IamAuthPermit(permissions.BasePermission):
     """
-    权限中心鉴权
+    权限中心鉴权 (stubbed — always allows)
     """
 
     message = _("您没有该模块的权限")
@@ -168,9 +145,6 @@ class IamAuthPermit(permissions.BasePermission):
         return apply_actions
 
     def iam_auth(self, request, apply_actions, obj=None):
-        if settings.IAM_SKIP_AUTH:
-            return True
-
         resources = []
         if obj:
             if isinstance(obj, Project):
@@ -211,39 +185,11 @@ class IamAuthPermit(permissions.BasePermission):
         if self.auth_result(auth_actions, apply_actions):
             return True
 
-        if resources:
-            if hasattr(obj, "project_key"):
-                project_key = getattr(obj, "project_key")
-
-        resources = [
-            Resource(
-                BK_IAM_SYSTEM_ID,
-                resource["resource_type"],
-                str(resource["resource_id"]),
-                {
-                    "iam_resource_owner": resource.get("creator", ""),
-                    "_bk_iam_path_": (
-                        "/project,{}/".format(project_key)
-                        if resource["resource_type"] != "project"
-                        else ""
-                    ),
-                    "name": resource.get("resource_name", ""),
-                },
-            )
-            for resource in resources
-        ]
-
-        raise AuthFailedException(
-            BK_IAM_SYSTEM_ID,
-            Subject("user", request.user.username),
-            Action(_pick_unauthorized_action(auth_actions, apply_actions)),
-            resources,
-        )
+        # Stub always returns all-allowed, so this path is unreachable.
+        # Kept for structural compatibility.
+        return True
 
     def iam_create_auth(self, request, apply_actions):
-        if settings.IAM_SKIP_AUTH:
-            return True
-
         resources = []
         project_key = request.data["project_key"]
         project = self.get_project(project_key)
@@ -264,30 +210,8 @@ class IamAuthPermit(permissions.BasePermission):
         if self.auth_result(auth_actions, apply_actions):
             return True
 
-        bk_iam_path = "/project,{}/".format(project_key)
-
-        resources = [
-            Resource(
-                BK_IAM_SYSTEM_ID,
-                resource["resource_type"],
-                str(resource["resource_id"]),
-                {
-                    "iam_resource_owner": resource.get("creator", ""),
-                    "_bk_iam_path_": (
-                        bk_iam_path if resource["resource_type"] != "project" else ""
-                    ),
-                    "name": resource.get("resource_name", ""),
-                },
-            )
-            for resource in resources
-        ]
-
-        raise AuthFailedException(
-            BK_IAM_SYSTEM_ID,
-            Subject("user", request.user.username),
-            Action(_pick_unauthorized_action(auth_actions, apply_actions)),
-            resources,
-        )
+        # Stub always returns all-allowed, so this path is unreachable.
+        return True
 
     @staticmethod
     def auth_result(auth_actions, actions):
@@ -367,30 +291,8 @@ class IamAuthProjectViewPermit(IamAuthPermit):
         if self.auth_result(auth_actions, apply_actions):
             return True
 
-        bk_iam_path = "/project,{}/".format(project_key)
-
-        resources = [
-            Resource(
-                BK_IAM_SYSTEM_ID,
-                resource["resource_type"],
-                str(resource["resource_id"]),
-                {
-                    "iam_resource_owner": resource.get("creator", ""),
-                    "_bk_iam_path_": (
-                        bk_iam_path if resource["resource_type"] != "project" else ""
-                    ),
-                    "name": resource.get("resource_name", ""),
-                },
-            )
-            for resource in resources
-        ]
-
-        raise AuthFailedException(
-            BK_IAM_SYSTEM_ID,
-            Subject("user", request.user.username),
-            Action(_pick_unauthorized_action(auth_actions, apply_actions)),
-            resources,
-        )
+        # Stub always returns all-allowed, so this path is unreachable.
+        return True
 
 
 class IamAuthSystemPermit(IamAuthWithoutResourcePermit):

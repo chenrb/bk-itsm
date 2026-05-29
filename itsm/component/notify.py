@@ -34,7 +34,6 @@ from itsm.component.esb.esbclient import client_backend
 from itsm.component.exceptions import ComponentCallError
 from itsm.component.utils.basic import merge_dict_list
 from itsm.meta.services.notice_filter import notice_filter_service
-from weixin.core.settings import WEIXIN_APP_EXTERNAL_HOST
 
 
 class BaseNotifier(object):
@@ -46,14 +45,6 @@ class BaseNotifier(object):
 
     def get_notify_class(self, notify_type, **kwargs):
         """获取通知类"""
-
-        if notify_type == "weixin":
-            return WeixinNotifier(
-                self.title,
-                self.receivers,
-                self.message,
-                ticket_id=kwargs.get("ticket_id"),
-            )
 
         if notify_type == "email":
             return EmailNotifier(self.title, self.receivers, self.message)
@@ -106,52 +97,6 @@ class BaseNotifier(object):
             "receiver__username": self.receivers,
             "title": self.title,
             "content": self.message,
-        }
-
-
-class WeixinNotifier(BaseNotifier):
-    """发送微信"""
-
-    def __init__(
-        self,
-        title,
-        receivers,
-        message,
-        wx_qy_agentid=settings.WX_QY_AGENTID,
-        wx_qy_corpsecret=settings.WX_QY_CORPSECRET,
-        ticket_id="",
-    ):
-        """支持指定通道发送企业微信消息"""
-
-        self.wx_qy_agentid = wx_qy_agentid
-        self.wx_qy_corpsecret = wx_qy_corpsecret
-        self.ticket_id = ticket_id
-
-        super(WeixinNotifier, self).__init__(title, receivers, message)
-
-    def send(self, **kwargs):
-        params = merge_dict_list(
-            [self.params, kwargs, {"msg_type": settings.QY_WEIXIN}]
-        )
-        try:
-            client_backend.cmsi.send_msg(params)
-        except ComponentCallError as e:
-            if e.esb_message.startswith("Some users failed"):
-                return
-            raise e
-
-    @property
-    def params(self):
-        return {
-            "receiver__username": self.receivers,
-            "title": self.title,
-            "content": self.message,
-            "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            "remark": _(
-                '<a href="{site_url}weixin/#/ticket/{ticket_id}/">点击查看详情</a>'
-            ).format(site_url=WEIXIN_APP_EXTERNAL_HOST, ticket_id=self.ticket_id),
-            "wx_qy_agentid": self.wx_qy_agentid,
-            "wx_qy_corpsecret": self.wx_qy_corpsecret,
         }
 
 

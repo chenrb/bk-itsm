@@ -27,7 +27,7 @@ from django.utils.decorators import method_decorator
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from blueapps.account.decorators import login_exempt
+from itsm.component.decorators import login_exempt
 
 from itsm.component.decorators import custom_apigw_required
 from itsm.component.drf import viewsets as component_viewsets

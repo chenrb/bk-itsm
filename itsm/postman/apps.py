@@ -26,7 +26,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from django.apps import AppConfig
 from django.db.models.signals import post_migrate
 
-from blueapps.conf import settings
+from django.conf import settings
 from itsm.component.dlls.autodiscover import autodiscover_collections
 
 

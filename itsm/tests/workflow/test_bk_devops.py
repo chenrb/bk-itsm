@@ -26,7 +26,7 @@ import json
 
 import mock
 from django.test import TestCase, override_settings
-from blueapps.core.celery.celery import app
+from config import celery_app as app
 
 from itsm.pipeline_plugins.components.collections.bk_devops import BkDevOpsService
 from itsm.service.models import CatalogService

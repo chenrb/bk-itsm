@@ -2,12 +2,13 @@
 """INSTALLED_APPS + MIDDLEWARE + AUTHENTICATION_BACKENDS"""
 import os
 
-# TODO: 移除 IAM，替换为 django-guardian
-USE_IAM = os.getenv("USE_IAM", "false").lower() == "true"
+AUTH_USER_MODEL = "users.User"
 
 INSTALLED_APPS = (
     # itsm helper 注册首位
     "itsm.helper",
+    # 用户模型
+    "itsm.component.users",
     # Django 内置
     "django.contrib.admin",
     "django.contrib.auth",
@@ -53,18 +54,12 @@ INSTALLED_APPS = (
     "django_filters",
     # TODO: 移除以下 blueking 依赖
     "apigw_manager.apigw",
-    "weixin.core",
-    "weixin",
     "blueapps.opentelemetry.instrument_app",
-    "itsm.plugin_service",
     "bk_notice_sdk",
     # Celery
     "django_celery_beat",
     "django_celery_results",
 )
-
-if USE_IAM:
-    INSTALLED_APPS += ("iam", "iam.contrib.iam_migration", "itsm.auth_iam")
 
 AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
@@ -76,7 +71,6 @@ MIDDLEWARE = (
     "itsm.component.misc_middlewares.UserLoginForbiddenMiddleware",
     "itsm.component.misc_middlewares.ServiceSwitchCheck",
     "itsm.component.misc_middlewares.ApiIgnoreCheck",
-    "weixin.core.middlewares.WeixinProxyPatchMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -87,11 +81,8 @@ MIDDLEWARE = (
     "whitenoise.middleware.WhiteNoiseMiddleware",
     # TODO: 移除以下 blueking 依赖
     "blueapps.account.middlewares.RioLoginRequiredMiddleware",
-    "weixin.core.middlewares.WeixinAuthenticationMiddleware",
-    "weixin.core.middlewares.WeixinLoginMiddleware",
     "blueapps.account.middlewares.LoginRequiredMiddleware",
     "blueapps.core.exceptions.middleware.AppExceptionMiddleware",
-    "iam.contrib.django.middlewares.AuthFailedExceptionMiddleware",
     "itsm.component.misc_middlewares.InstrumentProfilerMiddleware",
     "apigw_manager.apigw.authentication.ApiGatewayJWTGenericMiddleware",
     "apigw_manager.apigw.authentication.ApiGatewayJWTAppMiddleware",

@@ -66,7 +66,8 @@ def app_ready_handler(sender, **kwargs):
 
 
 def init_super_user():
-    from blueapps.account.models import User
+    from django.contrib.auth import get_user_model
+    User = get_user_model()
 
     for name in settings.INIT_SUPERUSER:
         try:

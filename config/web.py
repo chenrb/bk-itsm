@@ -49,7 +49,6 @@ TEMPLATES = [
         "DIRS": (
             os.path.join(BASE_DIR, "static", "assets"),
             os.path.join(BASE_DIR, "templates"),
-            os.path.join(BASE_DIR, "static", "weixin"),
         ),
         "APP_DIRS": True,
         "OPTIONS": {

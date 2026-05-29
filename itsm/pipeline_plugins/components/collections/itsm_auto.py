@@ -30,7 +30,7 @@ from datetime import datetime, timedelta
 
 import jmespath
 import jsonschema
-from blueapps.utils.logger import logger_celery as logger
+from common.log import logger as logger
 from django.conf import settings
 from django.core.cache import cache
 from django.db import transaction

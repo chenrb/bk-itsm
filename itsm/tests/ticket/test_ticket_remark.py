@@ -28,7 +28,7 @@ __copyright__ = "Copyright © 2025 Tencent BlueKing. All Rights Reserved."
 
 import json
 import mock
-from blueapps.core.celery.celery import app
+from config import celery_app as app
 
 from django.test import TestCase, override_settings
 

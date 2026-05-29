@@ -63,7 +63,7 @@ from itsm.component.constants import (
 )
 from itsm.component.db import managers
 from itsm.component.utils.basic import create_version_number, dotted_name
-from itsm.auth_iam.utils import IamRequest
+from itsm.component.utils.iam_stub import IamRequest
 from itsm.role.models import BKUserRole, UserRole
 from itsm.service.models import ServiceCatalog
 from itsm.ticket_status.models import TicketStatus

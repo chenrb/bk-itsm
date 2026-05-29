@@ -26,7 +26,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 import os
 import datetime
 
-from blueapps.account.decorators import login_exempt
+from itsm.component.decorators import login_exempt
 from django.conf import settings
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render
@@ -39,6 +39,26 @@ from itsm.iadmin.models import SystemSettings
 from itsm.project.models import UserProjectAccessRecord
 from config.default import FRONTEND_URL
 from itsm.role.models import BKUserRole, UserRole
+
+
+def _get_title():
+    return "{} | {}".format(_("流程服务"), _("ITSM"))
+
+
+def _get_footer():
+    default_footer = """
+            <div class="copyright">
+                <ul class="link-list">
+                    <a href="https://wpa1.qq.com/KziXGWJs?_type=wpa&qidian=true" class="link-item">{}</a>
+                    <a href="http://bk.tencent.com/s-mart/community/" class="link-item" target="_blank">{}</a>
+                    <a href="http://bk.tencent.com/" class="link-item" target="_blank">{}</a>
+                </ul>
+                <div class="desc">Copyright &copy; 2012-${{year}} Tencent BlueKing. All Rights Reserved.V2.6.8</div>
+            </div>
+            """.format(
+        _("技术支持"), _("社区论坛"), _("产品官网")
+    )
+    return getattr(settings, "FOOTER", None) or default_footer
 
 
 class HttpResponseIndexRedirect(HttpResponseRedirect):
@@ -84,7 +104,8 @@ def init(request):
 @login_exempt
 def index(request):
     """首页"""
-    from adapter.core import TITLE, LOGIN_URL
+    TITLE = _get_title()
+    LOGIN_URL = settings.LOGIN_URL
 
     # 如果发现不是woa过来的域名
     if (
@@ -160,7 +181,7 @@ def get_footer(request):
     @param request:
     @return:
     """
-    from adapter.core import FOOTER
+    FOOTER = _get_footer()
 
     return JsonResponse(
         {
@@ -189,6 +210,3 @@ def get_major_minor_version(version_string):
     # 取前两个部分并用 '.' 连接
     major_minor = ".".join(parts[:2])
     return major_minor
-
-
-template_name = "wiki/create.html"

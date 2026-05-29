@@ -34,7 +34,7 @@ from rest_framework.decorators import action
 from itsm.component.constants import LESSCODE_PROJECT_KEY
 from itsm.component.drf import viewsets as component_viewsets
 from itsm.component.constants.iam import ACTIONS
-from itsm.auth_iam.utils import IamRequest
+from itsm.component.utils.iam_stub import IamRequest
 from itsm.component.exceptions import ProjectSettingsNotFound, DeleteError
 from itsm.project.handler.migration_handler import MigrationHandlerDispatcher
 from itsm.project.models import (

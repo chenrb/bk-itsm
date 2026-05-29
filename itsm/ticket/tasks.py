@@ -33,7 +33,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from celery import Task, shared_task
 from celery.schedules import crontab
-from blueapps.contrib.celery_tools.periodic import periodic_task
+from celery import shared_task
 from django.db.models import Q
 from django.db import connection, transaction
 from django.utils.translation import gettext as _
@@ -69,7 +69,7 @@ from itsm.ticket_status.models import StatusTransit
 from itsm.workflow.models import Notify
 
 
-@periodic_task(run_every=crontab(minute=0, hour="*/2"))
+@shared_task  # run_every: run_every=crontab(minute=0, hour="*/2")
 def auto_comment():
     """周期任务：为超时的评价添加默认评价"""
     if AUTO_COMMENT_DAYS > 0:
@@ -84,7 +84,7 @@ def auto_comment():
         )
 
 
-@periodic_task(run_every=crontab(hour=0, minute=0, day_of_week=1))
+@shared_task  # run_every: run_every=crontab(hour=0, minute=0, day_of_week=1)
 def weekly_statical():
     """每周的单据统计任务"""
     try:
@@ -311,7 +311,7 @@ def notify_fast_approval_task(ticket, state_id, receivers):
     notify_fast_approval_message(ticket, state_id, receivers)
 
 
-@periodic_task(run_every=(crontab(minute="*/1")), ignore_result=True)
+@shared_task  # run_every: run_every=(crontab(minute="*/1"), ignore_result=True)
 @share_lock()
 def status_auto_transit():
     """单据状态自动流转"""
@@ -435,7 +435,7 @@ def remark_notify(ticket_id, creator, message, receivers):
         )
 
 
-@periodic_task(run_every=crontab(minute=0, hour=8))
+@shared_task  # run_every: run_every=crontab(minute=0, hour=8)
 def collection_near_users():
     if settings.CLOSE_EVERY_DAY_TICKET_NOTIFY:
         return
@@ -506,7 +506,7 @@ def send_message(username, queryset):
     notify.send_message(title, username, email_content)
 
 
-@periodic_task(run_every=crontab(minute="*/10", hour="9-12"))
+@shared_task  # run_every: run_every=crontab(minute="*/10", hour="9-12")
 def consume_notify():
     if settings.CLOSE_EVERY_DAY_TICKET_NOTIFY:
         return
@@ -540,7 +540,7 @@ def ticket_set_history_operators(ticket_id, current_operator):
         ticket.save(update_fields=("updated_by",))
 
 
-@periodic_task(run_every=crontab(hour="4", minute="0", day_of_week="*"), ignore_result=True)
+@shared_task  # run_every: run_every=crontab(hour="4", minute="0", day_of_week="*", ignore_result=True)
 def check_auto_stuck_schedules():
     try:
         from itsm.component.apigw.client.monitor import PushData

@@ -26,91 +26,31 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from django.conf import settings
 from common.log import logger
 
-from iam import Subject, Action
-from iam.auth.models import ApiAuthResourceWithPath, ApiAuthRequest
-from itsm.auth_iam.utils import IamRequest
+from itsm.component.utils.iam_stub import IamRequest
 from itsm.component.constants import DEFAULT_PROJECT_PROJECT_KEY
 from itsm.component.exceptions import AuthMigrateError
 from itsm.project.models import Project
 
 
 class MigrateIamRequest(IamRequest):
-    
+
     def grant_or_revoke_instance_permission(self, actions, resources, operate,
                                             project_key=DEFAULT_PROJECT_PROJECT_KEY):
-
-        subject = Subject("user", self.request.user.username if self.request else self.username)
-        actions = [Action(action) for action in actions]
-
-        project = self.get_project(project_key)
-
-        resources = [
-            ApiAuthResourceWithPath(
-                settings.BK_IAM_SYSTEM_ID,
-                resource['resource_type'],
-                path=[
-                    {
-                        "type": "project",
-                        "id": project_key,
-                        "name": project.name
-                    },
-                    {
-                        "type": resource['resource_type'],
-                        "id": resource['resource_id'],
-                        "name": resource['resource_name']
-                    }
-                ]
-            )
-            for resource in resources
-        ]
-
-        for action in actions:
-            request = ApiAuthRequest(settings.BK_IAM_SYSTEM_ID, subject, action, resources, None,
-                                     operate)
-            try:
-                self._iam.grant_or_revoke_path_permission(request,
-                                                          bk_username=self.request.user.username)
-            except BaseException as error:
-                logger.error("实例权限迁移失败， error={}, actions={}, operate={}, project_key={}"
-                             .format(error, actions, operate, project_key))
-                raise AuthMigrateError("权限迁移失败，请检查您的配置 error={}, actions={}, operate={}, "
-                                       "project_key={}"
-                                       .format(error, actions, operate, project_key))
+        """No-op stub: permission migration is disabled without the IAM SDK."""
+        logger.info(
+            "MigrateIamRequest.grant_or_revoke_instance_permission skipped "
+            "(IAM SDK removed): actions=%s, operate=%s, project_key=%s",
+            actions, operate, project_key,
+        )
 
     def grant_or_revoke_permit_with_project(self, actions, operate,
                                             project_key=DEFAULT_PROJECT_PROJECT_KEY):
-
-        subject = Subject("user", self.request.user.username if self.request else self.username)
-        actions = [Action(action) for action in actions]
-
-        project = self.get_project(project_key)
-
-        resources = [
-            ApiAuthResourceWithPath(
-                settings.BK_IAM_SYSTEM_ID,
-                "project",
-                path=[
-                    {
-                        "type": "project",
-                        "id": project_key,
-                        "name": project.name
-                    },
-                ]
-            )
-        ]
-
-        for action in actions:
-            request = ApiAuthRequest(settings.BK_IAM_SYSTEM_ID, subject, action, resources, None,
-                                     operate)
-            try:
-                self._iam.grant_or_revoke_path_permission(request,
-                                                          bk_username=self.request.user.username)
-            except BaseException as error:
-                logger.error("项目权限迁移失败， error={}, actions={}, operate={}, project_key={}"
-                             .format(error, actions, operate, project_key))
-                raise AuthMigrateError("项目权限迁移失败，请检查您的配置 error={}, actions={}, operate={},"
-                                       " project_key={}"
-                                       .format(error, actions, operate, project_key))
+        """No-op stub: permission migration is disabled without the IAM SDK."""
+        logger.info(
+            "MigrateIamRequest.grant_or_revoke_permit_with_project skipped "
+            "(IAM SDK removed): actions=%s, operate=%s, project_key=%s",
+            actions, operate, project_key,
+        )
 
     def get_project(self, project_key):
         return Project.objects.get(key=project_key)

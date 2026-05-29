@@ -26,7 +26,7 @@ import json
 
 import mock
 from django.test import TestCase, override_settings
-from blueapps.core.celery.celery import app
+from config import celery_app as app
 
 from itsm.pipeline_plugins.components.collections.itsm_approval_node import ItsmApprovalService
 from itsm.pipeline_plugins.components.collections.itsm_approve import ItsmService

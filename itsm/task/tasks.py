@@ -28,7 +28,7 @@ import datetime
 from collections import defaultdict
 from operator import itemgetter
 from celery.schedules import crontab
-from blueapps.contrib.celery_tools.periodic import periodic_task
+from celery import shared_task
 
 from itsm.component.constants.task import (
     NEED_UPDATE_TASK_STATUS,
@@ -107,11 +107,9 @@ def get_task_status(bk_biz_id, sops_task_id):
     return res.get("data")
 
 
-@periodic_task(
-    run_every=(
+@shared_task  # run_every: run_every=(
         crontab(
             minute="*/2",
-        )
     ),
     ignore_result=True,
 )
@@ -362,11 +360,9 @@ def do_after_sops_task_finished(sops_task_id):
     task.save()
 
 
-@periodic_task(
-    run_every=(
+@shared_task  # run_every: run_every=(
         crontab(
             minute="*/5",
-        )
     ),
     ignore_result=True,
 )

@@ -31,7 +31,7 @@ from rest_framework import serializers
 from rest_framework.fields import JSONField, empty
 from rest_framework.validators import UniqueValidator
 
-from itsm.auth_iam.utils import IamRequest
+from itsm.component.utils.iam_stub import IamRequest
 from itsm.component.drf.serializers import AuthModelSerializer
 from itsm.component.constants import (
     FIELD_BIZ,

@@ -34,7 +34,6 @@ from django.utils.translation import gettext as _
 from rest_framework.exceptions import ValidationError as RrfValidationError
 
 from common.log import logger
-from itsm.component.bkoauth.jwt_client import JWTClient, jwt_invalid_view
 from itsm.component.exceptions import ServerError, ParamError
 from itsm.component.utils.basic import ComplexRegexField, size_mapper
 from itsm.component.utils.response import Fail
@@ -287,18 +286,6 @@ def fbv_exception_handler(view_func):
     return _exception_handler
 
 
-# def custom_apigw_required(view_func):
-#     """apigw装饰器"""
-#
-#     @wraps(view_func)
-#     def _wrapped_view(self, request, *args, **kwargs):
-#         request.jwt = JWTClient(request)
-#         if not request.jwt.is_valid:
-#             return jwt_invalid_view(request)
-#         return view_func(self, request, *args, **kwargs)
-#
-#     return _wrapped_view
-
 
 def custom_apigw_required(view_func):
     """apigw装饰器"""
@@ -329,13 +316,12 @@ def custom_apigw_required(view_func):
 
 
 def apigw_required(view_func):
-    """apigw装饰器"""
+    """apigw装饰器 — TODO: Plan 13 重写为 PyJWT"""
+    # TODO: Plan 13 — 重写 JWT 认证
+    return view_func
 
-    @wraps(view_func)
-    def _wrapped_view(request, *args, **kwargs):
-        request.jwt = JWTClient(request)
-        if not request.jwt.is_valid:
-            return jwt_invalid_view(request)
-        return view_func(request, *args, **kwargs)
 
-    return _wrapped_view
+def login_exempt(view_func):
+    """标记视图免登录检查，兼容 blueapps.account.decorators.login_exempt"""
+    view_func.login_exempt = True
+    return view_func

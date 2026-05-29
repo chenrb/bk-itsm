@@ -91,7 +91,7 @@ from itsm.component.utils.basic import create_version_number
 from itsm.component.utils.bk_bunch import bunchify
 from itsm.component.utils.misc import JsonEncoder
 from itsm.iadmin.models import SystemSettings
-from itsm.auth_iam.utils import IamRequest
+from itsm.component.utils.iam_stub import IamRequest
 from itsm.role.models import UserRole
 from itsm.service.models import Service
 from itsm.workflow import signals

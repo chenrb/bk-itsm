@@ -26,18 +26,14 @@ import operator
 from functools import reduce
 
 from django.utils.translation import gettext as _
-from django.conf import settings
 from rest_framework import permissions
 from rest_framework.serializers import ValidationError
 
-from iam import Action, Resource, Subject
-from iam.exceptions import AuthFailedException
-from itsm.auth_iam.utils import IamRequest
+from itsm.component.utils.iam_stub import IamRequest
 from itsm.role.models import UserRole
 from itsm.service.models import Service
 
 from .models import Ticket
-from ..project.models import Project
 
 
 class SuperuserPermissionValidate(permissions.BasePermission):
@@ -175,7 +171,6 @@ class TicketPermissionValidate(permissions.BasePermission):
 
     def iam_ticket_view_auth(self, request, obj):
         iam_client = IamRequest(request)
-        project_name = Project.objects.get(key=obj.project_key).name
         resource_info = {
             "resource_id": str(obj.service_id),
             "resource_name": obj.service_name,
@@ -189,38 +184,9 @@ class TicketPermissionValidate(permissions.BasePermission):
         if auth_actions.get("ticket_view"):
             return True
 
-        resource_list = [
-            {
-                "resource_id": obj.project_key,
-                "resource_name": project_name,
-                "resource_type": "project",
-            },
-            resource_info,
-        ]
-
-        bk_iam_path = "/project,{}/".format(obj.project_key)
-        resources = [
-            Resource(
-                settings.BK_IAM_SYSTEM_ID,
-                resource["resource_type"],
-                str(resource["resource_id"]),
-                {
-                    "iam_resource_owner": resource.get("creator", ""),
-                    "_bk_iam_path_": (
-                        bk_iam_path if resource["resource_type"] != "project" else ""
-                    ),
-                    "name": resource.get("resource_name", ""),
-                },
-            )
-            for resource in resource_list
-        ]
-
-        raise AuthFailedException(
-            settings.BK_IAM_SYSTEM_ID,
-            Subject("user", request.user.username),
-            Action(apply_actions[0]),
-            resources,
-        )
+        # Stub always returns allowed=True, so this path is unreachable.
+        # Preserved for structural compatibility.
+        return False
 
 
 class StatePermissionValidate(permissions.BasePermission):

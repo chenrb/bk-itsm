@@ -24,7 +24,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
 from django.conf import settings
-from django.urls import include, re_path
+from django.urls import include, path, re_path
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -36,8 +36,7 @@ urlpatterns = [
     re_path(r"^admin/", admin.site.urls),
     re_path(r"^notice/", include("bk_notice_sdk.urls")),
     # 用户登录鉴权
-    # re_path(r'^account/', include('account.urls')),
-    re_path(r"^account/", include("blueapps.account.urls")),
+    path("account/", include("itsm.component.users.urls")),
     # 接口版本管理
     re_path(r"^api/", include("itsm.api.v1")),
     # 对外开放的接口
@@ -61,7 +60,6 @@ handler401 = "error_pages.views.error_401"
 
 # 全局生效：不推荐生产环境使用
 urlpatterns += [
-    # wiki上传图片404也可以这样简单解决：路由层面不复用MEDIA_URL，后者只用来生成url，比如可以自定义prefix为SITE_URL
     re_path(
         r"^media/(?P<path>.*)$", static.serve, {"document_root": settings.MEDIA_ROOT}
     ),

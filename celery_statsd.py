@@ -97,7 +97,7 @@ class Camera(Polaroid):
             #     f"celery.workers.{worker_name}.status_string", worker.status_string
             # )
 
-        from blueapps.core.celery.celery import app as celery_app
+        from config import celery_app
 
         try:
             broker = Broker(

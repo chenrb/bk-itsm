@@ -25,7 +25,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from django.apps import AppConfig
 
-from blueapps.conf import settings
+from django.conf import settings
 from itsm.component.dlls.autodiscover import autodiscover_collections
 from itsm.trigger.signal.signals import trigger_signal, action_finish
 

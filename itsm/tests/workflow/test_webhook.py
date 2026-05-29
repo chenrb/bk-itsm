@@ -12,7 +12,7 @@ from itsm.pipeline_plugins.components.collections.webhook import (
 )
 from itsm.service.models import CatalogService
 from itsm.ticket.models import Ticket
-from blueapps.core.celery.celery import app
+from config import celery_app as app
 from pipeline.core.data.base import DataObject
 
 

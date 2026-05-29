@@ -25,7 +25,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from celery import shared_task
 from celery.schedules import crontab
-from blueapps.contrib.celery_tools.periodic import periodic_task
+from celery import shared_task
 from django.core.cache import cache
 from django.conf import settings
 from itsm.component.constants import CACHE_10MIN, CACHE_5MIN
@@ -112,6 +112,6 @@ def update_user_departments(cache_key, username, id_only):
     return result if result else []
 
 
-@periodic_task(run_every=crontab(minute=0, hour="0,1,2,3,4"))
+@shared_task  # run_every: run_every=crontab(minute=0, hour="0,1,2,3,4")
 def delete_tracker_record():
     pass

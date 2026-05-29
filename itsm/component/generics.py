@@ -41,7 +41,6 @@ from rest_framework.exceptions import (
 from rest_framework.response import Response
 
 from common.log import logger
-from iam.exceptions import AuthFailedException
 from itsm.component.constants import ResponseCodeStatus
 from itsm.component.constants.iam import HTTP_499_IAM_FORBIDDEN
 from itsm.component.utils.drf import format_validation_message
@@ -56,9 +55,6 @@ def exception_handler(exc, context):
         app自定义异常
     """
     data = {"result": False, "data": None}
-    if isinstance(exc, AuthFailedException):
-        # 权限中心校验异常, 直接抛出
-        raise exc
 
     if isinstance(exc, (NotAuthenticated, AuthenticationFailed)):
         data = {

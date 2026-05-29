@@ -31,7 +31,7 @@ import time
 from collections import OrderedDict
 
 import mock
-from blueapps.core.celery.celery import app
+from config import celery_app as app
 from django.conf import settings
 from django.test import TestCase, override_settings
 from common.cipher import AESVerification

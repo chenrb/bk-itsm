@@ -25,12 +25,12 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import time
 
-from blueapps.contrib.celery_tools.periodic import periodic_task
+from celery import shared_task
 from celery.schedules import crontab
 from common.redis import Cache
 
 
-@periodic_task(run_every=crontab(minute=0, hour=0))
+@shared_task  # run_every: run_every=crontab(minute=0, hour=0)
 def clean_timout_callback_ticket():
     instance = Cache()
     tickets = instance.hgetall("callback_error_ticket")

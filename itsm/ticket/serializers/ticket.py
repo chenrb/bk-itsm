@@ -34,7 +34,7 @@ from rest_framework.fields import JSONField, empty
 
 from common.log import logger
 from common.utils import html_escape, texteditor_escape
-from itsm.auth_iam.utils import IamRequest
+from itsm.component.utils.iam_stub import IamRequest
 from itsm.component.constants import (
     ACTION_CHOICES,
     ALL_ACTION_CHOICES,

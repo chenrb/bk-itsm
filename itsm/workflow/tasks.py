@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from celery.schedules import crontab
-from blueapps.contrib.celery_tools.periodic import periodic_task
+from celery import shared_task
 
 from common.log import logger
 from itsm.component.constants import PUBLIC_PROJECT_PROJECT_KEY
@@ -10,7 +10,7 @@ from itsm.workflow.models import Notify, settings, Project
 from itsm.workflow.utils import init_notify_type_choice
 
 
-@periodic_task(run_every=(crontab(hour="*/1", minute=0)), ignore_result=True)
+@shared_task  # run_every: run_every=(crontab(hour="*/1", minute=0), ignore_result=True)
 @share_lock()
 def check_and_update_notify_type():
     choice = init_notify_type_choice()

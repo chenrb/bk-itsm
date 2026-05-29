@@ -31,7 +31,7 @@ from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 
-from blueapps.account.decorators import login_exempt
+from itsm.component.decorators import login_exempt
 from common.log import logger
 from common.cipher import AESVerification
 from common.redis import Cache

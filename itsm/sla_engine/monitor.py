@@ -28,7 +28,7 @@ import json
 
 from celery import shared_task
 from celery.schedules import crontab
-from blueapps.contrib.celery_tools.periodic import periodic_task
+from celery import shared_task
 from django.db import transaction
 
 from common.redis import Cache
@@ -65,7 +65,7 @@ def action_exclude(ac_key, ac_value, ac_time):
             sla_task_action.alert()
 
 
-@periodic_task(run_every=datetime.timedelta(seconds=30))
+@shared_task  # run_every: run_every=datetime.timedelta(seconds=30)
 def sla_task_metric():
     """
     1、获取redis内当前分钟的任务
@@ -88,11 +88,9 @@ def sla_task_metric():
     sla_redis_inst.srem(SLA_ACTION_TIME, ac_time)
 
 
-@periodic_task(
-    run_every=(
+@shared_task  # run_every: run_every=(
         crontab(
             minute="*/10",
-        )
     ),
     ignore_result=True,
 )
@@ -122,11 +120,9 @@ def compensate_task():
         sla_redis_inst.srem(SLA_ACTION_TIME, ac_time)
 
 
-@periodic_task(
-    run_every=(
+@shared_task  # run_every: run_every=(
         crontab(
             minute="*/10",
-        )
     ),
     ignore_result=True,
 )

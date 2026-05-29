@@ -128,7 +128,7 @@ class Project(Model):
         CustomNotice.init_project_template(self.key)
 
     def grant_instance_permit(self, instances):
-        from itsm.auth_iam.utils import grant_instance_creator_related_actions
+        from itsm.component.utils.iam_stub import grant_instance_creator_related_actions
 
         for instance in instances:
             instance.creator = self.creator

@@ -29,7 +29,7 @@ import re
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
-from itsm.auth_iam.utils import IamRequest
+from itsm.component.utils.iam_stub import IamRequest
 from itsm.component.constants import CATALOG, FIRST_ORDER
 from itsm.project.models import Project, ProjectSettings, CostomTab
 

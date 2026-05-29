@@ -23,7 +23,8 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
-from blueapps.account.models import User
+from django.contrib.auth import get_user_model
+User = get_user_model()
 from django.core.cache import cache
 from django.db.models import Count
 

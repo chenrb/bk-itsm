@@ -5,7 +5,7 @@ from datetime import datetime
 
 import mock
 from django.test import TestCase, override_settings
-from blueapps.core.celery.celery import app
+from config import celery_app as app
 
 from itsm.service.models import Service, CatalogService
 from itsm.sla_engine.utils import seconds_format

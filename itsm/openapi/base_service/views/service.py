@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from blueapps.account.decorators import login_exempt
+from itsm.component.decorators import login_exempt
 from django.db import transaction
 from django.utils.decorators import method_decorator
 from rest_framework.decorators import action

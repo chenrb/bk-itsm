@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from blueapps.core.celery.celery import app
+from config import celery_app as app
 
 from itsm.monitor.healthz.check.base import checker
 from celery.app.control import Control
