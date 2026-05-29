@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-BK-ITSM (蓝鲸流程服务) is an IT Service Management application. Backend is Python 3.13 / Django 6.0 with DRF; frontend is Vue 2 (PC + WeChat). It uses a flow engine (`pipeline`) for workflow orchestration and Celery for async tasks.
+BK-ITSM (蓝鲸流程服务) is an IT Service Management application. Backend is Python 3.13 / Django 6.0 with DRF; frontend is Vue 2 (PC). It uses a flow engine (`pipeline`) for workflow orchestration and Celery for async tasks. The project has been fully decoupled from the BlueKing PaaS platform.
 
 ## Commands
 
@@ -52,13 +52,6 @@ npm run build        # Production build -> ../../../static/
 npm run lint         # ESLint with auto-fix
 ```
 
-### Frontend (WeChat)
-
-```bash
-cd frontend/weixin
-# Similar Vue 2 setup
-```
-
 ### Pre-commit hooks
 
 Configured in `.pre-commit-config.yaml`: black, flake8, commitlint. Install with `pre-commit install && pre-commit install --hook-type commit-msg`.
@@ -94,16 +87,16 @@ BK_MYSQL_TEST_NAME=bk_itsm_ci_test
 - `config/dev.py` — local development (loads `config/local_settings.py` for personal overrides)
 - `config/stag.py` — staging
 - `config/prod.py` — production
-- `config/default.py` — shared settings (INSTALLED_APPS, MIDDLEWARE, etc.)
+- `config/default.py` — shared settings, aggregates sub-modules (apps, celery, database, etc.)
 
-Environment-specific overrides come from `adapter/config/sites/{RUN_VER}/` (e.g. `adapter/config/sites/open/`).
+Configuration is organized into focused modules under `config/`: `apps.py`, `celery.py`, `database.py`, `integrations.py`, `pipeline.py`, `env.py`, etc.
 
 ### Django apps (under `itsm/`)
 
 The main business logic lives in Django apps under the `itsm/` package:
 
 - **`itsm/workflow/`** — Workflow definition and versioning (the core process designer)
-- **`itsm/ticket/`** — Ticket lifecycle management (create, state transitions, approval, comments)
+- **`itsm/ticket/`** — Ticket lifecycle management (create, state transitions, approval, comments); includes `schedule_monitor.py` for pipeline stuck-task detection
 - **`itsm/service/`** — Service catalog management
 - **`itsm/trigger/`** — Event trigger rules and actions
 - **`itsm/task/`** — Task management
@@ -113,13 +106,10 @@ The main business logic lives in Django apps under the `itsm/` package:
 - **`itsm/openapi/`** — Public API (gateway-exposed)
 - **`itsm/postman/`** — Third-party API management
 - **`itsm/pipeline_plugins/`** — Pipeline engine plugins (custom components + variables)
-- **`itsm/auth_iam/`** — IAM (identity access management) integration
-- **`itsm/gateway/`** — Wrappers around external BlueKing platform APIs
+- **`itsm/gateway/`** — Wrappers around external platform APIs
 - **`itsm/meta/`** — Metadata management
-- **`itsm/notice/`** — Notification management
 - **`itsm/misc/`** — Miscellaneous utilities
 - **`itsm/iadmin/`** — Admin configuration panel
-- **`itsm/helper/`** — Helper utilities (registered first in INSTALLED_APPS)
 - **`itsm/monitor/`** — Prometheus monitoring endpoints
 
 ### API routing
@@ -138,15 +128,12 @@ Each app under `itsm/` has its own `urls.py` and `views.py` (or `api.py`) follow
 
 ### Shared component libraries
 
-- **`itsm/component/`** — Shared backend utilities: DRF mixins, middlewares, ESB/APiGW clients, decorators, constants, notification helpers, task utilities, field definitions
-- **`common/`** — Cross-cutting utilities: Redis helpers, middleware, context processors, logging, encryption
-- **`iam/`** — IAM SDK for permission evaluation
-- **`adapter/`** — Environment-specific configuration adapters (sites/open, sites/ieod, etc.)
-- **`blueking/`** — BlueKing platform API client SDK (CMDB, Job, etc.)
+- **`itsm/component/`** — Shared backend utilities: DRF mixins, middlewares, `platform_client` (HTTP client for external platform APIs), decorators, constants, notification helpers, task utilities, field definitions
+- **`common/`** — Cross-cutting utilities: Redis helpers, middleware, context processors, logging, encryption, `time_this_function` decorator
 
 ### Frontend architecture
 
-PC frontend (`frontend/pc/`) and WeChat frontend (`frontend/weixin/`) are separate Vue 2 apps. See `frontend/pc/CLAUDE.md` for detailed frontend architecture.
+PC frontend (`frontend/pc/`) is a Vue 2 app. See `frontend/pc/CLAUDE.md` for detailed frontend architecture.
 
 ### Celery
 
