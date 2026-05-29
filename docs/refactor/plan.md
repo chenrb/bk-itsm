@@ -28,15 +28,15 @@
 | 01 | [基础设施](plans/01-base-infra.md) | base_settings.py、config/\_\_init\_\_.py、wsgi.py | ✅ |
 | 02 | [拆分 config/default.py](plans/02-config-default.md) | 按 13 个配置类别拆分为子模块 | ✅ |
 | 03 | [settings.py + 环境配置](plans/03-settings-and-env.md) | 简化 settings.py，删除 dev/stag/prod.py | ✅ |
-| 04 | [User 模型](plans/04-user-model.md) | 创建自定义 User 模型、登录视图、URL 配置 | |
-| 05 | [login_exempt + User 引用](plans/05-login-exempt-and-user-refs.md) | 替换 12 个文件的 blueapps account import | |
-| 06 | [删除 ESB/通信层](plans/06-delete-esb.md) | 删除 blueking/、adapter/ 等 6 个目录 | |
-| 07 | [user_adapter](plans/07-user-adapter.md) | 创建本地用户查询接口 | |
-| 08 | [删除 IAM](plans/08-delete-iam.md) | 删除 iam/、auth_iam/ 目录 | |
+| 04 | [User 模型](plans/04-user-model.md) | 创建自定义 User 模型、登录视图、URL 配置 | ✅ |
+| 05 | [login_exempt + User 引用](plans/05-login-exempt-and-user-refs.md) | 替换 12 个文件的 blueapps account import | ✅ |
+| 06 | [删除 ESB/通信层](plans/06-delete-esb.md) | 删除 blueking/、adapter/ 等 6 个目录 | ✅ |
+| 07 | [user_adapter](plans/07-user-adapter.md) | 创建本地用户查询接口 | ✅ |
+| 08 | [删除 IAM](plans/08-delete-iam.md) | 删除 iam/、auth_iam/ 目录 | ✅ |
 | 09 | [权限系统 guardian](plans/09-permission-guardian.md) | 重写 DRF 权限类 | |
-| 10 | [删除 weixin](plans/10-delete-weixin.md) | 删除 weixin/、miniweixin/、前端微信应用 | |
+| 10 | [删除 weixin](plans/10-delete-weixin.md) | 删除 weixin/、miniweixin/、前端微信应用 | ✅ |
 | 11 | [通知系统](plans/11-notifier-system.md) | 创建 Notifier 抽象接口 | |
-| 12 | [Celery 清理](plans/12-celery-periodic-tasks.md) | 替换 periodic_task 装饰器 | |
+| 12 | [Celery 清理](plans/12-celery-periodic-tasks.md) | 替换 periodic_task 装饰器 | ✅ |
 | 13 | [OpenAPI 认证 + 存储](plans/13-openapi-auth-and-storage.md) | 重写 JWT 认证，移除 bkstorages | |
 | 14 | [残余清理](plans/14-delete-residual.md) | 删除 sops_proxy/ 等残余目录 | |
 | 15 | [更新测试](plans/15-update-tests.md) | 更新测试 import，更新 CI | |
