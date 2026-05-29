@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 """INSTALLED_APPS + MIDDLEWARE + AUTHENTICATION_BACKENDS"""
-import os
 
 AUTH_USER_MODEL = "users.User"
 
@@ -52,10 +51,6 @@ INSTALLED_APPS = (
     "rest_framework",
     "corsheaders",
     "django_filters",
-    # TODO: 移除以下 blueking 依赖
-    "apigw_manager.apigw",
-    "blueapps.opentelemetry.instrument_app",
-    "bk_notice_sdk",
     # Celery
     "django_celery_beat",
     "django_celery_results",
@@ -79,12 +74,5 @@ MIDDLEWARE = (
     "django.middleware.security.SecurityMiddleware",
     "django.middleware.locale.LocaleMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
-    # TODO: 移除以下 blueking 依赖
-    "blueapps.account.middlewares.RioLoginRequiredMiddleware",
-    "blueapps.account.middlewares.LoginRequiredMiddleware",
-    "blueapps.core.exceptions.middleware.AppExceptionMiddleware",
     "itsm.component.misc_middlewares.InstrumentProfilerMiddleware",
-    "apigw_manager.apigw.authentication.ApiGatewayJWTGenericMiddleware",
-    "apigw_manager.apigw.authentication.ApiGatewayJWTAppMiddleware",
-    "apigw_manager.apigw.authentication.ApiGatewayJWTUserMiddleware",
 )

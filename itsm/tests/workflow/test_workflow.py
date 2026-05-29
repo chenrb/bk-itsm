@@ -36,7 +36,7 @@ import copy
 
 from django.test import TestCase, override_settings
 
-from itsm.auth_iam.utils import IamRequest
+from itsm.component.utils.iam_stub import IamRequest
 from itsm.component.utils.misc import JsonEncoder
 from itsm.workflow.models import State, Transition, Workflow
 

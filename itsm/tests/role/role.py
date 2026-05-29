@@ -35,7 +35,7 @@ import datetime
 
 from django.test import TestCase
 
-from itsm.auth_iam.utils import IamRequest
+from itsm.component.utils.iam_stub import IamRequest
 from itsm.role.models import UserRole
 
 

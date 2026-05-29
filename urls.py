@@ -32,9 +32,8 @@ from django.views import static
 
 # 公共URL配置
 urlpatterns = [
-    # Django后台数据库管理®
+    # Django后台数据库管理
     re_path(r"^admin/", admin.site.urls),
-    re_path(r"^notice/", include("bk_notice_sdk.urls")),
     # 用户登录鉴权
     path("account/", include("itsm.component.users.urls")),
     # 接口版本管理

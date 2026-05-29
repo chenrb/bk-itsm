@@ -42,7 +42,6 @@ from rest_framework.response import Response
 
 from common.log import logger
 from itsm.component.constants import ResponseCodeStatus
-from itsm.component.constants.iam import HTTP_499_IAM_FORBIDDEN
 from itsm.component.utils.drf import format_validation_message
 from .exceptions import ServerError, IamPermissionDenied
 
@@ -71,9 +70,9 @@ def exception_handler(exc, context):
             "code": ResponseCodeStatus.PERMISSION_DENIED,
             "message": exc.detail,
             "data": [],
-            "permission": exc.data,  # 具体的权限信息
+            "permission": exc.data,
         }
-        return Response(data, status=HTTP_499_IAM_FORBIDDEN)
+        return Response(data, status=status.HTTP_403_FORBIDDEN)
 
     if isinstance(exc, PermissionDenied):
         data = {
@@ -83,56 +82,42 @@ def exception_handler(exc, context):
         }
         return Response(data, status=status.HTTP_403_FORBIDDEN)
 
+    if isinstance(exc, ValidationError):
+        data.update(
+            {
+                "code": ResponseCodeStatus.VALIDATE_ERROR,
+                "messages": exc.detail,
+                "message": format_validation_message(exc),
+            }
+        )
+    elif isinstance(exc, MethodNotAllowed):
+        data.update(
+            {
+                "code": ResponseCodeStatus.METHOD_NOT_ALLOWED,
+                "message": exc.detail,
+            }
+        )
+    elif isinstance(exc, ServerError):
+        data.update(
+            {
+                "code": exc.code,
+                "message": exc.message,
+            }
+        )
+    elif isinstance(exc, Http404):
+        data.update(
+            {
+                "code": ResponseCodeStatus.OBJECT_NOT_EXIST,
+                "message": _("当前操作的对象不存在"),
+            }
+        )
     else:
-        if isinstance(exc, ValidationError):
-            data.update(
-                {
-                    "code": ResponseCodeStatus.VALIDATE_ERROR,
-                    "messages": exc.detail,
-                    "message": format_validation_message(exc),
-                }
-            )
+        logger.error(traceback.format_exc())
+        data.update(
+            {
+                "code": ResponseCodeStatus.SERVER_500_ERROR,
+                "message": getattr(exc, "message", str(exc)),
+            }
+        )
 
-        elif isinstance(exc, MethodNotAllowed):
-            data.update(
-                {
-                    "code": ResponseCodeStatus.METHOD_NOT_ALLOWED,
-                    "message": exc.detail,
-                }
-            )
-        elif isinstance(exc, PermissionDenied):
-            data.update(
-                {
-                    "code": ResponseCodeStatus.PERMISSION_DENIED,
-                    "message": exc.detail,
-                }
-            )
-
-        elif isinstance(exc, ServerError):
-            # 更改返回的状态为为自定义错误类型的状态码
-            data.update(
-                {
-                    "code": exc.code,
-                    "message": exc.message,
-                }
-            )
-        elif isinstance(exc, Http404):
-            # 更改返回的状态为为自定义错误类型的状态码
-            data.update(
-                {
-                    "code": ResponseCodeStatus.OBJECT_NOT_EXIST,
-                    "message": _("当前操作的对象不存在"),
-                }
-            )
-        else:
-            # 调试模式
-            logger.error(traceback.format_exc())
-            # 正式环境，屏蔽500
-            data.update(
-                {
-                    "code": ResponseCodeStatus.SERVER_500_ERROR,
-                    "message": getattr(exc, "message", str(exc)),
-                }
-            )
-
-        return Response(data, status=status.HTTP_200_OK)
+    return Response(data, status=status.HTTP_200_OK)

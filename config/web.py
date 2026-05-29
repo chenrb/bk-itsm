@@ -57,7 +57,6 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "blueapps.template.context_processors.blue_settings",
                 "common.context_processors.mysetting",
             ],
         },
@@ -98,3 +97,15 @@ CSRF_TRUSTED_ORIGINS = [
     "https://*.{}".format(BKPAAS_BK_DOMAIN),
     "http://*.{}".format(BKPAAS_BK_DOMAIN),
 ]
+
+# ==============================================================================
+# Email / Notifications
+# ==============================================================================
+EMAIL_BACKEND = os.environ.get("EMAIL_BACKEND", "django.core.mail.backends.smtp.EmailBackend")
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "localhost")
+EMAIL_PORT = int(os.environ.get("EMAIL_PORT", 25))
+EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS", "false").lower() == "true"
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "itsm@localhost")
+DEFAULT_WEBHOOK_URL = os.environ.get("DEFAULT_WEBHOOK_URL", "")

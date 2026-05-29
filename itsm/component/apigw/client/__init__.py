@@ -1,27 +1,36 @@
 # -*- coding: utf-8 -*-
-"""
-Tencent is pleased to support the open source community by making BK-ITSM 蓝鲸流程服务 available.
+"""APIGW client module stub."""
+import logging
+import warnings
 
-Copyright (C) 2025 Tencent.  All rights reserved.
+logger = logging.getLogger("app")
 
-BK-ITSM 蓝鲸流程服务 is licensed under the MIT License.
 
-License for BK-ITSM 蓝鲸流程服务:
---------------------------------------------------------------------
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
-documentation files (the "Software"), to deal in the Software without restriction, including without limitation
-the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software,
-and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+class _ServiceStub:
+    """Logs a warning and returns empty result for any method call."""
 
-The above copyright notice and this permission notice shall be included in all copies or substantial
-portions of the Software.
+    def __init__(self, name):
+        self._name = name
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
-LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-"""
+    def __getattr__(self, method):
+        def _stub_fn(*args, **kwargs):
+            warnings.warn(
+                f"APIGW client call {self._name}.{method}() is a stub — "
+                "BlueKing API gateway has been decoupled",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+            logger.warning("APIGW stub: %s.%s() called", self._name, method)
+            return {}
 
-from . import devops  # noqa
-from . import monitor  # noqa
+        return _stub_fn
+
+
+class _ClientStub:
+    """Redirects attribute access to service stubs."""
+
+    def __getattr__(self, name):
+        return _ServiceStub(name)
+
+
+client = _ClientStub()

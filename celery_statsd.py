@@ -190,7 +190,7 @@ if __name__ == "__main__":
 
     django.setup()
 
-    from blueapps.core.celery.celery import app as celery_app
+    from config import celery_app
     from statsd.defaults.django import statsd as statsd_client
 
     monitor(celery_app, statsd_client)
