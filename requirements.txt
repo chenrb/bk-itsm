@@ -1,39 +1,31 @@
 # -*- coding: utf-8 -*-
-# 工程预装模块
-# 需要额外的python包，可直接在文件后面添加
-# 请确保指定的包和版本号，可通过pip安装
+# BK-ITSM requirements — Python 3.13, Django 6.0
 
-# blueapps requirement
-Django>=4.2.26,<4.3
+# Core
+Django>=6.0,<6.1
 PyMySQL==1.1.1
 MarkupSafe==2.1.5
 Mako==1.3.2
 requests==2.32.4
-celery==5.3.0
-django-celery-beat==2.7.0
-django-celery-results==2.5.1
-# pi==3.3.1
+celery==5.6.3
+django-celery-beat==2.8.1
+django-celery-results==2.6.0
 python-json-logger==2.0.7
 whitenoise==6.8.2
-six==1.16.0
 httplib2==0.22.0
-djangorestframework==3.15.2
+djangorestframework==3.17.1
 drf-extensions==0.7.1
 django-cors-headers==4.2.0
 jsonfield==3.1.0
 pypinyin==0.53.0
 django_extensions==3.2.3
-django-filter==2.4.0
-# django-autofixture==0.12.1
+django-filter==25.2
 django-revproxy==0.13.0
-pyinstrument_cext==0.2.4
 pyinstrument==5.0.0
 humanize==4.11.0
 xlwt==1.3.0
 jsonschema==4.23.0
-# django-smart-autoregister==0.0.5
-django-bulk-update==2.2.0
-django-redis==5.4.0
+django-redis==6.0.0
 RestrictedPython==8.0
 
 # wiki related
@@ -57,27 +49,15 @@ statsd==3.3.0
 # pipeline
 ujson==5.12.1
 pyparsing==3.2.0
-redis==5.0.3
+redis>=5.0.3
 django-timezone-field==5.1
 factory_boy==3.3.1
 mistune==3.0.2
-eventlet==0.40.3
-gevent==24.2.1
+eventlet==0.41.0
+gevent==26.4.0
 
-# iam
-cachetools==5.5.0
-certifi==2024.7.4
-chardet==5.2.0
-curlify==2.2.1
-idna==3.10
-urllib3==2.7.0
-# pycrypto==2.6.1
-
-#others
-raven==6.10.0
-ddtrace==0.14.1
+# others
 gunicorn==23.0.0
-bkstorages==2.0.0
 pytz==2024.2
 mock==5.1.0
 pydantic==2.10.6
@@ -86,9 +66,8 @@ pydantic==2.10.6
 xlrd==2.0.1
 typing-extensions==4.13.2
 
-
-#bkouth
-PyJWT==2.8.0
+# auth / JWT
+PyJWT==2.13.0
 cryptography==46.0.7
 
 # prometheus
@@ -96,23 +75,19 @@ django-prometheus==2.3.1
 
 # grpcio
 grpcio==1.80.0
-
 protobuf==5.29.6
 
 # opentelemetry
-opentelemetry-api==1.29.0
-opentelemetry-sdk==1.29.0
-opentelemetry-exporter-otlp==1.29.0
-opentelemetry-exporter-jaeger==1.21.0
-opentelemetry-exporter-jaeger-proto-grpc==1.21.0
-opentelemetry-exporter-jaeger-thrift==1.21.0
-opentelemetry-instrumentation==0.50b0
-opentelemetry-instrumentation-celery==0.50b0
-opentelemetry-instrumentation-django==0.50b0
-opentelemetry-instrumentation-dbapi==0.50b0
-opentelemetry-instrumentation-redis==0.50b0
-opentelemetry-instrumentation-logging==0.50b0
-opentelemetry-instrumentation-requests==0.50b0
+opentelemetry-api==1.42.1
+opentelemetry-sdk==1.42.1
+opentelemetry-exporter-otlp==1.42.1
+opentelemetry-instrumentation==0.63b0
+opentelemetry-instrumentation-celery==0.63b0
+opentelemetry-instrumentation-django==0.63b0
+opentelemetry-instrumentation-dbapi==0.63b0
+opentelemetry-instrumentation-redis==0.63b0
+opentelemetry-instrumentation-logging==0.63b0
+opentelemetry-instrumentation-requests==0.63b0
 
 pyCryptodome==3.20.0
 
@@ -120,12 +95,14 @@ Jinja2==3.1.6
 jmespath==1.0.1
 requests_toolbelt==1.0.0
 
-apigw-manager[cryptography]==4.0.0
-blueapps[opentelemetry,bkcrypto]==4.15.4
+# API docs (replacing drf-yasg)
+drf-spectacular==0.29.0
 
-drf-yasg==1.21.8
+# permissions (replacing blueking IAM)
+django-guardian==3.3.1
 
-bk-notice-sdk==1.3.2
+# error tracking (replacing raven)
+sentry-sdk==2.60.0
 
 sqlparse>=0.5.0,<0.6
 Werkzeug>=3.0.6,<3.1

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-BK-ITSM (蓝鲸流程服务) is an IT Service Management application built on the BlueKing platform. Backend is Python/Django 4.2 with DRF; frontend is Vue 2 (PC + WeChat). It uses a flow engine (`pipeline`) for workflow orchestration and Celery for async tasks.
+BK-ITSM (蓝鲸流程服务) is an IT Service Management application. Backend is Python 3.13 / Django 6.0 with DRF; frontend is Vue 2 (PC + WeChat). It uses a flow engine (`pipeline`) for workflow orchestration and Celery for async tasks.
 
 ## Commands
 
@@ -166,7 +166,7 @@ MySQL via PyMySQL. Migrations in each app's `migrations/` directory. Test databa
 
 ### Python
 
-- **Python 3.11**, Django 4.2
+- **Python 3.13**, Django 6.0
 - **Formatter:** black (line length 100, from isort config)
 - **Linter:** flake8 (max-line-length 120, max-complexity 25)
 - **Import sorting:** isort (line_length=100, known_third_party=rest_framework, known_django=django)
@@ -184,7 +184,7 @@ See `frontend/pc/CLAUDE.md` for full ESLint, formatting, and Vue conventions.
 ## CI
 
 GitHub Actions workflow (`.github/workflows/django.yml`) runs on push/PR:
-1. Sets up Python 3.11 + MySQL + Redis
+1. Sets up Python 3.13 + MySQL + Redis
 2. Installs deps + runs migrations
 3. Runs `coverage run manage.py test itsm.tests`
 4. Uploads coverage to Codecov
