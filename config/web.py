@@ -33,11 +33,10 @@ REST_FRAMEWORK = {
 
 # ==============================================================================
 # Templates
+# TODO: 评估是否完全去除 Mako，迁移到 Django templates
 # ==============================================================================
-MAKO_DIR_NAME = "mako_templates"
-MAKO_DEFAULT_FILTERS = None
 MAKO_TEMPLATE_DIR = (
-    os.path.join(BASE_DIR, MAKO_DIR_NAME),
+    os.path.join(BASE_DIR, "mako_templates"),
     os.path.join(BASE_DIR, "static", "dist"),
 )
 MAKO_TEMPLATE_MODULE_DIR = os.path.join(
@@ -61,28 +60,7 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "blueapps.template.context_processors.blue_settings",
                 "common.context_processors.mysetting",
-                "sekizai.context_processors.sekizai",
-                "weixin.core.context_processors.basic",
             ],
-        },
-    },
-    {
-        "BACKEND": "blueapps.template.backends.mako.MakoTemplates",
-        "DIRS": MAKO_TEMPLATE_DIR,
-        "APP_DIRS": True,
-        "OPTIONS": {
-            "context_processors": [
-                "django.template.context_processors.debug",
-                "django.template.context_processors.request",
-                "django.contrib.auth.context_processors.auth",
-                "django.contrib.messages.context_processors.messages",
-                "blueapps.template.context_processors.blue_settings",
-                "common.context_processors.mysetting",
-                "django.template.context_processors.i18n",
-                "sekizai.context_processors.sekizai",
-                "weixin.core.context_processors.basic",
-            ],
-            "module_directory": MAKO_TEMPLATE_MODULE_DIR,
         },
     },
 ]
@@ -91,8 +69,33 @@ DATETIME_FORMAT = "Y-m-d H:i:s"
 DATE_FORMAT = "Y-m-d"
 
 # ==============================================================================
+# Static files
+# ==============================================================================
+STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(os.environ.get("PROJECT_ROOT", BASE_DIR), "staticfiles/")
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+BK_STATIC_URL = "/static"
+STATIC_VERSION = "2.6.11"
+
+# ==============================================================================
+# Media files
+# ==============================================================================
+MEDIA_URL = "%smedia/" % os.environ.get("SITE_URL", "/")
+MEDIA_ROOT = os.path.join(os.environ.get("PROJECT_ROOT", os.path.dirname(BASE_DIR)), "USERRES")
+
+FILE_CHARSET = "utf-8"
+ALLOW_CSRF = os.environ.get("BKAPP_ALLOW_CSRF", None) == "1"
+
+# ==============================================================================
 # CSRF / Session
 # ==============================================================================
 CSRF_COOKIE_PATH = "/"
 CSRF_COOKIE_NAME = os.environ.get("BKAPP_CSRF_COOKIE_NAME", "bkitsm_csrftoken")
 SESSION_COOKIE_NAME = "bkitsm_sessionid"
+LOGIN_URL = os.environ.get("LOGIN_URL", "/account/login/")
+
+BKPAAS_BK_DOMAIN = os.getenv("BKPAAS_BK_DOMAIN", "")
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.{}".format(BKPAAS_BK_DOMAIN),
+    "http://*.{}".format(BKPAAS_BK_DOMAIN),
+]

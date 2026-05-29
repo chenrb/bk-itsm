@@ -11,3 +11,7 @@ AUTO_TIMEOUT_MINUTES = os.getenv("AUTO_TIMEOUT_MINUTES", 30)
 
 AUTOSTATE_SCHEDULE_INTERVAL = os.getenv("AUTOSTATE_SCHEDULE_INTERVAL", 30)
 TAM_PROJECT_ID = os.environ.get("TAM_PROJECT_ID", "")
+
+STATSD_HOST = os.environ.get("STATSD_HOST", "localhost")
+STATSD_PORT = os.environ.get("STATSD_PORT", 8125)
+STATSD_PREFIX = os.environ.get("STATSD_PREFIX", None)

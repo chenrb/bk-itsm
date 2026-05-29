@@ -30,8 +30,6 @@ from .basic import *  # noqa
 ADMIN_READ_ONLY = "read_only"
 # 可以看到，且可以操作所有工单
 ADMIN_SUPERUSER = "superuser"
-# 可以管理知识库所有文章
-WIKI_ADMIN_SUPERUSER = "wiki_superuser"
 # 可以看到，和管理自己负责的流程
 WORKFLOW_SUPERUSER = "workflow_superuser"
 
@@ -41,8 +39,6 @@ ADMIN_BK_SUPERUSER_KEY = "BK_SUPERUSER"
 ADMIN_STATICS_MANAGER_KEY = "STATICS_MANAGER"
 # ITSM超级管理员
 ADMIN_SUPERUSER_KEY = "SUPERUSER"
-# WIKI超级管理员
-WIKI_ADMIN_SUPERUSER_KEY = "WIKI_SUPERUSER"
 # 流程管理员
 WORKFLOW_SUPERUSER_KEY = "WORKFLOW_MANAGER"
 
@@ -50,7 +46,6 @@ ADMIN_CHOICES = [
     (WORKFLOW_SUPERUSER, "流程管理员"),
     (ADMIN_READ_ONLY, "统计配置"),
     (ADMIN_SUPERUSER, "超级管理员"),
-    (WIKI_ADMIN_SUPERUSER, "知识库管理员"),
 ]
 ACCESS_NAMES = dict(ADMIN_CHOICES)
 

@@ -24,7 +24,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
 from django.contrib.auth import get_user_model
-from django.db import transaction
 from django.utils.translation import gettext as _
 from rest_framework import serializers
 
@@ -33,7 +32,6 @@ from itsm.component.constants import (
     LEN_MIDDLE,
     LEN_NORMAL,
     LEN_XX_LONG,
-    WIKI_ADMIN_SUPERUSER_KEY,
     LEN_SHORT,
 )
 from itsm.component.drf.serializers import DynamicFieldsModelSerializer
@@ -157,30 +155,5 @@ class UserRoleSerializer(DynamicFieldsModelSerializer):
         return self.update_auth_actions(instance, data)
 
     def update(self, instance, validated_data):
-        with transaction.atomic():
-            old_members = instance.members.split(",")
-            instance = super(UserRoleSerializer, self).update(instance, validated_data)
-            if instance.role_key != WIKI_ADMIN_SUPERUSER_KEY:
-                return instance
-
-            # 如果更新的是wiki管理员，需要把对应用户的is_superuser属性改为True
-            new_members = instance.members.split(",")
-            cancel_wiki_admins = set(old_members) - set(new_members)
-
-            if cancel_wiki_admins:
-                # 去掉权限的用户
-                for not_wiki_admin_user in BKUser.objects.filter(
-                    username__in=cancel_wiki_admins
-                ):
-                    not_wiki_admin_user.set_property("is_wiki_superuser", 0)
-
-            # 加权限的用户，如果用户不存在就创建一个
-            # 一视同仁，更新一遍，掩盖初始化wiki管理员没有添加该属性的缺陷，只有更新该角色才生效
-            for admin in new_members:
-                admin_user = BKUser.objects.filter(username=admin).first()
-                if not admin_user:
-                    admin_user = BKUser(username=admin, password="")
-                    admin_user.save()
-                admin_user.set_property("is_wiki_superuser", 1)
-
+        instance = super(UserRoleSerializer, self).update(instance, validated_data)
         return instance

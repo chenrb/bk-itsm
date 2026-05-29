@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import os
-import sys
 
 from celery import Celery
 
@@ -10,7 +9,6 @@ celery_app.config_from_object("django.conf:settings", namespace="CELERY")
 PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT, PROJECT_MODULE_NAME = os.path.split(PROJECT_PATH)
 BASE_DIR = PROJECT_ROOT
-PYTHON_BIN = os.path.dirname(sys.executable)
 
 APP_CODE = os.environ.get("APP_CODE", "bk_itsm")
 APP_TOKEN = os.environ.get("APP_TOKEN", "")

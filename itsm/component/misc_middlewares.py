@@ -40,7 +40,6 @@ from common.mymako import render_mako_context
 from itsm.component.constants import EXEMPT_HTTPS_REDIRECT
 from itsm.iadmin.contants import SERVICE_SWITCH
 from itsm.iadmin.models import SystemSettings
-from itsm.auth_iam.utils import IamRequest
 
 try:
     import cProfile
@@ -226,22 +225,6 @@ class NginxAuthProxy(MiddlewareMixin):
                 return None
 
         return None
-
-
-class WikiIamAuthMiddleware(MiddlewareMixin):
-    """
-    设置用户的知识管理员权限
-    """
-
-    def process_view(self, request, view, args, kwargs):
-        """process_view."""
-        if request.user and request.user.username and "/wiki/" in request.path:
-            apply_actions = ["knowledge_manage"]
-            iam_client = IamRequest(request)
-            auth_actions = iam_client.resource_multi_actions_allowed(apply_actions, [])
-            request.user.set_property(
-                "is_wiki_superuser", 1 if auth_actions.get("knowledge_manage") else 0
-            )
 
 
 class HttpResponseIndexRedirect(HttpResponseRedirect):

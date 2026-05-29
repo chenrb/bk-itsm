@@ -2,7 +2,6 @@
 """Celery 配置"""
 import os
 
-IS_USE_CELERY = True
 CELERYD_CONCURRENCY = os.getenv("BK_CELERYD_CONCURRENCY", 2)
 
 CELERY_IMPORTS = (
@@ -22,6 +21,8 @@ CELERY_TIMEZONE = "Asia/Shanghai"
 CELERY_ENABLE_UTC = True
 DJANGO_CELERY_BEAT_TZ_AWARE = True
 
-STATSD_HOST = os.environ.get("STATSD_HOST", "localhost")
-STATSD_PORT = os.environ.get("STATSD_PORT", 8125)
-STATSD_PREFIX = os.environ.get("STATSD_PREFIX", None)
+BROKER_URL = os.environ.get("BROKER_URL", "redis://localhost:6379/0")
+
+CELERYBEAT_SCHEDULER = "django_celery_beat.schedulers.DatabaseScheduler"
+
+from pipeline.celery.settings import *  # noqa

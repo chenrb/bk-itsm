@@ -4,7 +4,6 @@ import os
 
 # TODO: 移除 IAM，替换为 django-guardian
 USE_IAM = os.getenv("USE_IAM", "false").lower() == "true"
-IAM_SKIP_AUTH = False
 
 INSTALLED_APPS = (
     # itsm helper 注册首位
@@ -52,12 +51,6 @@ INSTALLED_APPS = (
     "rest_framework",
     "corsheaders",
     "django_filters",
-    # wiki
-    "django.contrib.humanize.apps.HumanizeConfig",
-    "django_nyt.apps.DjangoNytConfig",
-    "sekizai",
-    "sorl.thumbnail",
-    "simplemde",
     # TODO: 移除以下 blueking 依赖
     "apigw_manager.apigw",
     "weixin.core",
@@ -65,6 +58,9 @@ INSTALLED_APPS = (
     "blueapps.opentelemetry.instrument_app",
     "itsm.plugin_service",
     "bk_notice_sdk",
+    # Celery
+    "django_celery_beat",
+    "django_celery_results",
 )
 
 if USE_IAM:
@@ -80,7 +76,6 @@ MIDDLEWARE = (
     "itsm.component.misc_middlewares.UserLoginForbiddenMiddleware",
     "itsm.component.misc_middlewares.ServiceSwitchCheck",
     "itsm.component.misc_middlewares.ApiIgnoreCheck",
-    "itsm.component.misc_middlewares.WikiIamAuthMiddleware",
     "weixin.core.middlewares.WeixinProxyPatchMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",

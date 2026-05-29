@@ -37,7 +37,6 @@ from django.db.models import F
 
 from bulk_update.helper import bulk_update
 from common.log import logger
-from config.default import BIZ_GROUP_CONF, IS_BIZ_GROUP
 from itsm.component.constants import DEFAULT_BK_BIZ_ID
 from itsm.component.esb.esbclient import client_backend
 from itsm.component.utils.basic import dotted_name
@@ -645,34 +644,14 @@ def build_field_kwargs():
     """构建迁移所需的字段元素：api_instance, 数据字典"""
     from itsm.service.models import SysDict, DictData
 
-    kwargs = {"is_biz_group": IS_BIZ_GROUP}
-    if IS_BIZ_GROUP:
-        search_inst_api = RemoteApi.objects.get(is_builtin=True, func_name='search_inst')
-        group_instance = RemoteApiInstance.objects.create(
-            remote_api=search_inst_api,
-            req_params={},
-            req_body={'bk_obj_id': BIZ_GROUP_CONF['biz_obj_id'], 'bk_supplier_account': '0'},
-            rsp_data='data.info',
-        )
-        biz_instance = RemoteApiInstance.create_default_api_instance(
-            func_name='search_business',
-            req_params={},
-            req_body={
-                'fields': ['bk_biz_id', 'bk_biz_name'],
-                'condition': {BIZ_GROUP_CONF['biz_property_id']: '${params_%s}' % BIZ_GROUP_CONF[
-                    'biz_obj_id']},
-            },
-            rsp_data='data.info',
-        )
-        kwargs.update({'group_instance': group_instance, 'biz_instance': biz_instance})
-    else:
-        biz_instance = RemoteApiInstance.create_default_api_instance(
-            func_name='search_business',
-            req_params={},
-            req_body={'fields': ['bk_biz_id', 'bk_biz_name']},
-            rsp_data='data.info',
-        )
-        kwargs.update({'biz_instance': biz_instance})
+    kwargs = {}
+    biz_instance = RemoteApiInstance.create_default_api_instance(
+        func_name='search_business',
+        req_params={},
+        req_body={'fields': ['bk_biz_id', 'bk_biz_name']},
+        rsp_data='data.info',
+    )
+    kwargs.update({'biz_instance': biz_instance})
 
     fault_level_init = {
         'level_1': '一级故障',

@@ -61,7 +61,7 @@ class UserRoleValidator(object):
             raise serializers.ValidationError(_("该角色名称已存在"))
 
         # 不允许修改特殊角色的名称和权限范围
-        if self.role and role_key in ["STATICS_MANAGER", "SUPERUSER", "WIKI_SUPERUSER"]:
+        if self.role and role_key in ["STATICS_MANAGER", "SUPERUSER"]:
             if self.role.access != access:
                 raise serializers.ValidationError(_("该管理员权限页面不允许修改"))
             if self.role.name != name:
@@ -78,5 +78,5 @@ class UserRoleValidator(object):
 
 def delete_user_role_validate(instance):
     """删除时校验"""
-    if instance.role_key in ["STATICS_MANAGER", "SUPERUSER", "WIKI_SUPERUSER"]:
+    if instance.role_key in ["STATICS_MANAGER", "SUPERUSER"]:
         raise serializers.ValidationError(_("该角色不能删除"))

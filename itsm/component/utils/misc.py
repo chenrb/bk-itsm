@@ -27,7 +27,6 @@ import datetime
 import json
 import os
 
-from django.conf import settings
 from dateutil.relativedelta import relativedelta
 
 from common.log import logger
@@ -193,13 +192,6 @@ def get_field_display_value(field):
     # 如果是状态字段，display_value 应当为单据的
     if field.key == "current_status":
         return field.ticket.current_status_display
-
-    # 兼容旧数据
-    if field.type == "CASCADE" and settings.IS_BIZ_GROUP:
-        for choice in field.choice:
-            for item in choice["items"]:
-                if str(item["key"]) == field._value:
-                    return "{}->{}".format(choice["name"], item["name"])
 
     if field.type in ["SELECT", "RADIO"]:
         return {str(choice["key"]): choice["name"] for choice in field.choice}.get(

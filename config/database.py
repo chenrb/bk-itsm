@@ -103,3 +103,5 @@ class PatchFeatures:
 
 
 DatabaseFeatures.minimum_database_version = PatchFeatures.minimum_database_version
+
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"

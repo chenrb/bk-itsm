@@ -407,14 +407,6 @@ USER_ROLE_CHOICES = [
         DEFAULT_USERS,
         "可管理自己有权限的流程",
     ),
-    (
-        WIKI_ADMIN_SUPERUSER_KEY,
-        "知识库管理员",
-        "ADMIN",
-        WIKI_ADMIN_SUPERUSER,
-        DEFAULT_USERS,
-        "可管理知识库所有文章",
-    ),
     # IAM
     ("super_manager", "超级管理员", "IAM", "", "", "权限中心管理权限最高的角色"),
     ("system_manager", "系统管理员", "IAM", "", "", "每个接入系统在权限中心管理权限最高的角色"),

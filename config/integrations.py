@@ -14,7 +14,6 @@ USER_MANGE_HOST = os.environ.get(
     "BK_COMPONENT_API_URL", BK_PAAS_HOST
 )
 BK_USER_MANAGE_HOST = os.environ.get("BK_USER_MANAGE_HOST", USER_MANGE_HOST)
-LOGIN_URL = os.environ.get("LOGIN_URL", "/account/login/")
 
 # 前端地址
 FRONTEND_URL = os.environ.get("BKAPP_FRONTEND_URL") or os.path.join(
@@ -26,6 +25,7 @@ WEIXIN_APP_EXTERNAL_SHARE_HOST = "{}weixin/".format(
 TICKET_NOTIFY_HOST = WEIXIN_APP_EXTERNAL_SHARE_HOST
 
 # 标准运维代理
+SITE_URL_SOPS = "/o/bk_sops/"
 SOPS_PROXY_URL = os.environ.get(
     "BKAPP_SOPS_PROXY_URL", "{}{}".format(BK_PAAS_INNER_HOST, "/o/bk_sops/")
 )
@@ -50,9 +50,9 @@ def my_before_proxy_func(request, json_data, request_headers):
 
 
 BEFORE_PROXY_FUNC = my_before_proxy_func
-DEFAULT_VARIABLE_NAME = "variable_by_name"
 
 # IAM
+IAM_SKIP_AUTH = False
 BK_IAM_SYSTEM_ID = os.getenv("BKAPP_BK_IAM_SYSTEM_ID", APP_CODE)
 BK_IAM_SYSTEM_NAME = os.getenv("BKAPP_BK_IAM_SYSTEM_NAME", "ITSM")
 BK_IAM_INNER_HOST = os.environ.get("BK_IAM_V3_INNER_HOST", None)
@@ -134,13 +134,6 @@ BK_SHARED_RES_URL = os.getenv("BKPAAS_SHARED_RES_URL") or os.getenv(
 BK_PLATFORM_NAME = os.getenv("BKAPP_PLATFORM_NAME", "")
 BK_IEOD_LOGIN_URL = os.environ.get("BK_IEOD_LOGIN_URL", "")
 MY_OA_CALLBACK_URL = os.environ.get("MY_OA_CALLBACK_URL", "")
-
-# CSRF
-BKPAAS_BK_DOMAIN = os.getenv("BKPAAS_BK_DOMAIN", "")
-CSRF_TRUSTED_ORIGINS = [
-    "https://*.{}".format(BKPAAS_BK_DOMAIN),
-    "http://*.{}".format(BKPAAS_BK_DOMAIN),
-]
 
 # 企微webhook
 QW_WEB_HOOK_URL = os.getenv(

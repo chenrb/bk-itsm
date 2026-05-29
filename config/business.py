@@ -2,21 +2,14 @@
 """业务环境变量配置"""
 import os
 
+# business_rules
+DEFAULT_VARIABLE_NAME = "variable_by_name"
+
 # 初始化管理员
 BKAPP_ITSM_ADMIN = os.environ.get("BKAPP_ITSM_ADMIN", "")
 INIT_SUPERUSER = set(
     ["admin"] + [u for u in BKAPP_ITSM_ADMIN.split(",") if u]
 )
-
-# 业务关联组件参数
-IS_BIZ_GROUP = os.environ.get("BKAPP_IS_BIZ_GROUP", None) == "1"
-BIZ_GROUP_CONF = {
-    "biz_property_id": os.environ.get("BKAPP_BIZ_GROUP_RELATED_KEY", "belong_office"),
-    "biz_obj_id": os.environ.get("BKAPP_BIZ_GROUP_MODULE_KEY", "office"),
-}
-BIZ_GROUP_DESC = os.environ.get("BKAPP_GROUP_DESC", "请选择分组")
-BIZ_GROUP_ENUM = os.environ.get("BKAPP_BIZ_GROUP_ENUM", "")
-BIZ_ENUM = os.environ.get("BKAPP_BIZ_ENUM", "")
 
 # 微信/企业微信
 OUT_LINK = os.environ.get("BKAPP_OUT_LINK", "https://test.bksaas.com/")

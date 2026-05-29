@@ -512,9 +512,8 @@ class WorkflowManager(Manager):
         if flow_id:
             workflows = workflows.filter(id=flow_id)
 
-        group = kwargs.get("is_biz_group", False)
+        group = False
         biz_instance = kwargs.get("biz_instance")
-        group_instance = kwargs.get("group_instance", None)
 
         for workflow in workflows:
             # fix transitions of router about accept transition
@@ -750,41 +749,15 @@ class WorkflowManager(Manager):
                 # 提单节点业务字段
                 if state.type == "NORMAL" and state.is_builtin is True:
                     if workflow.is_biz_needed:
-                        if group:
-                            group_field = workflow.fields.create(
-                                name=settings.BIZ_GROUP_DESC,
-                                api_instance_id=group_instance.id,
-                                source_type="API",
-                                type="SELECT",
-                                kv_relation={
-                                    "name": "bk_inst_name",
-                                    "key": "bk_inst_id",
-                                },
-                                key=settings.BIZ_GROUP_CONF["biz_obj_id"],
-                                desc=settings.BIZ_GROUP_DESC,
-                                state=state,
-                            )
-                            state_fields.insert(1, group_field.id)
-                            Field._objects.filter(
-                                key=FIELD_BIZ, id__in=state.fields
-                            ).update(
-                                api_instance_id=biz_instance.id,
-                                source_type="API",
-                                type="SELECT",
-                                kv_relation={"name": "bk_biz_name", "key": "bk_biz_id"},
-                                related_fields={"rely_on": [group_field.key]},
-                                desc="请选择业务",
-                            )
-                        else:
-                            Field._objects.filter(
-                                key=FIELD_BIZ, id__in=state.fields
-                            ).update(
-                                api_instance_id=biz_instance.id,
-                                source_type="API",
-                                type="SELECT",
-                                kv_relation={"name": "bk_biz_name", "key": "bk_biz_id"},
-                                desc="请选择业务",
-                            )
+                        Field._objects.filter(
+                            key=FIELD_BIZ, id__in=state.fields
+                        ).update(
+                            api_instance_id=biz_instance.id,
+                            source_type="API",
+                            type="SELECT",
+                            kv_relation={"name": "bk_biz_name", "key": "bk_biz_id"},
+                            desc="请选择业务",
+                        )
                 # 更新
                 state.fields = state_fields
 

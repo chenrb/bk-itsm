@@ -24,7 +24,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
 from django.urls import include, re_path
-from django_nyt.urls import get_pattern as get_nyt_pattern
 
 from itsm.sites.views import index, get_footer, init
 from weixin import views as weixin_views
@@ -41,7 +40,5 @@ urlpatterns = [
     re_path(r"^weixin/$", weixin_views.index),
     re_path(r"^weixin/login/", include("weixin.core.urls")),
     re_path(r"^weixin/api/", include("weixin.urls")),
-    # wiki
-    re_path(r"^notifications/", get_nyt_pattern()),
     re_path(r"^core/footer/$", get_footer),
 ]
