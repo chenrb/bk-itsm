@@ -25,14 +25,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import datetime
 import hashlib
-import inspect
 import json
-import os
-import posixpath
 import re
-import stat
-from collections import Counter, namedtuple
-from functools import reduce
+from collections import namedtuple
 from itertools import combinations
 
 from celery.result import AsyncResult
@@ -40,24 +35,12 @@ from django.db.models.fields.reverse_related import ManyToManyRel
 from django.utils import timezone
 from django.utils.crypto import get_random_string
 from django.utils.translation import gettext as _
-from jsonschema import validate
 from pypinyin import lazy_pinyin
 from rest_framework.exceptions import ValidationError
 
 from common.log import logger
-from itsm.component.exceptions import ParamError
 
 # 基础工具包
-
-# 清理终端颜色
-COLOR_REMOVE = re.compile(r"\x1b[^m]*m")
-CLEAR_COLOR_RE = re.compile(
-    r"\\u001b\[\D{1}|\[\d{1,2}\D?|\\u001b\[\d{1,2}\D?~?", re.I | re.U
-)
-# 换行转换
-LINE_BREAK_RE = re.compile(r"\r\n|\r|\n", re.I | re.U)
-# ip地址v4版本
-IPV4_RE = re.compile(r"(?:[0-9]{1,3}\.){3}[0-9]{1,3}")
 
 
 def merge_dict_list(dict_list):
@@ -330,59 +313,6 @@ def better_time_or_none(time):
     return time.strftime("%Y-%m-%d %H:%M:%S") if time else time
 
 
-def time_delta(hours=1, minutes=30):
-    """
-    时间间隔
-    """
-    return datetime.timedelta(hours=hours, minutes=minutes)
-
-
-def index_of_list(objarr, key, val):
-    """
-    根据对象的某一属性寻找对象在其所在列表中的位置
-    """
-    return next((k for k, v in enumerate(objarr) if v[key] == val), -1)
-
-
-def safe_cast(val, to_type, default=None):
-    """
-    安全类型转换
-    """
-    try:
-        return to_type(val)
-    except ValueError:
-        return default or val
-    except TypeError:
-        return default or val
-
-
-def duplicate_check(id_list):
-    """
-    重复元素校验
-    """
-
-    # 筛选出现次数大于1的元素
-    return len([k for k, v in list(Counter(id_list).items()) if v > 1]) > 0
-
-
-def safe_remove(file_path):
-    """
-    安全删除文件
-    """
-    try:
-        os.remove(file_path)
-    except BaseException:
-        pass
-
-
-def deep_getattr(obj, attr):
-    """
-    Recurses through an attribute chain to get the ultimate value.
-    http://pingfive.typepad.com/blog/2010/04/deep-getattr-python-function.html
-    """
-    return reduce(getattr, attr.split("."), obj)
-
-
 def group_by(
     item_list, key_or_index_tuple, dict_result=False, aggregate=None, as_key=None
 ):
@@ -424,126 +354,9 @@ def revoke_task(task):
         pass
 
 
-def parse_color(content):
-    """
-    成功/失败/正常/异常/结果/返回码
-    <span class="agent-color-red">中转机登录失败</span>
-    """
-
-    color_pattern_list = [
-        {
-            "pattern": [
-                _("失败"),
-                _("异常"),
-                _("超时"),
-                _("放弃"),
-                _("无法"),
-                _("错误码"),
-                _("错误"),
-                _("批量安装作业启动失败"),
-                _("command not found"),
-                _("error"),
-                _("exception"),
-                _("timeout"),
-                _("failed"),
-                _("setup failed"),
-                _("no such file or directory"),
-            ],
-            "class": "agent-color-red",
-        },
-        {
-            "pattern": [
-                _("执行成功"),
-                _("启动成功"),
-                _("发送成功"),
-                _("成功录入cmdb"),
-                _("Done"),
-                _("step done"),
-                _("正常"),
-                _("install_success"),
-                _("success"),
-                _("100%"),
-            ],
-            "class": "agent-color-green",
-        },
-        {"pattern": [], "class": "agent-color-gray"},
-        {
-            "pattern": [
-                _("返回码"),
-                _("执行完毕"),
-                _("作业参数"),
-                _("curl"),
-                _("status"),
-                _("agent状态"),
-                _("yum"),
-                _("apt-get"),
-            ],
-            "class": "agent-color-black",
-        },
-        {
-            "pattern": [
-                _("warning"),
-                _("执行命令"),
-                _("输出结果"),
-                _("add crontab task failed. you can add it manually"),
-                _("Failed to register host to cmdb. you can register it manually"),
-            ],
-            "class": "agent-color-orange",
-        },
-        {"pattern": IPV4_RE, "class": "agent-color-black"},
-    ]
-
-    # 正则替换
-    for color_pattern in color_pattern_list:
-        pattern = color_pattern.get("pattern")
-        cls = color_pattern.get("class")
-        if isinstance(pattern, list):
-            # 空规则跳过
-            if not pattern:
-                continue
-            t = re.compile(str("|".join(pattern)), re.IGNORECASE)
-        else:
-            t = pattern
-
-        pts = set(t.findall(content))
-        for kw in pts:
-            content = content.replace(kw, '<span class="{}">{}</span>'.format(cls, kw))
-    else:
-        return content
-
-
-def log_parser(content):
-    """
-    \n\r->换行 + 清理终端颜色码 + 特殊颜色标记
-    """
-    # content = CLEAR_COLOR_RE.sub('', content)
-    content = LINE_BREAK_RE.sub("<br/>", content)
-    return content
-
-
-def strftime_local(aware_time, fmt="%Y-%m-%d %H:%M:%S %z"):
-    """格式化aware_time为本地时间"""
-
-    if timezone.is_aware(aware_time):
-        return timezone.localtime(aware_time).strftime(fmt)
-
-    return aware_time.strftime(fmt)
-
-
 def tuple_choices(tupl):
     """从django-model的choices转换到namedtuple"""
     return [(t, t) for t in tupl]
-
-
-def dict_to_choices(dic, is_reversed=False):
-    """从django-model的choices转换到namedtuple"""
-    if is_reversed:
-        return [(v, k) for k, v in dic)]
-    return [(k, v) for k, v in dic)]
-
-
-def reverse_dict(dic):
-    return {v: k for k, v in dic)}
 
 
 def dict_to_namedtuple(dic):
@@ -556,11 +369,6 @@ def choices_to_namedtuple(choices):
     return dict_to_namedtuple(dict(choices))
 
 
-def tuple_to_namedtuple(tupl):
-    """从tuple转换到namedtuple"""
-    return dict_to_namedtuple(dict(tuple_choices(tupl)))
-
-
 def revoke_celery_task(task_id):
     """
     终止celery任务
@@ -571,29 +379,6 @@ def revoke_celery_task(task_id):
         task.revoke(terminate=True)
     except Exception as e:
         logger.error("revoke_celery_task(Exception): %s" % e)
-
-
-def rmtree(sftp, remotepath, level=0):
-    """
-    递归删除操作
-    """
-
-    for f in sftp.listdir_attr(remotepath):
-        rpath = posixpath.join(remotepath, f.filename)
-
-        # 如果是目录，则递归删除
-        if stat.S_ISDIR(f.st_mode):
-            rmtree(sftp, rpath, level + 1)
-        else:
-            sftp.remove(rpath)
-
-    # 删除当前目录
-    sftp.rmdir(remotepath)
-
-
-def ansi_escape(str):
-    """终端颜色编码清理"""
-    return COLOR_REMOVE.sub("", str)
 
 
 def generate_random_sn(service_type):
@@ -778,13 +563,6 @@ def build_tree(raw_nodes, parent_name, empty_parent=None, need_route=False):
     return forest
 
 
-def jsonschema_validate(schema, instance):
-    try:
-        validate(instance, schema)
-    except Exception as e:
-        raise ParamError(_("请求参数校验失败: %s") % str(e))
-
-
 def walk(node):
     """iterate tree in pre-order depth-first search order"""
     yield node
@@ -803,10 +581,6 @@ def get_model_fields(model_class, name_only=True):
     return model_fields
 
 
-def get_function_name():
-    return inspect.stack()[1][3]
-
-
 def dictfetchall(connection, sql, *params, **kwargs):
     """
     Return all rows from a cursor as a dict,
@@ -822,62 +596,6 @@ def dictfetchall(connection, sql, *params, **kwargs):
         return list(cursor.fetchall())
 
     return [dict(zip(columns, row)) for row in cursor.fetchall()]
-
-
-def convert_bytes_to_str(obj):
-    converted = set()
-
-    def _convert(obj, converted):
-        if isinstance(obj, dict):
-            new_dict = obj.__class__()
-
-            for attr, value in obj.items():
-
-                if isinstance(attr, bytes):
-                    attr = attr.decode("utf-8")
-
-                value = _convert(value, converted)
-
-                new_dict[attr] = value
-
-            obj = new_dict
-
-        if isinstance(obj, list):
-            new_list = obj.__class__()
-
-            for item in obj:
-                new_list.append(_convert(item, converted))
-
-            obj = new_list
-
-        elif isinstance(obj, bytes):
-
-            try:
-                obj = obj.decode("utf-8")
-            except Exception:
-                pass
-
-        elif hasattr(obj, "__dict__"):
-
-            if id(obj) in converted:
-                return obj
-            else:
-                converted.add(id(obj))
-
-            new__dict__ = {}
-
-            for attr, value in obj.__dict__.items():
-
-                if isinstance(attr, bytes):
-                    attr = attr.decode("utf-8")
-
-                new__dict__[attr] = _convert(value, converted)
-
-            obj.__dict__ = new__dict__
-
-        return obj
-
-    return _convert(obj, converted)
 
 
 def namedtuplefetchall(cursor):

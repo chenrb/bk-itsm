@@ -31,8 +31,6 @@ from itsm.component.utils.basic import (
     ComplexRegexField,
     Regex,
     better_time_or_none,
-    safe_cast,
-    duplicate_check,
     group_by,
     tuple_choices,
     generate_random_sn,
@@ -85,16 +83,6 @@ class TestComponentsUtilsInstance(TestCase):
 
         data = better_time_or_none(datetime.datetime.now())
         self.assertIsInstance(data, str)
-
-    @override_settings(MIDDLEWARE=("itsm.tests.middlewares.OverrideMiddleware",))
-    def test_safe_cast(self):
-        value = safe_cast("112", int)
-        self.assertIsInstance(value, int)
-
-    @override_settings(MIDDLEWARE=("itsm.tests.middlewares.OverrideMiddleware",))
-    def test_duplicate_check(self):
-        test = [1, 1, 2, 3]
-        self.assertEqual(duplicate_check(test), True)
 
     @override_settings(MIDDLEWARE=("itsm.tests.middlewares.OverrideMiddleware",))
     def test_group_by(self):
