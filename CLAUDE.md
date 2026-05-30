@@ -124,7 +124,7 @@ Each `itsm/` app follows Django conventions: `models.py` (or `models/`), `views.
 
 ### Celery
 
-Five task modules registered in `CELERY_IMPORTS`: `ticket`, `service`, `sla_engine`, `trigger`, `task`. Four worker processes in `app_desc.yaml`: web (Gunicorn), beat (scheduler), pworker (prefork), gworker (gevent). Tasks use pickle serializer.
+Five task modules registered in `CELERY_IMPORTS`: `ticket`, `service`, `sla_engine`, `trigger`, `task`. Tasks use pickle serializer.
 
 ### Database
 
