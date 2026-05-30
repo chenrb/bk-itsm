@@ -81,7 +81,7 @@
 - 删除死的 URL 路由 `itsm.plugin_service.urls`、middleware `HttpsMiddleware` / `ProfilerMiddleware` / `InstrumentProfilerMiddleware`
 - 删除 `error_pages/`（模板不存在，handler 无效）、`common/context_processors.py`、`itsm/component/request_middlewares.py`
 - 删除 `sync_saas_apigw.py` 及 `data/`、`Makefile`、`scripts/`（整个目录）、`test_script/`、`itsm/tests/runner.py`、`docs/itsm_nfs/`
-- 清理 `requirements.txt` 移除 19 个未使用包（109→64 行）
+- 清理 `requirements.txt` 移除 19 个未使用包（109→64 行），升级 `django-celery-beat` 2.8.1→2.9.0、`django-timezone-field` 5.1→7.2.1、`RestrictedPython` 8.0→8.2 以兼容 Django 6.0
 - 修正 `.pre-commit-config.yaml` Python 版本 3.11→3.13
 - 移除 `config/i18n.py` 中无引用的 `LOCALEURL_USE_ACCEPT_LANGUAGE`
 
