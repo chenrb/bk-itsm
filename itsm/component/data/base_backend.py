@@ -25,10 +25,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from abc import ABCMeta, abstractmethod
 
-import six
 
 
-class BaseDataBackend(six.with_metaclass(ABCMeta, object)):
+class BaseDataBackend(metaclass=ABCMeta):
     @abstractmethod
     def exists(self, key):
         return NotImplementedError()

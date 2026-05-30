@@ -31,7 +31,6 @@ from functools import reduce
 from itertools import chain
 
 from django.utils.functional import partition
-from six.moves import zip
 
 from django.db import models, connections, NotSupportedError
 from django.db.models import F, Q, QuerySet, AutoField

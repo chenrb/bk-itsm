@@ -29,8 +29,6 @@ import os
 import random
 import string
 import time
-import six
-from six.moves import range
 
 from django.conf import settings
 from django.db import models, transaction
@@ -1060,7 +1058,7 @@ class StateManager(Manager):
 
             # 旧流程版本数据兼容处理
             for k in ["fields", "extras"]:
-                if isinstance(state[k], six.string_types):
+                if isinstance(state[k], str):
                     state[k] = json.loads(state[k])
             if state["type"] == "TASK":
                 # API字段的还原

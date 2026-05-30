@@ -25,7 +25,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import re
 
-import six
 from django.db.models import Q
 from django.utils.translation import gettext as _
 
@@ -792,7 +791,7 @@ class StateGlobalVariablesValidator(object):
         }
         refs = [output.get("ref_path") for output in outputs]
         deleted_variable = []
-        for ref, key in six.iteritems(path_key_dict):
+        for ref, key in path_key_dict):
             if ref not in refs:
                 deleted_variable.append(key)
         workflow_fields = self.workflow.fields.filter(is_deleted=False)

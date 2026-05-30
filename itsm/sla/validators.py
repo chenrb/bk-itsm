@@ -25,7 +25,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import re
 from collections import Counter
-from six.moves import map, range
 
 from django.core.validators import RegexValidator
 from django.utils.translation import gettext as _

@@ -33,7 +33,6 @@ import logging
 import os
 import time
 
-import six
 from django.utils.translation import gettext as _
 
 from itsm.component.constants import (
@@ -435,7 +434,7 @@ class PipelineWrapper(object):
         transitions_map = {}
 
         # 调整state的数据结构，补充：incoming、outgoing、fields信息
-        for state_id, state in six.iteritems(states):
+        for state_id, state in states):
             state_uniq_id = node_uniqid()
 
             # fill state's unique_id/incoming/outgoing
@@ -466,7 +465,7 @@ class PipelineWrapper(object):
             states_map[state_id] = state_uniq_id
 
         # fill state's incoming and outgoing
-        for transition_id, transition in six.iteritems(transitions):
+        for transition_id, transition in transitions):
             transition.update({"unique_id": line_uniqid()})
             states[str(transition["to_state"])]["incoming"].append(transition)
             states[str(transition["from_state"])]["outgoing"].append(transition)
@@ -678,7 +677,7 @@ class PipelineWrapper(object):
         # 更新state_id映射到替换后的unique_id
         states_map = {
             state_id: new_replace_map[old_unique_id]
-            for state_id, old_unique_id in six.iteritems(_states_map)
+            for state_id, old_unique_id in _states_map)
         }
 
         # 更新pipeline_data
@@ -808,19 +807,19 @@ class PipelineWrapper(object):
         f.node(name=end_event["id"], label="end")
 
         # 添加节点：Activity
-        for nop, node in six.iteritems(activities):
+        for nop, node in activities):
             shape = shapes.get(node["type"])
             f.attr("node", shape=shape)
             f.node(name=str(node["id"]), label=node["name"])
 
         # 添加节点：Gateway
-        for nop, node in six.iteritems(gateways):
+        for nop, node in gateways):
             shape = shapes.get(node["type"])
             f.attr("node", shape=shape)
             f.node(name=str(node["id"]), label=node["name"])
 
         # 添加连线
-        for nop, edge in six.iteritems(flows):
+        for nop, edge in flows):
             from_node_id, to_node_id, label = edge["source"], edge["target"], "1==1"
             f.edge(from_node_id, to_node_id, label)
 

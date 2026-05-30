@@ -24,7 +24,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 from collections import OrderedDict
 
-import six
 
 import jsonfield
 from django.db import models, transaction
@@ -648,11 +647,11 @@ class WorkflowVersion(WorkflowBase):
         """获取工作流图"""
         nodes = {
             sid: {"id": sid, "name": "{}({})".format(s["name"], sid), "type": s["type"]}
-            for sid, s in six.iteritems(self.states)
+            for sid, s in self.states)
         }
         edges = [
             [t["from_state"], t["to_state"], "{}({})".format(t["name"], tid)]
-            for tid, t in six.iteritems(self.transitions)
+            for tid, t in self.transitions)
         ]
 
         return {"nodes": nodes, "edges": edges}
@@ -739,7 +738,7 @@ class WorkflowVersion(WorkflowBase):
     def transitions_hash(self):
         return {
             "{from_state}_{to_state}".format(**t): tid
-            for tid, t in six.iteritems(self.transitions)
+            for tid, t in self.transitions)
         }
 
     def graph_matrix(self, scopes=None):
@@ -756,7 +755,7 @@ class WorkflowVersion(WorkflowBase):
         """
 
         matrix = {}
-        for sid, s in six.iteritems(self.states):
+        for sid, s in self.states):
             ssid = str(sid)
             transitions_from = self.get_transitions_from(ssid)
 
@@ -819,7 +818,7 @@ class WorkflowVersion(WorkflowBase):
     def get_first_transition(self):
         """获取start之后的第一个状态流转信息"""
 
-        for transition_id, transition in six.iteritems(self.transitions):
+        for transition_id, transition in self.transitions):
             from_state_id = str(transition["from_state"])
             if self.states[from_state_id]["type"] == "START":
                 return transition
@@ -833,7 +832,7 @@ class WorkflowVersion(WorkflowBase):
             return list(self.transitions.values())
 
         transitions_from = []
-        for trans_id, trans in six.iteritems(self.transitions):
+        for trans_id, trans in self.transitions):
             if trans["from_state"] == int(from_state_id):
                 transitions_from.append(trans)
 
@@ -874,7 +873,7 @@ class WorkflowVersion(WorkflowBase):
     def get_old_w_first_transition(self):
         """获取start之后的第一个状态流转信息"""
 
-        for transition_id, transition in six.iteritems(self.transitions):
+        for transition_id, transition in self.transitions):
             from_state_id = str(transition["from_state_id"])
             if self.states[from_state_id]["type"] == "START":
                 return transition

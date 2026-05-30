@@ -35,7 +35,6 @@ from collections import Counter, namedtuple
 from functools import reduce
 from itertools import combinations
 
-import six
 from celery.result import AsyncResult
 from django.db.models.fields.reverse_related import ManyToManyRel
 from django.utils import timezone
@@ -539,12 +538,12 @@ def tuple_choices(tupl):
 def dict_to_choices(dic, is_reversed=False):
     """从django-model的choices转换到namedtuple"""
     if is_reversed:
-        return [(v, k) for k, v in six.iteritems(dic)]
-    return [(k, v) for k, v in six.iteritems(dic)]
+        return [(v, k) for k, v in dic)]
+    return [(k, v) for k, v in dic)]
 
 
 def reverse_dict(dic):
-    return {v: k for k, v in six.iteritems(dic)}
+    return {v: k for k, v in dic)}
 
 
 def dict_to_namedtuple(dic):

@@ -25,7 +25,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import operator
 from functools import reduce
-import six
 
 import jsonfield
 from django.conf import settings
@@ -1111,7 +1110,7 @@ class DictData(BaseMpttModel):
         """字典数据转换为表记录"""
 
         objs = []
-        for k, v in six.iteritems(data_dict):
+        for k, v in data_dict):
             obj = cls.create_item(dict_table, key=k, name=v, is_builtin=True)
             objs.append(obj)
 
