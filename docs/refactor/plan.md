@@ -43,6 +43,12 @@ Phase 2 后发现的零散死代码清理。
 - 全局移除 `from __future__ import`（251 个文件，含 migrations）
 - 全局移除 `class Xxx(object):` Python 2 风格类声明（41 个文件）
 - 清理 `itsm/component/utils/basic.py` 14 个死函数（913→630 行），清理未使用 import 和死常量
+- 删除 9 个零引用工具文件（`utils/ago.py`、`auth.py`、`batch.py`、`bk_math.py`、`django_helper.py`、`local.py`、`patch_cache.py`、`robot.py`、`sandbox.py`）
+- 删除 `data/sentinel.py`（Redis Sentinel 客户端，零引用）
+- 删除 3 个零引用 DRF 子模块（`drf/mixins.py`、`drf/parsers.py`、`drf/routers.py`）
+- 删除 `WorkflowPipelineWrapper` 死类（`workflow/backend.py`），修复 5 个预存 `for ... in X):` 语法错误
+- 删除 `frontend/pc/src/views/i18n_patch.py`（Python 2 脚本，已无法运行）
+- 清理 `requirements.txt` 移除 2 个未使用包（`httplib2`、`pydantic`，64→62 行）
 
 ### 验证状态
 

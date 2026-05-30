@@ -434,7 +434,7 @@ class PipelineWrapper:
         transitions_map = {}
 
         # 调整state的数据结构，补充：incoming、outgoing、fields信息
-        for state_id, state in states):
+        for state_id, state in states:
             state_uniq_id = node_uniqid()
 
             # fill state's unique_id/incoming/outgoing
@@ -465,7 +465,7 @@ class PipelineWrapper:
             states_map[state_id] = state_uniq_id
 
         # fill state's incoming and outgoing
-        for transition_id, transition in transitions):
+        for transition_id, transition in transitions:
             transition.update({"unique_id": line_uniqid()})
             states[str(transition["to_state"])]["incoming"].append(transition)
             states[str(transition["from_state"])]["outgoing"].append(transition)
@@ -677,7 +677,7 @@ class PipelineWrapper:
         # 更新state_id映射到替换后的unique_id
         states_map = {
             state_id: new_replace_map[old_unique_id]
-            for state_id, old_unique_id in _states_map)
+            for state_id, old_unique_id in _states_map
         }
 
         # 更新pipeline_data
@@ -807,19 +807,19 @@ class PipelineWrapper:
         f.node(name=end_event["id"], label="end")
 
         # 添加节点：Activity
-        for nop, node in activities):
+        for nop, node in activities:
             shape = shapes.get(node["type"])
             f.attr("node", shape=shape)
             f.node(name=str(node["id"]), label=node["name"])
 
         # 添加节点：Gateway
-        for nop, node in gateways):
+        for nop, node in gateways:
             shape = shapes.get(node["type"])
             f.attr("node", shape=shape)
             f.node(name=str(node["id"]), label=node["name"])
 
         # 添加连线
-        for nop, edge in flows):
+        for nop, edge in flows:
             from_node_id, to_node_id, label = edge["source"], edge["target"], "1==1"
             f.edge(from_node_id, to_node_id, label)
 
@@ -840,16 +840,3 @@ class PipelineWrapper:
 
         with open(os.path.join(dest, name), "wb") as output_file:
             output_file.write(f.pipe(format="png"))
-
-
-class WorkflowPipelineWrapper(PipelineWrapper):
-    def __init__(self, workflow):
-        self.flow = workflow.tag_data()
-        #     TODO 以下部分可以参照流程部署的方式来获取
-        self.states = {
-            str(state["id"]): state for state in list(self.flow.states.values())
-        }
-        self.transitions = {
-            str(transition["id"]): transition
-            for transition in list(self.flow.transitions.values())
-        }
