@@ -42,6 +42,7 @@ Phase 2 后发现的零散死代码清理。
 - 前端 SOPS/DevOps 残余清理：删除 4 个 Vue 组件，清理 20+ 引用文件中的 `TASK-SOPS` 类型、store actions、palette 入口等（-1658 行）
 - 全局移除 `from __future__ import`（251 个文件，含 migrations）
 - 全局移除 `class Xxx(object):` Python 2 风格类声明（41 个文件）
+- 清理 `itsm/component/utils/basic.py` 14 个死函数（913→630 行），清理未使用 import 和死常量
 
 ### 验证状态
 

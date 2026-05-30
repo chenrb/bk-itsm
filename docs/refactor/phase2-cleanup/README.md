@@ -99,6 +99,13 @@
 - 全局移除 `class Xxx(object):` Python 2 风格类声明，改为 `class Xxx:`（41 个文件）
 - 涉及 `business_rules/`、`common/`、`itsm/` 下所有子模块
 
+### P2-14: 清理 `basic.py` 死函数
+- `itsm/component/utils/basic.py` 913→630 行（-295 行）
+- 移除 14 个零外部调用的死函数：`time_delta`、`index_of_list`、`safe_cast`、`duplicate_check`、`safe_remove`、`deep_getattr`、`parse_color`、`log_parser`、`strftime_local`、`dict_to_choices`、`reverse_dict`、`tuple_to_namedtuple`、`rmtree`、`ansi_escape`、`jsonschema_validate`、`get_function_name`、`convert_bytes_to_str`
+- 清理 8 个未使用 import（`inspect`、`os`、`posixpath`、`stat`、`Counter`、`reduce`、`jsonschema.validate`、`ParamError`）
+- 清理 4 个死常量（`COLOR_REMOVE`、`CLEAR_COLOR_RE`、`LINE_BREAK_RE`、`IPV4_RE`）
+- 移除对应的 2 个死测试方法（`test_safe_cast`、`test_duplicate_check`）
+
 ## 总影响
 
 | 指标 | 数值 |
