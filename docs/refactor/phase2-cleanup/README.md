@@ -72,6 +72,11 @@
 | `from itsm.component.bkchat` | 零 |
 | `from itsm.helper` | 零 |
 
+### P2-09: 删除 `core/` 包
+- 删除 `core/__init__.py`、`core/handler/__init__.py`、`core/handler/wsgi.py`、`core/wsgi.py`
+- `BkWSGIHandler`（自定义 WSGI handler，处理蓝鲸 PaaS 子路径部署）不再被引用
+- 根目录 `wsgi.py` 已使用标准 `django.core.wsgi.get_wsgi_application`
+
 ## 总影响
 
 | 指标 | 数值 |

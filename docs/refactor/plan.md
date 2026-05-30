@@ -22,9 +22,15 @@
 - `config/integrations.py` 143→54 行
 - 总计 ~130 文件，~11,000 行删除
 
+### Phase 2.1: 持续清理
+
+Phase 2 后发现的零散死代码清理。
+
+- 删除 `core/` 包（`BkWSGIHandler` 及自定义 WSGI 入口）— 根目录 `wsgi.py` 已使用标准 Django WSGI，`core/` 无任何引用
+
 ### 验证状态
 
-零蓝鲸硬依赖残留（blueapps、blueking、apigw_manager、bk_notice_sdk、bkstorages、iam SDK、auth_iam、esb、apigw、bkchat、helper — 全部归零）。
+零蓝鲸硬依赖残留（blueapps、blueking、apigw_manager、bk_notice_sdk、bkstorages、iam SDK、auth_iam、esb、apigw、bkchat、helper、core — 全部归零）。
 
 ---
 
