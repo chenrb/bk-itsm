@@ -32,7 +32,7 @@ from itsm.trigger.rules.actions import ResponseActions
 from itsm.trigger.rules.variables import TriggerVariables
 
 
-class TriggerRuleManager(object):
+class TriggerRuleManager:
     """触发器规则管理器"""
 
     def __init__(

@@ -246,7 +246,7 @@ class ActionSchemaViewTest(TestCase):
         self.assertIsInstance(rsp.data["data"], list)
 
 
-class _FakeRequest(object):
+class _FakeRequest:
     def __init__(self, data=None, query_params=None, method="POST", username="alice"):
         self.data = data or {}
         self.query_params = query_params or {}
@@ -256,7 +256,7 @@ class _FakeRequest(object):
         self.user = user
 
 
-class _FakeView(object):
+class _FakeView:
     def __init__(self, action="clone"):
         self.action = action
 

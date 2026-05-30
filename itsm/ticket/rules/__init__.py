@@ -26,7 +26,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from business_rules import run_all
 
 
-class TicketRuleManager(object):
+class TicketRuleManager:
     """单据规则管理器"""
 
     def __init__(self, ticket, rules, var_class, action_class):

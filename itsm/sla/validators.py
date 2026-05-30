@@ -173,7 +173,7 @@ def sla_can_destroy(instance):
         raise ValidationError(_("该服务协议已绑定服务，请解绑后再删除"))
 
 
-class ScheduleValidator(object):
+class ScheduleValidator:
     def __init__(self, instance):
         self.instance = instance
 
@@ -239,7 +239,7 @@ class ScheduleValidator(object):
                     )
 
 
-class DayValidator(object):
+class DayValidator:
     def __init__(self, instance):
         self.instance = instance
 
@@ -304,7 +304,7 @@ class DayValidator(object):
                     raise ParamError(_("工作日的工作时间段重合，请检查"))
 
 
-class DurationValidator(object):
+class DurationValidator:
     """时间范围验证器"""
 
     def __init__(self, instance):
@@ -319,7 +319,7 @@ class DurationValidator(object):
             raise ParamError(_("时间范围错误，开始时间不能大于或等于结束时间"))
 
 
-class SlaValidator(object):
+class SlaValidator:
     """服务协议验证器"""
 
     def __init__(self, instance):
@@ -344,7 +344,7 @@ class SlaValidator(object):
             raise ParamError(_("服务协议名称：[%s] 已存在") % value.get("name"))
 
 
-class SlaTimerRuleValidator(object):
+class SlaTimerRuleValidator:
     """
     sla到达规则验证器
     """

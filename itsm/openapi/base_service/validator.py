@@ -10,7 +10,7 @@ from itsm.ticket.validators import (
 from itsm.workflow.models import WorkflowVersion
 
 
-class CreateTicketValidator(object):
+class CreateTicketValidator:
     def __init__(self, request):
         self.request = request
 

@@ -149,7 +149,7 @@ from .serializers import (
 store = settings.STORE
 
 
-class PartialUpdateModelMixin(object):
+class PartialUpdateModelMixin:
     """支持局部更新"""
 
     def update(self, request, *args, **kwargs):

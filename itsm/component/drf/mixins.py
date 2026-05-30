@@ -32,7 +32,7 @@ from itsm.component.constants import ResponseCodeStatus
 from itsm.component.utils.basic import dotted_name
 
 
-class ApiGenericMixin(object):
+class ApiGenericMixin:
     """API视图类通用函数"""
 
     # 默认要求登录态；对于真正需要匿名访问的视图（healthz/ping/index/get_footer/IAM 回调等），
@@ -178,7 +178,7 @@ class AuthListModelMixin(ListModelMixin):
         return response
 
 
-class ApiGatewayMixin(object):
+class ApiGatewayMixin:
     """对外开放API返回格式统一
     错误码返回规范为数字：
         正确：0
@@ -220,7 +220,7 @@ class ApiGatewayMixin(object):
         )
 
 
-class DynamicListModelMixin(object):
+class DynamicListModelMixin:
     """
     动态取消分页，动态修改返回字段
     说明：子类（xxModelViewset）的序列化类（xxSerializer）必须继承：DynamicFieldsModelSerializer
@@ -246,7 +246,7 @@ class DynamicListModelMixin(object):
         return Response(serializer.data)
 
 
-class ObjectManagerMixin(object):
+class ObjectManagerMixin:
     def is_obj_manager(self, username):
         """新增和修改权限：创建人和负责人"""
         return username == self.creator or dotted_name(username) in self.owners

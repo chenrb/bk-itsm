@@ -33,7 +33,7 @@ from itsm.ticket.models import Ticket
 from itsm.ticket.validators import regex_validate
 
 
-class TicketValidValidator(object):
+class TicketValidValidator:
     context = {}
 
     def __call__(self, value):
@@ -52,7 +52,7 @@ class TicketValidValidator(object):
         self.context = getattr(serializer_field, "context")
 
 
-class TaskOrdersValidator(object):
+class TaskOrdersValidator:
     def __call__(self, value):
         task_ids = [i["task_id"] for i in value]
         valid_task_ids = list(
@@ -65,7 +65,7 @@ class TaskOrdersValidator(object):
             )
 
 
-class TaskFieldBatchUpdateValidator(object):
+class TaskFieldBatchUpdateValidator:
     def __call__(self, value):
         field_ids = [v["id"] for v in value if "id" in v]
         valid_field_ids = TaskField.objects.filter(id__in=field_ids).values_list(

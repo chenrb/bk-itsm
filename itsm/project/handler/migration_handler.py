@@ -43,7 +43,7 @@ GRANT = "grant"
 REVOKE = "revoke"
 
 
-class MigrationHandlerBase(object):
+class MigrationHandlerBase:
     resource_type = None
 
     @abstractmethod
@@ -239,7 +239,7 @@ class UserGroupMigrationHandler(MigrationHandlerBase):
         self.grant_or_revoke_instance_permission(request, actions, user_role, GRANT)
 
 
-class MigrationHandlerDispatcher(object):
+class MigrationHandlerDispatcher:
     MIGRATIONS_HANDLER_CLASS = [
         ServiceMigrationHandler,
         UserGroupMigrationHandler,

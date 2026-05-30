@@ -102,7 +102,7 @@ def get_pinyin_key(name):
     return pinyin_key.upper()
 
 
-class ComplexRegexField(object):
+class ComplexRegexField:
     """
     复杂正则字符验证
     validate_type：type:list 说明：en：英文   num：0-9数字 ch：中文 numwithoutzero：1-9数字 lower-en：小写a-z upper-en：大写：a-z special：特殊字符
@@ -252,7 +252,7 @@ class ComplexRegexField(object):
             )
 
 
-class Regex(object):
+class Regex:
     def __init__(self, validate_type=""):
         self.validate_type = validate_type
         self.regex_dict = {
@@ -710,7 +710,7 @@ def create_version_number(create_time=None):
     return datetime.datetime.now().strftime("%Y%m%d%H%M%S")
 
 
-class TempDisableSignal(object):
+class TempDisableSignal:
     """临时关闭信号"""
 
     def __init__(self, signal, receiver, sender, dispatch_uid=None):

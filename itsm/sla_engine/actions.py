@@ -42,7 +42,7 @@ from itsm.sla_engine.utils import action_time
 logger = logging.getLogger(__name__)
 
 
-class SlaTaskAction(object):
+class SlaTaskAction:
     """任务动作集合"""
 
     def __init__(self, action, ticket, sla_task, action_policy_type, ac_time):

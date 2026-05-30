@@ -32,7 +32,7 @@ from itsm.component.utils.client_backend_query import get_bk_users
 from itsm.role.models import RoleType, UserRole
 
 
-class UserRoleValidator(object):
+class UserRoleValidator:
     def __init__(self, role=None):
         self.role = role
 

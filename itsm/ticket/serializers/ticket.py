@@ -484,7 +484,7 @@ class SimpleStatusSerializer(serializers.ModelSerializer):
         return data
 
 
-class TicketList(object):
+class TicketList:
     def __init__(self, instances, username, token):
 
         # 说明是page

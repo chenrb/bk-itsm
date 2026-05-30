@@ -79,7 +79,7 @@ class TestRpcApiView(TestCase):
     def test_post_should_invoke_component_when_meta_is_safe(
         self, patch_get_component_class
     ):
-        class FakeComponent(object):
+        class FakeComponent:
             def __init__(self, request):
                 self.request = request
 
@@ -155,7 +155,7 @@ class TestRpcApiPermission(TestCase):
     def test_post_allows_itsm_superuser(
         self, _wm, _su, patch_get_component_class
     ):
-        class FakeComponent(object):
+        class FakeComponent:
             def __init__(self, request):
                 self.request = request
 

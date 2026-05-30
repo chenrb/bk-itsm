@@ -42,7 +42,7 @@ from pipeline.service import task_service
 from pipeline.utils.uniqid import node_uniqid, line_uniqid, uniqid
 
 
-class TaskPipelineWrapper(object):
+class TaskPipelineWrapper:
     def __init__(self, ticket_id, task_id):
         self.ticket_id = ticket_id
         self.task_id = task_id

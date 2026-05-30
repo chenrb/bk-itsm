@@ -5,7 +5,7 @@ from itsm.monitor.healthz.check.base import checker
 from celery.app.control import Control
 
 
-class CeleryClient(object):
+class CeleryClient:
     _application = None
     _control = None
     _default_queue = None

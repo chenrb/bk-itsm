@@ -28,7 +28,7 @@ from django.utils.deprecation import MiddlewareMixin
 
 class OverrideMiddleware(MiddlewareMixin):
     def process_request(self, request):
-        class Base(object):
+        class Base:
             pass
 
         request.user = Base()
@@ -45,7 +45,7 @@ class OverrideMiddleware(MiddlewareMixin):
 
 class OverrideTestMiddleware(MiddlewareMixin):
     def process_request(self, request):
-        class Base(object):
+        class Base:
             pass
 
         request.user = Base()

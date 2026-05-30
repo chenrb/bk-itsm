@@ -54,7 +54,7 @@ from itsm.ticket.models import Ticket, TicketGlobalVariable, TicketToTicket
 from itsm.ticket_status.models import TicketStatus
 
 
-class CreateTicketValidator(object):
+class CreateTicketValidator:
     def __init__(self, request):
         self.request = request
 
@@ -118,7 +118,7 @@ class CreateTicketValidator(object):
         )
 
 
-class StateOperateValidator(object):
+class StateOperateValidator:
     """认领、转单、派单"""
 
     def __init__(self, current_node, bk_biz_id=None):

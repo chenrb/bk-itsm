@@ -56,7 +56,7 @@ except ImportError:
 __all__ = ["local", "Local"]
 
 
-class Localbase(object):
+class Localbase:
 
     __slots__ = ('__storage__', '__ident_func__')
 

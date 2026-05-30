@@ -69,7 +69,7 @@ from pipeline.utils.uniqid import line_uniqid, node_uniqid
 logger = logging.getLogger("app")
 
 
-class PipelineWrapper(object):
+class PipelineWrapper:
     """适配器内持有一个workflow和pipeline
     主要封装pipeline操作方法
     """

@@ -29,7 +29,7 @@ __copyright__ = "Copyright © 2025 Tencent BlueKing. All Rights Reserved."
 from itsm.sla_engine.models import SlaTask
 
 
-class SlaTaskTestCase(object):
+class SlaTaskTestCase:
     def __init__(self, task_id):
         self.task_id = task_id
 

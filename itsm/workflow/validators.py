@@ -278,7 +278,7 @@ def state_exists_validate(from_state_id, to_state_id):
         raise ParamError(_("当前SLA任务缺少开始节点或者结束节点，请重新选择"))
 
 
-class WorkflowPipelineValidator(object):
+class WorkflowPipelineValidator:
     def __init__(self, instance):
         self.instance = instance
         self.states_map = {}
@@ -462,7 +462,7 @@ class WorkflowPipelineValidator(object):
             raise WorkFlowInvalidError([], str(error))
 
 
-class SopsStateValidator(object):
+class SopsStateValidator:
     def __init__(self, instance):
         self.instance = instance
 
@@ -471,7 +471,7 @@ class SopsStateValidator(object):
             raise ParamError(_("请选择标准运维流程模板"))
 
 
-class DevSopsStateValidator(object):
+class DevSopsStateValidator:
     def __init__(self, instance):
         self.instance = instance
 
@@ -485,7 +485,7 @@ class DevSopsStateValidator(object):
                 raise ParamError(_("【{}】参数不能为空").format(constant.get("name")))
 
 
-class StateProcessorsValidator(object):
+class StateProcessorsValidator:
     def __init__(self, instance):
         self.instance = instance
 
@@ -524,7 +524,7 @@ class StateProcessorsValidator(object):
         person_and_type_validate(processors, processors_type, is_biz_needed)
 
 
-class FieldValidator(object):
+class FieldValidator:
     def __init__(self, instance):
         self.instance = instance
 
@@ -735,7 +735,7 @@ def template_field_can_destroy(instance):
         )
 
 
-class StatePollValidator(object):
+class StatePollValidator:
     def __call__(self, kwargs):
         api_info = kwargs.get("api_info", {})
         need_poll = api_info.get("need_poll", "")
@@ -766,7 +766,7 @@ class StatePollValidator(object):
             raise ParamError(_("请添加完整结束条件"))
 
 
-class StateGlobalVariablesValidator(object):
+class StateGlobalVariablesValidator:
     def __init__(self, instance):
         self.instance = instance
         self.workflow = self.instance.workflow
@@ -803,7 +803,7 @@ class StateGlobalVariablesValidator(object):
             related_states_validate(key, workflow_states)
 
 
-class TransitionValidator(object):
+class TransitionValidator:
     def __init__(self, instance=None):
         self.instance = instance
         self.from_state = None
@@ -930,7 +930,7 @@ def task_schema_delete_validate(instance):
         raise ValidationError(_("当前任务模板已经被流程引用，无法删除！"))
 
 
-class TriggerValidator(object):
+class TriggerValidator:
     """
     TODO：可以准备废弃了
     """

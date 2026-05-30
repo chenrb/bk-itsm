@@ -74,7 +74,7 @@ def action_time(seconds, sla_id, priority, start_time=None):
     return deadline
 
 
-class TimeDelta(object):
+class TimeDelta:
     """时间段"""
 
     def __init__(self, start_time, end_time):
@@ -150,7 +150,7 @@ class TimeDelta(object):
             return 1
 
 
-class MultiTimeDelta(object):
+class MultiTimeDelta:
     """多个时间段"""
 
     def __init__(self, *time_deltas):
@@ -249,7 +249,7 @@ class MultiTimeDelta(object):
         return union_time_deltas
 
 
-class SlaEngine(object):
+class SlaEngine:
     """sla协议引擎"""
 
     def __init__(self, sla_id):

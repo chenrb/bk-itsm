@@ -186,7 +186,7 @@ class ModelViewSet(component_viewsets.ModelViewSet):
         serializer.save(updated_by=username)
 
 
-class TicketOrderingFilter(object):
+class TicketOrderingFilter:
     """工单自定义排序规则"""
 
     @staticmethod

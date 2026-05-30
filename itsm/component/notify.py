@@ -11,7 +11,7 @@ from itsm.component.utils.basic import merge_dict_list
 from itsm.meta.services.notice_filter import notice_filter_service
 
 
-class BaseNotifier(object):
+class BaseNotifier:
     def __init__(self, title, receivers, message, notify_type=GENERAL_NOTICE):
         self.title = title
         self.receivers = notice_filter_service.notice_receiver_filter(receivers)

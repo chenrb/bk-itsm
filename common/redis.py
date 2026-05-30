@@ -49,7 +49,7 @@ CACHE_BACKEND_CONF_MAP = {
 }
 
 
-class BaseRedisCache(object):
+class BaseRedisCache:
     def __init__(self, redis_class=None):
         self.redis_class = redis_class or redis.Redis
         self._instance = None

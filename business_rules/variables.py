@@ -40,7 +40,7 @@ from .operators import (
 from .utils import fn_name_to_pretty_label
 
 
-class BaseVariables(object):
+class BaseVariables:
     """
     Classes that hold a collection of variables to use with the rules
     engine should inherit from this.

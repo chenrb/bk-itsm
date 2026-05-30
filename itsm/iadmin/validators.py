@@ -59,7 +59,7 @@ from itsm.ticket.models import TicketToTicket, Ticket
 from itsm.trigger.models import Trigger
 
 
-class PathTypeValidators(object):
+class PathTypeValidators:
     """路径类型校验"""
 
     def __init__(self, instance):

@@ -272,7 +272,7 @@ class RemoteApiBatchDeleteAuthzTest(TestCase):
         )
 
 
-class _FakeRequest(object):
+class _FakeRequest:
     def __init__(self, query_params=None):
         self.query_params = query_params or {}
         self.data = {}
@@ -281,7 +281,7 @@ class _FakeRequest(object):
         self.user = user
 
 
-class _FakeView(object):
+class _FakeView:
     def __init__(self, action):
         self.action = action
         self.permission_free_actions = []

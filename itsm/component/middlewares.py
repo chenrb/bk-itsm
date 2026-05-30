@@ -83,7 +83,7 @@ class SingleHandlerSignal(Signal):
 request_accessor = SingleHandlerSignal()
 
 
-class RequestProvider(object):
+class RequestProvider:
     """
     与 AccessorSignal 搭建使用，request 事件接收者
     """

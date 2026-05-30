@@ -34,7 +34,7 @@ from Crypto.Random import new
 from django.conf import settings
 
 
-class AESCipher(object):
+class AESCipher:
     def __init__(self, key, iv=None):
         self.bs = 16
         self.iv = iv
@@ -79,7 +79,7 @@ class AESCipher(object):
         return int(math.ceil(((length + 1) // 16 * 16 + 16) / 3.0)) * 4
 
 
-class AESVerification(object):
+class AESVerification:
     @classmethod
     def cipher(cls):
         # 需要判断是否有指定密钥，如有，优先级最高

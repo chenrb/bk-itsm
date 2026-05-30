@@ -26,7 +26,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from django.http import JsonResponse
 
 
-class Response(object):
+class Response:
     def __init__(self):
         self.response = {}
 

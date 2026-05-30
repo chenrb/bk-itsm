@@ -30,7 +30,7 @@ from .service import *  # noqa
 # ================================================
 # deprecated vars
 # ================================================
-class Field(object):
+class Field:
     def __init__(self, key, name, field_type, pk=False, choices=(), max_length=LEN_LONG, unique=False):
         self.key = key
         self.name = name

@@ -43,14 +43,14 @@ def _make_task(ticket, name="t"):
     )
 
 
-class FakeView(object):
+class FakeView:
     def __init__(self, action):
         self.action = action
 
 
-class FakeRequest(object):
+class FakeRequest:
     def __init__(self, username):
-        class _U(object):
+        class _U:
             pass
 
         self.user = _U()

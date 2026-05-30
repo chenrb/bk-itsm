@@ -37,7 +37,7 @@ from itsm.trigger.models import Trigger
 SAFE_RPC_PLACEHOLDER_PATTERN = re.compile(r"\$\{([^{}]+)\}")
 
 
-class CompRequest(object):
+class CompRequest:
     """
     Request class for Component
     """

@@ -16,7 +16,7 @@ class HTTPBearerToken(AuthBase):
         return r
 
 
-class EncodeWebhook(object):
+class EncodeWebhook:
     def __init__(self, headers=None):
         self.headers = headers or {}
 

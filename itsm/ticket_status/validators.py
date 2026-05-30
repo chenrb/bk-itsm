@@ -119,7 +119,7 @@ def from_status_id_validator(from_status_id):
         )
 
 
-class TicketStatusValidator(object):
+class TicketStatusValidator:
     """工单状态验证器"""
 
     def __init__(self, instance):

@@ -43,7 +43,7 @@ from .fields import (
 from .utils import float_to_decimal, fn_name_to_pretty_label
 
 
-class BaseType(object):
+class BaseType:
     def __init__(self, value):
         self.value = self._assert_valid_value_and_cast(value)
 

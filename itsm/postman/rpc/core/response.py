@@ -24,7 +24,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
 
-class CompResponse(object):
+class CompResponse:
     """
     Response class for Component
     """

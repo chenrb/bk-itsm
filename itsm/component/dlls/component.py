@@ -56,7 +56,7 @@ class BaseComponentMeta(type):
         return new_class
 
 
-class ComponentLibrary(object):
+class ComponentLibrary:
     """组件库"""
 
     components = OrderedDict()

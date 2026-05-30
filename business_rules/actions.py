@@ -28,7 +28,7 @@ import inspect
 from .utils import fn_name_to_pretty_label, get_valid_fields
 
 
-class BaseActions(object):
+class BaseActions:
     """ Classes that hold a collection of actions to use with the rules
     engine should inherit from this.
     """
