@@ -94,6 +94,11 @@
 - 清理 20+ 引用文件中的 `TASK-SOPS` 类型过滤器、store actions、palette 入口、组件注册
 - 删除重复 `locale/zh-cn/`、`locale/cmd.md`
 
+### P2-13: 移除 Python 2 兼容代码
+- 全局移除 `from __future__ import` 语句（251 个文件，含所有 migrations）
+- 全局移除 `class Xxx(object):` Python 2 风格类声明，改为 `class Xxx:`（41 个文件）
+- 涉及 `business_rules/`、`common/`、`itsm/` 下所有子模块
+
 ## 总影响
 
 | 指标 | 数值 |

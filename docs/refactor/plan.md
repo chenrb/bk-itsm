@@ -40,6 +40,8 @@ Phase 2 后发现的零散死代码清理。
 - 删除重复 `locale/zh-cn/`（与 `zh_CN` 内容相同）、`locale/cmd.md`（过时 PaaS i18n 笔记）
 - 删除整个 `scripts/` 目录（旧版 PaaS CI 脚本、commit-msg 校验、过时文档）
 - 前端 SOPS/DevOps 残余清理：删除 4 个 Vue 组件，清理 20+ 引用文件中的 `TASK-SOPS` 类型、store actions、palette 入口等（-1658 行）
+- 全局移除 `from __future__ import`（251 个文件，含 migrations）
+- 全局移除 `class Xxx(object):` Python 2 风格类声明（41 个文件）
 
 ### 验证状态
 
