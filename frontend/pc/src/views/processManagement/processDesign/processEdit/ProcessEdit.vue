@@ -108,12 +108,6 @@
         :configur="configur"
         @closeConfigur="closeConfigur">
       </autoNode>
-      <sopsNode
-        v-if="configur.id && configur.type === 'TASK-SOPS'"
-        :flow-info="flowInfo"
-        :configur="configur"
-        @closeConfigur="closeConfigur">
-      </sopsNode>
       <signNode
         v-if="configur.id && configur.type === 'SIGN'"
         :flow-info="flowInfo"
@@ -136,7 +130,6 @@
   import ActivationProcess from '../designStep/ActivationProcess.vue';
   import basicNode from '../nodeConfigue/basicNode.vue';
   import autoNode from '../nodeConfigue/autoNode.vue';
-  import sopsNode from '../nodeConfigue/sopsNode.vue';
   import signNode from '../nodeConfigue/signNode.vue';
   import ApprovalNode from '../nodeConfigue/ApprovalNode.vue';
   import { errorHandler } from '../../../../utils/errorHandler';
@@ -149,7 +142,6 @@
       ActivationProcess,
       basicNode,
       autoNode,
-      sopsNode,
       signNode,
       ApprovalNode,
     },

@@ -23,7 +23,7 @@
 <template>
   <div class="bk-node-content" v-bkloading="{ isLoading: !nodeListCurren[0] }">
     <template
-      v-if="nodeListCurren[0] && (nodeListCurren[0].can_operate || nodeListCurren[0].can_view) && nodeListCurren[0].type !== 'TASK-SOPS'">
+      v-if="nodeListCurren[0] && (nodeListCurren[0].can_operate || nodeListCurren[0].can_view)">
       <div class="bk-logs-basic" v-if="nodeListCurren[0] && nodeListCurren[0].action_type === 'TRANSITION'">
         <h3 class="bk-basic-h3">{{ $t('m.newCommon["基本信息"]') }}</h3>
         <ul>
@@ -116,13 +116,6 @@
             :api-info="item.api_info"
             :node-info="item">
           </bk-plugin-info>
-          <sopsNodeInfo
-            v-else
-            :api-info="item.api_info"
-            :node-info="item"
-            :ticket-id="basicInfomation.id"
-            :stated-id="item.ticket_id">
-          </sopsNodeInfo>
         </template>
         <!-- 暂无权限 -->
         <template v-else>
@@ -143,7 +136,6 @@
   import CurrentSteps from '../currentSteps/index.vue';
   import fieldPreview from '@/views/commonComponent/fieldPreview';
   import autoNodeInfo from './autoNodeInfo.vue';
-  import sopsNodeInfo from './sopsNodeInfo.vue';
   import devopsNodeInfo from './devopsNodeInfo.vue';
   import signNodeInfo from './signNodeInfo';
   import approvalNodeInfo from './approvalNodeInfo';
@@ -157,7 +149,6 @@
       CurrentSteps,
       fieldPreview,
       autoNodeInfo,
-      sopsNodeInfo,
       signNodeInfo,
       approvalNodeInfo,
       devopsNodeInfo,

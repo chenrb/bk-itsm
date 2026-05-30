@@ -138,21 +138,6 @@
               :ticket-info="ticketInfo"
               @updateCurrentStep="successFn">
             </node-task-list>
-            <sops-and-devops-task
-              v-if="nodeInfo.status === 'FAILED' && (nodeInfo.type === 'TASK-SOPS' || nodeInfo.type === 'TASK-DEVOPS' || nodeInfo.type === 'WEBHOOK')"
-              :constants="constants"
-              :hooked-var-list="hookedVarList"
-              :node-info="nodeInfo"
-              :pipeline-list="pipelineList"
-              :constant-default-value="constantDefaultValue"
-              :ticket-info="ticketInfo"
-              :workflow="workflow"
-              :pipeline-constants="pipelineConstants"
-              :pipeline-stages="pipelineStages"
-              :pipeline-rules="pipelineRules"
-              @reloadTicket="reloadTicket"
-              @onChangeHook="onChangeHook">
-            </sops-and-devops-task>
             <bkPluginTask
               v-if="nodeInfo.type === 'BK-PLUGIN' && nodeInfo.status === 'FAILED'"
               :ticket-info="ticketInfo"
@@ -283,7 +268,6 @@
   import TicketTriggerDialog from '@/components/ticket/TicketTriggerDialog.vue';
   import NodeDealDialog from './NodeDealDialog.vue';
   import NodeTaskList from './nodetask/NodeTaskList.vue';
-  import sopsAndDevopsTask from './nodetask/sopsDevopsTask.vue';
   import { useCommonMix } from '@/composables/useCommonMix';
   import { errorHandler } from '@/utils/errorHandler.js';
   import { convertTimeArrToMS, convertTimeArrToString, convertMStoString } from '@/utils/util.js';
@@ -300,7 +284,6 @@
       TicketTriggerDialog,
       NodeDealDialog,
       NodeTaskList,
-      sopsAndDevopsTask,
       bkPluginTask,
     },
     setup() { return { ...useCommonMix() }; },
@@ -349,13 +332,10 @@
     },
     data() {
       return {
-        constants: [],
-        hookedVarList: {},
         pipelineList: [],
         pipelineRules: {},
         pipelineStages: [],
         pipelineConstants: [],
-        constantDefaultValue: {},
         convertTimeArrToString,
         replyBtnLoading: false,
         unfold: false, // 是否展开
@@ -449,7 +429,7 @@
         if (this.nodeInfo.sla_task_status === 2 && this.nodeInfo.is_reply_need === true) {
           return false;
         }
-        const nodeType = ['TASK-SOPS', 'TASK-DEVOPS', 'BK-PLUGIN', 'WEBHOOK'];
+        const nodeType = ['TASK-DEVOPS', 'BK-PLUGIN', 'WEBHOOK'];
         if (nodeType.includes(this.nodeInfo.type) && this.nodeInfo.status === 'RUNNING') return false;
         return true;
       },
@@ -478,35 +458,10 @@
           this.runTime();
         }
         this.workflow = this.ticketInfo.table_fields[0].workflow_id;
-        this.getSopsPreview();
         this.getpipelineDetail();
       },
       reloadTicket() {
         this.reload();
-      },
-      // 获取sops Constants
-      async getSopsPreview() {
-        if (Object.prototype.hasOwnProperty.call(this.nodeInfo.contexts, 'task_params')) {
-          const { bk_biz_id, template_id, exclude_task_nodes_id, template_source } = this.nodeInfo.contexts.task_params;
-          const params = {
-            bk_biz_id,
-            template_id,
-            exclude_task_nodes_id,
-          };
-          const url = template_source === 'common' ? 'taskFlow/getSopsCommonPreview' : 'taskFlow/getSopsPreview';
-          const res = await this.$store.dispatch(url, params);
-          const constants = Object.keys(res.data.pipeline_tree.constants).map(item => {
-            this.hookedVarList[item] = false;
-            this.constantDefaultValue[item] = this.nodeInfo.contexts.task_params.constants[item];
-            res.data.pipeline_tree.constants[item].value = this.nodeInfo.contexts.task_params.constants[item];
-            return res.data.pipeline_tree.constants[item];
-          });
-          this.constants = constants;
-        }
-      },
-      // 改变hook
-      onChangeHook(key, value) {
-        this.hookedVarList[key] = value;
       },
       // 获取流水线
       getpipelineDetail() {

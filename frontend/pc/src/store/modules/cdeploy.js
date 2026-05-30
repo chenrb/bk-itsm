@@ -335,25 +335,7 @@ export default {
     changeValue({ commit, state, dispatch }, { value }) {
       state.show = value;
     },
-    getSopsTemplate({ commit, state, dispatch }) {
-      return ajax.get(`gateway/sops/get_template_list/`).then((response) => {
-        const res = response.data;
-        return res;
-      });
-    },
-    getTemplateDetail({ commit, state, dispatch }, params) {
-      return ajax.get(`gateway/sops/get_template_detail/`, { params: params }).then((response) => {
-        const res = response.data;
-        return res;
-      });
-    },
     putWebHook({ commit, state, dispatch }, { params, stateId }) {
-      return ajax.put(`workflow/states/${stateId}/`, params).then((response) => {
-        const res = response.data;
-        return res;
-      });
-    },
-    putSopsInfo({ commit, state, dispatch }, { params, stateId }) {
       return ajax.put(`workflow/states/${stateId}/`, params).then((response) => {
         const res = response.data;
         return res;

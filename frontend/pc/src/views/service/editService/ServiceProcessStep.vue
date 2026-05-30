@@ -47,12 +47,6 @@
           :configur="configur"
           @closeConfigur="closeConfigur">
         </autoNode>
-        <sopsNode
-          v-if="configur.type === 'TASK-SOPS'"
-          :flow-info="flowInfo"
-          :configur="configur"
-          @closeConfigur="closeConfigur">
-        </sopsNode>
         <devopsNode
           v-if="configur.type === 'TASK-DEVOPS'"
           :flow-info="flowInfo"
@@ -94,7 +88,6 @@
   import secondFlow from './flowCanvas/secondFlow.vue';
   import basicNode from '@/views/processManagement/processDesign/nodeConfigue/basicNode.vue';
   import autoNode from '@/views/processManagement/processDesign/nodeConfigue/autoNode.vue';
-  import sopsNode from '@/views/processManagement/processDesign/nodeConfigue/sopsNode.vue';
   import signNode from '@/views/processManagement/processDesign/nodeConfigue/signNode.vue';
   import devopsNode from '@/views/processManagement/processDesign/nodeConfigue/devopsNode.vue';
   import ApprovalNode from '@/views/processManagement/processDesign/nodeConfigue/ApprovalNode.vue';
@@ -107,7 +100,6 @@
       secondFlow,
       basicNode,
       autoNode,
-      sopsNode,
       signNode,
       ApprovalNode,
       devopsNode,
@@ -140,7 +132,6 @@
       nodeType() {
         const nodoTypeList = {
           'TASK-DEVOPS': this.$t('m["蓝盾节点"]'),
-          'TASK-SOPS': this.$t('m["标准运维节点"]'),
           NORMAL: this.$t('m["手动节点"]'),
           TASK: this.$t('m["任务节点"]'),
           APPROVAL: this.$t('m["审批节点"]'),

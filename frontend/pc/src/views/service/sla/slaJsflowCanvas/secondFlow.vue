@@ -829,7 +829,7 @@
           }
         });
         // 节点EndPoint位置
-        const typeList = ['NORMAL', 'ROUTER', 'TASK', 'TASK-SOPS'];
+        const typeList = ['NORMAL', 'ROUTER', 'TASK'];
         const currentNodeEndpoints = this.getEndPointInfo(node, typeList);
         const parentNodeEndpoints = {};
         const childrenNodeEndpoints = {};

@@ -134,7 +134,7 @@
       isNeedToLoop() {
         const isNeedLoop = this.nodeList.some(item => {
           // 标准运维任务节点为 RUNNING 状态时
-          if (['TASK', 'TASK-SOPS'].includes(item.type) && item.status === 'RUNNING') {
+          if (['TASK'].includes(item.type) && item.status === 'RUNNING') {
             return true;
           }
           // 排队状态

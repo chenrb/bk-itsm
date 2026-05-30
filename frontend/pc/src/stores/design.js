@@ -331,25 +331,7 @@ export const useDesignStore = defineStore('design', {
     changeValue({ value }) {
       this.show = value
     },
-    getSopsTemplate() {
-      return ajax.get(`gateway/sops/get_template_list/`).then((response) => {
-        const res = response.data
-        return res
-      })
-    },
-    getTemplateDetail(params) {
-      return ajax.get(`gateway/sops/get_template_detail/`, { params: params }).then((response) => {
-        const res = response.data
-        return res
-      })
-    },
     putWebHook({ params, stateId }) {
-      return ajax.put(`workflow/states/${stateId}/`, params).then((response) => {
-        const res = response.data
-        return res
-      })
-    },
-    putSopsInfo({ params, stateId }) {
       return ajax.put(`workflow/states/${stateId}/`, params).then((response) => {
         const res = response.data
         return res

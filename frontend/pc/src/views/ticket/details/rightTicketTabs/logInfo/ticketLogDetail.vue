@@ -80,13 +80,6 @@
                   </field-preview>
                 </template>
                 <!-- 标准运维节点 -->
-                <sops-node-log
-                  v-else-if="
-                    logInfo.from_state_type === 'TASK-SOPS'
-                  "
-                  :sops-info="logInfo.form_data[0].value"
-                >
-                </sops-node-log>
                 <devops-node-log
                   v-else-if="
                     logInfo.from_state_type ===
@@ -139,7 +132,6 @@
 <script>
   import fieldsDone from '../../components/fieldsDone.vue';
   import autoNodeInfo from '../../nodeInfo/autoNodeInfo.vue';
-  import sopsNodeLog from './sopsNodeLog.vue';
   import devopsNodeLog from './devopsNodeLog.vue';
   import fieldPreview from '@/views/commonComponent/fieldPreview/index.vue';
 
@@ -148,7 +140,6 @@
     components: {
       fieldsDone,
       autoNodeInfo,
-      sopsNodeLog,
       fieldPreview,
       devopsNodeLog,
     },

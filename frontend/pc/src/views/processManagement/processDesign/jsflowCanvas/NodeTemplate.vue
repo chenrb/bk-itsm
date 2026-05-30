@@ -139,7 +139,6 @@
           { type: 'NORMAL', iconStyle: 'icon-icon-person' },
           { type: 'ROUTER', iconStyle: 'icon-icon-person' },
           { type: 'TASK', iconStyle: 'icon-api-icon' },
-          { type: 'TASK-SOPS', iconStyle: 'icon-task-node' },
           { type: 'APPROVAL', iconStyle: 'icon-approval-node' },
           { type: 'WEBHOOK', iconStyle: 'icon-icon-webhook-2' },
           // { type: 'SIGN', iconStyle: 'icon-sign-node-white f18' },
@@ -147,7 +146,6 @@
         clickList: [
           { type: 'NORMAL', name: this.$t('m.treeinfo["手动节点"]'), iconStyle: 'icon-icon-artificial' },
           { type: 'TASK', name: this.$t('m.treeinfo["API节点"]'), iconStyle: 'icon-api-node' },
-          { type: 'TASK-SOPS', name: this.$t('m.treeinfo["标准运维节点"]'), iconStyle: 'icon-task-icon' },
           // { type: 'SIGN', name: this.$t('m.treeinfo[\'会签节点\']'), iconStyle: 'icon-sign-node' },
           { type: 'WEBHOOK', name: this.$t('m[\'WEBHOOK节点\']'), iconStyle: 'icon-icon-webhook-2' },
           { type: 'APPROVAL', name: this.$t('m.treeinfo[\'审批节点\']'), iconStyle: 'icon-approval-node' },

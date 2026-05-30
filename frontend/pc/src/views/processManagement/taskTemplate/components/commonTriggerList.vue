@@ -329,7 +329,7 @@
       setFilterSignal(condition = []) {
         let conditions = condition;
         if (
-          ['TASK', 'TASK-SOPS', 'SIGN'].indexOf(this.nodeType) > -1
+          ['TASK', 'SIGN'].indexOf(this.nodeType) > -1
           && this.origin === 'state'
         ) { // 根据节点类型过滤
           conditions = Array.from(new Set(['CLAIM_STATE', 'DELIVER_STATE', 'DISTRIBUTE_STATE', ...condition]));
