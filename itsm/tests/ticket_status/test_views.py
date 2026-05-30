@@ -26,7 +26,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 __author__ = "蓝鲸智云"
 __copyright__ = "Copyright © 2025 Tencent BlueKing. All Rights Reserved."
 
-import mock
+from unittest import mock
 from django.test import TestCase, override_settings
 
 from itsm.ticket_status.models import StatusTransit, TicketStatusConfig, TicketStatus

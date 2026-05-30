@@ -29,7 +29,7 @@ from django.conf import settings
 from django.core.cache import cache
 
 from itsm.component.constants import PROCESS_COUNT, APPROVAL_STATE
-from itsm.component.utils.bunch import bunchify
+from itsm.component.utils.bk_bunch import bunchify
 from itsm.meta.services.notice_filter import notice_filter_service
 from itsm.ticket.models import Ticket, Status, SignTask
 from pipeline.component_framework.component import Component

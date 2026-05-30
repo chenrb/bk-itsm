@@ -50,6 +50,13 @@ Phase 2 后发现的零散死代码清理。
 - 删除 `frontend/pc/src/views/i18n_patch.py`（Python 2 脚本，已无法运行）
 - 清理 `requirements.txt` 移除 2 个未使用包（`httplib2`、`pydantic`，64→62 行）
 
+### P2-16: 继续清理
+- 恢复误删的 `robot.py`（`trigger/action/components/automatic_announcement.py` 有活跃引用）
+- 全局替换 `import mock` → `from unittest import mock`（23 个测试文件），移除 `mock==5.1.0` 依赖
+- 删除 `utils/user_adapter.py`（零引用）、`component/generics.py`（零引用 DRF 异常处理器）
+- 合并 `bunch.py` → `bk_bunch.py`（迁移唯一引用到 `bk_bunch.bunchify`）
+- 清理 `requirements.txt` 移除 2 个未使用包（`factory_boy`、`xlrd`）
+
 ### 验证状态
 
 零蓝鲸硬依赖残留（blueapps、blueking、apigw_manager、bk_notice_sdk、bkstorages、iam SDK、auth_iam、esb、apigw、bkchat、helper、core — 全部归零）。

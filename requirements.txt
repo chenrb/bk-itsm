@@ -33,7 +33,6 @@ ujson==5.12.1
 pyparsing==3.2.0
 redis>=5.0.3
 django-timezone-field==7.2.1
-factory_boy==3.3.1
 mistune==3.0.2
 eventlet==0.41.0
 gevent==26.4.0
@@ -41,10 +40,8 @@ gevent==26.4.0
 # others
 gunicorn==23.0.0
 pytz==2024.2
-mock==5.1.0
 
 # excel
-xlrd==2.0.1
 typing-extensions==4.13.2
 
 # auth / JWT

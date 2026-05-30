@@ -30,7 +30,7 @@ import json
 import time
 from collections import OrderedDict
 
-import mock
+from unittest import mock
 from config import celery_app as app
 from django.conf import settings
 from django.test import TestCase, override_settings

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
 
-import mock
+from unittest import mock
 from django.test import TestCase, override_settings
 
 from itsm.sla.models import Sla

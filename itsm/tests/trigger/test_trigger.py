@@ -25,7 +25,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 import json
 from unittest.mock import patch, MagicMock
 
-import mock
+from unittest import mock
 from django.test import TestCase, override_settings
 
 from itsm.component.constants import SOURCE_TICKET

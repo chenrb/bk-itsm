@@ -24,7 +24,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 import json
 
-import mock
+from unittest import mock
 from django.test import TestCase, override_settings
 
 from config import celery_app as app

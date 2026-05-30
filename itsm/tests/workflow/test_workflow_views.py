@@ -24,7 +24,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 import copy
 
-import mock
+from unittest import mock
 from django.test import TestCase, override_settings
 
 from itsm.tests.data.datas import DATA

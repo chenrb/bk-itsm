@@ -27,7 +27,7 @@ __author__ = "蓝鲸智云"
 __copyright__ = "Copyright © 2025 Tencent BlueKing. All Rights Reserved."
 
 import json
-import mock
+from unittest import mock
 from config import celery_app as app
 
 from django.test import TestCase, override_settings

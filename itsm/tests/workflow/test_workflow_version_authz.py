@@ -9,7 +9,7 @@ BK-ITSM 蓝鲸流程服务 is licensed under the MIT License.
 
 import json
 
-import mock
+from unittest import mock
 from django.test import TestCase, override_settings
 
 

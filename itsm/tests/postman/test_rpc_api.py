@@ -2,7 +2,7 @@
 
 import json
 
-import mock
+from unittest import mock
 from django.test import TestCase, override_settings
 
 from itsm.postman.rpc.core.request import CompRequest

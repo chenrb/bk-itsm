@@ -31,7 +31,7 @@ import json
 import sys
 import datetime
 
-import mock
+from unittest import mock
 from django.http import FileResponse
 from django.test import TestCase, override_settings
 

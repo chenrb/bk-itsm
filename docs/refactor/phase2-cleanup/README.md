@@ -114,12 +114,19 @@
 - 删除 `frontend/pc/src/views/i18n_patch.py`（Python 2 脚本，已无法运行）
 - 清理 `requirements.txt` 移除 2 个未使用包（`httplib2`、`pydantic`）
 
+### P2-16: 继续清理
+- 恢复误删的 `robot.py`（`automatic_announcement.py` 有活跃引用）
+- 全局替换 `import mock` → `from unittest import mock`（23 个测试文件），移除 `mock==5.1.0`
+- 删除 `utils/user_adapter.py`（零引用）、`component/generics.py`（零引用 DRF 异常处理器）
+- 合并 `bunch.py` → `bk_bunch.py`，迁移唯一引用
+- 清理 `requirements.txt` 移除 `factory_boy`、`xlrd`
+
 ## 总影响
 
 | 指标 | 数值 |
 |------|------|
-| 删除文件 | ~145+ |
-| 删除代码行 | ~13,500+ |
+| 删除文件 | ~148+ |
+| 删除代码行 | ~13,800+ |
 | 删除目录 | ~20+ |
 | 删除 Django app | 7 个 (auth_iam, notice, helper, + 3 未用第三方) |
 | 删除 DB 表 | 2 个 (task_sops_task, task_sub_task) |

@@ -3,7 +3,7 @@ import copy
 import json
 from datetime import datetime
 
-import mock
+from unittest import mock
 from django.test import TestCase, override_settings
 from config import celery_app as app
 
