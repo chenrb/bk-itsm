@@ -27,8 +27,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 import logging
 import time
 
-from six.moves import map, range
-
 import redis
 from django.conf import settings
 from redis.exceptions import ConnectionError

@@ -27,6 +27,15 @@
 Phase 2 后发现的零散死代码清理。
 
 - 删除 `core/` 包（`BkWSGIHandler` 及自定义 WSGI 入口）— 根目录 `wsgi.py` 已使用标准 Django WSGI，`core/` 无任何引用
+- 删除死的 URL 路由 `itsm.plugin_service.urls`、middleware `HttpsMiddleware` / `ProfilerMiddleware` / `InstrumentProfilerMiddleware`
+- 删除 `error_pages/`（模板不存在，handler 无效）、`common/context_processors.py`、`itsm/component/request_middlewares.py`
+- 删除 `sync_saas_apigw.py` 及 `data/`（蓝鲸 API 网关同步残余）
+- 删除 `Makefile`、`scripts/settings_saas.py`、`scripts/convert_yaml.py`、`test_script/`、`itsm/tests/runner.py`、`docs/itsm_nfs/`
+- 清理 `requirements.txt` 移除 19 个未使用包（109→64 行）
+- 清理 `misc_middlewares.py` 未使用 import、`PREFIX_KEY` 改用 `APP_CODE`
+- 修正 `.pre-commit-config.yaml` Python 版本 3.11→3.13
+- 移除 `config/i18n.py` 中无引用的 `LOCALEURL_USE_ACCEPT_LANGUAGE`
+- `common/redis.py` 移除 `six.moves` import
 
 ### 验证状态
 

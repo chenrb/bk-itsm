@@ -7,7 +7,6 @@ from config import BASE_DIR  # noqa
 LANGUAGE_CODE = os.environ.get("BKAPP_BACKEND_LANGUAGE", "zh-hans")
 SITE_ID = 1
 LOCALE_PATHS = (os.path.join(BASE_DIR, "locale"),)
-LOCALEURL_USE_ACCEPT_LANGUAGE = True
 
 
 def _(s):
