@@ -49,11 +49,6 @@ urlpatterns = [
     re_path(r"^eri/admin/", include("pipeline.contrib.engine_admin.urls")),
 ]
 
-handler404 = "error_pages.views.error_404"
-handler500 = "error_pages.views.error_500"
-handler403 = "error_pages.views.error_403"
-handler401 = "error_pages.views.error_401"
-
 # 本地生效：DEBUG=True
 # urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

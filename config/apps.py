@@ -55,7 +55,6 @@ AUTHENTICATION_BACKENDS = (
 )
 
 MIDDLEWARE = (
-    "itsm.component.misc_middlewares.HttpsMiddleware",
     "itsm.component.misc_middlewares.UserLoginForbiddenMiddleware",
     "itsm.component.misc_middlewares.ServiceSwitchCheck",
     "itsm.component.misc_middlewares.ApiIgnoreCheck",
@@ -67,5 +66,4 @@ MIDDLEWARE = (
     "django.middleware.security.SecurityMiddleware",
     "django.middleware.locale.LocaleMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
-    "itsm.component.misc_middlewares.InstrumentProfilerMiddleware",
 )

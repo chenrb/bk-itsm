@@ -58,7 +58,6 @@ CLOSE_EVERY_DAY_TICKET_NOTIFY = bool(
 # 框架
 IS_BKUI_HISTORY_MODE = False
 IS_AJAX_PLAIN_MODE = True
-TEST_RUNNER = "itsm.tests.runner.ItsmTestRunner"
 
 # 性能分析
 try:

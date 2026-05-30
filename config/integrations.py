@@ -18,7 +18,7 @@ BK_PAAS_ESB_HOST = os.environ.get("BK_COMPONENT_API_URL", "")
 # 前端地址
 FRONTEND_URL = os.environ.get("BKAPP_FRONTEND_URL", "")
 
-# IAM（仍被 context_processors、cipher、openapi serializer 引用）
+# IAM（仍被 cipher、openapi serializer 引用）
 BK_IAM_APP_CODE = os.getenv("BK_IAM_V3_APP_CODE", "bk_iam")
 IAM_ESB_PAAS_HOST = os.environ.get("BK_COMPONENT_API_URL", "")
 CALLBACK_AES_KEY = "APPROVAL_RESULT"

@@ -337,7 +337,7 @@ TASK_GLOBAL_VARIABLES = [
 FIRST_ORDER = 1
 
 # 获取key的前缀, 使用redis缓存, 保证不同环境下的key不相同
-PREFIX_KEY = "%s:%s:" % (settings.APP_CODE, settings.ENVIRONMENT)
+PREFIX_KEY = "%s:" % settings.APP_CODE
 API_PERMISSION_ERROR_CODE = 9900403
 
 TIME_DELTA = {

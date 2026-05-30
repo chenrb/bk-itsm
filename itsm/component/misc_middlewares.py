@@ -24,145 +24,16 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
 import base64
-import pstats
-import time
-from io import StringIO
 
-from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 from django.utils.deprecation import MiddlewareMixin
-from pyinstrument import Profiler
 
-from common.log import logger
 from common.mymako import render_mako_context
 from itsm.iadmin.contants import SERVICE_SWITCH
 from itsm.iadmin.models import SystemSettings
 
-try:
-    import cProfile
-except ImportError:
-    import profile  # noqa
-
 User = get_user_model()
-
-
-class ProfilerMiddleware(object):
-    def __init__(self, get_response=None):
-        self.get_response = get_response
-        self.profiler = None
-
-    def __call__(self, request):
-        response = None
-        if hasattr(self, "process_request"):
-            response = self.process_request(request)
-        if not response:
-            response = self.get_response(request)
-        if hasattr(self, "process_response"):
-            response = self.process_response(request, response)
-        return response
-
-    def can(self, request):
-        if settings.PROFILER["enable"]:
-            request_paths = settings.PROFILER.get("request_paths", [])
-            if not request_paths:
-                return True
-            for path in request_paths:
-                if (
-                    path["path"] == request.path
-                    and request.method in path["method"]
-                    and "profile" in request.GET
-                ):
-                    return True
-
-    def process_view(self, request, callback, callback_args, callback_kwargs):
-        if self.can(request):
-            self.profiler = cProfile.Profile()
-            self.profiler.enable()
-
-    def process_response(self, request, response):
-        if self.can(request):
-            self.profiler.disable()
-
-            s = StringIO()
-
-            sortby = settings.PROFILER.get("sort", "time")
-            count = settings.PROFILER.get("count", None)
-            outputs = settings.PROFILER.get("output", ["console"])
-
-            pstats.Stats(self.profiler, stream=s).sort_stats(sortby).print_stats(count)
-            for output in outputs:
-                if output == "console":
-                    print(s.getvalue())
-
-                if output == "file":
-                    file_location = settings.PROFILER.get("file_location", "profiles")
-                    if not os.path.exists(file_location):
-                        os.mkdir(file_location)
-                    file_loc = os.path.join(
-                        file_location,
-                        "%s%s-profile%s.log"
-                        % (
-                            request.method,
-                            request.path.replace("/", "-"),
-                            int(time.time()),
-                        ),
-                    )
-                    with open(file_loc, "a+") as file:
-                        file.write("request path {}".format(request.path))
-                        for counter in s.getvalue().split("\n"):
-                            if (
-                                "django/db/models/" in counter
-                                or "pymysql/connections.py" in counter
-                                or "site-packages" in counter
-                            ):
-                                continue
-
-                            file.write("{}\n".format(counter))
-                        file.close()
-        return response
-
-
-class InstrumentProfilerMiddleware(ProfilerMiddleware):
-    def process_view(self, request, callback, callback_args, callback_kwargs):
-        if self.can(request):
-            self.profiler = Profiler()
-            self.profiler.start()
-
-    def process_response(self, request, response):
-        if not (self.can(request) and self.profiler):
-            return response
-        self.profiler.stop()
-        outputs = settings.PROFILER.get("output", ["console"])
-        for output in outputs:
-            output_text = self.profiler.output_html()
-            if output == "console":
-                print(output_text)
-
-            if output == "file":
-                file_location = settings.PROFILER.get("file_location", "profiles")
-                if not os.path.exists(file_location):
-                    os.mkdir(file_location)
-
-                file_loc = os.path.join(
-                    file_location,
-                    "%s%s-profile%s.html"
-                    % (
-                        request.method,
-                        request.path.replace("/", "-"),
-                        int(time.time()),
-                    ),
-                )
-                with open(file_loc, "a+") as file:
-                    try:
-                        file.write(output_text)
-                    except BaseException:
-                        pass
-                    finally:
-                        file.close()
-        if getattr(settings, "PYINSTRUMENT_URL_ARGUMENT", "profile") in request.GET:
-            return HttpResponse(output_text)
-        return response
 
 
 class ApiIgnoreCheck(MiddlewareMixin):
@@ -221,14 +92,6 @@ class NginxAuthProxy(MiddlewareMixin):
                     setattr(view, "login_exempt", True)
             except BaseException:
                 return None
-
-        return None
-
-
-class HttpsMiddleware(MiddlewareMixin):
-    def process_request(self, request):
-        if settings.ENVIRONMENT == "dev":
-            return None
 
         return None
 
