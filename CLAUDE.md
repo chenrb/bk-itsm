@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-BK-ITSM (蓝鲸流程服务) is an IT Service Management application. Backend is Python 3.13 / Django 6.0 with DRF; frontend is Vue 3 (PC). It uses an embedded flow engine (`pipeline/`) for workflow orchestration and Celery for async tasks. The project has been fully decoupled from the BlueKing PaaS platform — no `blueapps`, `blueking`, `adapter`, `iam` SDK, or ESB imports remain.
+BK-ITSM (蓝鲸流程服务) is an IT Service Management application. Backend is Python 3.13 / Django 6.0 with DRF; frontend is Vue 3 (PC). It uses an embedded flow engine (`pipeline/`) for workflow orchestration and Celery for async tasks. The project has been fully decoupled from the BlueKing PaaS platform — no `blueapps`, `blueking`, `adapter`, `iam` SDK, `esb`, `apigw_manager`, or `six` imports remain.
 
 ## Commands
 
@@ -108,6 +108,7 @@ config/monitoring.py   → monitoring/sentry config
 - `/openapi/` → `itsm.api.open_v1`
 - `/openapi/v2/` → `itsm.api.open_v2`
 - `/monitor/` → `itsm.monitor.urls`
+- `/` → `itsm.sites.urls` (frontend entry points)
 
 Each `itsm/` app follows Django conventions: `models.py` (or `models/`), `views.py` (or `views/`), `serializers.py`, `urls.py`, `tasks.py`.
 
@@ -117,8 +118,8 @@ Each `itsm/` app follows Django conventions: `models.py` (or `models/`), `views.
 
 ### Shared libraries
 
-- **`itsm/component/`** — Shared backend utilities: DRF mixins, middlewares, `platform_client/http.py` (requests-based HTTP client replacing old ESB SDK), constants, notification helpers, field definitions
-- **`common/`** — Cross-cutting utilities: Redis, logging, XSS filtering, encryption, context processors
+- **`itsm/component/`** — Shared backend utilities: DRF mixins, middlewares, `platform_client/http.py` (requests-based HTTP client replacing old ESB SDK), constants, notification helpers, field definitions, user model
+- **`common/`** — Cross-cutting utilities: Redis, logging, XSS filtering, encryption, Mako template helpers
 - **`business_rules/`** — Local business rule engine (not BlueKing-related)
 
 ### Celery
@@ -129,6 +130,10 @@ Five task modules registered in `CELERY_IMPORTS`: `ticket`, `service`, `sla_engi
 
 MySQL via PyMySQL. Test DB configured via `BK_MYSQL_TEST_NAME`. Each app has its own `migrations/` directory.
 
+### Templates
+
+Mako templates in `mako_templates/` for error pages, service close page, and email notifications. Django templates in `templates/` for admin. Configured in `config/web.py`.
+
 ## Code Conventions
 
 ### Python
@@ -138,6 +143,7 @@ MySQL via PyMySQL. Test DB configured via `BK_MYSQL_TEST_NAME`. Each app has its
 - **Linter:** flake8 (max-line-length 120, max-complexity 25)
 - **Import sorting:** isort (line_length=100, known_third_party=rest_framework, known_django=django)
 - **Test files:** `test_*.py` pattern
+- **No Python 2 compatibility code** — no `six`, no `__future__` imports needed
 
 ### Commit messages
 
@@ -150,3 +156,7 @@ See `frontend/pc/CLAUDE.md` for full Vue conventions. Key: Vue 3 + Vite 4 + Vuex
 ## CI
 
 GitHub Actions (`.github/workflows/django.yml`): Python 3.13 + MySQL + Redis → install deps → migrate → `coverage run manage.py test itsm.tests` → Codecov upload.
+
+## Refactoring
+
+Refactoring plans and history are in `docs/refactor/`. Phase 1 (去蓝鲸依赖) and Phase 2 (死代码清理) are complete. When modifying code during refactoring, follow the rules in `docs/refactor/plan.md`: always clean unused imports, dead dependencies, and stale config after deleting code.
