@@ -77,6 +77,23 @@
 - `BkWSGIHandler`（自定义 WSGI handler，处理蓝鲸 PaaS 子路径部署）不再被引用
 - 根目录 `wsgi.py` 已使用标准 `django.core.wsgi.get_wsgi_application`
 
+### P2-10: 死代码、死依赖、死配置全面清理
+- 删除死的 URL 路由 `itsm.plugin_service.urls`、middleware `HttpsMiddleware` / `ProfilerMiddleware` / `InstrumentProfilerMiddleware`
+- 删除 `error_pages/`（模板不存在，handler 无效）、`common/context_processors.py`、`itsm/component/request_middlewares.py`
+- 删除 `sync_saas_apigw.py` 及 `data/`、`Makefile`、`scripts/`（整个目录）、`test_script/`、`itsm/tests/runner.py`、`docs/itsm_nfs/`
+- 清理 `requirements.txt` 移除 19 个未使用包（109→64 行）
+- 修正 `.pre-commit-config.yaml` Python 版本 3.11→3.13
+- 移除 `config/i18n.py` 中无引用的 `LOCALEURL_USE_ACCEPT_LANGUAGE`
+
+### P2-11: 移除 six 依赖
+- 全局替换 `six` 为 Python 3 原生等价物，涉及 12 个文件
+- `six.iteritems` → `.items()`、`six.string_types` → `str`、`six.integer_types` → `int`、`six.text_type` → `str`、`six.with_metaclass` → `metaclass=`、`six.moves.*` → builtin
+
+### P2-12: 前端 SOPS/DevOps 残余清理
+- 删除 4 个 SOPS Vue 组件（sopsDevopsTask、sopsNode、sopsNodeLog、sopsNodeInfo）
+- 清理 20+ 引用文件中的 `TASK-SOPS` 类型过滤器、store actions、palette 入口、组件注册
+- 删除重复 `locale/zh-cn/`、`locale/cmd.md`
+
 ## 总影响
 
 | 指标 | 数值 |

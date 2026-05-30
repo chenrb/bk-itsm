@@ -36,6 +36,10 @@ Phase 2 后发现的零散死代码清理。
 - 修正 `.pre-commit-config.yaml` Python 版本 3.11→3.13
 - 移除 `config/i18n.py` 中无引用的 `LOCALEURL_USE_ACCEPT_LANGUAGE`
 - `common/redis.py` 移除 `six.moves` import
+- 全局移除 `six` 依赖（12 个文件），替换为 Python 3 原生等价物（`six.iteritems` → `.items()`、`six.string_types` → `str`、`six.with_metaclass` → `metaclass=` 等）
+- 删除重复 `locale/zh-cn/`（与 `zh_CN` 内容相同）、`locale/cmd.md`（过时 PaaS i18n 笔记）
+- 删除整个 `scripts/` 目录（旧版 PaaS CI 脚本、commit-msg 校验、过时文档）
+- 前端 SOPS/DevOps 残余清理：删除 4 个 Vue 组件，清理 20+ 引用文件中的 `TASK-SOPS` 类型、store actions、palette 入口等（-1658 行）
 
 ### 验证状态
 
