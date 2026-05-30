@@ -19,32 +19,26 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 "Generated-By: Babel 2.5.1\n"
 
-#: adapter/core/sites/ieod/show.py:30 adapter/core/sites/open/show.py:31
 #: itsm/component/constants/iam.py:474 itsm/sites/views.py:130
 msgid "流程服务"
 msgstr "ITSM"
 
-#: adapter/core/sites/ieod/show.py:30 adapter/core/sites/open/show.py:31
+#: itsm/sites/views.py:130
 msgid "腾讯蓝鲸智云"
 msgstr "Tencent BlueKing"
 
-#: adapter/core/sites/ieod/show.py:43
 msgid "联系BK助手"
 msgstr "Contact BK Customer Service"
 
-#: adapter/core/sites/ieod/show.py:43
 msgid "蓝鲸桌面"
 msgstr "BlueKing Desktop"
 
-#: adapter/core/sites/open/show.py:46
 msgid "技术支持"
 msgstr "Support"
 
-#: adapter/core/sites/open/show.py:46
 msgid "社区论坛"
 msgstr "Forum"
 
-#: adapter/core/sites/open/show.py:46
 msgid "产品官网"
 msgstr "Official"
 
@@ -56,23 +50,22 @@ msgstr ""
 msgid "简体中文"
 msgstr ""
 
-#: django_signal_valve/models.py:61 pipeline/django_signal_valve/models.py:44
+#: pipeline/django_signal_valve/models.py:44
 msgid "信号模块名"
 msgstr ""
 
-#: django_signal_valve/models.py:62 pipeline/django_signal_valve/models.py:45
+#: pipeline/django_signal_valve/models.py:45
 msgid "信号属性名"
 msgstr ""
 
-#: django_signal_valve/models.py:63 pipeline/django_signal_valve/models.py:46
+#: pipeline/django_signal_valve/models.py:46
 msgid "信号参数"
 msgstr ""
 
-#: iam/contrib/django/response.py:25
 msgid "您没有此操作的权限"
 msgstr "You have no permission to operate"
 
-#: itsm/auth_iam/models.py:35 itsm/component/constants/ticket.py:172
+#: itsm/component/constants/ticket.py:172
 #: itsm/component/db/models.py:48 itsm/component/db/models.py:77
 #: itsm/iadmin/models.py:64 itsm/postman/models.py:69
 #: itsm/project/models/base.py:35 itsm/role/models.py:68
@@ -84,7 +77,7 @@ msgstr "You have no permission to operate"
 msgid "创建人"
 msgstr "Creator"
 
-#: itsm/auth_iam/models.py:36 itsm/component/constants/ticket.py:173
+#: itsm/component/constants/ticket.py:173
 #: itsm/component/db/models.py:49 itsm/component/db/models.py:79
 #: itsm/iadmin/models.py:65 itsm/iadmin/models.py:138 itsm/postman/models.py:70
 #: itsm/project/models/base.py:36 itsm/role/models.py:69
@@ -102,7 +95,7 @@ msgstr "Creator"
 msgid "创建时间"
 msgstr "CreateTime"
 
-#: itsm/auth_iam/models.py:37 itsm/component/db/models.py:50
+#: itsm/component/db/models.py:50
 #: itsm/component/db/models.py:80 itsm/iadmin/models.py:66
 #: itsm/iadmin/models.py:139 itsm/postman/models.py:71
 #: itsm/project/models/base.py:37 itsm/role/models.py:70
@@ -114,7 +107,7 @@ msgstr "CreateTime"
 msgid "更新时间"
 msgstr "Update Time"
 
-#: itsm/auth_iam/models.py:38 itsm/component/db/models.py:51
+#: itsm/component/db/models.py:51
 #: itsm/component/db/models.py:82 itsm/iadmin/models.py:67
 #: itsm/postman/models.py:72 itsm/project/models/base.py:38
 #: itsm/role/models.py:71 itsm/service/models.py:80 itsm/sla/models/basic.py:47
@@ -124,7 +117,7 @@ msgstr "Update Time"
 msgid "修改人"
 msgstr "Modifier"
 
-#: itsm/auth_iam/models.py:39 itsm/component/constants/ticket.py:174
+#: itsm/component/constants/ticket.py:174
 #: itsm/component/db/models.py:84 itsm/role/models.py:72
 #: itsm/service/models.py:81 itsm/sla/models/schedule.py:49
 #: itsm/task/models.py:1015 itsm/task/models.py:1096
@@ -133,7 +126,7 @@ msgstr "Modifier"
 msgid "结束时间"
 msgstr "EndTime"
 
-#: itsm/auth_iam/models.py:40 itsm/component/db/models.py:52
+#: itsm/component/db/models.py:52
 #: itsm/component/db/models.py:85 itsm/iadmin/models.py:68
 #: itsm/postman/models.py:73 itsm/project/models/project.py:58
 #: itsm/project/models/project.py:215 itsm/role/models.py:73

@@ -18,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "Generated-By: Babel 2.11.0\n"
 
-#: itsm/auth_iam/models.py:35 itsm/component/constants/ticket.py:172
+#: itsm/component/constants/ticket.py:172
 #: itsm/component/db/models.py:48 itsm/component/db/models.py:77
 #: itsm/iadmin/models.py:64 itsm/postman/models.py:69
 #: itsm/project/models/base.py:35 itsm/role/models.py:68
@@ -30,7 +30,7 @@ msgstr ""
 msgid "创建人"
 msgstr "によって作成されました"
 
-#: itsm/auth_iam/models.py:36 itsm/component/constants/ticket.py:173
+#: itsm/component/constants/ticket.py:173
 #: itsm/component/db/models.py:49 itsm/component/db/models.py:79
 #: itsm/iadmin/models.py:65 itsm/iadmin/models.py:138
 #: itsm/postman/models.py:70 itsm/project/models/base.py:36
@@ -46,7 +46,7 @@ msgstr "によって作成されました"
 msgid "创建时间"
 msgstr "作成時間"
 
-#: itsm/auth_iam/models.py:37 itsm/component/db/models.py:50
+#: itsm/component/db/models.py:50
 #: itsm/component/db/models.py:80 itsm/iadmin/models.py:66
 #: itsm/iadmin/models.py:139 itsm/postman/models.py:71
 #: itsm/project/models/base.py:37 itsm/role/models.py:70
@@ -58,7 +58,7 @@ msgstr "作成時間"
 msgid "更新时间"
 msgstr "時間を更新します"
 
-#: itsm/auth_iam/models.py:38 itsm/component/db/models.py:51
+#: itsm/component/db/models.py:51
 #: itsm/component/db/models.py:82 itsm/iadmin/models.py:67
 #: itsm/postman/models.py:72 itsm/project/models/base.py:38
 #: itsm/role/models.py:71 itsm/service/models.py:80
@@ -68,7 +68,7 @@ msgstr "時間を更新します"
 msgid "修改人"
 msgstr "修正する"
 
-#: itsm/auth_iam/models.py:39 itsm/component/constants/ticket.py:174
+#: itsm/component/constants/ticket.py:174
 #: itsm/component/db/models.py:84 itsm/role/models.py:72
 #: itsm/service/models.py:81 itsm/sla/models/schedule.py:49
 #: itsm/task/models.py:1015 itsm/task/models.py:1096
@@ -76,7 +76,7 @@ msgstr "修正する"
 msgid "结束时间"
 msgstr "終了時間"
 
-#: itsm/auth_iam/models.py:40 itsm/component/db/models.py:52
+#: itsm/component/db/models.py:52
 #: itsm/component/db/models.py:85 itsm/iadmin/models.py:68
 #: itsm/postman/models.py:73 itsm/project/models/project.py:58
 #: itsm/project/models/project.py:215 itsm/role/models.py:73
