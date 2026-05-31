@@ -121,6 +121,18 @@
 - 合并 `bunch.py` → `bk_bunch.py`，迁移唯一引用
 - 清理 `requirements.txt` 移除 `factory_boy`、`xlrd`
 
+### P2-17: 移除废弃 Django 模型
+- 删除 `WorkflowSnap`、`DefaultField`（`workflow/models/deprecated.py`，已迁移至 WorkflowVersion）
+- 删除 `OldSla`（`service/models.py`，已迁移至 `itsm/sla` app）
+- 删除 `ServiceProperty`、`PropertyRecord`（`service/models.py`，legacy 属性系统）
+- 删除 `CostomTab`（`project/models/project.py`，URL 路由已禁用）
+- 清理对应的序列化器（`SlaSerializer`、`CostomTabSerializer`）、视图集（`SlaViewSet`、`CostomTabViewSet`）、URL 注册、Admin 注册
+- 清理 `service/managers.py` 中 4 个废弃迁移方法、`ticket/managers.py` 中 3 个 WorkflowSnap 迁移方法、`workflow/managers.py` 中 WorkflowSnapManager
+- 清理 `service/apps.py` 中注释和活跃的废弃初始化调用
+- 删除 `tests/workflow/db_fix_test.py`（全部引用 WorkflowSnap/OldSla）、`tests/project/test_tabs.py`
+- 创建 3 个 DROP TABLE 迁移：`workflow/0053`、`service/0032`、`project/0008`
+- 修复 `service/models.py` 预存 `for ... in X):` 语法错误
+
 ## 总影响
 
 | 指标 | 数值 |
