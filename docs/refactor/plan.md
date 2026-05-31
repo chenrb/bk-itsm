@@ -76,6 +76,20 @@ Phase 2 后发现的零散死代码清理。
 - `config/local_settings.py` 补充 `REDIS_*` 配置（`common/redis.py` 模块级引用需要）
 - 无升级路径：已部署实例必须 DROP DATABASE 后重新 `migrate`
 
+### P4: apps.py 清理
+
+审计全部 23 个 `apps.py`，移除死代码、一次性迁移 handler、蓝鲸残余信号连接。22 个文件，删除 11,348 行。
+
+- `task/apps.py`：删除空 `app_ready_handler`（仅 `pass`）
+- `workflow/apps.py`：删除 `fix_migrate_error()`（旧迁移 hack，P3 后无用）
+- `project/apps.py`：删除 `init_lesscode_project()`（蓝鲸低代码残余）
+- `ticket/apps.py`：删除 `TicketComment.fix_comments()`（一次性数据迁移伪装成持久 handler）
+- `postman/apps.py`：删除 uppercase system code 一次性迁移 handler
+- `service/apps.py`：断开 `register_builtin_iam_service`、`register_builtin_bkbase_service` 信号连接
+- 清理孤立代码：`service/managers.py`（init_iam_services、init_bkbase_services）、`workflow/managers.py`（init_iam_system、init_iam_default_workflow、init_bkbase_workflow）、`service/signals/handlers.py`（iam/bkbase handler 函数）
+- 清理孤立常量：`BUILTIN_IAM_SERVICES`、`BUILTIN_BKBASE_SERVICES`、`BKBASE_CATALOG_KEY`
+- 删除 `initials/workflow/iam_default.json`、`iam_user.json`、`bkbase/` 目录（8 个 JSON 文件）
+
 ### 验证状态
 
 零蓝鲸硬依赖残留（blueapps、blueking、apigw_manager、bk_notice_sdk、bkstorages、iam SDK、auth_iam、esb、apigw、bkchat、helper、core — 全部归零）。
