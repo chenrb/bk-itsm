@@ -12,14 +12,14 @@ specific language governing permissions and limitations under the License.
 """
 
 import logging
-import traceback
 
 from django.db import models
+from django.db.utils import OperationalError, ProgrammingError
 from django.utils.translation import gettext_lazy as _
 
 from pipeline.engine.conf import function_switch
 
-logger = logging.getLogger("celery")
+logger = logging.getLogger(__name__)
 
 
 class FunctionSwitchManager(models.Manager):
@@ -41,8 +41,12 @@ class FunctionSwitchManager(models.Manager):
                         description=switch["description"]
                     )
             self.bulk_create(s_to_be_created)
+        except (ProgrammingError, OperationalError):
+            logger.warning(
+                "[pipeline] function_switch 表尚未创建，请先执行 python manage.py migrate"
+            )
         except Exception:
-            logger.error("function switch init failed: %s" % traceback.format_exc())
+            logger.exception("function switch init failed")
 
     def is_frozen(self):
         return self.get(name=function_switch.FREEZE_ENGINE).is_active

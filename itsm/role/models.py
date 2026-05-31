@@ -154,8 +154,8 @@ class UserRole(ObjectManagerMixin, Model):
         _("角色唯一标识"), max_length=LEN_MIDDLE, default=EMPTY_STRING
     )
     name = models.CharField(_("角色命名"), max_length=LEN_NORMAL)
-    members = models.CharField(_("角色组成人员"), max_length=LEN_XX_LONG)
-    owners = models.CharField(_("负责人"), max_length=LEN_XX_LONG, default=EMPTY_STRING)
+    members = models.TextField(_("角色组成人员"), default=EMPTY_STRING)
+    owners = models.TextField(_("负责人"), default=EMPTY_STRING)
     access = models.CharField(_("对应服务"), max_length=LEN_MIDDLE)
     desc = models.CharField(
         _("用户角色描述"),

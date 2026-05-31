@@ -28,6 +28,8 @@ import pkgutil
 import sys
 from importlib import import_module
 
+from django.db.utils import OperationalError, ProgrammingError
+
 logger = logging.getLogger('root')
 
 
@@ -41,12 +43,20 @@ def autodiscover_items(module):
     modules = [
         name for _, name, is_pkg in pkgutil.iter_modules([module_dir]) if not is_pkg and not name.startswith('_')
     ]
+    _db_warned = False
     for name in modules:
         module_path = "{}.{}".format(module.__name__, name)
         try:
             __import__(module_path)
+        except (ProgrammingError, OperationalError):
+            if not _db_warned:
+                logger.warning(
+                    "[autodiscover] 数据库表尚未创建，跳过模块注册。"
+                    "请先执行 python manage.py migrate"
+                )
+                _db_warned = True
         except Exception as e:
-            logger.error(f'[!] module({module_path}) import failed with err: {e}')
+            logger.error('[!] module(%s) import failed with err: %s', module_path, e)
 
 
 def autodiscover_collections(path):
@@ -66,3 +76,9 @@ def autodiscover_collections(path):
         except ImportError as e:
             if not str(e) == 'No module named %s' % path:
                 pass
+        except (ProgrammingError, OperationalError):
+            logger.warning(
+                "[autodiscover] 数据库表尚未创建，请先执行 python manage.py migrate"
+            )
+        except Exception as e:
+            logger.error("[autodiscover] %s.%s import failed: %s", app_config.name, path, e)

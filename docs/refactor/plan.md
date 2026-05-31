@@ -114,6 +114,37 @@ Phase 2 后发现的零散死代码清理。
 - **更新 `.env.example`** — 全部使用新变量名，移除 IAM/APIGW 段，新增邮件和文档配置段
 - **更新 `.github/workflows/django.yml`** — CI 环境变量同步重命名，移除 `RUN_ENV`、`APP_ID`、`APP_TOKEN`、`USE_IAM` 等死变量
 
+### P6: 启动流程健壮性 + 数据库配置补齐
+
+修复 `python manage.py runserver` / `migrate` 启动链路中的实际问题，消除强制依赖 `local_settings.py` 的状况。
+
+- **`config/database.py`：数据库配置正式写入**
+  - Redis 配置提供默认值（`localhost:6379`），不再依赖 `IS_USE_REDIS` 条件分支
+  - 移除 `DatabaseCache` 回退路径，Redis 为唯一缓存后端
+  - 数据后端配置（`ITSM_DATA_BACKEND`、`PIPELINE_DATA_BACKEND`）不再条件分支
+  - 新增 `REDIS` 字典（host/port/password/mode/db），替代 `iadmin/apps.py` 中的运行时拼接
+  - `DEFAULT_AUTO_FIELD = "django.db.models.AutoField"` 补齐 Django 6 要求
+
+- **`itsm/iadmin/apps.py`：删除运行时 REDIS 拼接**
+  - 移除 `ready()` 中从 `os.environ` 读取 Redis 配置并动态注入 `settings.REDIS` 的代码
+  - Redis 配置已在 `config/database.py` 静态定义
+
+- **Pipeline apps.py 错误处理改进**
+  - `pipeline/apps.py`：Redis 连接失败从 `error` 降为 `warning`，提示检查 Redis 服务
+  - `pipeline/component_framework/apps.py`：`ProgrammingError`/`OperationalError` 从 `exception` 降为 `warning`，引导执行 `migrate`
+  - `pipeline/engine/models/function.py`：function_switch 初始化捕获 DB 异常，`logger` 改用 `__name__`，异常日志用 `logger.exception`
+  - `pipeline/variable_framework/apps.py`：同上，首次迁移异常从 `exception` 降为 `warning`
+
+- **`itsm/component/dlls/autodiscover.py`：数据库未就绪时优雅降级**
+  - `autodiscover_items`：捕获 `ProgrammingError`/`OperationalError`，输出一次 warning 后跳过
+  - `autodiscover_collections`：同上
+  - f-string 改为 `%s` 格式化（logger 最佳实践）
+
+- **其他修复**
+  - `itsm/role/models.py`：`UserRole.members`/`owners` 从 `CharField(max_length=LEN_XX_LONG)` 改为 `TextField`，解决 MySQL 行大小限制问题（TODO: 应改为 ManyToManyField）
+  - `itsm/trigger/action/core/component.py`：移除 `CallableChoiceIterator` import，改用 `callable()` 判断
+  - `itsm/workflow/utils.py`：`get_notify_type_choice` 捕获所有异常回退到默认值
+
 ### 验证状态
 
 零蓝鲸硬依赖残留（blueapps、blueking、apigw_manager、bk_notice_sdk、bkstorages、iam SDK、auth_iam、esb、apigw、bkchat、helper、core — 全部归零）。

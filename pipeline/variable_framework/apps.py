@@ -41,6 +41,8 @@ class VariableFrameworkConfig(AppConfig):
 
         try:
             VariableModel.objects.exclude(code__in=list(VariableLibrary.variables.keys())).update(status=False)
-        except (ProgrammingError, OperationalError) as e:
-            # first migrate
-            logger.exception(e)
+        except (ProgrammingError, OperationalError):
+            logger.warning(
+                "[variable_framework] 数据库表尚未创建，跳过变量注册。"
+                "请先执行 python manage.py migrate"
+            )

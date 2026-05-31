@@ -75,6 +75,8 @@ def get_notify_type_choice():
         return notify_type_choice
     except Notify.DoesNotExist:
         return NOTIFY_TYPE_CHOICES
+    except Exception:
+        return NOTIFY_TYPE_CHOICES
 
 
 def get_third_party_notify_type():

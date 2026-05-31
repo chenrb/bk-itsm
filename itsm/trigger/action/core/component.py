@@ -25,7 +25,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import traceback
 from django.utils.translation import gettext as _
-from django.forms.fields import CallableChoiceIterator
 from django.forms.forms import DeclarativeFieldsMetaclass
 
 from itsm.component.dlls.component import BaseComponentMeta
@@ -122,8 +121,8 @@ class BaseComponent(metaclass=BaseComponentMeta):  # noqa
                 choices = (
                     getattr(field, "choices") if hasattr(field, "choices") else None
                 )
-                if isinstance(choices, CallableChoiceIterator):
-                    choices = choices.choices_func()
+                if callable(choices):
+                    choices = choices()
 
                 input_data = {
                     "name": _(field_name),

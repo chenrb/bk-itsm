@@ -23,8 +23,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
-import os
-
 from django.apps import AppConfig
 from django.conf import settings
 from django.db.models.signals import post_migrate
@@ -83,14 +81,4 @@ class IadminConfig(AppConfig):
     name = "itsm.iadmin"
 
     def ready(self):
-        print("init redis settings")
-        if not hasattr(settings, "REDIS") and "REDIS_HOST" in os.environ:
-            settings.REDIS = {
-                "host": os.getenv("REDIS_HOST"),
-                "port": os.getenv("REDIS_PORT"),
-                "password": os.getenv("REDIS_PASSWORD"),
-                "service_name": os.getenv("REDIS_SERVICE_NAME", "mymaster"),
-                "mode": os.getenv("REDIS_MODE", "single"),
-                "db": os.getenv("REDIS_DB", 0),
-            }
         post_migrate.connect(app_ready_handler, sender=self)

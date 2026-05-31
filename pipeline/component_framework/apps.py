@@ -53,12 +53,15 @@ def init_component_framework(**kwargs):
             ComponentModel.objects.filter(code=code, version__in=ComponentLibrary.versions(code)).update(
                 status=True
             )
-    except InternalError as e:
-        # version field migration
-        logger.exception(e)
-    except (ProgrammingError, OperationalError) as e:
-        # first migrate
-        logger.exception(e)
+    except InternalError:
+        logger.warning(
+            "[component_framework] 数据库版本字段迁移中，跳过组件注册"
+        )
+    except (ProgrammingError, OperationalError):
+        logger.warning(
+            "[component_framework] 数据库表尚未创建，跳过组件注册。"
+            "请先执行 python manage.py migrate"
+        )
 
 
 class ComponentFrameworkConfig(AppConfig):

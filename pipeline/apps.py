@@ -13,7 +13,6 @@ specific language governing permissions and limitations under the License.
 
 import sys
 import logging
-import traceback
 
 import redis
 from django.apps import AppConfig
@@ -81,13 +80,16 @@ class PipelineConfig(AppConfig):
                 settings.redis_inst = CLIENT_GETTER[mode]()
                 settings.REDIS_INST = CLIENT_GETTER[mode]()
             except Exception:
-                # fall back to single node mode
-                logger.error("redis client init error: %s" % traceback.format_exc())
+                logger.warning(
+                    "[pipeline] Redis 连接失败，请检查 Redis 是否已启动以及配置是否正确"
+                )
         elif (
             getattr(settings, "PIPELINE_DATA_BACKEND", None)
             == "pipeline.engine.core.data.redis_backend.RedisDataBackend"
         ):
-            logger.error("can not find REDIS in settings!")
+            logger.warning(
+                "[pipeline] settings.REDIS 未配置，请检查 config/database.py 中是否定义了 REDIS"
+            )
 
         # avoid big flow pickle raise maximum recursion depth exceeded error
         sys.setrecursionlimit(10000)
