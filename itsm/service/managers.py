@@ -352,7 +352,7 @@ class SysDictManager(managers.Manager):
         pass
 
 
-class BaseMpttManager(managers.BaseTreeHandler):
+class BaseMpttManager(managers.BaseTreeManager):
     pass
 
 
