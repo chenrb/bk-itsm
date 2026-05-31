@@ -12,7 +12,7 @@ from itsm.openapi.base_service.serializers import ApiGwSerializer
 
 def grant(app_code, resource_names, stage):
     # 需提供网关地址 endpoint，环境 stage 默认为 prod
-    client = Client(stage=stage, endpoint=settings.BK_API_URL_TMPL)
+    client = Client(stage=stage, endpoint=settings.API_URL_TEMPLATE)
     # 根据需求，提供应用认证、用户认证信息
     client.update_bkapi_authorization(
         bk_app_code=settings.BK_APP_CODE,

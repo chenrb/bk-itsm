@@ -97,7 +97,7 @@ def index(request):
     TITLE = _get_title()
     LOGIN_URL = settings.LOGIN_URL
 
-    BK_USER_MANAGE_HOST = settings.BK_USER_MANAGE_HOST
+    BK_USER_MANAGE_HOST = settings.USER_MANAGE_HOST
 
     try:
         notice_center_switch_value = SystemSettings.objects.get(
@@ -113,7 +113,7 @@ def index(request):
         doc_lang = "ZH"
 
     version = get_version()
-    doc_url = settings.BK_DOC_URL.format(
+    doc_url = settings.DOC_URL.format(
         lang=doc_lang, version=get_major_minor_version(version)
     )
 
@@ -127,16 +127,16 @@ def index(request):
             "LOGIN_URL": LOGIN_URL,
             "LOG_NAME": _("流程服务"),
             "IS_USE_INVITE_SMS": "true" if settings.IS_USE_INVITE_SMS else "false",
-            "BK_USER_MANAGE_HOST": BK_USER_MANAGE_HOST,
-            "BK_PAAS_ESB_HOST": settings.BK_PAAS_ESB_HOST,
+            "USER_MANAGE_HOST": BK_USER_MANAGE_HOST,
+            "PLATFORM_API_URL": settings.PLATFORM_API_URL,
             "TAM_PROJECT_ID": settings.TAM_PROJECT_ID,
             "DOC_URL": doc_url,
-            "BK_DOC_CENTER_HOST": settings.BK_DOC_CENTER_HOST,
+            "DOC_CENTER_HOST": settings.DOC_CENTER_HOST,
             "NOTICE_CENTER_SWITCH": notice_center_switch_value,
-            "BK_SHARED_RES_URL": settings.BK_SHARED_RES_URL,
-            "BK_PLATFORM_NAME": settings.BK_PLATFORM_NAME,
+            "SHARED_RES_URL": settings.SHARED_RES_URL,
+            "PLATFORM_NAME": settings.PLATFORM_NAME,
             "VERSION": version,
-            "BKAPP_CSRF_COOKIE_NAME": settings.CSRF_COOKIE_NAME,
+            "CSRF_COOKIE_NAME": settings.CSRF_COOKIE_NAME,
         },
     )
 

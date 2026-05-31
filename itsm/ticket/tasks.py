@@ -559,7 +559,7 @@ def check_auto_stuck_schedules():
         if settings.IS_MONITOR_EVENT:
             # 开启监控事件日志上报
             data = [{
-                "event_name": f"itsm 2.x 工单卡顿--{settings.RUN_MODE}",
+                "event_name": "itsm 工单卡顿",
                 "event": {
                     "content": log_data
                 },

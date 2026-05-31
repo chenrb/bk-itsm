@@ -178,7 +178,7 @@ class TicketCommentInvite(models.Model):
             return "##Err##"
 
         # [T|P|D][6c] = 7c
-        return "{}{}".format(settings.RUN_MODE[0], code)
+        return "T{}".format(code)
 
     @classmethod
     def get_user_comments_invites(cls, user):
@@ -283,7 +283,7 @@ class TicketFollowerNotifyLog(NotifyLogModel):
             return "##Err##"
 
         # [T|P|D][6c] = 7c
-        return "{}{}".format(settings.RUN_MODE[0], ticket_token)
+        return "T{}".format(ticket_token)
 
 
 class TicketSuperviseNotifyLog(NotifyLogModel):

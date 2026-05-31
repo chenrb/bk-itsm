@@ -149,7 +149,7 @@ def filter_user_sensitive_info(users: List):
     """
     过滤用户敏感信息
     """
-    fields = settings.BK_USER_WHITE_FIELDS
+    fields = settings.USER_WHITE_FIELDS
     results = []
     for user_info in users:
         user = {}

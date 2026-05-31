@@ -173,7 +173,7 @@ def get_custom_api_data(field):
 
     auth_headers = {
         "bk_app_code": settings.APP_ID,
-        "bk_app_secret": settings.APP_TOKEN,
+        "bk_app_secret": settings.SECRET_KEY,
         "bk_username": settings.SYSTEM_USE_API_ACCOUNT,
     }
 

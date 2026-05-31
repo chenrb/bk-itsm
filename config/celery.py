@@ -2,8 +2,6 @@
 """Celery 配置"""
 import os
 
-CELERYD_CONCURRENCY = os.getenv("BK_CELERYD_CONCURRENCY", 2)
-
 CELERY_IMPORTS = (
     "itsm.ticket.tasks",
     "itsm.service.tasks",

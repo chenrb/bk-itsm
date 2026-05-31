@@ -32,7 +32,7 @@ TRIGGER_SOURCE = 'trigger'
 # RemoteApi 导入文件大小上限（字节）；默认 1 MiB，可通过 env 覆盖。
 try:
     REMOTE_API_IMPORT_MAX_BYTES = int(
-        os.environ.get("BKAPP_REMOTE_API_IMPORT_MAX_BYTES", 1024 * 1024)
+        os.environ.get("REMOTE_API_IMPORT_MAX_BYTES", 1024 * 1024)
     )
 except (TypeError, ValueError):
     REMOTE_API_IMPORT_MAX_BYTES = 1024 * 1024
@@ -40,7 +40,7 @@ except (TypeError, ValueError):
 # RemoteApi 单次导入条目数上限；默认 20，可通过 env 覆盖。
 try:
     REMOTE_API_IMPORT_MAX_ITEMS = int(
-        os.environ.get("BKAPP_REMOTE_API_IMPORT_MAX_ITEMS", 20)
+        os.environ.get("REMOTE_API_IMPORT_MAX_ITEMS", 20)
     )
 except (TypeError, ValueError):
     REMOTE_API_IMPORT_MAX_ITEMS = 20

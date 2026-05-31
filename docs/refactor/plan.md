@@ -90,6 +90,30 @@ Phase 2 后发现的零散死代码清理。
 - 清理孤立常量：`BUILTIN_IAM_SERVICES`、`BUILTIN_BKBASE_SERVICES`、`BKBASE_CATALOG_KEY`
 - 删除 `initials/workflow/iam_default.json`、`iam_user.json`、`bkbase/` 目录（8 个 JSON 文件）
 
+### P5: 环境变量与配置清理
+
+统一环境变量命名，删除蓝鲸 PaaS 残余配置垫片，补齐缺失的 `DATABASES` 定义。
+
+- **删除 `config/env.py`** — 蓝鲸兼容垫片（`BK_PAAS_HOST`、`BK_URL`、`RUN_VER`、`RUN_MODE`），其内容分配到对应模块或直接删除
+- **`APP_TOKEN` → `SECRET_KEY`** — `config/__init__.py` 不再从 `APP_TOKEN` 派生 `SECRET_KEY`，直接读取 `SECRET_KEY` 环境变量
+- **补齐 `DATABASES`** — 提交代码中 `DATABASES` 配置从未定义（仅存在于 `local_settings.py` 和部署文档），现在正式写入 `config/database.py`
+- **`BKAPP_*` / `BK_*` 环境变量统一重命名** — 28 个环境变量：
+  - `BK_MYSQL_*` → `MYSQL_*`、`BKAPP_REDIS_*` → `REDIS_*`
+  - `BKAPP_*` 业务前缀全部去掉（`BKAPP_ITSM_ADMIN` → `ITSM_ADMIN`、`BKAPP_BK_USER_WHITE_FIELDS` → `USER_WHITE_FIELDS` 等）
+  - `BK_API_URL_TMPL` → `API_URL_TEMPLATE`、`BK_DOC_CENTER_HOST` → `DOC_CENTER_HOST`
+  - `BKPAAS_BK_DOMAIN` → `APP_DOMAIN`、`BKPAAS_SHARED_RES_URL` → `SHARED_RES_URL`
+- **删除死配置** — `RUN_MODE`、`APP_TOKEN`、`BK_PAAS_HOST`、`BK_CC_HOST`、`BK_JOB_HOST`、`BK_PAAS_ESB_HOST`、`BK_IAM_APP_CODE`、`IAM_ESB_PAAS_HOST`、`CALLBACK_AES_KEY`、`INIT_DEVOPS_TEMPLATE`、`TAPD_OAUTH_URL`、`BK_DESKTOP_URL`、`BK_STATIC_URL`、`ALLOW_CSRF`、`CUSTOM_TITLE`、`LOG_NAME`、`NEED_PROFILE`、`ENABLE_OTEL_TRACE`、`CELERYD_CONCURRENCY`
+- **`config/default.py` 移除 `from config.env import *`** — 从 11 个子模块降为 10 个
+- **代码清理**：
+  - `ticket/models/misc.py` 中 `RUN_MODE[0]` 硬编码为 `"T"` 前缀
+  - `ticket/tasks.py` 移除 `RUN_MODE` 引用
+  - `component/decorators.py` 移除 `RUN_VER == "ieod"` 分支
+  - `workflow/apps.py` 移除 `INIT_DEVOPS_TEMPLATE` 蓝盾初始化代码块及未使用 `settings` import
+  - `sites/views.py` 模板上下文变量名统一（`BK_*` → 无前缀）
+  - `pipeline/contrib/engine_admin/views.py` 模板上下文 `BKAPP_CSRF_COOKIE_NAME` → `CSRF_COOKIE_NAME`
+- **更新 `.env.example`** — 全部使用新变量名，移除 IAM/APIGW 段，新增邮件和文档配置段
+- **更新 `.github/workflows/django.yml`** — CI 环境变量同步重命名，移除 `RUN_ENV`、`APP_ID`、`APP_TOKEN`、`USE_IAM` 等死变量
+
 ### 验证状态
 
 零蓝鲸硬依赖残留（blueapps、blueking、apigw_manager、bk_notice_sdk、bkstorages、iam SDK、auth_iam、esb、apigw、bkchat、helper、core — 全部归零）。

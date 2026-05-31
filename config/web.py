@@ -2,7 +2,7 @@
 """REST Framework + Templates + CSRF/Session"""
 import os
 
-from config import APP_CODE, BASE_DIR  # noqa
+from config import APP_CODE, BASE_DIR, PROJECT_ROOT  # noqa
 
 # ==============================================================================
 # REST FRAMEWORK
@@ -71,7 +71,6 @@ DATE_FORMAT = "Y-m-d"
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(os.environ.get("PROJECT_ROOT", BASE_DIR), "staticfiles/")
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
-BK_STATIC_URL = "/static"
 STATIC_VERSION = "2.6.11"
 
 # ==============================================================================
@@ -81,20 +80,19 @@ MEDIA_URL = "%smedia/" % os.environ.get("SITE_URL", "/")
 MEDIA_ROOT = os.path.join(os.environ.get("PROJECT_ROOT", os.path.dirname(BASE_DIR)), "USERRES")
 
 FILE_CHARSET = "utf-8"
-ALLOW_CSRF = os.environ.get("BKAPP_ALLOW_CSRF", None) == "1"
 
 # ==============================================================================
 # CSRF / Session
 # ==============================================================================
 CSRF_COOKIE_PATH = "/"
-CSRF_COOKIE_NAME = os.environ.get("BKAPP_CSRF_COOKIE_NAME", "bkitsm_csrftoken")
+CSRF_COOKIE_NAME = os.environ.get("CSRF_COOKIE_NAME", "bkitsm_csrftoken")
 SESSION_COOKIE_NAME = "bkitsm_sessionid"
 LOGIN_URL = os.environ.get("LOGIN_URL", "/account/login/")
 
-BKPAAS_BK_DOMAIN = os.getenv("BKPAAS_BK_DOMAIN", "")
+APP_DOMAIN = os.getenv("APP_DOMAIN", "")
 CSRF_TRUSTED_ORIGINS = [
-    "https://*.{}".format(BKPAAS_BK_DOMAIN),
-    "http://*.{}".format(BKPAAS_BK_DOMAIN),
+    "https://*.{}".format(APP_DOMAIN),
+    "http://*.{}".format(APP_DOMAIN),
 ]
 
 # ==============================================================================

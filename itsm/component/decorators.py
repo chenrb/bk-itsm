@@ -297,9 +297,6 @@ def custom_apigw_required(view_func):
         if exempt:
             return view_func(self, request, *args, **kwargs)
 
-        if settings.RUN_VER == "ieod":
-            return view_func(self, request, *args, **kwargs)
-
         if not hasattr(request, "jwt"):
             logger.warning(
                 "can not found jwt in request, "

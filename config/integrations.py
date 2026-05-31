@@ -7,47 +7,31 @@ from config import APP_CODE  # noqa
 # 平台 API 基础地址（用于 platform_client HTTP 调用）
 PLATFORM_API_BASE_URL = os.environ.get("PLATFORM_API_BASE_URL", "")
 
-# 平台地址
-BK_CC_HOST = os.environ.get("BK_CC_HOST", "#")
-BK_JOB_HOST = os.environ.get("BK_JOB_HOST", "#")
-USER_MANGE_HOST = os.environ.get("BK_COMPONENT_API_URL", "")
-BK_USER_MANAGE_HOST = os.environ.get("BK_USER_MANAGE_HOST", USER_MANGE_HOST)
+# 平台 API 地址（统一，替代原 BK_COMPONENT_API_URL 多处重复）
+PLATFORM_API_URL = os.environ.get("PLATFORM_API_URL", "")
 
-BK_PAAS_ESB_HOST = os.environ.get("BK_COMPONENT_API_URL", "")
+# 用户管理
+USER_MANAGE_HOST = os.environ.get("USER_MANAGE_HOST", PLATFORM_API_URL)
 
 # 前端地址
-FRONTEND_URL = os.environ.get("BKAPP_FRONTEND_URL", "")
-
-# IAM（仍被 cipher、openapi serializer 引用）
-BK_IAM_APP_CODE = os.getenv("BK_IAM_V3_APP_CODE", "bk_iam")
-IAM_ESB_PAAS_HOST = os.environ.get("BK_COMPONENT_API_URL", "")
-CALLBACK_AES_KEY = "APPROVAL_RESULT"
-
-# 蓝盾（仍被 workflow/apps.py 引用）
-INIT_DEVOPS_TEMPLATE = os.environ.get("INIT_DEVOPS_TEMPLATE", False)
+FRONTEND_URL = os.environ.get("FRONTEND_URL", "")
 
 # APIGW（仍被 openapi/base_service/views/apigw.py 引用）
-BK_API_URL_TMPL = os.getenv("BK_API_URL_TMPL")
+API_URL_TEMPLATE = os.getenv("API_URL_TEMPLATE")
 
 # 文档
-BK_DOC_CENTER_HOST = os.getenv("BK_DOC_CENTER_HOST", "#")
-BK_DOC_URL = "{}/markdown/{{lang}}/ITSM/{{version}}/UserGuide/Introduce/README.md".format(
-    BK_DOC_CENTER_HOST
+DOC_CENTER_HOST = os.getenv("DOC_CENTER_HOST", "#")
+DOC_URL = "{}/markdown/{{lang}}/ITSM/{{version}}/UserGuide/Introduce/README.md".format(
+    DOC_CENTER_HOST
 )
-
-# TAPD（仍被 component/utils/auth.py 引用）
-TAPD_OAUTH_URL = os.environ.get("TAPD_OAUTH_URL", "")
 
 # 公共
-BK_DESKTOP_URL = os.environ.get("BK_DESKTOP_URL", "")
-FOOTER = os.getenv("BKAPP_FOOTER", None)
-BK_SHARED_RES_URL = os.getenv("BKPAAS_SHARED_RES_URL") or os.getenv(
-    "BKAPP_SHARED_RES_URL"
-)
-BK_PLATFORM_NAME = os.getenv("BKAPP_PLATFORM_NAME", "")
+FOOTER = os.getenv("FOOTER", None)
+SHARED_RES_URL = os.getenv("SHARED_RES_URL")
+PLATFORM_NAME = os.getenv("PLATFORM_NAME", "")
 
-# 企微webhook
+# 企微 webhook
 QW_WEB_HOOK_URL = os.getenv(
-    "BKAPP_QW_WEB_HOOK_URL",
+    "QW_WEB_HOOK_URL",
     "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key={}",
 )

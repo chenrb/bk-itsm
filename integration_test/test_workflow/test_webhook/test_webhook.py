@@ -29,7 +29,7 @@ class WebhookTestCase(BaseTestCase):
                 "desc": "",
                 "key": "bk_app_secret",
                 "select": True,
-                "value": settings.APP_TOKEN,
+                "value": settings.SECRET_KEY,
             },
             {
                 "check": "true",
@@ -109,7 +109,7 @@ class WebhookTestCase(BaseTestCase):
                     {"key": "bk_app_code", "value": settings.APP_CODE, "select": True},
                     {
                         "key": "bk_app_secret",
-                        "value": settings.APP_TOKEN,
+                        "value": settings.SECRET_KEY,
                         "select": True,
                     },
                     {

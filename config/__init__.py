@@ -11,7 +11,8 @@ PROJECT_ROOT, PROJECT_MODULE_NAME = os.path.split(PROJECT_PATH)
 BASE_DIR = PROJECT_ROOT
 
 APP_CODE = os.environ.get("APP_CODE", "bk_itsm")
-APP_TOKEN = os.environ.get("APP_TOKEN", "")
-SECRET_KEY = APP_TOKEN
+SECRET_KEY = os.environ.get("SECRET_KEY", "")
 
-__all__ = ["celery_app", "APP_CODE", "SECRET_KEY", "BASE_DIR", "PROJECT_ROOT"]
+DEBUG = os.environ.get("DEBUG", "false").lower() == "true"
+
+__all__ = ["celery_app", "APP_CODE", "SECRET_KEY", "BASE_DIR", "PROJECT_ROOT", "DEBUG"]

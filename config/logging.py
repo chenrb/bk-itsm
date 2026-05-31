@@ -2,7 +2,7 @@
 """日志配置"""
 import os
 
-from config import BASE_DIR  # noqa
+from config import BASE_DIR, DEBUG  # noqa
 
 LOG_DIR = os.path.join(BASE_DIR, "logs")
 os.makedirs(LOG_DIR, exist_ok=True)
@@ -40,6 +40,4 @@ LOGGING = {
     },
 }
 
-ENABLE_OTEL_TRACE = os.getenv("BKAPP_ENABLE_OTEL_TRACE", "0") == "1"
-DEBUG = os.environ.get("DEBUG", "false").lower() == "true"
 LOG_LEVEL = os.environ.get("LOG_LEVEL", "DEBUG" if DEBUG else "INFO")

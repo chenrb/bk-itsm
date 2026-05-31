@@ -24,7 +24,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 from django.apps import AppConfig
 from django.db.models import signals
-from django.conf import settings
 
 
 def app_ready_handler(sender, **kwarg):
@@ -40,17 +39,6 @@ def app_ready_handler(sender, **kwarg):
             is_draft=False,
             is_enabled=True,
         )
-
-    if settings.INIT_DEVOPS_TEMPLATE:
-        if not TaskSchema.objects.filter(component_type="DEVOPS").exists():
-            print("create devops task schema")
-            TaskSchema.objects.create(
-                component_type="DEVOPS",
-                name="蓝盾任务模板",
-                is_builtin=True,
-                is_draft=False,
-                is_enabled=True,
-            )
 
 
 class WorkflowConfig(AppConfig):

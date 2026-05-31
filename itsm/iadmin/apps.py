@@ -84,13 +84,13 @@ class IadminConfig(AppConfig):
 
     def ready(self):
         print("init redis settings")
-        if not hasattr(settings, "REDIS") and "BKAPP_REDIS_HOST" in os.environ:
+        if not hasattr(settings, "REDIS") and "REDIS_HOST" in os.environ:
             settings.REDIS = {
-                "host": os.getenv("BKAPP_REDIS_HOST"),
-                "port": os.getenv("BKAPP_REDIS_PORT"),
-                "password": os.getenv("BKAPP_REDIS_PASSWORD"),
-                "service_name": os.getenv("BKAPP_REDIS_SERVICE_NAME", "mymaster"),
-                "mode": os.getenv("BKAPP_REDIS_MODE", "single"),
-                "db": os.getenv("BKAPP_REDIS_DB", 0),
+                "host": os.getenv("REDIS_HOST"),
+                "port": os.getenv("REDIS_PORT"),
+                "password": os.getenv("REDIS_PASSWORD"),
+                "service_name": os.getenv("REDIS_SERVICE_NAME", "mymaster"),
+                "mode": os.getenv("REDIS_MODE", "single"),
+                "db": os.getenv("REDIS_DB", 0),
             }
         post_migrate.connect(app_ready_handler, sender=self)

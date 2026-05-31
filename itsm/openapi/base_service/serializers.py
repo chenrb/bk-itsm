@@ -306,7 +306,7 @@ class PostManSerializer(RemoteSystemSerializer):
         data = super(PostManSerializer, self).to_representation(instance)
         data["can_edit"] = True
         data["domain"] = (
-            instance.domain if instance.domain else settings.IAM_ESB_PAAS_HOST
+            instance.domain if instance.domain else settings.PLATFORM_API_URL
         )
         return data
 

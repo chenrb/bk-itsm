@@ -48,27 +48,22 @@ pre-commit install && pre-commit install --hook-type commit-msg
 Set in `.env` or `config/local_settings.py`:
 
 ```
-RUN_ENV=open          APP_CODE=bk_itsm       RUN_VER=open
-SECRET_KEY=12345678-1234-5678-1234-123456789012
-APP_TOKEN=12345678-1234-5678-1234-123456789012
-BK_PAAS_HOST=http://127.0.0.1
+APP_CODE=bk_itsm         SECRET_KEY=changeme-in-production
+RUN_VER=open             DEBUG=true
 BROKER_URL=redis://localhost:6379/0
-USE_IAM=false
-BKAPP_REDIS_HOST=localhost  BKAPP_REDIS_PORT=6379
-BK_MYSQL_NAME=bk_itsm_ci   BK_MYSQL_USER=root   BK_MYSQL_PASSWORD=root
-BK_MYSQL_HOST=localhost     BK_MYSQL_PORT=3306
-BK_MYSQL_TEST_NAME=bk_itsm_ci_test
-PLATFORM_API_BASE_URL=     # Optional: base URL for platform_client HTTP calls
+REDIS_HOST=localhost     REDIS_PORT=6379
+MYSQL_NAME=bk_itsm      MYSQL_USER=root       MYSQL_PASSWORD=root
+MYSQL_HOST=localhost     MYSQL_PORT=3306       MYSQL_TEST_NAME=bk_itsm_test
+PLATFORM_API_BASE_URL=   # Optional: base URL for platform_client HTTP calls
 ```
 
 ## Architecture
 
 ### Settings loading
 
-`settings.py` (root) is minimal — it installs pymysql, then does `from config.default import *`. `config/default.py` aggregates 11 sub-modules by concern:
+`settings.py` (root) is minimal — it installs pymysql, then does `from config.default import *`. `config/default.py` aggregates 10 sub-modules by concern:
 
 ```
-config/env.py          → base env vars (RUN_VER, DEBUG, BK_PAAS_HOST)
 config/apps.py         → INSTALLED_APPS, MIDDLEWARE, AUTHENTICATION_BACKENDS
 config/celery.py       → CELERY_IMPORTS, broker, serializer
 config/database.py     → DATABASES (MySQL via PyMySQL)
@@ -131,7 +126,7 @@ Five task modules registered in `CELERY_IMPORTS`: `ticket`, `service`, `sla_engi
 
 ### Database
 
-MySQL via PyMySQL. Test DB configured via `BK_MYSQL_TEST_NAME`. Each app has its own `migrations/` directory.
+MySQL via PyMySQL. Test DB configured via `MYSQL_TEST_NAME`. Each app has its own `migrations/` directory.
 
 ### Templates
 
