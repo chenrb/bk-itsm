@@ -24,28 +24,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
 from django.apps import AppConfig
-from django.db.models.signals import post_migrate
 
 from django.conf import settings
 from itsm.component.dlls.autodiscover import autodiscover_collections
-
-
-def app_ready_handler(sender, **kwargs):
-    from itsm.iadmin.models import SystemSettings
-    from itsm.postman.models import RemoteSystem
-
-    if SystemSettings.objects.filter(key="migrate_system_code").exists():
-        print('skip flush system code to upper')
-        return
-
-    print('flush system code to upper')
-    for rs in RemoteSystem.objects.all():
-        rs.code = rs.code.upper()
-        rs.save()
-
-    SystemSettings.objects.create(
-        key="migrate_system_code", value=1, type="DATETIME",
-    )
 
 
 class PostmanConfig(AppConfig):
@@ -55,5 +36,3 @@ class PostmanConfig(AppConfig):
         for path in settings.PRC_AUTO_DISCOVER_PATH:
             print('autodiscover rpc: %s' % path)
             autodiscover_collections(path)
-
-        post_migrate.connect(app_ready_handler, sender=self)

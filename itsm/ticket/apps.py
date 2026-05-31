@@ -30,15 +30,8 @@ __copyright__ = "Copyright © 2025 Tencent BlueKing. All Rights Reserved."
 # http://www.koopman.me/2015/01/django-signals-example/
 
 from django.apps import AppConfig
-from django.db.models.signals import post_migrate, post_save, pre_save
+from django.db.models.signals import post_save, pre_save
 from itsm.trigger.signal import post_action_finish
-
-
-def app_ready_handler(sender, **kwargs):
-    from itsm.ticket.models import TicketComment
-
-    TicketComment.fix_comments()
-    # Ticket.objects.upgrade_running_tickets()
 
 
 class TicketConfig(AppConfig):
@@ -48,12 +41,6 @@ class TicketConfig(AppConfig):
         from itsm.ticket.models import Ticket
         from itsm.ticket.handlers import before_ticket_status_updated, after_ticket_created, create_trigger_action_log
 
-        # 耗时数据迁移初始化方案：在启动celery的时候，下放到celery中，确保可以重入
-        # if sys.argv[1] == 'celery' and sys.argv[2] == 'worker':
-        #     print 'app[%s] ready in celery worker' % self.name
-        #     from itsm.ticket.tasks import auto_comment
-        #     auto_comment.delay()
-        post_migrate.connect(app_ready_handler, sender=self)
         post_save.connect(after_ticket_created, sender=Ticket)
         pre_save.connect(before_ticket_status_updated, sender=Ticket)
         post_action_finish.connect(create_trigger_action_log)

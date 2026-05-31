@@ -35,9 +35,7 @@ from django.apps import AppConfig
 from django.db.models.signals import post_migrate
 from itsm.service.signals.handlers import (
     register_builtin_approve_service,
-    register_builtin_iam_service,
     register_builtin_service,
-    register_builtin_bkbase_service,
 )
 
 
@@ -64,6 +62,4 @@ class ServiceConfig(AppConfig):
     def ready(self):
         post_migrate.connect(app_ready_handler, sender=self)
         post_migrate.connect(register_builtin_approve_service, sender=self)
-        post_migrate.connect(register_builtin_iam_service, sender=self)
         post_migrate.connect(register_builtin_service, sender=self)
-        post_migrate.connect(register_builtin_bkbase_service, sender=self)

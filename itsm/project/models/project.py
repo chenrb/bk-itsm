@@ -154,28 +154,6 @@ class Project(Model):
         except BaseException as error:
             print("init_default_project error， error is {}".format(error))
 
-    @classmethod
-    def init_lesscode_project(cls):
-
-        if Project.objects.filter(key="lesscode").exists():
-            return
-        try:
-            project = Project.objects.create(
-                key="lesscode", name="Lesscode", desc="蓝鲸低代码项目", creator="admin"
-            )
-            catalogs = copy.deepcopy(CATALOG)
-            for catalog in catalogs:
-                catalog["key"] = "{}_{}".format(project.key, catalog["key"])
-                catalog["parent_key"] = "{}_{}".format(
-                    project.key, catalog["parent_key"]
-                )
-            project.init_service_catalogs(catalogs)
-            project.init_project_settings()
-            project.init_project_sla()
-            project.init_custom_notify_template()
-        except BaseException as error:
-            print("init_default_project error， error is {}".format(error))
-
 
 class ProjectSettings(Model):
     type = models.CharField(_("类型"), max_length=LEN_NORMAL, default="FUNCTION")

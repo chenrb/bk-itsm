@@ -42,12 +42,6 @@ def app_ready_handler(sender, **kwargs):
     except Exception as e:
         print("init default project exception: %s" % e)
 
-    print("init lesscode project start")
-    try:
-        Project.init_lesscode_project()
-    except Exception as e:
-        print("init lesscode project exception: %s" % e)
-
 
 class ProjectConfig(AppConfig):
     name = "itsm.project"

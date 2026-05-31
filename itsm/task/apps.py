@@ -24,15 +24,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
 from django.apps import AppConfig
-from django.db.models.signals import post_migrate
-
-
-def app_ready_handler(sender, **kwargs):
-    pass
 
 
 class TaskConfig(AppConfig):
     name = "itsm.task"
-
-    def ready(self):
-        post_migrate.connect(app_ready_handler, sender=self)

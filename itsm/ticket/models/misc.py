@@ -23,7 +23,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
-import time
 import uuid
 
 import jsonfield
@@ -125,37 +124,6 @@ class TicketComment(models.Model):
 
     def __unicode__(self):
         return "{}({})".format(self.ticket.sn, self.stars)
-
-    @classmethod
-    def fix_comments(cls, *args, **kwargs):
-        """为之前结束的单据创建评论数据，未做迁移前只执行一次"""
-
-        from itsm.ticket.models import Ticket
-
-        start = time.time()
-        try:
-            uncommented_finished = (
-                Ticket.objects.filter(
-                    is_deleted=False, is_draft=False, current_status="FINISHED"
-                )
-                .exclude(
-                    id__in=TicketComment.objects.values_list("ticket_id", flat=True)
-                )
-                .values_list("id", flat=True)
-            )
-
-            TicketComment.objects.bulk_create(
-                [
-                    TicketComment(ticket_id=ticket_id)
-                    for ticket_id in uncommented_finished
-                ]
-            )
-            print(
-                "fix history ticket comments: %s, elapsed: %ss"
-                % (len(uncommented_finished), time.time() - start)
-            )
-        except Exception as e:
-            print("fix history ticket comments exception: %s" % e)
 
     @classmethod
     def ticket_comments(cls, ticket_ids):
