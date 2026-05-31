@@ -14,6 +14,9 @@ BK-ITSM (蓝鲸流程服务) is an IT Service Management application. Backend is
 pip install -r requirements.txt    # Install dependencies
 python manage.py runserver         # Dev server (requires MySQL + Redis + env vars)
 python manage.py migrate           # Run migrations
+# Use .venv for all Python commands:
+.venv/Scripts/python manage.py check       # System check
+.venv/Scripts/python manage.py makemigrations  # Generate migrations
 python manage.py test itsm.tests   # Run all tests (Django test runner)
 python manage.py test itsm.tests.workflow.test_workflow                                    # Single module
 python manage.py test itsm.tests.workflow.test_workflow.TestWorkflow.test_create_workflow  # Single method
@@ -159,4 +162,8 @@ GitHub Actions (`.github/workflows/django.yml`): Python 3.13 + MySQL + Redis →
 
 ## Refactoring
 
-Refactoring plans and history are in `docs/refactor/`. Phase 1 (去蓝鲸依赖) and Phase 2 (死代码清理) are complete. When modifying code during refactoring, follow the rules in `docs/refactor/plan.md`: always clean unused imports, dead dependencies, and stale config after deleting code.
+Refactoring plans and history are in `docs/refactor/`. Phase 1 (去蓝鲸依赖) and Phase 2 (死代码清理) are complete. P3 (迁移重置) has reset all migrations to a single `0001_initial` per app — existing databases must be dropped and recreated. When modifying code during refactoring, follow the rules in `docs/refactor/plan.md`: always clean unused imports, dead dependencies, and stale config after deleting code.
+
+## Virtual Environment
+
+Use `.venv` in the project root as the Python virtual environment. All `python` / `manage.py` commands should use `.venv/Scripts/python`.

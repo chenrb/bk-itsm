@@ -65,6 +65,17 @@ Phase 2 后发现的零散死代码清理。
 - 清理对应的序列化器、视图、URL、admin、manager 迁移方法
 - 创建 3 个 DROP TABLE 迁移（workflow/0053、service/0032、project/0008）
 
+### P3: 迁移重置
+
+删除全部历史迁移文件，从零生成干净的 `0001_initial.py`，项目作为全新项目对待（需 DROP DATABASE + CREATE）。
+
+- 删除 Pipeline 8 个子应用的 77 个历史迁移文件（2017-2021）
+- 为 19 个应用生成全新 `0001_initial.py`（14 ITSM + 5 Pipeline）
+  - `service` 因跨应用 FK 依赖自动拆分为 `0001_initial` + `0002_initial`
+- 3 个未注册 Pipeline 子应用（`django_signal_valve`、`contrib.statistics`、`contrib.periodic_task`）不生成迁移
+- `config/local_settings.py` 补充 `REDIS_*` 配置（`common/redis.py` 模块级引用需要）
+- 无升级路径：已部署实例必须 DROP DATABASE 后重新 `migrate`
+
 ### 验证状态
 
 零蓝鲸硬依赖残留（blueapps、blueking、apigw_manager、bk_notice_sdk、bkstorages、iam SDK、auth_iam、esb、apigw、bkchat、helper、core — 全部归零）。
@@ -76,6 +87,7 @@ Phase 2 后发现的零散死代码清理。
 1. **删除代码后必须清理未使用的 import** — 每次删除类/函数/变量后，检查文件中是否残留无引用的 import 语句，一并删除。
 2. **删除代码后必须清理依赖** — 如果删除的代码是某个 pip 包的唯一消费者，同步从 `requirements.txt` 中移除该包。
 3. **删除代码后必须清理配置** — 检查 `MIDDLEWARE`、`INSTALLED_APPS`、`CELERY_IMPORTS`、URL 路由、context_processors 等配置中是否有对已删除代码的引用，一并清理。
+4. **迁移策略** — 项目已重置为单次 `0001_initial` 迁移，后续 schema 变更使用标准 `makemigrations`/`migrate`。已部署实例需 DROP DATABASE + CREATE，无升级路径。
 
 ---
 
