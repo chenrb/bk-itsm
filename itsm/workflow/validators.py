@@ -791,7 +791,7 @@ class StateGlobalVariablesValidator:
         }
         refs = [output.get("ref_path") for output in outputs]
         deleted_variable = []
-        for ref, key in path_key_dict):
+        for ref, key in path_key_dict:
             if ref not in refs:
                 deleted_variable.append(key)
         workflow_fields = self.workflow.fields.filter(is_deleted=False)

@@ -80,7 +80,7 @@ class TicketEventLog(Event):
         verbose_name = _("单据流转日志")
         verbose_name_plural = _("单据流转日志")
         ordering = ("id",)
-        index_together = (("operate_at", "operator", "is_deleted"),)
+        indexes = [models.Index(fields=["operate_at", "operator", "is_deleted"])]
 
     def __unicode__(self):
         return "{}({})".format(self.ticket, self.from_state_id)

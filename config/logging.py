@@ -41,4 +41,5 @@ LOGGING = {
 }
 
 ENABLE_OTEL_TRACE = os.getenv("BKAPP_ENABLE_OTEL_TRACE", "0") == "1"
-LOG_LEVEL = os.environ.get("LOG_LEVEL", "DEBUG" if DEBUG else "INFO")  # noqa: F405
+DEBUG = os.environ.get("DEBUG", "false").lower() == "true"
+LOG_LEVEL = os.environ.get("LOG_LEVEL", "DEBUG" if DEBUG else "INFO")

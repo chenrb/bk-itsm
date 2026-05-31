@@ -30,3 +30,4 @@ build.yml
 .vscode
 
 pre-*-bkcodeai
+logs/

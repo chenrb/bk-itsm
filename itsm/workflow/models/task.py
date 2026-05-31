@@ -225,7 +225,7 @@ class TaskConfig(Model):
         app_label = "workflow"
         verbose_name = _("任务配置")
         verbose_name_plural = _("任务配置")
-        index_together = (
-            ("create_task_state", "workflow_id"),
-            ("execute_task_state", "workflow_id"),
-        )
+        indexes = [
+            models.Index(fields=["create_task_state", "workflow_id"]),
+            models.Index(fields=["execute_task_state", "workflow_id"]),
+        ]

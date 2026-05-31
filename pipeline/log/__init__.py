@@ -21,17 +21,30 @@ def setup(level=None):
     if level in set(logging._levelToName.values()):
         logger.setLevel(level)
 
-    logging._acquireLock()
-    try:
-        for hdl in logger.handlers:
-            if isinstance(hdl, EngineLogHandler):
-                break
-        else:
-            hdl = EngineLogHandler()
-            hdl.setLevel(logger.level)
-            logger.addHandler(hdl)
-    finally:
-        logging._releaseLock()
+    # Python 3.13+ removed _acquireLock/_releaseLock; use threading lock directly
+    import threading
+    lock = getattr(logging, '_lock', threading.Lock())
+    if hasattr(lock, '__enter__'):
+        with lock:
+            for hdl in logger.handlers:
+                if isinstance(hdl, EngineLogHandler):
+                    break
+            else:
+                hdl = EngineLogHandler()
+                hdl.setLevel(logger.level)
+                logger.addHandler(hdl)
+    else:
+        logging._acquireLock()
+        try:
+            for hdl in logger.handlers:
+                if isinstance(hdl, EngineLogHandler):
+                    break
+            else:
+                hdl = EngineLogHandler()
+                hdl.setLevel(logger.level)
+                logger.addHandler(hdl)
+        finally:
+            logging._releaseLock()
 
 
 default_app_config = "pipeline.log.apps.LogConfig"

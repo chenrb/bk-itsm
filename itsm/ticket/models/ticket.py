@@ -225,7 +225,7 @@ from itsm.component.utils.client_backend_query import (
     get_department_info,
     list_departments_info,
 )
-from platform_config import BaseTicket
+# BaseTicket was a BlueKing platform mixin (MoaConfig + BkchatConfig), removed in Phase 1
 
 from .basic import Model
 from ..utils import filter_sensitive_info
@@ -1296,7 +1296,7 @@ class Status(Model):
             ]
 
 
-class Ticket(Model, BaseTicket):
+class Ticket(Model):
     """工单表"""
 
     def __init__(self, *args, **kwargs):
@@ -1423,13 +1423,13 @@ class Ticket(Model, BaseTicket):
         verbose_name = _("工单")
         verbose_name_plural = _("工单")
         ordering = ("-id",)
-        index_together = (
-            ("create_at", "bk_biz_id", "service_id", "current_status", "service_type"),
-            ("service_id", "create_at"),
-            ("bk_biz_id", "service_id"),
-            ("creator", "create_at"),
-            ("current_status", "create_at"),
-        )
+        indexes = [
+            models.Index(fields=["create_at", "bk_biz_id", "service_id", "current_status", "service_type"]),
+            models.Index(fields=["service_id", "create_at"]),
+            models.Index(fields=["bk_biz_id", "service_id"]),
+            models.Index(fields=["creator", "create_at"]),
+            models.Index(fields=["current_status", "create_at"]),
+        ]
 
     def __unicode__(self):
         return "{}({})".format(self.title, self.sn)
@@ -5045,10 +5045,10 @@ class TicketOrganization(Model):
         app_label = "ticket"
         verbose_name = _("用户组织")
         verbose_name_plural = _("用户组织")
-        index_together = (
-            ("create_at", "username", "first_level_id"),
-            ("first_level_id", "create_at"),
-        )
+        indexes = [
+            models.Index(fields=["create_at", "username", "first_level_id"]),
+            models.Index(fields=["first_level_id", "create_at"]),
+        ]
 
 
 class TicketToTicket(Model):
