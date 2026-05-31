@@ -1669,46 +1669,6 @@ class TableManager(Manager):
         return self.create_table(table_data)
 
 
-class WorkflowSnapManager(models.Manager):
-    """
-    workflow 版本表级操作
-    """
-
-    def create_snapshot(self, workflow, operator=""):
-        """创建快照信息"""
-
-        # 统一key为string
-        states = {}
-        for item in list(workflow.states.values()):
-            # 固化state中处理角色为提单人的处理人列表为提单人
-            if item.get("processors_type") == "STARTER":
-                item.update(processors_type="PERSON", processors=dotted_name(operator))
-            states[str(item["id"])] = item
-
-        transitions = {
-            str(item["id"]): item for item in list(workflow.transitions.values())
-        }
-        fields = {
-            str(item["id"]): item
-            for item in list(workflow.fields.filter(is_valid=True).values())
-        }
-
-        tag = self.create(
-            workflow_id=workflow.id,
-            states=states,
-            master=workflow.master,
-            transitions=transitions,
-            notify_rule=workflow.notify_rule,
-            notify_freq=workflow.notify_freq,
-            fields=fields,
-        )
-
-        for item in workflow.notify.all():
-            tag.notify.add(item)
-
-        return tag
-
-
 class WorkflowVersionManager(Manager):
     """
     workflow 版本表级操作
@@ -1718,50 +1678,6 @@ class WorkflowVersionManager(Manager):
         from itsm.service.models import Service
 
         return Service.objects.filter(workflow_id=instance["id"]).count()
-
-    def get_or_create_version_from_workflow(self):
-        """抛弃旧的流程版本，合并流程快照到最后一个流程版本"""
-
-        from itsm.workflow.models import Workflow, WorkflowSnap, WorkflowVersion
-
-        total = Workflow._objects.all().count()
-        print("get_or_create_version_from_workflow, total workflow: %s" % total)
-
-        ver_for_snaps = {}
-        count = 0
-        # 创建流程最新版本，并聚合快照（被删除的流程相关的工单也需要迁移）
-        for workflow in Workflow._objects.all():
-            # workflow对应的快照
-            snaps = set(
-                WorkflowSnap.objects.filter(workflow_id=workflow.pk).values_list(
-                    "id", flat=True
-                )
-            )
-            count += 1
-            # 跳过已有版本的迁移（避免重复迁移）
-            try:
-                version = WorkflowVersion._objects.get(workflow_id=workflow.id)
-                print(
-                    "skip exist workflow version: {}({})".format(
-                        version.name, version.version_number
-                    )
-                )
-            except WorkflowVersion.DoesNotExist:
-                version = workflow.create_version("system")
-                print(
-                    "create workflow version: {}({})".format(
-                        version.name, version.version_number
-                    )
-                )
-
-            ver_for_snaps[version.pk] = snaps
-            print(
-                "update workflow: {}, cnt={}, workflow_number={}".format(
-                    workflow.name, len(snaps), count
-                )
-            )
-
-        return ver_for_snaps
 
     @transaction.atomic
     def upgrade_version(

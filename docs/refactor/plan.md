@@ -57,6 +57,14 @@ Phase 2 后发现的零散死代码清理。
 - 合并 `bunch.py` → `bk_bunch.py`（迁移唯一引用到 `bk_bunch.bunchify`）
 - 清理 `requirements.txt` 移除 2 个未使用包（`factory_boy`、`xlrd`）
 
+### P2-17: 移除废弃 Django 模型
+- 删除 `WorkflowSnap`、`DefaultField`（workflow deprecated.py，已迁移至 WorkflowVersion）
+- 删除 `OldSla`（service，已迁移至 sla app）
+- 删除 `ServiceProperty`、`PropertyRecord`（service，legacy 属性系统）
+- 删除 `CostomTab`（project，URL 已注释禁用）
+- 清理对应的序列化器、视图、URL、admin、manager 迁移方法
+- 创建 3 个 DROP TABLE 迁移（workflow/0053、service/0032、project/0008）
+
 ### 验证状态
 
 零蓝鲸硬依赖残留（blueapps、blueking、apigw_manager、bk_notice_sdk、bkstorages、iam SDK、auth_iam、esb、apigw、bkchat、helper、core — 全部归零）。

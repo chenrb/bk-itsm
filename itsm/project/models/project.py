@@ -207,20 +207,3 @@ class UserProjectAccessRecord(Model):
             self.updated_by = self.username
             self.save()
 
-
-class CostomTab(Model):
-    name = models.CharField(_("名称"), max_length=LEN_SHORT)
-    desc = models.CharField(_("描述"), max_length=LEN_LONG, null=True, blank=True)
-    project_key = models.CharField(_("项目key"), max_length=LEN_SHORT)
-    conditions = jsonfield.JSONField(
-        _("筛选条件"), default=EMPTY_DICT, null=True, blank=True
-    )
-    order = models.IntegerField(_("排序"), default=FIRST_ORDER)
-    is_deleted = models.BooleanField(_("是否软删除"), default=False, db_index=True)
-
-    def delete(self, using=None):
-        self.is_deleted = True
-        self.save()
-
-    def hard_delete(self, using=None):
-        super(Model, self).delete()

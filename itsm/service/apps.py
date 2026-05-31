@@ -43,24 +43,15 @@ from itsm.service.signals.handlers import (
 
 def app_ready_handler(sender, **kwargs):
     from itsm.service.models import (
-        # PropertyRecord,
         ServiceCatalog,
         ServiceCategory,
-        # ServiceProperty,
-        # OldSla,
         SysDict,
     )
     from itsm.component.constants import CATALOG
 
     try:
         ServiceCategory.init_service_data()
-        # ServiceProperty.init_service_data()
-        # PropertyRecord.init_service_data()
-        # OldSla.init_sla_from_property()
         SysDict.objects.init_builtin_dicts()
-        SysDict.objects.init_change_type_from_property()
-        SysDict.objects.init_event_type_from_property()
-        ServiceCatalog.objects.migrate_from_service_category()
         ServiceCatalog.objects.init_default_catalog(CATALOG)
     except Exception as e:
         print(traceback.format_exc())

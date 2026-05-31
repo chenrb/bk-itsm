@@ -24,7 +24,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
 from .common import *  # noqa
-from .deprecated import *  # noqa
 from .event import *  # noqa
 from .field import *  # noqa
 from .state import *  # noqa

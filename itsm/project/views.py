@@ -41,14 +41,12 @@ from itsm.project.models import (
     Project,
     ProjectSettings,
     UserProjectAccessRecord,
-    CostomTab,
     PUBLIC_PROJECT_PROJECT_KEY,
 )
 from itsm.project.serializers import (
     ProjectSerializer,
     ProjectSettingSerializer,
     ProjectMigrateSerializer,
-    CostomTabSerializer,
 )
 
 
@@ -206,80 +204,3 @@ class ProjectViewSet(component_viewsets.AuthModelViewSet):
         return Response()
 
 
-class CostomTabViewSet(component_viewsets.ModelViewSet):
-    serializer_class = CostomTabSerializer
-    queryset = CostomTab.objects.filter(is_deleted=False).order_by("order")
-
-    def get_queryset(self):
-        # 个人范畴资源：所有读写均限定为当前登录用户创建的 tab。
-        # 这样 get_object()/destroy/move 等通过 pk 查询时，跨用户访问会自然 404。
-        return self.queryset.filter(creator=self.request.user.username)
-
-    def get_personal_queryset(self):
-        return self.get_queryset()
-
-    def list(self, request, *args, **kwargs):
-        project_key = self.request.query_params.get("project_key", "")
-        if not project_key:
-            raise ValidationError(_("project_key:该字段是必填项"))
-        queryset = self.get_personal_queryset().filter(project_key=project_key)
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
-
-    def destroy(self, request, *args, **kwargs):
-        """
-        删除tab
-        """
-        # 1.获取当前tab的序号
-        instance = self.get_object()
-        order = instance.order
-        project_key = instance.project_key
-        # 2.删除当前tab
-        self.perform_destroy(instance)
-        # 3.将序号>当前序号的tab的序号批量-1
-        tabs = self.get_personal_queryset().filter(
-            order__gt=order, project_key=project_key
-        )
-        for tab in tabs:
-            tab.order -= 1
-        CostomTab.objects.bulk_update(tabs, ["order"])
-
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-    @action(detail=True, methods=["post"])
-    def move(self, request, *args, **kwargs):
-        """
-        移动tab到指定位置
-        """
-        # 1.获取移动目标序号
-        new_order = request.data.get("new_order")
-        instance = self.get_object()
-        # 向前移动
-        if instance.order > new_order:
-            # 2.将[new_order, pk)的tab的序号批量+1
-            tabs = self.get_personal_queryset().filter(
-                order__gte=new_order,
-                order__lt=instance.order,
-                project_key=instance.project_key,
-            )
-            for tab in tabs:
-                tab.order += 1
-            CostomTab.objects.bulk_update(tabs, ["order"])
-        # 向后移动
-        elif instance.order < new_order:
-            # 2.将(pk, new_order]的tab的序号批量-1
-            tabs = self.get_personal_queryset().filter(
-                order__gt=instance.order,
-                order__lte=new_order,
-                project_key=instance.project_key,
-            )
-            for tab in tabs:
-                tab.order -= 1
-            CostomTab.objects.bulk_update(tabs, ["order"])
-        # 不改变顺序
-        else:
-            return Response()
-        # 3.将当前tab的序号置为目标序号
-        instance.order = new_order
-        instance.save()
-        return Response()

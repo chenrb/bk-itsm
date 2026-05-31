@@ -61,7 +61,6 @@ from itsm.service.models import (
     CatalogService,
     DictData,
     Favorite,
-    OldSla,
     Service,
     ServiceCatalog,
     ServiceCategory,
@@ -247,66 +246,6 @@ class ServiceCatalogShortcutSerializer(serializers.ModelSerializer):
             "parent_id",
             "parent_name",
         )
-
-
-class SlaSerializer(serializers.ModelSerializer):
-    """服务级别序列化"""
-
-    name = serializers.CharField(
-        required=True,
-        error_messages={"blank": _("名称为必填项")},
-        max_length=8,
-        validators=[
-            UniqueValidator(
-                queryset=OldSla.objects.all(), message=_("服务级别名已存在，请重新输入")
-            ),
-            name_validator,
-        ],
-    )
-    key = serializers.CharField(required=False, max_length=LEN_LONG, allow_blank=True)
-    level = serializers.ChoiceField(
-        choices=OldSla.level_choices, error_messages={"invalid_choice": _("选项不合法")}
-    )
-    resp_time = serializers.CharField(
-        required=True, error_messages={"blank": _("响应时间为必填项")}
-    )
-    deal_time = serializers.CharField(
-        required=True, error_messages={"blank": _("处理时间为必填项")}
-    )
-    desc = serializers.CharField(required=False, max_length=LEN_LONG, allow_blank=True)
-
-    class Meta:
-        model = OldSla
-        fields = (
-            "id",
-            "key",
-            "name",
-            "level",
-            "resp_time",
-            "deal_time",
-            "desc",
-            "is_builtin",
-        )
-
-    def create(self, validated_data):
-        validated_data["key"] = OldSla.get_unique_key(validated_data["name"])
-        return super(SlaSerializer, self).create(validated_data)
-
-    def validate_resp_time(self, value):
-        """resp_time校验"""
-        time_validator(value)
-        return value
-
-    def validate_deal_time(self, value):
-        """deal_time校验"""
-        time_validator(value)
-        return value
-
-    def to_representation(self, instance):
-        data = super(SlaSerializer, self).to_representation(instance)
-        data.update({"desc": _(data["desc"])})
-        data.update({"name": _(data["name"])})
-        return data
 
 
 class ServiceSlaSerializer(serializers.ModelSerializer):

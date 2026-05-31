@@ -26,7 +26,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from django.contrib import admin
 from mptt.admin import MPTTModelAdmin
 
-from itsm.service.models import Service, ServiceCatalog, OldSla
+from itsm.service.models import Service, ServiceCatalog
 
 
 class ServiceCatalogAdmin(MPTTModelAdmin):
@@ -52,16 +52,5 @@ class ServiceAdmin(admin.ModelAdmin):
     )
 
 
-class SlaAdmin(admin.ModelAdmin):
-    list_display = (
-        "id",
-        "name",
-        "level",
-        "resp_time",
-        "deal_time",
-    )
-
-
 admin.site.register(ServiceCatalog, ServiceCatalogAdmin)
 admin.site.register(Service, ServiceAdmin)
-admin.site.register(OldSla, SlaAdmin)

@@ -47,12 +47,6 @@ class CatalogQuerySet(QuerySet):
         return self.select_related("parent")
 
 
-class SlaManager(managers.Manager):
-    """Sla管理器"""
-
-    pass
-
-
 class CatalogServiceManager(managers.Manager):
     """服务目录管理器"""
 
@@ -253,56 +247,6 @@ class ServiceManager(managers.Manager):
             print("upgrade non_bind_flows version: %s" % non_bind_flow)
             WorkflowVersion.objects.upgrade_version(non_bind_flow.id, **kwargs)
 
-    def get_or_create_service_and_catalog_from_version(self, *args, **kwargs):
-        """创建服务条目并绑定到服务目录
-        排除草稿流程，仅创建有效流程的服务项
-        """
-
-        from itsm.workflow.models import WorkflowVersion
-        from itsm.service.models import OldSla, ServiceCatalog, CatalogService
-
-        ver_for_service = {}
-
-        print("Service.get_or_create_service_and_catalog_from_version")
-        for ver in WorkflowVersion._objects.all():
-            # 排除草稿流程
-            if ver.is_draft:
-                print("skip draft workflow version: %s(%s)" % (ver.name, ver.flow_type))
-                continue
-
-            print("create service item for version: %s(%s)" % (ver.name, ver.flow_type))
-            obj, created = self.get_or_create(
-                defaults={
-                    "key": ver.flow_type,
-                    "sla": OldSla.objects.get(name="三级", level=1),
-                    "desc": ver.desc,
-                    "is_deleted": ver.is_deleted,
-                },
-                **{"name": ver.name, "workflow": ver},  # noqa
-            )
-
-            # 关联目录
-            try:
-                catalog = ServiceCatalog._objects.get(
-                    key=ver.extras["service_property"]
-                    .get("public", {})
-                    .get("service_category")
-                )
-
-                catalog_service, created = CatalogService.objects.get_or_create(
-                    service=obj, catalog=catalog
-                )
-
-                ver_for_service[ver.pk] = catalog_service
-
-                print(
-                    "create service({}) and bind catalog({})".format(obj.id, catalog.id)
-                )
-            except ServiceCatalog.DoesNotExist:
-                print("catalog not found: {} - {}".format(ver.id, ver.name))
-
-        return ver_for_service
-
     def clone(self, tag_data, username, catalog_id=None):
         from itsm.workflow.models import Workflow
 
@@ -400,76 +344,15 @@ class SysDictManager(managers.Manager):
                 DictData.create_builtin_dicts_ordered_data(obj, json_data)
 
     def init_change_type_from_property(self):
-        """迁移变更类型到数据字典：CHANGE_TYPE"""
-
-        if self.model._objects.exists():
-            print("Service exists, skip init_change_type_from_property")
-            return
-
-        print("Service.init_change_type_from_property")
-        from itsm.service.models import ServiceProperty, PropertyRecord, DictData
-
-        change_type = self.get(key="CHANGE_TYPE")
-
-        try:
-            property = ServiceProperty.objects.get(key="change_type")
-            for record in PropertyRecord.objects.filter(service_property=property):
-                DictData.create_item(
-                    dict_table=change_type,
-                    key=record.key,
-                    name=record.data.get("level"),
-                    is_deleted=record.is_deleted,
-                    is_readonly=True,
-                )
-        except ServiceProperty.DoesNotExist:
-            # 全新安装，不需要迁移数据
-            pass
+        """数据已迁移至 SysDict，此方法不再需要"""
+        pass
 
     def init_event_type_from_property(self):
-        """迁移事件类型到数据字典：CHANGE_TYPE"""
-
-        if self.model._objects.exists():
-            print("Service exists, skip init_event_type_from_property")
-            return
-
-        print("Service.init_event_type_from_property")
-        from itsm.service.models import ServiceProperty, PropertyRecord, DictData
-
-        event_type = self.get(key="EVENT_TYPE")
-        event_type_fault = event_type.dict_data.get(key="fault")
-
-        try:
-            property = ServiceProperty.objects.get(key="event_type")
-
-            for record in PropertyRecord.objects.filter(service_property=property):
-                if record.data.get("level") == 2:
-                    item_level2 = DictData.create_item(
-                        dict_table=event_type,
-                        key=record.key,
-                        name=record.data.get("name"),
-                        is_deleted=record.is_deleted,
-                        is_readonly=True,
-                        parent=event_type_fault,
-                    )
-
-                    for record in PropertyRecord.objects.filter(
-                        service_property=property
-                    ):
-                        if record.data.get("level") == 3:
-                            DictData.create_item(
-                                dict_table=event_type,
-                                key=record.key,
-                                name=record.data.get("name"),
-                                is_deleted=record.is_deleted,
-                                is_readonly=True,
-                                parent=item_level2,
-                            )
-        except ServiceProperty.DoesNotExist:
-            # 全新安装，不需要迁移数据
-            pass
+        """数据已迁移至 SysDict，此方法不再需要"""
+        pass
 
 
-class BaseMpttManager(managers.BaseTreeManager):
+class BaseMpttManager(managers.BaseTreeHandler):
     pass
 
 
@@ -481,63 +364,8 @@ class ServiceCatalogManager(BaseMpttManager):
     """服务目录管理器"""
 
     def migrate_from_service_category(self):
-        """服务目录、数据字典概念引入后的数据迁移"""
-
-        if self.model._objects.exists():
-            print("ServiceCatalog exists, skip migrate_from_service_category")
-            return
-
-        from itsm.service.models import ServiceProperty
-
-        try:
-            service_category = ServiceProperty._objects.get(key="service_category")
-        except ServiceProperty.DoesNotExist:
-            print("skip migrate_from_service_category")
-            return
-
-        from itsm.service.models import PropertyRecord
-
-        service_categories = PropertyRecord._objects.filter(
-            service_property=service_category
-        )
-
-        if self.filter(key="root", is_deleted=False).exists():
-            print("skip exist migrate_from_service_category")
-            return
-
-        root = self.model.create_root(key="root", name=_("根目录"), is_deleted=False)
-
-        print("migrate service_category to service_catalog")
-        for level1 in service_categories:
-            if level1.data.get("level") == 1:
-                grandfather = self.model.create_catalog(
-                    key=level1.key,
-                    name=level1.data.get("name"),
-                    parent=root,
-                    is_deleted=level1.is_deleted,
-                )
-                for level2 in service_categories:
-                    if (
-                        level2.data.get("level") == 2
-                        and level2.data.get("parent_key") == grandfather.key
-                    ):
-                        father = self.model.create_catalog(
-                            key=level2.key,
-                            name=level2.data.get("name"),
-                            parent=grandfather,
-                            is_deleted=level2.is_deleted,
-                        )
-                        for level3 in service_categories:
-                            if (
-                                level3.data.get("level") == 3
-                                and level3.data.get("parent_key") == father.key
-                            ):
-                                self.model.create_catalog(
-                                    key=level3.key,
-                                    name=level3.data.get("name"),
-                                    parent=father,
-                                    is_deleted=level3.is_deleted,
-                                )
+        """数据已迁移至 ServiceCatalog，此方法不再需要"""
+        pass
 
     def init_default_catalog(self, catalog, ignore_exists=False):
 

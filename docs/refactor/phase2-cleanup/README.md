@@ -125,8 +125,8 @@
 
 | 指标 | 数值 |
 |------|------|
-| 删除文件 | ~148+ |
-| 删除代码行 | ~13,800+ |
+| 删除文件 | ~150+ |
+| 删除代码行 | ~14,500+ |
 | 删除目录 | ~20+ |
 | 删除 Django app | 7 个 (auth_iam, notice, helper, + 3 未用第三方) |
-| 删除 DB 表 | 2 个 (task_sops_task, task_sub_task) |
+| 删除 DB 表 | 7 个 (task_sops_task, task_sub_task, + 5 废弃模型) |

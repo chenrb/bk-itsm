@@ -57,7 +57,6 @@ from itsm.service.models import (
     CatalogService,
     DictData,
     Favorite,
-    OldSla,
     Service,
     ServiceCatalog,
     ServiceCategory,
@@ -76,7 +75,6 @@ from itsm.service.serializers import (
     ServiceCatalogShortcutSerializer,
     ServiceCategorySerializer,
     ServiceSerializer,
-    SlaSerializer,
     SysDictSerializer,
     DictKeySerializer,
     ServiceConfigSerializer,
@@ -339,24 +337,6 @@ class CatalogServiceViewSet(component_viewsets.ReadOnlyModelViewSet):
             obj.order = FIRST_ORDER + order
         bulk_update(catalog_services, update_fields=["order"])
         return Response()
-
-
-class SlaViewSet(component_viewsets.ModelViewSet):
-    """SLA视图集合"""
-
-    serializer_class = SlaSerializer
-    queryset = OldSla.objects.all()
-    pagination_class = None
-    permission_classes = (perm.IsAdmin,)
-
-    @action(detail=False, methods=["get"])
-    def get_level_choice(self, request, *args, **kwargs):
-        return Response(
-            [
-                {"key": choice[0], "name": _(choice[1])}
-                for choice in OldSla.level_choices
-            ]
-        )
 
 
 class ServiceViewSet(component_viewsets.AuthModelViewSet):
