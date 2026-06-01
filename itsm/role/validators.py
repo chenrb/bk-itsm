@@ -27,7 +27,6 @@ from django.utils.translation import gettext as _
 from rest_framework import serializers
 
 from itsm.component.constants import DEFAULT_PROJECT_PROJECT_KEY
-from itsm.component.utils.basic import list_by_separator
 from itsm.component.utils.client_backend_query import get_bk_users
 from itsm.role.models import RoleType, UserRole
 
@@ -43,7 +42,7 @@ class UserRoleValidator:
         name = value.get("name", "")
         access = value.get("access", "")
         project_key = value.get("project_key", DEFAULT_PROJECT_PROJECT_KEY)
-        members = list_by_separator(value.get("members", ""))
+        members = value.get("members", [])
 
         if getattr(self.role, "id", None) != value.get("id"):
             raise serializers.ValidationError(_("角色 ID 异常"))

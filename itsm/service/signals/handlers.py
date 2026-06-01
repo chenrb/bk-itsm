@@ -82,4 +82,21 @@ def register_builtin_service(sender, **kwargs):
         if UserRole.objects.filter(role_key=new_system.get("role_key")).exists():
             continue
 
-        UserRole.objects.create(**new_system)
+        member_names = new_system.pop("members", "")
+        owner_names = new_system.pop("owners", "")
+        instance = UserRole.objects.create(**new_system)
+
+        from django.contrib.auth import get_user_model
+        User = get_user_model()
+        if member_names:
+            instance.members.set(
+                User.objects.filter(
+                    username__in=[u for u in member_names.split(",") if u]
+                )
+            )
+        if owner_names:
+            instance.owners.set(
+                User.objects.filter(
+                    username__in=[u for u in owner_names.split(",") if u]
+                )
+            )

@@ -31,11 +31,10 @@ from itsm.component.constants import (
     ACCESS_NAMES,
     LEN_MIDDLE,
     LEN_NORMAL,
-    LEN_XX_LONG,
     LEN_SHORT,
 )
 from itsm.component.drf.serializers import DynamicFieldsModelSerializer
-from itsm.component.utils.basic import dotted_name, list_by_separator, normal_name
+from itsm.component.utils.basic import list_by_separator
 from itsm.role.models import RoleType, UserRole
 
 from .validators import UserRoleValidator
@@ -76,13 +75,17 @@ class UserRoleSerializer(DynamicFieldsModelSerializer):
         max_length=LEN_NORMAL,
         error_messages={"blank": _("请输入自定义角色名")},
     )
-    members = serializers.CharField(
+    members = serializers.ListField(
+        child=serializers.CharField(),
         required=True,
-        max_length=LEN_XX_LONG,
-        error_messages={"blank": _("请指定角色下的人员")},
+        allow_empty=False,
+        error_messages={"empty": _("请指定角色下的人员")},
     )
-    owners = serializers.CharField(
-        required=False, max_length=LEN_XX_LONG, allow_blank=True
+    owners = serializers.ListField(
+        child=serializers.CharField(),
+        required=False,
+        allow_empty=True,
+        default=list,
     )
     access = serializers.CharField(
         required=False, allow_null=True, allow_blank=True, max_length=LEN_MIDDLE
@@ -123,25 +126,24 @@ class UserRoleSerializer(DynamicFieldsModelSerializer):
         data = super(UserRoleSerializer, self).to_internal_value(data)
 
         data["role_type"] = data.get("role_type", "").upper()
-        data["members"] = dotted_name(data["members"])
-
-        if "owners" in data:
-            data["owners"] = dotted_name(data["owners"])
 
         return data
 
     def to_representation(self, instance):
         data = super(UserRoleSerializer, self).to_representation(instance)
 
-        data["owners"] = normal_name(data.get("owners"))
+        data["owners"] = ",".join(
+            instance.owners.values_list("username", flat=True)
+        )
         data["name"] = _(data["name"])
         data["desc"] = _(data["desc"] or "")
 
-        # 支持动态字段渲染
         if "members" in data:
-            members = data.get("members")
-            data["count"] = len(list_by_separator(members))
-            data["members"] = normal_name(members)
+            member_list = list(
+                instance.members.values_list("username", flat=True)
+            )
+            data["count"] = len(member_list)
+            data["members"] = ",".join(member_list)
 
         if "access" in data:
             data["access_name"] = _(
@@ -154,6 +156,24 @@ class UserRoleSerializer(DynamicFieldsModelSerializer):
             )
         return self.update_auth_actions(instance, data)
 
+    def create(self, validated_data):
+        members = validated_data.pop("members", [])
+        owners = validated_data.pop("owners", [])
+        instance = super(UserRoleSerializer, self).create(validated_data)
+        User = get_user_model()
+        if members:
+            instance.members.set(User.objects.filter(username__in=members))
+        if owners:
+            instance.owners.set(User.objects.filter(username__in=owners))
+        return instance
+
     def update(self, instance, validated_data):
+        members = validated_data.pop("members", None)
+        owners = validated_data.pop("owners", None)
         instance = super(UserRoleSerializer, self).update(instance, validated_data)
+        User = get_user_model()
+        if members is not None:
+            instance.members.set(User.objects.filter(username__in=members))
+        if owners is not None:
+            instance.owners.set(User.objects.filter(username__in=owners))
         return instance

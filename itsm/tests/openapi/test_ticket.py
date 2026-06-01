@@ -123,7 +123,6 @@ class TicketOpenTest(TestCase):
         role = UserRole.objects.create(
             role_type="IAM",
             name="分级管理员",
-            members="",
             role_key="rating_manager",
             access="",
         )

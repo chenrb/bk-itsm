@@ -102,7 +102,8 @@ def weekly_statical():
         return
 
     try:
-        receivers = UserRole.objects.get(role_key=ADMIN_SUPERUSER_KEY).members
+        role = UserRole.objects.get(role_key=ADMIN_SUPERUSER_KEY)
+        receivers = ",".join(role.members.values_list("username", flat=True))
     except UserRole.DoesNotExist:
         logger.info("统计日报发送错误, 没有超级管理员配置")
         return

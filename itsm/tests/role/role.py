@@ -33,6 +33,7 @@ import sys
 import datetime
 
 
+from django.contrib.auth import get_user_model
 from django.test import TestCase
 
 from itsm.component.utils.iam_stub import IamRequest
@@ -51,16 +52,20 @@ class UserRoleTest(TestCase):
             "name": "role_create_test_{}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")),
             "role_type": "GENERAL",
             "role_key": "UNIQUE_{}".format(datetime.datetime.now().microsecond),
-            "members": "admin,itsm_admin",
             "access": "",
             "creator": self.operator,
+            "updated_by": self.operator,
         }
 
     def test_create_role(self):
         """
         测试创建服务
         """
+        User = get_user_model()
         self.role = UserRole.objects.create(**self.data)
+        self.role.members.set(
+            User.objects.filter(username__in=["admin", "itsm_admin"])
+        )
         self.assertTrue(isinstance(self.role, UserRole))
 
     def test_create_role_actions_auth(self):

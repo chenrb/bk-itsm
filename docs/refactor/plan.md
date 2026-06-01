@@ -160,6 +160,24 @@ Phase 2 后发现的零散死代码清理。
 
 ---
 
+### P7: UserRole M2M 重构
+
+将 `UserRole.members`/`UserRole.owners` 从 TextField（逗号分隔用户名）迁移到 ManyToManyField，修正数据建模。
+
+- **字段变更**：`TextField` → `ManyToManyField(settings.AUTH_USER_MODEL)`
+- **查询重写**：`members__contains=dotted_name(username)` → `members__username=username`（6 个类方法）
+- **`is_itsm_superuser`**：从 `get().members` 字符串匹配改为 `filter(members__username=).exists()`
+- **`get_users_by_type`**（GENERAL 分支）：从逗号拼接改为 M2M 查询
+- **`is_obj_manager`**：override `ObjectManagerMixin`，用 M2M filter 替代字符串 `in` 检查
+- **`init_builtin_user_roles`**：`get_or_create` 后 `members.set()`/`owners.set()`
+- **Serializer**：`CharField` → `ListField`，API 输出保持逗号分隔字符串（前端不变），新增 `create`/`update` 处理 M2M
+- **Validator**：`list_by_separator()` → 直接取 list
+- **Signal handler**：`UserRole.objects.create(**new_system)` → pop M2M 字段后 create + set
+- **Ticket tasks**：`.members` → `.members.values_list("username", flat=True)`
+- **迁移**：更新 `0001_initial.py`，删除 `0002`（TextField 临时迁移）
+
+---
+
 ## 待规划阶段
 
 <!-- 在此添加新的重构计划 -->

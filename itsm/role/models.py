@@ -41,7 +41,6 @@ from itsm.component.constants import (
     EMPTY_STRING,
     LEN_MIDDLE,
     LEN_NORMAL,
-    LEN_XX_LONG,
     ROLE_CHOICES,
     USER_ROLE_CHOICES,
     PREFIX_KEY,
@@ -51,7 +50,7 @@ from itsm.component.constants import (
 from itsm.component.drf.mixins import ObjectManagerMixin
 from itsm.component.db import managers
 from itsm.component.platform_client.http import client_backend
-from itsm.component.utils.basic import dotted_name, list_by_separator
+from itsm.component.utils.basic import list_by_separator
 from itsm.component.utils.client_backend_query import (
     get_bk_business,
     get_department_users,
@@ -154,8 +153,18 @@ class UserRole(ObjectManagerMixin, Model):
         _("角色唯一标识"), max_length=LEN_MIDDLE, default=EMPTY_STRING
     )
     name = models.CharField(_("角色命名"), max_length=LEN_NORMAL)
-    members = models.TextField(_("角色组成人员"), default=EMPTY_STRING)
-    owners = models.TextField(_("负责人"), default=EMPTY_STRING)
+    members = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name="user_roles",
+        blank=True,
+        verbose_name=_("角色组成人员"),
+    )
+    owners = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name="owned_roles",
+        blank=True,
+        verbose_name=_("负责人"),
+    )
     access = models.CharField(_("对应服务"), max_length=LEN_MIDDLE)
     desc = models.CharField(
         _("用户角色描述"),
@@ -183,24 +192,41 @@ class UserRole(ObjectManagerMixin, Model):
     def __unicode__(self):
         return "{}({})".format(self.name, self.pk)
 
+    def is_obj_manager(self, username):
+        """Override ObjectManagerMixin — M2M 版本"""
+        return username == self.creator or self.owners.filter(
+            username=username
+        ).exists()
+
     @classmethod
     def init_builtin_user_roles(cls, *args, **kwargs):
         """用户管理角色初始化"""
+        from django.contrib.auth import get_user_model
+
+        User = get_user_model()
         for role in USER_ROLE_CHOICES:
-            members = role[4]
-            if role[0] == "SUPERUSER":
-                members = ",{},".format(",".join(settings.INIT_SUPERUSER))
             try:
-                cls.objects.get_or_create(
+                instance, created = cls.objects.get_or_create(
+                    role_key=role[0],
+                    role_type=role[2],
                     defaults={
-                        "desc": role[5],
-                        "members": members,
                         "name": role[1],
                         "access": role[3],
+                        "desc": role[5],
+                        "creator": "admin",
+                        "updated_by": "admin",
                     },
-                    **{"role_key": role[0], "role_type": role[2]}
                 )
-            except BaseException as error:
+                if created:
+                    if role[0] == "SUPERUSER":
+                        usernames = list(settings.INIT_SUPERUSER)
+                    else:
+                        usernames = [u for u in role[4].split(",") if u]
+                    users = [User.objects.get_or_create(username=u)[0] for u in usernames]
+                    instance.members.set(users)
+                    admin_user = User.objects.get_or_create(username="admin")[0]
+                    instance.owners.set([admin_user])
+            except Exception as error:
                 print(
                     "init_builtin_user_roles error role %s error %s"
                     % (role, str(error))
@@ -209,7 +235,7 @@ class UserRole(ObjectManagerMixin, Model):
     @classmethod
     def has_access(cls, username, access, role_type="ADMIN"):
         return cls.objects.filter(
-            role_type=role_type, members__contains=dotted_name(username), access=access
+            role_type=role_type, members__username=username, access=access
         ).exists()
 
     @classmethod
@@ -217,7 +243,7 @@ class UserRole(ObjectManagerMixin, Model):
         """查询用户页面权限"""
 
         access_list = cls.objects.filter(
-            members__contains=dotted_name(username), role_type="ADMIN"
+            members__username=username, role_type="ADMIN"
         ).values_list("role_key", flat=True)
 
         return list(access_list)
@@ -225,27 +251,26 @@ class UserRole(ObjectManagerMixin, Model):
     @classmethod
     def is_statics_manager(cls, username):
         return cls.objects.filter(
-            members__contains=dotted_name(username), role_key=ADMIN_STATICS_MANAGER_KEY
+            members__username=username, role_key=ADMIN_STATICS_MANAGER_KEY
         ).exists()
 
     @classmethod
     def is_workflow_manager(cls, username):
         """判断是否是流程管理员"""
         return cls.objects.filter(
-            members__contains=dotted_name(username), role_key=WORKFLOW_SUPERUSER_KEY
+            members__username=username, role_key=WORKFLOW_SUPERUSER_KEY
         ).exists()
 
     @classmethod
     def is_itsm_superuser(cls, username):
         """判断是否itsm超级管理员"""
-        return (
-            dotted_name(username)
-            in cls.objects.get(role_key=ADMIN_SUPERUSER_KEY).members
-        )
+        return cls.objects.filter(
+            role_key=ADMIN_SUPERUSER_KEY, members__username=username
+        ).exists()
 
     @classmethod
     def get_general_role_by_user(cls, username):
-        return cls.objects.filter(members__contains=username).values("role_type", "id")
+        return cls.objects.filter(members__username=username).values("role_type", "id")
 
     @classmethod
     def get_cmdb_role_by_user(cls, username):
@@ -386,8 +411,11 @@ class UserRole(ObjectManagerMixin, Model):
                     return list_by_separator(cmdb_users)
 
                 if user_type == "GENERAL":
-                    general_users = ",".join([role.members for role in roles])
-                    return list_by_separator(general_users)
+                    return list(
+                        UserRole.objects.filter(id__in=roles)
+                        .values_list("members__username", flat=True)
+                        .distinct()
+                    )
 
         if user_type in ["PERSON", "EMPTY", "VARIABLE"] and users:
             return list_by_separator(users)
