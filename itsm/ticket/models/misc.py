@@ -25,7 +25,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import uuid
 
-import jsonfield
 from django.conf import settings
 from django.db import models, transaction
 from django.utils.crypto import get_random_string
@@ -33,9 +32,7 @@ from django.utils.translation import gettext as _
 from mptt.fields import TreeForeignKey
 
 from itsm.component.constants import (
-    EMPTY_DICT,
     EMPTY_INT,
-    EMPTY_LIST,
     EMPTY_STRING,
     LEN_LONG,
     LEN_NORMAL,
@@ -55,8 +52,8 @@ class TicketTemplate(models.Model):
     service = models.CharField(
         _("对应服务主键"), default=EMPTY_STRING, max_length=LEN_NORMAL
     )
-    template = jsonfield.JSONField(
-        _("单据模板字段"), default=EMPTY_LIST, null=True, blank=True
+    template = models.JSONField(
+        _("单据模板字段"), default=list, null=True, blank=True
     )
 
     class Meta:
@@ -74,8 +71,8 @@ class TicketStateDraft(models.Model):
     creator = models.CharField(_("创建人"), max_length=LEN_NORMAL)
     ticket_id = models.IntegerField(_("单据id"))
     state_id = models.IntegerField(_("节点id"))
-    draft = jsonfield.JSONField(
-        _("单据节点草稿字段"), default=EMPTY_LIST, null=True, blank=True
+    draft = models.JSONField(
+        _("单据节点草稿字段"), default=list, null=True, blank=True
     )
 
     class Meta:
@@ -317,7 +314,7 @@ class TicketGlobalVariable(models.Model):
 
     key = models.CharField(_("变量关键字"), max_length=LEN_LONG)
     name = models.CharField(_("变量名"), max_length=LEN_NORMAL, default=EMPTY_STRING)
-    value = jsonfield.JSONField(_("变量值"), default=EMPTY_DICT)
+    value = models.JSONField(_("变量值"), default=dict)
 
     state_id = models.IntegerField(_("关联节点"), null=True, blank=True)
     ticket_id = models.IntegerField(_("关联单据"), null=True, blank=True, db_index=True)

@@ -27,7 +27,6 @@ import json
 import os
 
 import jmespath
-import jsonfield
 import jsonschema
 from django.conf import settings
 from django.db import models
@@ -36,8 +35,6 @@ from django.utils.translation import gettext as _
 
 from common.log import logger
 from itsm.component.constants import (
-    EMPTY_DICT,
-    EMPTY_LIST,
     EMPTY_STRING,
     LEN_LONG,
     LEN_NORMAL,
@@ -123,14 +120,14 @@ class RemoteSystem(Model):
         blank=True,
     )
     is_activated = models.BooleanField(_("是否启用"), default=False)
-    headers = jsonfield.JSONField(
-        _("系统公共头部"), default=EMPTY_LIST, null=True, blank=True
+    headers = models.JSONField(
+        _("系统公共头部"), default=list, null=True, blank=True
     )
-    cookies = jsonfield.JSONField(
-        _("系统公共cookies"), default=EMPTY_LIST, null=True, blank=True
+    cookies = models.JSONField(
+        _("系统公共cookies"), default=list, null=True, blank=True
     )
-    variables = jsonfield.JSONField(
-        _("系统变量"), default=EMPTY_LIST, null=True, blank=True
+    variables = models.JSONField(
+        _("系统变量"), default=list, null=True, blank=True
     )
     project_key = models.CharField(
         _("项目key"), max_length=LEN_SHORT, null=False, default=0
@@ -223,18 +220,18 @@ class RemoteApi(ObjectManagerMixin, Model):
     owners = models.CharField(_("负责人"), max_length=LEN_XX_LONG, default=EMPTY_STRING)
 
     # 参数格式
-    req_headers = jsonfield.JSONField(
-        _("headers参数"), default=EMPTY_LIST, null=True, blank=True
+    req_headers = models.JSONField(
+        _("headers参数"), default=list, null=True, blank=True
     )
-    req_params = jsonfield.JSONField(
-        _("query参数"), default=EMPTY_LIST, null=True, blank=True
+    req_params = models.JSONField(
+        _("query参数"), default=list, null=True, blank=True
     )
-    req_body = jsonfield.JSONField(
-        _("body参数"), default=EMPTY_DICT, null=True, blank=True
+    req_body = models.JSONField(
+        _("body参数"), default=dict, null=True, blank=True
     )
     # 属性提取路径列表：data.attr1.attr2,data.attr1.attr3
-    rsp_data = jsonfield.JSONField(
-        _("rsp_data"), default=EMPTY_DICT, null=True, blank=True
+    rsp_data = models.JSONField(
+        _("rsp_data"), default=dict, null=True, blank=True
     )
     before_req = models.TextField(_("request预处理代码"), default=EMPTY_STRING)
     map_code = models.TextField(_("response后处理代码"), default=EMPTY_STRING)
@@ -369,18 +366,18 @@ class RemoteApiInstance(Model):
     name = models.CharField(_("配置名称"), max_length=LEN_SHORT, default="")
     desc = models.CharField(_("配置描述"), max_length=LEN_X_LONG, default="", null=True)
 
-    req_params = jsonfield.JSONField(_("query实例化参数"), default=EMPTY_DICT)
-    req_body = jsonfield.JSONField(_("body实例化参数"), default=EMPTY_DICT)
+    req_params = models.JSONField(_("query实例化参数"), default=dict)
+    req_body = models.JSONField(_("body实例化参数"), default=dict)
     rsp_data = models.CharField(_("返回参数"), max_length=LEN_XX_LONG, default="")
-    succeed_conditions = jsonfield.JSONField(_("成功条件"), default=EMPTY_DICT)
-    end_conditions = jsonfield.JSONField(
-        _("结束条件（api节点可用）"), default=EMPTY_DICT, null=True, blank=True
+    succeed_conditions = models.JSONField(_("成功条件"), default=dict)
+    end_conditions = models.JSONField(
+        _("结束条件（api节点可用）"), default=dict, null=True, blank=True
     )
     need_poll = models.BooleanField(_("是否轮询"), default=False)
     map_code = models.TextField(_("response后处理代码"), default=EMPTY_STRING)
     before_req = models.TextField(_("request预处理代码"), default=EMPTY_STRING)
 
-    remote_api_info = jsonfield.JSONField(_("remote_api_info"), default=EMPTY_DICT)
+    remote_api_info = models.JSONField(_("remote_api_info"), default=dict)
 
     class Meta:
         app_label = "postman"

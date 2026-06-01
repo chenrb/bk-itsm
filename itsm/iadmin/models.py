@@ -26,7 +26,6 @@ import copy
 import os
 import re
 
-import jsonfield
 import mistune
 from django.db import models
 from django.db.models import QuerySet
@@ -34,7 +33,6 @@ from django.utils.translation import gettext as _
 
 from config.default import PROJECT_ROOT
 from itsm.component.constants import (
-    EMPTY_LIST,
     EMPTY_STRING,
     LEN_LONG,
     LEN_MIDDLE,
@@ -312,7 +310,7 @@ class MigrateLogs(models.Model):
     operator = models.CharField(_("升级人"), max_length=LEN_NORMAL, blank=True)
     create_at = models.DateTimeField(_("记录创建日期"), auto_now_add=True, blank=True)
     note = models.TextField(_("备注"), null=True, blank=True)
-    exe_func = jsonfield.JSONField(_("执行的函数"), default=EMPTY_LIST, blank=True)
+    exe_func = models.JSONField(_("执行的函数"), default=list, blank=True)
     is_finished = models.BooleanField(_("是否执行结束"), default=False)
     is_success = models.BooleanField(_("是否迁移成功"), default=False)
 

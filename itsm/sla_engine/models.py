@@ -29,10 +29,9 @@ import json
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils.translation import gettext as _
-from jsonfield import JSONField
 from django.db import transaction
 from common.redis import Cache
-from itsm.component.constants import EMPTY_DICT, EMPTY_LIST, LEN_LONG, EMPTY_INT
+from itsm.component.constants import LEN_LONG, EMPTY_INT
 from itsm.sla.models import ActionPolicy
 from itsm.sla_engine.constants import (
     HANDLE_WARING,
@@ -570,9 +569,9 @@ class SlaActionHistory(models.Model):
         choices=[("SUCCESS", _("成功")), ("FAILED", _("失败"))],
     )
     action_type = models.CharField(_("行为类型"), max_length=LEN_LONG)
-    action_detail = JSONField(_("行为详情"), default=EMPTY_DICT)
+    action_detail = models.JSONField(_("行为详情"), default=dict)
     create_time = models.DateTimeField(_("动作发生时间"), auto_now_add=True)
-    condition = JSONField(_("触发的规则"), default=EMPTY_LIST)
+    condition = models.JSONField(_("触发的规则"), default=list)
 
     objects = SlaActionHistoryManager()
 

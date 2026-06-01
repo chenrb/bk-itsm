@@ -23,12 +23,10 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
-import jsonfield
 from django.db import models
 from django.utils.translation import gettext as _
 
 from itsm.component.constants import (
-    EMPTY_DICT,
     EMPTY_STRING,
     LEN_LONG,
     LEN_NORMAL,
@@ -63,8 +61,8 @@ class Event(models.Model):
         null=True,
         blank=True,
     )
-    form_data = jsonfield.JSONField(
-        _("表单快照字典"), default=EMPTY_DICT, null=True, blank=True
+    form_data = models.JSONField(
+        _("表单快照字典"), default=dict, null=True, blank=True
     )
 
     operate_at = models.DateTimeField(_("操作时间"), auto_now_add=True)

@@ -32,7 +32,6 @@ from itertools import chain
 from json import JSONDecodeError
 
 import requests
-import jsonfield
 from bulk_update.helper import bulk_update
 from django.conf import settings
 from django.db import models, transaction
@@ -65,9 +64,7 @@ from itsm.component.constants import (
     DISTRIBUTE_TYPE_CHOICES,
     DISTRIBUTING,
     EXCEPTION_DISTRIBUTE_OPERATE,
-    EMPTY_DICT,
     EMPTY_INT,
-    EMPTY_LIST,
     EMPTY_STRING,
     FAILED,
     FIELD_PRIORITY,
@@ -349,17 +346,17 @@ class Status(Model):
         _("终止原因"), default=EMPTY_STRING, null=True, blank=True
     )
 
-    fields = jsonfield.JSONField(_("字段列表"), default=EMPTY_LIST)
+    fields = models.JSONField(_("字段列表"), default=list)
     api_instance_id = models.IntegerField(
         _("api实例主键"), default=0, null=True, blank=True
     )
     error_message = models.TextField(_("失败信息"), blank=True, null=True)
 
     # contexts: 目前存储了标准运维节点的请求参数
-    contexts = jsonfield.JSONField(_("状态上下文"), default=EMPTY_DICT)
-    meta = jsonfield.JSONField(_("配置信息"), default=EMPTY_DICT)
-    query_params = jsonfield.JSONField(_("表单输入信息"), default=EMPTY_DICT)
-    ignore_params = jsonfield.JSONField(_("忽略结果参数"), default=EMPTY_DICT)
+    contexts = models.JSONField(_("状态上下文"), default=dict)
+    meta = models.JSONField(_("配置信息"), default=dict)
+    query_params = models.JSONField(_("表单输入信息"), default=dict)
+    ignore_params = models.JSONField(_("忽略结果参数"), default=dict)
     objects = managers.StatusManager()
 
     class Meta:
@@ -1325,7 +1322,7 @@ class Ticket(Model):
         _("优先级编码"), max_length=LEN_LONG, blank=True, null=True
     )
     # 单据对应的：pipeline_tree/states_map
-    pipeline_data = jsonfield.JSONField(_("Pipeline流程树元数据"), default=EMPTY_DICT)
+    pipeline_data = models.JSONField(_("Pipeline流程树元数据"), default=dict)
 
     node_status = models.ManyToManyField(Status, help_text=_("节点状态"))
 
@@ -1387,10 +1384,9 @@ class Ticket(Model):
     service = models.CharField(
         _("对应服务主键"), default="custom", max_length=LEN_NORMAL
     )
-    service_property = jsonfield.JSONCharField(
+    service_property = models.JSONField(
         _("业务特性json字段"),
-        max_length=LEN_LONG,
-        default=EMPTY_DICT,
+        default=dict,
         null=True,
         blank=True,
     )
@@ -1404,7 +1400,7 @@ class Ticket(Model):
     meta.ticket_agent 代提单人
     meta.task_pipeline_id 任务流水线ID
     """
-    meta = jsonfield.JSONField(_("扩展描述信息"), default=EMPTY_DICT)
+    meta = models.JSONField(_("扩展描述信息"), default=dict)
     # 单据对应的业务信息
     project_key = models.CharField(
         _("项目key"), max_length=LEN_SHORT, null=False, default=0
@@ -5038,7 +5034,7 @@ class TicketOrganization(Model):
     third_level_name = models.CharField(
         _("三级组织名称"), max_length=LEN_LONG, default=_("其他")
     )
-    family = jsonfield.JSONField(_("组织树"), default=EMPTY_DICT)
+    family = models.JSONField(_("组织树"), default=dict)
     create_at = models.DateTimeField(_("创建时间"))
 
     class Meta:

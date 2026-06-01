@@ -147,7 +147,12 @@ Phase 2 后发现的零散死代码清理。
 
 ### 验证状态
 
-零蓝鲸硬依赖残留（blueapps、blueking、apigw_manager、bk_notice_sdk、bkstorages、iam SDK、auth_iam、esb、apigw、bkchat、helper、core — 全部归零）。
+- `python manage.py check` 通过（0 issues，0 warnings）
+- 零蓝鲸硬依赖残留（blueapps、blueking、apigw_manager、bk_notice_sdk、bkstorages、iam SDK、auth_iam、esb、apigw、bkchat、helper、core — 全部归零）
+- MySQL 驱动：mysqlclient 2.2.8（PyMySQL 已完全移除）
+- JSONField：Django 内置（jsonfield 已完全移除）
+- DRF 缓存：本地 `cache_response`（drf-extensions 已完全移除）
+- CI：GitHub Actions django.yml 已重写，等待 push 后验证
 
 ---
 
@@ -175,6 +180,61 @@ Phase 2 后发现的零散死代码清理。
 - **Signal handler**：`UserRole.objects.create(**new_system)` → pop M2M 字段后 create + set
 - **Ticket tasks**：`.members` → `.members.values_list("username", flat=True)`
 - **迁移**：更新 `0001_initial.py`，删除 `0002`（TextField 临时迁移）
+- **关键提交**：`0b7bf85a`
+
+### P8: CI 修复 + PyMySQL 替换
+
+修复长期中断的 CI 流水线，并将 MySQL 驱动从 PyMySQL 切换到 mysqlclient。
+
+- **CI 重写**（`.github/workflows/django.yml`）
+  - 删除对已删除文件 `scripts/workflows/bk_ci.sh` 的引用，内联所有步骤
+  - 升级 actions 版本（checkout v3→v4, setup-python v4→v5）
+  - 清理 P5 后残留的旧环境变量（`RUN_ENV`、`APP_ID`、`APP_TOKEN`、`USE_IAM` 等）
+  - 新增 Redis 服务容器
+- **`.env.example`**：Redis 段从"可选"改为"必选"，默认值取消注释
+- **PyMySQL → mysqlclient**
+  - Django 6.0 要求 `mysqlclient >= 2.2.1`，PyMySQL 报版本 `1.4.6` 不兼容
+  - `settings.py`：删除 `pymysql.install_as_MySQLdb()` 及版本 patch（3 行）
+  - `requirements.txt`：`PyMySQL==1.1.1` → `mysqlclient==2.2.8`
+  - 不再需要任何版本欺骗 hack
+- **关键提交**：`9d349a5d`（CI + env）, `fdc0fdd2`（mysqlclient）
+
+### P9: 去第三方 JSONField + DRF 缓存依赖
+
+移除 `jsonfield` 和 `drf-extensions` 两个第三方包，改用 Django 内置等价实现。
+
+- **`jsonfield` → `django.db.models.JSONField`**（20 个 model 文件）
+  - `jsonfield.JSONField` → `models.JSONField`（Django 3.1+ 内置）
+  - `jsonfield.JSONCharField` → `models.JSONField`（去掉 `max_length`，MySQL 原生 JSON 列有自动校验）
+  - 清理所有 `import jsonfield` / `from jsonfield import JSONField`
+- **`default` 值 callable 化**（消除 `fields.E010` 警告）
+  - `default=EMPTY_LIST`（即 `[]`）→ `default=list`
+  - `default=EMPTY_DICT`（即 `ConstantDict({})`）→ `default=dict`
+  - 非空默认值（`DEFAULT_FLOW_CONDITION`、`EMPTY_VARIABLE`、`revoke_config`、`extras` 等）→ 模块级工厂函数（`_default_xxx`）
+  - Django migration serializer 不支持 lambda，必须用模块级函数
+- **`drf-extensions` → 本地 `cache_response` 装饰器**
+  - `itsm/component/cache_keys.py` 新增 `cache_response`，行为与 drf-extensions 等价：
+    - miss 时：`finalize_response` → `render()` → 缓存 `(rendered_content, status_code, headers)` 三元组
+    - hit 时：直接构造 `HttpResponse` 返回，跳过序列化和渲染
+    - 默认不缓存错误响应（`status >= 400`）
+  - `itsm/ticket/views/ticket.py`：import 改为本地模块
+- **迁移重置**：19 个 `0001_initial.py` 全部重新生成（14 ITSM + 5 Pipeline）
+- **`requirements.txt`**：移除 `jsonfield==3.2.0`、`drf-extensions==0.7.1`
+
+### P10: 依赖审计 + 版本升级
+
+逐包审计 `requirements.txt` 全部依赖，移除无直接引用的包，升级全部包至最新兼容版本。
+
+- **移除 `django-multiselectfield`** — P2-17 删除 `PropertyRecord` 模型后残留 import，零活跃引用
+- **移除 `Werkzeug`** — Django 间接依赖，项目代码无直接 import，无需显式声明
+- **版本升级**（全部升至截至 2026-06 的最新兼容版本）：
+  - `mysqlclient` 2.2.7→2.2.8, `MarkupSafe` 2.1.5→3.0.3, `Mako` 1.3.2→1.3.12
+  - `requests` 2.32.4→2.34.2, `python-json-logger` 2.0.7→4.1.0, `whitenoise` 6.8.2→6.12.0
+  - `django-cors-headers` 4.2.0→4.9.0, `pypinyin` 0.53.0→0.55.0, `humanize` 4.11.0→4.15.0
+  - `jsonschema` 4.23.0→4.26.0, `django-mptt` 0.16.0→0.18.0, `pyparsing` 3.2.0→3.3.2
+  - `redis` 5.0.3→8.0.0, `mistune` 3.0.2→3.2.1, `gevent` 26.4.0→26.5.0
+  - `gunicorn` 23.0.0→26.0.0, `pytz` 2024.2→2026.2, `typing-extensions` 4.13.2→4.15.0
+  - `cryptography` 46.0.7→48.0.0, `pyCryptodome` 3.20.0→3.23.0, `jmespath` 1.0.1→1.1.0
 
 ---
 

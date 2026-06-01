@@ -42,13 +42,11 @@ from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
-from rest_framework_extensions.cache.decorators import cache_response
-
 from common.log import logger
 from common.redis import Cache
 from common.template.template import Template
 from config.default import OUT_LINK
-from itsm.component.cache_keys import ticket_cache_key
+from itsm.component.cache_keys import cache_response, ticket_cache_key
 from itsm.component.constants import (
     CACHE_5MIN,
     CACHE_10MIN,

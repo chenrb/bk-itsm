@@ -26,7 +26,6 @@ import datetime
 from itertools import chain
 from django.db import models
 from django.utils.translation import gettext as _
-import jsonfield
 
 from itsm.component.dlls.component import ComponentLibrary
 from itsm.component.constants import (
@@ -34,8 +33,6 @@ from itsm.component.constants import (
     LEN_MIDDLE,
     LEN_LONG,
     LEN_X_LONG,
-    EMPTY_DICT,
-    EMPTY_LIST,
     EMPTY_STRING,
     EMPTY_INT,
     OPT_TYPE_CHOICE,
@@ -46,6 +43,10 @@ from itsm.component.constants import (
 )
 from .base import Model as TriggerBaseModel
 from ...project.models import Project
+
+
+def _default_delay_params():
+    return {"type": "custom", "value": 0}
 
 
 class ActionSchema(TriggerBaseModel):
@@ -72,16 +73,16 @@ class ActionSchema(TriggerBaseModel):
     operate_type = models.CharField(
         _("操作方式"), choices=OPT_TYPE_CHOICE, max_length=LEN_NORMAL, default="BACKEND"
     )
-    delay_params = jsonfield.JSONField(
-        _("延迟参数"), default={"type": "custom", "value": 0}
+    delay_params = models.JSONField(
+        _("延迟参数"), default=_default_delay_params
     )
     can_repeat = models.BooleanField(_("是否可以重复执行"), default=False)
 
-    params = jsonfield.JSONField(
-        _("配置参数"), help_text=_("当前响应事件配置的参数模版"), default={}
+    params = models.JSONField(
+        _("配置参数"), help_text=_("当前响应事件配置的参数模版"), default=dict
     )
-    inputs = jsonfield.JSONField(
-        _("输入参数"), help_text=_("输入参数引用的参数变量"), default={}
+    inputs = models.JSONField(
+        _("输入参数"), help_text=_("输入参数引用的参数变量"), default=dict
     )
 
     class Meta:
@@ -145,8 +146,8 @@ class Trigger(TriggerBaseModel):
     )
 
     # inputs 好像暂时没需要
-    inputs = jsonfield.JSONField(
-        _("输入参数"), help_text=_("输入参数引用的参数变量"), default=EMPTY_LIST
+    inputs = models.JSONField(
+        _("输入参数"), help_text=_("输入参数引用的参数变量"), default=list
     )
 
     # 触发器的来源, 可以根据用户的需要来定义
@@ -274,13 +275,12 @@ class TriggerRule(TriggerBaseModel):
     FIELDS = ("id", "name", "condition", "action_schemas", "trigger_id", "by_condition")
     name = models.CharField(_("规则标题"), max_length=LEN_NORMAL, default="")
 
-    condition = jsonfield.JSONField(_("触发条件"), default=EMPTY_DICT)
+    condition = models.JSONField(_("触发条件"), default=dict)
     by_condition = models.BooleanField(_("触发方式"), default=False)
-    action_schemas = jsonfield.JSONCharField(
+    action_schemas = models.JSONField(
         _("响应事件列表"),
         help_text=_("关联事件的配置ID列表,关联actionSchema"),
-        max_length=LEN_LONG,
-        default=EMPTY_LIST,
+        default=list,
     )
     trigger_id = models.IntegerField(_("对应的触发器id"), null=True)
 

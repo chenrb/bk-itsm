@@ -25,7 +25,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from multiprocessing.dummy import Pool as ThreadPool
 
-import jsonfield
 from django.conf import settings
 from django.core.cache import cache
 from django.db import models
@@ -49,6 +48,10 @@ from itsm.component.constants import (
 )
 from itsm.component.drf.mixins import ObjectManagerMixin
 from itsm.component.db import managers
+
+
+def _default_roles():
+    return {"cmdb": {}, "organization": []}
 from itsm.component.platform_client.http import client_backend
 from itsm.component.utils.basic import list_by_separator
 from itsm.component.utils.client_backend_query import (
@@ -477,13 +480,11 @@ class UserRole(ObjectManagerMixin, Model):
 class BKUserRole(models.Model):
     """记录每一位用户的CMDB角色/Organization角色"""
 
-    roles_dict = {"cmdb": {}, "organization": []}
-
     username = models.CharField(
         _("蓝鲸用户username"), max_length=LEN_NORMAL, default=EMPTY_STRING
     )
-    roles = jsonfield.JSONField(
-        _("用户角色"), default=roles_dict, null=True, blank=True
+    roles = models.JSONField(
+        _("用户角色"), default=_default_roles, null=True, blank=True
     )
     uid = models.CharField(
         _("用户uid"), max_length=LEN_NORMAL, default=EMPTY_STRING, null=True, blank=True

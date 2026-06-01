@@ -25,7 +25,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from itertools import chain
 
-import jsonfield
 from django.db import models
 from django.forms import model_to_dict
 from django.utils.translation import gettext as _
@@ -34,8 +33,6 @@ from itsm.component.constants import (
     BASE_MODEL,
     DEFAULT_STRING,
     EMPTY,
-    EMPTY_DICT,
-    EMPTY_LIST,
     EMPTY_STRING,
     LAYOUT_CHOICES,
     LEN_LONG,
@@ -85,8 +82,8 @@ class BaseField(Model):
     api_instance_id = models.IntegerField(
         _("api实例主键"), default=0, null=True, blank=True
     )
-    kv_relation = jsonfield.JSONCharField(
-        _("源数据的kv关系配置"), default=EMPTY_DICT, max_length=LEN_NORMAL
+    kv_relation = models.JSONField(
+        _("源数据的kv关系配置"), default=dict
     )
     type = models.CharField(
         _("字段类型"), max_length=LEN_SHORT, choices=TYPE_CHOICES, default="STRING"
@@ -108,7 +105,7 @@ class BaseField(Model):
         choices=[(SHOW_DIRECTLY, "直接显示"), (SHOW_BY_CONDITION, "根据条件判断")],
         default=SHOW_DIRECTLY,
     )
-    show_conditions = jsonfield.JSONField(_("字段的显示条件"), default=EMPTY_DICT)
+    show_conditions = models.JSONField(_("字段的显示条件"), default=dict)
 
     regex = models.CharField(
         _("正则校验规则关键字"),
@@ -128,8 +125,8 @@ class BaseField(Model):
         }
     }
     """
-    regex_config = jsonfield.JSONCharField(
-        _("正则校验规则配置"), max_length=LEN_LONG, default=EMPTY_DICT
+    regex_config = models.JSONField(
+        _("正则校验规则配置"), default=dict
     )
     custom_regex = models.CharField(
         _("自定义正则规则"),
@@ -156,11 +153,11 @@ class BaseField(Model):
     default = models.CharField(
         _("默认值"), max_length=LEN_XX_LONG, default=EMPTY_STRING, null=True, blank=True
     )
-    choice = jsonfield.JSONField(_("选项"), default=EMPTY_LIST)
-    related_fields = jsonfield.JSONField(
-        _("级联字段"), default=EMPTY_DICT, null=True, blank=True
+    choice = models.JSONField(_("选项"), default=list)
+    related_fields = models.JSONField(
+        _("级联字段"), default=dict, null=True, blank=True
     )
-    meta = jsonfield.JSONField(_("复杂描述信息"), default=EMPTY_DICT)
+    meta = models.JSONField(_("复杂描述信息"), default=dict)
 
     class Meta:
         abstract = True
@@ -311,7 +308,7 @@ class Table(Model):
     desc = models.CharField(
         _("基础模型描述"), max_length=LEN_LONG, null=True, blank=True
     )
-    fields_order = jsonfield.JSONField(_("字段排序"), default=[])
+    fields_order = models.JSONField(_("字段排序"), default=list)
 
     is_builtin = models.BooleanField(_("是否内置字段"), default=False)
 

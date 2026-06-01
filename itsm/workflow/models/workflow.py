@@ -25,7 +25,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from collections import OrderedDict
 
 
-import jsonfield
 from django.db import models, transaction
 from django.db.models import Q
 from django.forms import model_to_dict
@@ -36,9 +35,7 @@ from itsm.component.constants import (
     DEFAULT_ENGINE_VERSION,
     DEFAULT_STRING,
     DEFAULT_VERSION,
-    EMPTY_DICT,
     EMPTY_INT,
-    EMPTY_LIST,
     EMPTY_STRING,
     FIELD_BIZ,
     LEN_LONG,
@@ -74,6 +71,20 @@ from .task import TaskSchema, TaskConfig
 from .common import GlobalVariable, Notify
 
 
+def _default_revoke_config():
+    return {"type": REVOKE_TYPE.FIRST, "state": 0}
+
+
+def _default_extras():
+    return {
+        "biz_related": False,
+        "need_urge": False,
+        "urgers_type": "EMPTY",
+        "urgers": EMPTY_STRING,
+        "task_settings": [],
+    }
+
+
 class WorkflowBase(ObjectManagerMixin, Model):
     """流程模板"""
 
@@ -86,9 +97,9 @@ class WorkflowBase(ObjectManagerMixin, Model):
     )
     is_enabled = models.BooleanField(_("是否启用"), default=False, db_index=True)
     is_revocable = models.BooleanField(_("是否可撤销"), default=True)
-    revoke_config = jsonfield.JSONField(
+    revoke_config = models.JSONField(
         _("撤销配置"),
-        default={"type": REVOKE_TYPE.FIRST, "state": 0},
+        default=_default_revoke_config,
         null=True,
         blank=True,
     )
@@ -130,20 +141,12 @@ class WorkflowBase(ObjectManagerMixin, Model):
     )
 
     # deprecated fields
-    master = jsonfield.JSONField(
-        _("主分支列表"), default=EMPTY_LIST, null=True, blank=True
+    master = models.JSONField(
+        _("主分支列表"), default=list, null=True, blank=True
     )
-    extras = jsonfield.JSONField(
+    extras = models.JSONField(
         _("其他配置信息"),
-        default={
-            # 强制业务关联
-            "biz_related": False,
-            # 督办相关
-            "need_urge": False,
-            "urgers_type": "EMPTY",
-            "urgers": EMPTY_STRING,
-            "task_settings": [],
-        },
+        default=_default_extras,
     )
 
     # need_auth_grant = True
@@ -173,8 +176,8 @@ class Workflow(WorkflowBase):
         default="default",
     )
 
-    service_property = jsonfield.JSONField(
-        _("对应服务的属性，为json字段"), default=EMPTY_DICT, null=True, blank=True
+    service_property = models.JSONField(
+        _("对应服务的属性，为json字段"), default=dict, null=True, blank=True
     )
 
     objects = managers.WorkflowManager()
@@ -553,27 +556,27 @@ class WorkflowVersion(WorkflowBase):
 
     workflow_id = models.IntegerField(_("流程模板ID"))
 
-    fields = jsonfield.JSONField(
-        _("字段快照字典"), default=EMPTY_DICT, null=True, blank=True
+    fields = models.JSONField(
+        _("字段快照字典"), default=dict, null=True, blank=True
     )
-    states = jsonfield.JSONField(
-        _("状态快照字典"), default=EMPTY_DICT, null=True, blank=True
+    states = models.JSONField(
+        _("状态快照字典"), default=dict, null=True, blank=True
     )
-    transitions = jsonfield.JSONField(
-        _("流转快照字典"), default=EMPTY_DICT, null=True, blank=True
+    transitions = models.JSONField(
+        _("流转快照字典"), default=dict, null=True, blank=True
     )
-    triggers = jsonfield.JSONField(
-        _("触发器快照字典"), default=EMPTY_DICT, null=True, blank=True
+    triggers = models.JSONField(
+        _("触发器快照字典"), default=dict, null=True, blank=True
     )
-    table = jsonfield.JSONField(
-        _("基础模型快照字典"), default=EMPTY_DICT, null=True, blank=True
+    table = models.JSONField(
+        _("基础模型快照字典"), default=dict, null=True, blank=True
     )
     version_message = models.TextField(
         _("版本信息"), default=EMPTY_STRING, null=True, blank=True
     )
 
-    pipeline_data = jsonfield.JSONField(
-        _("pipeline描述数据"), default=EMPTY_DICT, null=True, blank=True
+    pipeline_data = models.JSONField(
+        _("pipeline描述数据"), default=dict, null=True, blank=True
     )
 
     objects = managers.WorkflowVersionManager()

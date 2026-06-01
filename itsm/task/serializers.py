@@ -118,7 +118,7 @@ class TaskSerializer(serializers.ModelSerializer):
     component_type = serializers.CharField(
         required=False, max_length=LEN_LONG, default=EMPTY_STRING
     )
-    fields = serializers.JSONField(required=False, default={})
+    fields = serializers.JSONField(required=False, default=dict)
 
     class Meta:
         model = Task

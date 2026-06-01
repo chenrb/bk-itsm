@@ -30,8 +30,6 @@ from itsm.component.constants import (
     LEN_LONG,
     TRIGGER_SIGNAL_CHOICE,
     TRIGGER_SOURCE_TYPE,
-    EMPTY_LIST,
-    EMPTY_DICT,
     OPT_TYPE_CHOICE, LEN_SHORT, PUBLIC_PROJECT_PROJECT_KEY,
 )
 from itsm.component.drf.serializers import AuthModelSerializer
@@ -103,8 +101,8 @@ class TriggerRuleSerializer(AuthModelSerializer):
     触发器条件配置和触发时间配置序列化
     """
 
-    condition = serializers.JSONField(default={})
-    action_schemas = serializers.JSONField(default=EMPTY_LIST)
+    condition = serializers.JSONField(default=dict)
+    action_schemas = serializers.JSONField(default=list)
     trigger_id = serializers.IntegerField(required=True,)
     name = serializers.CharField(required=False, max_length=LEN_LONG, allow_blank=True, allow_null=True)
 
@@ -143,8 +141,8 @@ class ActionSchemaSerializer(AuthModelSerializer):
     delay_params = serializers.JSONField(required=False)
 
     # 参数
-    params = serializers.JSONField(default=EMPTY_DICT)
-    inputs = serializers.JSONField(default=EMPTY_DICT)
+    params = serializers.JSONField(default=dict)
+    inputs = serializers.JSONField(default=dict)
 
     def run_validators(self, value):
         self.validators.extend([ActionSchemaValidator(self.instance)])
@@ -161,7 +159,7 @@ class ActionSerializer(serializers.ModelSerializer):
     触发器条件配置和触发时间配置序列化
     """
 
-    inputs = serializers.JSONField(required=False, default=EMPTY_DICT)
+    inputs = serializers.JSONField(required=False, default=dict)
 
     class Meta:
         model = Action
@@ -174,8 +172,8 @@ class ActionDetailSerializer(serializers.ModelSerializer):
     触发器条件配置和触发时间配置序列化
     """
 
-    inputs = serializers.JSONField(required=False, default=EMPTY_DICT)
-    fields = serializers.JSONField(required=False, default=EMPTY_LIST)
+    inputs = serializers.JSONField(required=False, default=dict)
+    fields = serializers.JSONField(required=False, default=list)
 
     class Meta:
         model = Action

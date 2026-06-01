@@ -23,18 +23,31 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
-import jsonfield
 from django.db import models
 from django.utils.translation import gettext as _
 
 from itsm.component.constants import (
-    DEFAULT_FLOW_CONDITION,
-    EMPTY_DICT,
     FLOW_CONDITION_TYPE_CHOICES,
     LEN_NORMAL,
     LEN_SHORT,
 )
 from itsm.workflow import managers
+
+
+def _default_flow_condition():
+    return {
+        "expressions": [
+            {
+                "type": "and",
+                "expressions": [{"key": "G_INT_1", "condition": "==", "value": 1}],
+            }
+        ],
+        "type": "and",
+    }
+
+
+def _default_axis():
+    return {}
 
 from .base import Model
 
@@ -49,7 +62,10 @@ class Condition(Model):
         on_delete=models.CASCADE,
     )
     name = models.CharField(_("流转操作"), max_length=LEN_NORMAL)
-    data = jsonfield.JSONField(_("流转条件表达式"), default=DEFAULT_FLOW_CONDITION)
+    data = models.JSONField(
+        _("流转条件表达式"),
+        default=_default_flow_condition,
+    )
 
     objects = managers.ConditionManager()
 
@@ -82,7 +98,10 @@ class Transition(Model):
     )
 
     name = models.CharField(_("流转操作"), max_length=LEN_NORMAL)
-    condition = jsonfield.JSONField(_("流转条件表达式"), default=DEFAULT_FLOW_CONDITION)
+    condition = models.JSONField(
+        _("流转条件表达式"),
+        default=_default_flow_condition,
+    )
     condition_type = models.CharField(
         _("流转类型"),
         max_length=LEN_SHORT,
@@ -91,8 +110,8 @@ class Transition(Model):
     )
 
     # 线条的方向坐标 {"start":"left|right|top|bottom", "end": "left|right|top|bottom"}
-    axis = jsonfield.JSONCharField(
-        _("线条的坐标位置的坐标轴"), max_length=LEN_NORMAL, default=EMPTY_DICT
+    axis = models.JSONField(
+        _("线条的坐标位置的坐标轴"), default=dict
     )
 
     from_state = models.ForeignKey(

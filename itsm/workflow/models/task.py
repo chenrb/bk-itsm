@@ -26,12 +26,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 __author__ = "蓝鲸智云"
 __copyright__ = "Copyright © 2025 Tencent BlueKing. All Rights Reserved."
 
-import jsonfield
 from django.db import models
 from django.utils.translation import gettext as _
 
 from itsm.component.constants import (
-    EMPTY_DICT,
     LEN_MIDDLE,
     LEN_NORMAL,
     TASK_COMPONENT_CHOICE,
@@ -85,10 +83,10 @@ class TaskSchema(Model):
         help_text=_("当为流程version引用的时候，不可编辑和查看"),
         default=True,
     )
-    inputs = jsonfield.JSONField(
+    inputs = models.JSONField(
         _("组件输入信息"),
         help_text=_("当前组件输入参数引用的参数变量"),
-        default=EMPTY_DICT,
+        default=dict,
     )
 
     objects = TaskSchemaManager()

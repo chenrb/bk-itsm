@@ -1,29 +1,60 @@
 # -*- coding: utf-8 -*-
-"""
-Tencent is pleased to support the open source community by making BK-ITSM 蓝鲸流程服务 available.
+from functools import wraps
 
-Copyright (C) 2025 Tencent.  All rights reserved.
-
-BK-ITSM 蓝鲸流程服务 is licensed under the MIT License.
-
-License for BK-ITSM 蓝鲸流程服务:
---------------------------------------------------------------------
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
-documentation files (the "Software"), to deal in the Software without restriction, including without limitation
-the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software,
-and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial
-portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
-LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-"""
+from django.core.cache import cache
+from django.http import HttpResponse
 
 from itsm.component.constants import PREFIX_KEY
+
+
+def cache_response(timeout, key_func, cache_errors=False):
+    """缓存 DRF view action 的响应。
+
+    与 drf-extensions 的 cache_response 行为等价：
+    - 缓存 miss 时：执行 view → finalize_response → render，存储 (content, status, headers)
+    - 缓存 hit 时：直接构造 HttpResponse 返回，跳过序列化和渲染
+    - 默认不缓存错误响应（status >= 400）
+    """
+
+    def decorator(func):
+        @wraps(func)
+        def inner(self, request, *args, **kwargs):
+            key = key_func(
+                view_instance=self,
+                view_method=func,
+                request=request,
+                args=args,
+                kwargs=kwargs,
+            )
+            cached = cache.get(key)
+            if cached is not None:
+                content, status_code, headers = cached
+                response = HttpResponse(content=content, status=status_code)
+                for k, v in headers.values():
+                    response[k] = v
+                if not hasattr(response, "_closable_objects"):
+                    response._closable_objects = []
+                return response
+
+            response = func(self, request, *args, **kwargs)
+            response = self.finalize_response(request, response, *args, **kwargs)
+            response.render()
+
+            if not response.status_code >= 400 or cache_errors:
+                if hasattr(response, "_headers"):
+                    hdrs = response._headers.copy()
+                else:
+                    hdrs = {k: (k, v) for k, v in response.items()}
+                cache.set(
+                    key,
+                    (response.rendered_content, response.status_code, hdrs),
+                    timeout,
+                )
+            return response
+
+        return inner
+
+    return decorator
 
 
 def ticket_cache_key(view_instance, view_method, request, args, kwargs):
@@ -33,14 +64,20 @@ def ticket_cache_key(view_instance, view_method, request, args, kwargs):
 
     cache_key = view_method_name
 
-    if view_method_name == 'get_my_deal_tickets':
+    if view_method_name == "get_my_deal_tickets":
         cache_key = "{}ticket:{}:{}:{}".format(
-            PREFIX_KEY, view_method_name, request.user.username, request.query_params.get('days')
+            PREFIX_KEY,
+            view_method_name,
+            request.user.username,
+            request.query_params.get("days"),
         )
 
-    if view_method_name == 'get_my_ticket_status':
+    if view_method_name == "get_my_ticket_status":
         cache_key = "{}ticket:{}:{}:{}".format(
-            PREFIX_KEY, view_method_name, request.user.username, request.query_params.get('service_type')
+            PREFIX_KEY,
+            view_method_name,
+            request.user.username,
+            request.query_params.get("service_type"),
         )
 
     return cache_key

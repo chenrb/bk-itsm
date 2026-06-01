@@ -23,13 +23,11 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
-import jsonfield
 from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext as _
 
 from itsm.component.constants import (
-    EMPTY_DICT,
     EMPTY_STRING,
     LEN_LONG,
     LEN_NORMAL,
@@ -110,7 +108,7 @@ class GlobalVariable(Model):
     is_valid = models.BooleanField(_("是否有效"), default=True)
     is_deleted = models.BooleanField(_("是否已删除"), default=False)
 
-    meta = jsonfield.JSONField(_("扩展描述信息"), default=EMPTY_DICT)
+    meta = models.JSONField(_("扩展描述信息"), default=dict)
 
     objects = GlobalVariableManager()
 

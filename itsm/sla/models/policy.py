@@ -27,11 +27,9 @@ import copy
 
 from django.db import models
 from django.utils.translation import gettext as _
-from jsonfield import JSONField
 
 from common.template.template import Template
 from itsm.component.constants import (
-    EMPTY_DICT,
     EMPTY_INT,
     EMPTY_STRING,
     LEN_LONG,
@@ -163,7 +161,7 @@ class SlaTimerRule(Model):
         choices=[("START", _("开始")), ("STOP", _("结束")), ("PAUSE", _("暂停"))],
         default="START",
     )
-    condition = JSONField(_("条件"), default=EMPTY_DICT)
+    condition = models.JSONField(_("条件"), default=dict)
 
     """
     # 条件表达式的格式如下
@@ -276,7 +274,7 @@ class Action(Model):
         ],
     )
 
-    config = JSONField("事件配置", help_text="类型详细配置", default=EMPTY_DICT)
+    config = models.JSONField("事件配置", help_text="类型详细配置", default=dict)
 
     """
         # alert告警配置
@@ -353,7 +351,7 @@ class ActionPolicy(Model):
         _("升级事件类型"), choices=ACTION_POLICY_TYPES, default=1
     )
     order = models.IntegerField(_("策略顺序"), default=-1)
-    condition = JSONField("升级条件", help_text="当达到条件的时候，可以触发不同的动作")
+    condition = models.JSONField("升级条件", help_text="当达到条件的时候，可以触发不同的动作")
     actions = models.ManyToManyField(Action, help_text=_("处理事件"))
 
     class Meta:

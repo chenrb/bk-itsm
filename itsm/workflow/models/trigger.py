@@ -23,12 +23,10 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
-import jsonfield
 from django.db import models
 from django.utils.translation import gettext as _
 
 from itsm.component.constants import (
-    EMPTY_DICT,
     LEN_LONG,
     LEN_NORMAL,
     LEN_SHORT,
@@ -42,11 +40,11 @@ class Trigger(Model):
     name = models.CharField(_("名称"), max_length=LEN_NORMAL)
     component_key = models.CharField(_("原子key"), max_length=LEN_NORMAL)
     type = models.CharField(_("类型"), max_length=LEN_SHORT, choices=TRIGGER_TYPE)
-    condition = jsonfield.JSONCharField(
-        _("触发条件"), max_length=LEN_LONG, default=EMPTY_DICT
+    condition = models.JSONField(
+        _("触发条件"), default=dict
     )
-    inputs = jsonfield.JSONCharField(
-        _("传入参数"), max_length=LEN_LONG, default=EMPTY_DICT
+    inputs = models.JSONField(
+        _("传入参数"), default=dict
     )
     """
     key: one input key

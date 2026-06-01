@@ -26,21 +26,18 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 import operator
 from functools import reduce
 
-import jsonfield
 from django.conf import settings
 from django.db import models, transaction
 from django.db.models import Q, Count
 from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
 from mptt.models import TreeForeignKey
-from multiselectfield import MultiSelectField
 
 from itsm.component.constants import (
     ADMIN,
     DEFAULT_STRING,
     DISPLAY_CHOICES,
     EMPTY_INT,
-    EMPTY_LIST,
     EMPTY_STRING,
     FIRST_ORDER,
     LEN_LONG,
@@ -111,7 +108,7 @@ class Favorite(models.Model):
     )
     name = models.CharField(_("收藏名称"), max_length=LEN_LONG)
     service = models.CharField(_("服务类型"), max_length=LEN_NORMAL)
-    data = jsonfield.JSONField(_("收藏数据"), default=EMPTY_LIST)
+    data = models.JSONField(_("收藏数据"), default=list)
     create_at = models.DateTimeField(_("创建时间"), auto_now_add=True)
     update_at = models.DateTimeField(_("更新时间"), auto_now=True)
 
@@ -440,8 +437,8 @@ class ServiceSla(models.Model):
     name = models.CharField(_("任务名称"), max_length=LEN_LONG)
     sla_id = models.IntegerField(_("SLA协议 ID"))
     color = models.CharField(_("颜色标志"), max_length=LEN_SHORT, default=EMPTY_STRING)
-    lines = jsonfield.JSONField(_("线条列表"), default=EMPTY_LIST)
-    states = jsonfield.JSONField(_("节点列表"), default=EMPTY_LIST)
+    lines = models.JSONField(_("线条列表"), default=list)
+    states = models.JSONField(_("节点列表"), default=list)
 
     class Meta:
         app_label = "service"
@@ -467,7 +464,7 @@ class ServiceCatalog(BaseMpttModel):
         blank=True,
         related_name="children",
     )
-    route = jsonfield.JSONField(_("前置路径集合"), default=EMPTY_LIST)
+    route = models.JSONField(_("前置路径集合"), default=list)
     project_key = models.CharField(
         _("项目key"), max_length=LEN_SHORT, null=False, default=0
     )

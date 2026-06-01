@@ -26,7 +26,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 import traceback
 from datetime import datetime
 
-import jsonfield
 
 from django.db import models
 from django.utils.translation import gettext as _
@@ -92,12 +91,12 @@ class Action(TriggerBaseModel):
     )
     source_id = models.IntegerField(_("对应的来源PK值"), null=True, blank=True)
 
-    context = jsonfield.JSONField(_("触发事件的上下文参数"), default=EMPTY_DICT)
-    inputs = jsonfield.JSONField(
-        _("用户的输入参数"), help_text=_("输入参数引用的参数变量"), default=EMPTY_DICT
+    context = models.JSONField(_("触发事件的上下文参数"), default=dict)
+    inputs = models.JSONField(
+        _("用户的输入参数"), help_text=_("输入参数引用的参数变量"), default=dict
     )
-    outputs = jsonfield.JSONField(
-        _("动作的输出参数"), help_text=_("动作的输出参数字典"), default=EMPTY_DICT
+    outputs = models.JSONField(
+        _("动作的输出参数"), help_text=_("动作的输出参数字典"), default=dict
     )
 
     # 事件的执行状态
@@ -109,14 +108,14 @@ class Action(TriggerBaseModel):
     )
     end_time = models.DateTimeField(_("任务结束事件"), null=True)
     operator = models.CharField(_("执行人"), max_length=LEN_NORMAL, default=SYS)
-    ex_data = jsonfield.JSONField(
+    ex_data = models.JSONField(
         _("执行错误信息"),
         help_text=_("状态为失败的时候记录的错误日志"),
-        default=EMPTY_DICT,
+        default=dict,
     )
 
-    params = jsonfield.JSONField(
-        _("执行的参数"), help_text=_("手动触发器实际执行的参数信息"), default={}
+    params = models.JSONField(
+        _("执行的参数"), help_text=_("手动触发器实际执行的参数信息"), default=dict
     )
 
     objects = ActionManagers()

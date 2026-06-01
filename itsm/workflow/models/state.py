@@ -26,7 +26,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 import json
 from itertools import chain
 
-import jsonfield
 from django.db import models, transaction
 from django.db.models import Q
 from django.utils.translation import gettext as _
@@ -34,11 +33,8 @@ from django.utils.translation import gettext as _
 from itsm.component.constants import (
     DEFAULT_STRING,
     DISTRIBUTE_TYPE_CHOICES,
-    EMPTY_DICT,
     EMPTY_INT,
-    EMPTY_LIST,
     EMPTY_STRING,
-    EMPTY_VARIABLE,
     LEN_LONG,
     LEN_NORMAL,
     LEN_SHORT,
@@ -61,6 +57,10 @@ from .base import Model
 from .common import GlobalVariable
 from .field import Field
 from .transition import Transition
+
+
+def _default_variables():
+    return {"inputs": [], "outputs": []}
 
 
 class State(Model):
@@ -149,11 +149,11 @@ class State(Model):
     notify_freq = models.IntegerField(_("重试间隔(s)"), default=EMPTY_INT)
 
     # [1,3,2,4,5]
-    fields = jsonfield.JSONField(
-        _("表单字段(ID列表，按顺序排列)"), default=EMPTY_LIST, null=True, blank=True
+    fields = models.JSONField(
+        _("表单字段(ID列表，按顺序排列)"), default=list, null=True, blank=True
     )
-    read_only_fields = jsonfield.JSONField(
-        _("只读表单字段(ID列表，按顺序排列)"), default=EMPTY_LIST, null=True, blank=True
+    read_only_fields = models.JSONField(
+        _("只读表单字段(ID列表，按顺序排列)"), default=list, null=True, blank=True
     )
 
     is_draft = models.BooleanField(_("是否为草稿"), default=True)
@@ -167,19 +167,18 @@ class State(Model):
 
     # 会签及任务控制
     is_sequential = models.BooleanField(_("是否是串行任务"), default=False)
-    finish_condition = jsonfield.JSONField(_("可向下调度的条件"), default=EMPTY_DICT)
+    finish_condition = models.JSONField(_("可向下调度的条件"), default=dict)
 
-    variables = jsonfield.JSONField(_("变量"), default=EMPTY_VARIABLE, null=True)
-    axis = jsonfield.JSONCharField(
-        _("节点的坐标轴"), max_length=128, default=EMPTY_DICT
+    variables = models.JSONField(_("变量"), default=_default_variables, null=True)
+    axis = models.JSONField(
+        _("节点的坐标轴"), default=dict
     )
     api_instance_id = models.IntegerField(
         _("api实例主键"), default=0, null=True, blank=True
     )
-    extras = jsonfield.JSONCharField(
+    extras = models.JSONField(
         _("额外信息"),
-        max_length=LEN_XXX_LONG,
-        default=EMPTY_DICT,
+        default=dict,
         null=True,
         blank=True,
     )

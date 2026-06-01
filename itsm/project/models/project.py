@@ -24,7 +24,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 import copy
 
-import jsonfield
 from django.db import models, transaction
 
 from itsm.component.constants import (

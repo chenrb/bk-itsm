@@ -26,7 +26,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from functools import reduce
 import operator as filter_operator
 import logging
-import jsonfield
 
 from django.db.models import Q
 from django.db import models, transaction
@@ -49,7 +48,6 @@ from itsm.component.constants.basic import (
     TASK_GLOBAL_VARIABLES,
     TICKET_GLOBAL_VARIABLES,
     LEN_XX_LONG,
-    EMPTY_LIST,
     WEB,
 )
 from itsm.component.constants.role import PROCESSOR_CHOICES, PERSON, GENERAL
@@ -155,15 +153,15 @@ class Task(Model):
         null=True,
         blank=True,
     )
-    inputs = jsonfield.JSONField(
+    inputs = models.JSONField(
         _("组件输入信息"),
         help_text=_("当前组件输入参数引用的参数变量"),
-        default=EMPTY_DICT,
+        default=dict,
     )
-    outputs = jsonfield.JSONField(
+    outputs = models.JSONField(
         _("组件输出信息"),
         help_text=_("当前组件输出信息，比如sops各阶段返回"),
-        default=EMPTY_DICT,
+        default=dict,
     )
 
     order = models.IntegerField(_("任务的执行顺序"), default=1)
@@ -182,7 +180,7 @@ class Task(Model):
     )
     start_at = models.DateTimeField(_("开始执行的时间"), null=True)
     end_at = models.DateTimeField(_("结束执行的时间"), null=True)
-    pipeline_data = jsonfield.JSONField(_("Pipeline流程树元数据"), default=EMPTY_DICT)
+    pipeline_data = models.JSONField(_("Pipeline流程树元数据"), default=dict)
     execute_state_id = models.IntegerField(_("执行节点ID"), default=0)
 
     objects = TaskManager()
@@ -636,13 +634,13 @@ class TaskLibTasks(Model):
     component_type = models.CharField(_("任务类型"), max_length=LEN_NORMAL)
     processors_type = models.CharField(_("处理人类型"), max_length=LEN_NORMAL)
     processors = models.CharField(_("处理人"), max_length=LEN_LONG)
-    fields = jsonfield.JSONField(
-        _("字段列表"), max_length=LEN_XX_LONG, default=EMPTY_LIST
+    fields = models.JSONField(
+        _("字段列表"), default=list
     )
     sub_template_id = models.CharField(_("子模版ID"), default="", max_length=LEN_NORMAL)
     project_id = models.CharField(_("项目ID/业务ID"), default="", max_length=LEN_NORMAL)
-    exclude_task_nodes = jsonfield.JSONField(
-        _("排除节点ID列表"), max_length=LEN_LONG, default=EMPTY_LIST
+    exclude_task_nodes = models.JSONField(
+        _("排除节点ID列表"), default=list
     )
 
     class Meta:
