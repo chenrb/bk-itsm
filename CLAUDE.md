@@ -61,12 +61,12 @@ PLATFORM_API_BASE_URL=   # Optional: base URL for platform_client HTTP calls
 
 ### Settings loading
 
-`settings.py` (root) is minimal — it installs pymysql, then does `from config.default import *`. `config/__init__.py` defines `celery_app`, `BASE_DIR`, `APP_CODE`, `SECRET_KEY`, `DEBUG`. `config/default.py` aggregates 10 sub-modules by concern:
+`settings.py` (root) is minimal — it sets `DJANGO_SETTINGS_MODULE`, then does `from config.default import *`. `config/__init__.py` defines `celery_app`, `BASE_DIR`, `APP_CODE`, `SECRET_KEY`, `DEBUG`. `config/default.py` aggregates 10 sub-modules by concern:
 
 ```
 config/apps.py         → INSTALLED_APPS, MIDDLEWARE, AUTHENTICATION_BACKENDS
 config/celery.py       → CELERY_IMPORTS, broker, serializer
-config/database.py     → DATABASES (MySQL via PyMySQL)
+config/database.py     → DATABASES (MySQL via mysqlclient)
 config/logging.py      → LOGGING
 config/web.py          → TEMPLATES, STATIC_URL, etc.
 config/i18n.py         → LANGUAGES, LOCALE_PATHS
@@ -132,7 +132,7 @@ Five task modules registered in `CELERY_IMPORTS`: `ticket`, `service`, `sla_engi
 
 ### Database
 
-MySQL via PyMySQL. Test DB configured via `MYSQL_TEST_NAME`. Each app has its own `migrations/` directory.
+MySQL via mysqlclient. Test DB configured via `MYSQL_TEST_NAME`. Each app has its own `migrations/` directory.
 
 ### Templates
 
