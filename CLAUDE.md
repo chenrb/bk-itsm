@@ -45,13 +45,13 @@ pre-commit install && pre-commit install --hook-type commit-msg
 
 ## Environment Variables (local dev)
 
-Set in `.env` or `config/local_settings.py`:
+Copy `.env.example` to `.env` and edit. Redis and MySQL are both required.
 
 ```
 APP_CODE=bk_itsm         SECRET_KEY=changeme-in-production
-RUN_VER=open             DEBUG=true
+DEBUG=true
 BROKER_URL=redis://localhost:6379/0
-REDIS_HOST=localhost     REDIS_PORT=6379
+REDIS_HOST=localhost     REDIS_PORT=6379       REDIS_PASSWORD=
 MYSQL_NAME=bk_itsm      MYSQL_USER=root       MYSQL_PASSWORD=root
 MYSQL_HOST=localhost     MYSQL_PORT=3306       MYSQL_TEST_NAME=bk_itsm_test
 PLATFORM_API_BASE_URL=   # Optional: base URL for platform_client HTTP calls
@@ -61,7 +61,7 @@ PLATFORM_API_BASE_URL=   # Optional: base URL for platform_client HTTP calls
 
 ### Settings loading
 
-`settings.py` (root) is minimal — it installs pymysql, then does `from config.default import *`. `config/default.py` aggregates 10 sub-modules by concern:
+`settings.py` (root) is minimal — it installs pymysql, then does `from config.default import *`. `config/__init__.py` defines `celery_app`, `BASE_DIR`, `APP_CODE`, `SECRET_KEY`, `DEBUG`. `config/default.py` aggregates 10 sub-modules by concern:
 
 ```
 config/apps.py         → INSTALLED_APPS, MIDDLEWARE, AUTHENTICATION_BACKENDS
@@ -72,11 +72,15 @@ config/web.py          → TEMPLATES, STATIC_URL, etc.
 config/i18n.py         → LANGUAGES, LOCALE_PATHS
 config/pipeline.py     → pipeline engine config + is_superuser permission check
 config/business.py     → AUTO_TIMEOUT_MINUTES, business constants
-config/integrations.py → platform URLs (BK_CC_HOST, BK_JOB_HOST, etc.)
+config/integrations.py → platform URLs, frontend URL, webhook, docs
 config/monitoring.py   → monitoring/sentry config
 ```
 
 `config/local_settings.py` is gitignored — use it for personal overrides.
+
+### Auth
+
+Custom user model: `AUTH_USER_MODEL = "users.User"` defined in `itsm/component/users/models.py` (extends `AbstractBaseUser` + `PermissionsMixin`). Authentication backends: Django's `ModelBackend` + `openapi.authentication.backend.CustomUserBackend`. Custom middleware at the top of the stack: `UserLoginForbiddenMiddleware`, `ServiceSwitchCheck`, `ApiIgnoreCheck`.
 
 ### Django apps (under `itsm/`)
 
@@ -102,17 +106,19 @@ config/monitoring.py   → monitoring/sentry config
 ### API routing
 
 `urls.py` (root) dispatches:
+- `/account/` → `itsm.component.users.urls` (login/auth)
 - `/api/` → `itsm.api.v1`
 - `/openapi/` → `itsm.api.open_v1`
 - `/openapi/v2/` → `itsm.api.open_v2`
 - `/monitor/` → `itsm.monitor.urls`
+- `/eri/admin/` → `pipeline.contrib.engine_admin.urls` (pipeline engine admin)
 - `/` → `itsm.sites.urls` (frontend entry points)
 
 Each `itsm/` app follows Django conventions: `models.py` (or `models/`), `views.py` (or `views/`), `serializers.py`, `urls.py`, `tasks.py`.
 
 ### Pipeline engine
 
-`pipeline/` is an embedded workflow engine (local code, not a pip package). `itsm/pipeline_plugins/` registers custom components (`components/collections/`) and variables (`variables/collections/`). The pipeline engine has its own Celery config imported via `from pipeline.celery.settings import *`.
+`pipeline/` is an embedded workflow engine (local code, not a pip package). `itsm/pipeline_plugins/` registers custom components (`components/collections/`) and variables (`variables/collections/`). The pipeline engine has its own Celery config imported via `from pipeline.celery.settings import *`. Pipeline completion hooks into ticket lifecycle via `PIPELINE_END_HANDLER = "itsm.ticket.handlers.pipeline_end_handler"`.
 
 ### Shared libraries
 
@@ -122,7 +128,7 @@ Each `itsm/` app follows Django conventions: `models.py` (or `models/`), `views.
 
 ### Celery
 
-Five task modules registered in `CELERY_IMPORTS`: `ticket`, `service`, `sla_engine`, `trigger`, `task`. Tasks use pickle serializer.
+Five task modules registered in `CELERY_IMPORTS`: `ticket`, `service`, `sla_engine`, `trigger`, `task`. Tasks use pickle serializer. `manage.py` applies eventlet/gevent monkey-patching when Celery is invoked with those workers. `celery_app` is initialized in `config/__init__.py`.
 
 ### Database
 
@@ -153,7 +159,7 @@ See `frontend/pc/CLAUDE.md` for full Vue conventions. Key: Vue 3 + Vite 4 + Vuex
 
 ## CI
 
-GitHub Actions (`.github/workflows/django.yml`): Python 3.13 + MySQL + Redis → install deps → migrate → `coverage run manage.py test itsm.tests` → Codecov upload.
+GitHub Actions (`.github/workflows/django.yml`): Python 3.13 + MySQL + Redis → install deps → migrate → test → Codecov. **Note:** CI currently references `./scripts/workflows/bk_ci.sh` which was deleted during Phase 2 cleanup — the workflow file needs updating before CI will pass.
 
 ## Refactoring
 

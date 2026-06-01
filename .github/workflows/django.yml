@@ -1,14 +1,12 @@
-name: CodeCov
+name: CI
 on: [push, pull_request]
 jobs:
-  run:
+  test:
     runs-on: ubuntu-22.04
     env:
-      OS: ubuntu-22.04
-      PYTHON: "3.13"
       APP_CODE: "bk_itsm"
-      RUN_VER: "open"
       SECRET_KEY: "12345678-1234-5678-1234-123456789012"
+      DEBUG: "false"
       BROKER_URL: "redis://localhost:6379/0"
       REDIS_HOST: "localhost"
       REDIS_PORT: 6379
@@ -19,35 +17,36 @@ jobs:
       MYSQL_HOST: "localhost"
       MYSQL_PORT: 3306
       MYSQL_TEST_NAME: "bk_itsm_test"
-      WORKFLOW_DIR: "scripts/workflows"
-      YUM_INSTALL_SERVICE: ""
-      CREATE_PYTHON_VENV: ""
     services:
-      # Label used to access the service container
       redis:
-        # Docker Hub image
         image: redis
-        # Set health checks to wait until redis has started
         options: >-
           --health-cmd "redis-cli ping"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
         ports:
-          # Maps port 6379 on service container to the host
           - 6379:6379
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v2
-    - name: Setup Python
-      uses: actions/setup-python@master
-      with:
-        python-version: "3.13"
-    - name: Setup Mysql
-      run: |
-        sudo systemctl start mysql.service
-    - name: Generate Report
-      run: |
-        ./scripts/workflows/bk_ci.sh
-    - name: Upload Coverage to Codecov
-      uses: codecov/codecov-action@v1
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Start MySQL
+        run: sudo systemctl start mysql.service
+
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Migrations
+        run: python manage.py migrate
+
+      - name: Run Tests
+        run: coverage run manage.py test itsm.tests
+
+      - name: Upload Coverage to Codecov
+        uses: codecov/codecov-action@v4
