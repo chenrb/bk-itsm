@@ -126,7 +126,6 @@ def index(request):
             "USE_LOG": "true",
             "LOGIN_URL": LOGIN_URL,
             "LOG_NAME": _("流程服务"),
-            "IS_USE_INVITE_SMS": "true" if settings.IS_USE_INVITE_SMS else "false",
             "USER_MANAGE_HOST": BK_USER_MANAGE_HOST,
             "PLATFORM_API_URL": settings.PLATFORM_API_URL,
             "TAM_PROJECT_ID": settings.TAM_PROJECT_ID,

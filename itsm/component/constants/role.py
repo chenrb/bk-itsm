@@ -65,7 +65,6 @@ VARIABLE_LEADER = "VARIABLE_LEADER"
 ASSIGN_LEADER = "ASSIGN_LEADER"
 
 PROCESSOR_CHOICES = [
-    (CMDB, "CMDB业务公用角色"),
     (GENERAL, "通用角色表"),
     (OPEN, "不限"),
     (PERSON, "个人"),

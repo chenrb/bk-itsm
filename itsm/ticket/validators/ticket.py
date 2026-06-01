@@ -35,7 +35,6 @@ from common.log import logger
 from itsm.component.constants import (
     ACTION_DICT,
     CLAIM_OPERATE,
-    DEFAULT_BK_BIZ_ID,
     DERIVE,
     DISTRIBUTE_OPERATE,
     MASTER_SLAVE,
@@ -45,7 +44,6 @@ from itsm.component.constants import (
     TICKET_END_STATUS,
 )
 from itsm.component.exceptions import CreateTicketError, ParamError
-from itsm.component.utils.basic import dotted_name
 from itsm.component.utils.client_backend_query import get_user_department_ids
 from itsm.component.utils.conversion import format_exp_value
 from itsm.role.models import UserRole
@@ -121,10 +119,9 @@ class CreateTicketValidator:
 class StateOperateValidator:
     """认领、转单、派单"""
 
-    def __init__(self, current_node, bk_biz_id=None):
+    def __init__(self, current_node):
         self.current_node = current_node
         self.action_type = None
-        self.bk_biz_id = bk_biz_id
 
     def __call__(self, value):
 
@@ -238,7 +235,7 @@ class StateOperateValidator:
         ):
             # 指定了角色范围的人员信息
             valid_person = UserRole.get_users_by_type(
-                self.bk_biz_id, reference_processor_type, reference_processors, self
+                reference_processor_type, reference_processors, self
             )
 
             if not set(processors).issubset(set(valid_person)):
@@ -264,12 +261,9 @@ def first_state_permission(fields, first_state, username):
         else:
             return
 
-    # 提单节点提交的字段bk_biz_id的值
-    bk_biz_id = get_bk_biz_id(fields)
-
     if username in set(
         UserRole.get_users_by_type(
-            bk_biz_id, first_state["processors_type"], first_state["processors"]
+            first_state["processors_type"], first_state["processors"]
         )
     ):
         return
@@ -409,7 +403,8 @@ def merge_validate(from_ticket_ids, to_ticket_id, operator):
     # 关联操作的人为服务负责人或者ITSM超级管理员
     service = Service.objects.get(id=to_ticket["service_id"])
     if not (
-        UserRole.is_itsm_superuser(operator) or dotted_name(operator) in service.owners
+        UserRole.is_itsm_superuser(operator)
+        or service.owners.filter(username=operator).exists()
     ):
         raise serializers.ValidationError(_("抱歉，您没有关联母子单的权限"))
 
@@ -444,7 +439,8 @@ def unmerge_authorize_validate(master_ticket_id, operator):
         raise serializers.ValidationError(_("母单关联服务不存在，请联系管理员"))
 
     if not (
-        UserRole.is_itsm_superuser(operator) or dotted_name(operator) in service.owners
+        UserRole.is_itsm_superuser(operator)
+        or service.owners.filter(username=operator).exists()
     ):
         raise serializers.ValidationError(_("抱歉，您没有解绑母子单的权限"))
 
@@ -627,10 +623,9 @@ def ticket_operate_validate(fields, state_id, ticket, username):
             )
         )
 
-    # 区别提单节点：1、open类型，2、业务相关，未提单成功不更新业务id
+    # 区别提单节点：1、open类型
     if ticket.first_state_id == state_id:
-        bk_biz_id = get_bk_biz_id(fields)
-        if not status.can_first_state_operate(username, bk_biz_id):
+        if not status.can_first_state_operate(username):
             raise serializers.ValidationError(
                 _("【{}】没有任务【{}】的【提交】操作权限.").format(
                     username, status.name
@@ -654,14 +649,3 @@ def ticket_status_validate(ticket, state_id):
 
     if ticket.current_status in TICKET_END_STATUS:
         raise serializers.ValidationError(_("单据状态为结束状态，无法继续转换"))
-
-
-def get_bk_biz_id(fields):
-    """提单节点提交的字段bk_biz_id的值"""
-    bk_biz_id = DEFAULT_BK_BIZ_ID
-    for f in fields:
-        if f.get("key") == "bk_biz_id":
-            bk_biz_id = f.get("value")
-            return bk_biz_id
-
-    return bk_biz_id

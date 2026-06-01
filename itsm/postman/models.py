@@ -101,12 +101,11 @@ class RemoteSystem(Model):
     desc = models.CharField(
         _("系统描述"), max_length=LEN_LONG, default=EMPTY_STRING, null=True, blank=True
     )
-    owners = models.CharField(
-        _("系统责任人"),
-        max_length=LEN_NORMAL,
-        default=EMPTY_STRING,
-        null=True,
+    owners = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name="owned_remote_systems",
         blank=True,
+        verbose_name=_("系统责任人"),
     )
     contact_information = models.TextField(_("联系方式"), blank=True)
     is_builtin = models.BooleanField(_("是否内置系统"), default=False)
@@ -144,6 +143,8 @@ class RemoteSystem(Model):
     def data_to_dict(self):
         data = model_to_dict(self)
         data.pop("id")
+        data.pop("owners", None)
+        data["owners"] = list(self.owners.values_list("username", flat=True))
         data.update(
             headers=data["headers"],
             cookies=data["headers"],
@@ -217,7 +218,12 @@ class RemoteApi(ObjectManagerMixin, Model):
         default="GET",
     )
     desc = models.CharField(_("描述"), max_length=LEN_LONG, default="")
-    owners = models.CharField(_("负责人"), max_length=LEN_XX_LONG, default=EMPTY_STRING)
+    owners = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name="owned_remote_apis",
+        blank=True,
+        verbose_name=_("负责人"),
+    )
 
     # 参数格式
     req_headers = models.JSONField(
@@ -293,7 +299,15 @@ class RemoteApi(ObjectManagerMixin, Model):
     def tag_data(self):
         """Api数据"""
         data = model_to_dict(
-            self, exclude=["id", "req_headers", "req_params", "req_body", "rsp_data"]
+            self,
+            exclude=[
+                "id",
+                "req_headers",
+                "req_params",
+                "req_body",
+                "rsp_data",
+                "owners",
+            ],
         )
 
         data.update(
@@ -306,6 +320,7 @@ class RemoteApi(ObjectManagerMixin, Model):
             system_info=self.remote_system.data_to_dict(),
             is_builtin=False,
             read_only=False,
+            owners=list(self.owners.values_list("username", flat=True)),
         )
 
         return data

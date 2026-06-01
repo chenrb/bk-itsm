@@ -34,7 +34,6 @@ from itsm.component.constants import (
     COVERAGE_STATE,
     COVERAGE_STATE_LABEL_PREFIX,
     EMPTY,
-    FIELD_BIZ,
     FIELD_TITLE,
     GLOBAL_LABEL,
     LABEL_PREFIX,
@@ -96,12 +95,10 @@ def person_validate(processors):
         )
 
 
-def person_and_type_validate(processors, processors_type, is_biz_needed):
+def person_and_type_validate(processors, processors_type):
     """
     用户角色校验
     """
-    if processors_type == role.CMDB and is_biz_needed is False:
-        raise ParamError(_("不关联业务的流程不能选择CMDB操作角色"))
     if processors_type == role.PERSON:
         person_validate(processors)
 
@@ -498,8 +495,6 @@ class StateProcessorsValidator:
             # 创建的时候不需要校验这部分信息
             return
 
-        is_biz_needed = value.get("workflow").is_biz_needed
-
         if not RoleType.objects.filter(
             is_processor=True, type=processors_type
         ).exists():
@@ -521,7 +516,7 @@ class StateProcessorsValidator:
             ):
                 raise ParamError(_("该节点操作角色不能选择不限"))
 
-        person_and_type_validate(processors, processors_type, is_biz_needed)
+        person_and_type_validate(processors, processors_type)
 
 
 class FieldValidator:
@@ -702,8 +697,8 @@ class TemplateFieldValidator(FieldValidator):
                 & Q(project_key=value.get("project_key"))
                 & Q(is_deleted=False)
             ).exists():
-                if value.get("key") in [FIELD_TITLE, FIELD_BIZ]:
-                    raise ParamError(_("title, bk_biz_id 为内置唯一标识，请重新输入"))
+                if value.get("key") in [FIELD_TITLE]:
+                    raise ParamError(_("title 为内置唯一标识，请重新输入"))
                 raise ParamError(
                     _("当前项目字段库已存在唯一标识【{}】，请重新输入").format(
                         value.get("key")

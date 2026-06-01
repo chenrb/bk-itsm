@@ -60,7 +60,7 @@
         <bk-input maxlength="120"
           v-model="formInfo.name"
           @change="fieldNameChange"
-          :disabled="changeInfo.source === 'TABLE' && formInfo.key !== 'bk_biz_id'"
+          :disabled="changeInfo.source === 'TABLE'"
           :placeholder="$t(`m.treeinfo['请输入字段显示名']`)"
           @input="putKey">
         </bk-input>
@@ -88,7 +88,7 @@
         :ext-cls="'bk-halfline-item bk-halfline-margin bk-mt20-item'">
         <bk-select v-model="formInfo.type"
           :clearable="false"
-          :disabled="(changeInfo.is_builtin || changeInfo.source === 'TABLE' || (changeInfo.meta && changeInfo.meta.code === 'APPROVE_RESULT')) && formInfo.key !== 'bk_biz_id'"
+          :disabled="(changeInfo.is_builtin || changeInfo.source === 'TABLE' || (changeInfo.meta && changeInfo.meta.code === 'APPROVE_RESULT'))"
           searchable
           @selected="changeType">
           <bk-option v-for="option in fieldTypeList"
@@ -105,7 +105,7 @@
         :ext-cls="'bk-halfline-item bk-mt20-item'">
         <bk-select v-model="formInfo.regex"
           :clearable="false"
-          :disabled="(changeInfo.is_builtin || changeInfo.source === 'TABLE' || (changeInfo.meta && changeInfo.meta.code === 'APPROVE_RESULT')) && formInfo.key !== 'bk_biz_id'"
+          :disabled="(changeInfo.is_builtin || changeInfo.source === 'TABLE' || (changeInfo.meta && changeInfo.meta.code === 'APPROVE_RESULT'))"
           searchable
           @selected="changeRegex">
           <bk-option v-for="option in regexList"
@@ -167,7 +167,7 @@
           :ext-cls="'bk-halfline-item bk-halfline-margin bk-mt20-item'">
           <bk-input
             v-model="formInfo.customRegex"
-            :disabled="(changeInfo.is_builtin || changeInfo.source === 'TABLE') && formInfo.key !== 'bk_biz_id'"
+            :disabled="(changeInfo.is_builtin || changeInfo.source === 'TABLE')"
             :placeholder="$t(`m.treeinfo['请输入正则规则']`)"
             @change="$emit('change')">
           </bk-input>
@@ -239,7 +239,7 @@
             <custom-table-data :custom-table-info="customTableInfo"></custom-table-data>
             <p class="bk-field-error" v-if="checkStatus.customTableStatus">{{ $t('m.treeinfo["请填写正确格式的自定义数据"]') }}</p>
           </div>
-          <div class="bk-form-disabled" v-if="(changeInfo.is_builtin || changeInfo.source === 'TABLE' || (changeInfo.meta && changeInfo.meta.code === 'APPROVE_RESULT')) && formInfo.key !== 'bk_biz_id'"></div>
+          <div class="bk-form-disabled" v-if="(changeInfo.is_builtin || changeInfo.source === 'TABLE' || (changeInfo.meta && changeInfo.meta.code === 'APPROVE_RESULT'))"></div>
         </bk-form-item>
       </template>
       <template v-if="formInfo.type === 'FILE'">
@@ -258,7 +258,7 @@
               <span class="bk-file-delete" @click="deleteFile(item, index)">×</span>
             </li>
           </ul>
-          <div class="bk-form-disabled" v-if="(changeInfo.is_builtin || changeInfo.source === 'TABLE') && formInfo.key !== 'bk_biz_id'"></div>
+          <div class="bk-form-disabled" v-if="(changeInfo.is_builtin || changeInfo.source === 'TABLE')"></div>
         </bk-form-item>
       </template>
       <template v-if="showType.belongDefaultList.some(belong => formInfo.type === belong)">
@@ -300,7 +300,7 @@
               <bk-radio :ext-cls="'mr20'"
                 :key="validateIndex"
                 :value="validate.typeName"
-                :disabled="changeInfo.key === 'title' || changeInfo.is_builtin || formInfo.key === 'bk_biz_id'">
+                :disabled="changeInfo.key === 'title' || changeInfo.is_builtin">
                 {{validate.name}}
               </bk-radio>
             </template>
@@ -309,7 +309,7 @@
       </template>
       <bk-form-item :ext-cls="'bk-tanble-height bk-mt20-item'"
         :label="$t(`m.treeinfo['填写说明']`)">
-        <!-- 禁用：formInfo.isModule && formInfo.key!== 'bk_biz_id' -->
+
         <textarea
           class="bk-form-textarea bk-textarea-tanble bk-halfline-item bk-halfline-margin field-input-tips"
           :placeholder="$t(`m.treeinfo['请输入字段填写说明']`)"
@@ -331,7 +331,7 @@
           :label="$t(`m.treeinfo['字段释疑']`)"
           :required="true"
           :ext-cls="'bk-mt20-item'">
-          <!-- 禁用：formInfo.isModule && formInfo.key!== 'bk_biz_id' -->
+  
           <textarea
             class="bk-form-textarea bk-textarea-tanble bk-halfline-item bk-halfline-margin"
             :placeholder="$t(`m.treeinfo['请输入，用于鼠标经过提示']`)"

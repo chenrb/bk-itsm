@@ -53,7 +53,6 @@ from itsm.component.constants import (
     BASE_MODEL,
     NOTIFY_GLOBAL_VARIABLES,
     CLAIM_OPERATE,
-    DEFAULT_BK_BIZ_ID,
     DEFAULT_ENGINE_VERSION,
     DEFAULT_ORDER,
     DEFAULT_STRING,
@@ -162,7 +161,6 @@ from itsm.component.utils.client_backend_query import (
     get_user_leader,
     get_user_departments,
     get_bk_users,
-    get_bk_business,
 )
 from itsm.sla_engine.constants import (
     RUNNING as SLA_RUNNING,
@@ -274,7 +272,6 @@ class Status(Model):
     ticket_id = models.IntegerField(_("单据ID"), db_index=True)
     by_flow = models.CharField(_("进入节点的线条ID"), max_length=64, default="")
     state_id = models.IntegerField(_("节点ID"))
-    bk_biz_id = models.IntegerField(_("业务ID"), default=DEFAULT_BK_BIZ_ID)
     name = models.CharField(_("节点名"), max_length=LEN_NORMAL, default=EMPTY_STRING)
     type = models.CharField(
         _("节点类型类型"),
@@ -384,7 +381,7 @@ class Status(Model):
         )
         processed_user_list = tasks.values_list("processor", flat=True)
         user_list = UserRole.get_users_by_type(
-            self.bk_biz_id, self.processors_type, self.processors, self.ticket
+            self.processors_type, self.processors, self.ticket
         )
         # Filter unprocessed user
         processor_list = list(set(user_list).difference(processed_user_list))
@@ -419,7 +416,7 @@ class Status(Model):
 
     def get_user_list(self):
         user_list = UserRole.get_users_by_type(
-            self.bk_biz_id, self.processors_type, self.processors, self.ticket
+            self.processors_type, self.processors, self.ticket
         )
         return user_list
 
@@ -514,7 +511,6 @@ class Status(Model):
         action_type = kwargs["action_type"]
         ticket = kwargs.pop("ticket", None)
         real_processors = UserRole.get_users_by_type(
-            ticket.bk_biz_id,
             kwargs.get("processors_type", "PERSON"),
             kwargs.get("processors"),
             ticket,
@@ -534,7 +530,6 @@ class Status(Model):
                     ).values_list("processor", flat=True)
                 )
                 new_processor_list = UserRole.get_users_by_type(
-                    self.bk_biz_id,
                     kwargs.get("processors_type"),
                     kwargs.get("processors"),
                     self.ticket,
@@ -692,14 +687,14 @@ class Status(Model):
         else:
             return False
 
-    def can_first_state_operate(self, username, bk_biz_id):
+    def can_first_state_operate(self, username):
         """能否提单"""
 
         if self.processors_type == "OPEN":
             return True
 
         return username in UserRole.get_users_by_type(
-            bk_biz_id, self.processors_type, self.processors, self.ticket
+            self.processors_type, self.processors, self.ticket
         )
 
     def can_sign_state_operate(self, username):
@@ -832,15 +827,7 @@ class Status(Model):
             roles = UserRole.objects.filter(id__in=role_ids)
             role_name_list = list(roles.values_list("name", "members"))
             if self.processors_type == "CMDB":
-                if self.bk_biz_id == DEFAULT_BK_BIZ_ID:
-                    return []
-
-                cmdb_users = get_bk_business(
-                    self.bk_biz_id, role_type=[role.role_key for role in roles]
-                )
-                display_name = "{}({})".format(
-                    "CMDB业务公用角色", ",".join(list_by_separator(cmdb_users))
-                )
+                return []
 
             if self.processors_type == "GENERAL":
                 role_name_members_list = [
@@ -889,7 +876,7 @@ class Status(Model):
         key_value = {}
         code_list = [PROCESS_COUNT, PASS_COUNT, REJECT_COUNT, PASS_RATE, REJECT_RATE]
         user_list = UserRole.get_users_by_type(
-            ticket.bk_biz_id, self.processors_type, self.processors, ticket
+            self.processors_type, self.processors, ticket
         )
         context = {"total_count": len(user_list)}
 
@@ -933,17 +920,17 @@ class Status(Model):
             return [_("系统自动处理")]
 
         return UserRole.get_users_by_type(
-            self.ticket.bk_biz_id, self.processors_type, self.processors, self.ticket
+            self.processors_type, self.processors, self.ticket
         )
 
     def get_delivers(self):
         return UserRole.get_users_by_type(
-            self.ticket.bk_biz_id, self.delivers_type, self.delivers, self.ticket
+            self.delivers_type, self.delivers, self.ticket
         )
 
     def get_assignors(self):
         return UserRole.get_users_by_type(
-            self.ticket.bk_biz_id, self.assignors_type, self.assignors, self.ticket
+            self.assignors_type, self.assignors, self.ticket
         )
 
     @property
@@ -1314,10 +1301,6 @@ class Ticket(Model):
     )
     # 流程版本ID
     flow_id = models.IntegerField(_("流程版本ID"), default=EMPTY_INT)
-    # 蓝鲸业务ID，默认为-1，即不绑定业务
-    bk_biz_id = models.IntegerField(
-        _("业务id"), default=DEFAULT_BK_BIZ_ID, blank=True, null=True
-    )
     priority_key = models.CharField(
         _("优先级编码"), max_length=LEN_LONG, blank=True, null=True
     )
@@ -1349,8 +1332,11 @@ class Ticket(Model):
     current_task_processors = models.CharField(
         _("任务处理者列表"), max_length=LEN_LONG, default=EMPTY_STRING
     )
-    history_task_processors = models.CharField(
-        _("任务历史处理者列表"), max_length=LEN_LONG, default=EMPTY_STRING
+    history_task_processors = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name="history_task_tickets",
+        blank=True,
+        verbose_name=_("任务历史处理者列表"),
     )
 
     # Deprecated Fields
@@ -1420,11 +1406,12 @@ class Ticket(Model):
         verbose_name_plural = _("工单")
         ordering = ("-id",)
         indexes = [
-            models.Index(fields=["create_at", "bk_biz_id", "service_id", "current_status", "service_type"]),
             models.Index(fields=["service_id", "create_at"]),
-            models.Index(fields=["bk_biz_id", "service_id"]),
             models.Index(fields=["creator", "create_at"]),
             models.Index(fields=["current_status", "create_at"]),
+            models.Index(fields=["current_status", "service_id", "create_at"]),
+            models.Index(fields=["creator", "current_status"]),
+            models.Index(fields=["updated_by", "create_at"]),
         ]
 
     def __unicode__(self):
@@ -1793,7 +1780,7 @@ class Ticket(Model):
             return [self.creator]
 
         supervisors = UserRole.get_users_by_type(
-            self.bk_biz_id, self.supervise_type, self.supervisor, self
+            self.supervise_type, self.supervisor, self
         )
 
         # 默认提单人可以督办
@@ -1834,7 +1821,7 @@ class Ticket(Model):
             )
             for task in tasks:
                 task_processor = UserRole.get_users_by_type(
-                    self.bk_biz_id, task.processors_type, task.processors
+                    task.processors_type, task.processors
                 )
                 processors.update(task_processor)
 
@@ -1929,7 +1916,7 @@ class Ticket(Model):
             return [get_department_info(status.processors.strip(",")).get("name", "")]
         else:
             return UserRole.get_users_by_type(
-                self.bk_biz_id, status.processors_type, status.processors, self
+                status.processors_type, status.processors, self
             )
 
     @property
@@ -2266,11 +2253,6 @@ class Ticket(Model):
         if all_processors.intersection(user_roles["general"]):
             # 普通角色存在列表中
             return True
-
-        for role_id in all_processors.intersection(user_roles["cmdb"].keys()):
-            if self.bk_biz_id in user_roles["cmdb"][role_id]:
-                # 对应的业务id和cmdb的角色存在列表中
-                return True
 
         organization = set(map(lambda x: "O_{}".format(x), user_roles["organization"]))
         if all_processors.intersection(organization):
@@ -2652,7 +2634,6 @@ class Ticket(Model):
         notify_log = self.follower_notify_logs.filter(ticket_token=token)
         if notify_log:
             followers = UserRole.get_users_by_type(
-                self.bk_biz_id,
                 notify_log[0].followers_type,
                 notify_log[0].followers,
                 self,
@@ -3289,7 +3270,7 @@ class Ticket(Model):
         # 认领后处理
         elif distribute_type == "CLAIM_THEN_PROCESS":
             real_processors = UserRole.get_users_by_type(
-                self.bk_biz_id, f_processors_type, f_processors, self
+                f_processors_type, f_processors, self
             )
             if len(real_processors) == 1:
                 processors = dotted_name(",".join(real_processors))
@@ -3323,7 +3304,6 @@ class Ticket(Model):
             )
 
         defaults = {
-            "bk_biz_id": self.bk_biz_id or DEFAULT_BK_BIZ_ID,
             "status": status,
             "tag": getattr(state, "tag", DEFAULT_STRING),
             "name": state.name,
@@ -3513,7 +3493,6 @@ class Ticket(Model):
                 many=True,
                 context={
                     "username": username,
-                    "bk_biz_id": self.bk_biz_id,
                     "show_all_fields": True,
                 },
             ).data
@@ -4002,8 +3981,7 @@ class Ticket(Model):
 
         if str(state_id) == self.first_state_id:
             self.title = self.get_field_value("title", "--")
-            self.bk_biz_id = self.get_field_value("bk_biz_id", DEFAULT_BK_BIZ_ID)
-            self.save(update_fields=("title", "bk_biz_id"))
+            self.save(update_fields=("title",))
 
         if self.is_sla_end_state(state_id):
             self.stop_sla(state_id)
@@ -4085,7 +4063,6 @@ class Ticket(Model):
             "service_id": self.service_id,
             "service_type": self.service_type,
             "meta": self.meta,
-            "bk_biz_id": self.bk_biz_id,
             "current_status": self.current_status,
             "create_at": self.create_at,
             "creator": self.creator,
@@ -4301,10 +4278,11 @@ class Ticket(Model):
 
     def add_history_task_processors(self, username):
         """追加历史任务处理人"""
-        history_task_processors = list_by_separator(self.history_task_processors)
-        history_task_processors.append(username)
-        self.history_task_processors = dotted_name(",".join(history_task_processors))
-        self.save()
+        from django.contrib.auth import get_user_model
+
+        User = get_user_model()
+        user, _ = User.objects.get_or_create(username=username)
+        self.history_task_processors.add(user)
 
     def close(self, close_status, desc="", operator=""):
         # 关闭单据
@@ -4617,11 +4595,10 @@ class Ticket(Model):
         except UserRole.DoesNotExist:
             return ""
 
-    def get_current_processors(self, bk_biz_id=None):
+    def get_current_processors(self):
         """获取当前处理人列表"""
 
         users = UserRole.get_users_by_type(
-            bk_biz_id if bk_biz_id else self.bk_biz_id,
             self.current_processors_type,
             self.current_processors,
             self,
@@ -4733,15 +4710,6 @@ class Ticket(Model):
         return tickets.count()
 
     @classmethod
-    def get_biz_count(cls, service_id=None, scope=None, project_query=Q()):
-        tickets = Ticket.objects.filter(project_query).filter(bk_biz_id__gt=-1)
-        if service_id:
-            tickets = tickets.filter(service_id=service_id)
-        if scope:
-            tickets = tickets.filter(create_at__range=scope)
-        return len(set(tickets.values_list("bk_biz_id", flat=True)))
-
-    @classmethod
     def get_ticket_user_count(cls, service_id, scope=None, project_query=Q()):
         tickets = cls.objects.filter(project_query).filter(service_id=service_id)
         event_log = TicketEventLog.objects.filter(
@@ -4781,24 +4749,6 @@ class Ticket(Model):
             .extra(select={"date_str": data_str})  # review
             .values("date_str")
             .annotate(count=Count("id"))
-            .order_by("date_str")
-        )
-        dates_range = fill_time_dimension(
-            data["create_at__gte"], data["create_at__lte"], info, time_delta
-        )
-        return dates_range
-
-    @classmethod
-    def get_biz_statistics(cls, time_delta, data, project_key=None):
-        project_query = Q(project_key=project_key) if project_key else Q()
-        data_str = TIME_DELTA[time_delta].format(field_name="create_at")
-        info = (
-            cls.objects.filter(project_query)
-            .filter(**data)
-            .filter(bk_biz_id__gt=-1)
-            .extra(select={"date_str": data_str})  # review
-            .values("date_str")
-            .annotate(count=Count("bk_biz_id", distinct=True))
             .order_by("date_str")
         )
         dates_range = fill_time_dimension(

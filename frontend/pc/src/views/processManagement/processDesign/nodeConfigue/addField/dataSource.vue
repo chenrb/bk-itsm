@@ -143,7 +143,7 @@
         return this.$store.state.common.configurInfo;
       },
       dataSourceDisable() {
-        return (this.changeInfo.is_builtin || this.changeInfo.source === 'TABLE' || (this.changeInfo.meta && this.changeInfo.meta.code === 'APPROVE_RESULT')) && this.formInfo.key !== 'bk_biz_id';
+        return (this.changeInfo.is_builtin || this.changeInfo.source === 'TABLE' || (this.changeInfo.meta && this.changeInfo.meta.code === 'APPROVE_RESULT'));
       },
     },
     watch: {

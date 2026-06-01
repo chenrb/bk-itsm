@@ -44,7 +44,6 @@ from itsm.component.drf.serializers import (
     BaseModelSerializer,
 )
 from itsm.component.exceptions import ParamError
-from itsm.component.utils.basic import normal_name, dotted_name
 from itsm.meta.services.domain_validate_service import DomainValidateService
 from itsm.postman.models import RemoteApi, RemoteApiInstance, RemoteSystem
 from itsm.workflow.models import Field, State
@@ -79,8 +78,8 @@ class RemoteSystemSerializer(BaseModelSerializer):
     )
     system_id = serializers.IntegerField(required=False)
     desc = serializers.CharField(max_length=LEN_LONG, required=False, allow_blank=True)
-    owners = serializers.CharField(
-        max_length=LEN_NORMAL, required=False, allow_blank=True
+    owners = serializers.ListField(
+        child=serializers.CharField(), required=False, default=list
     )
 
     is_activated = serializers.BooleanField(required=True)
@@ -122,11 +121,6 @@ class RemoteSystemSerializer(BaseModelSerializer):
         data = super(RemoteSystemSerializer, self).to_internal_value(data)
         return data
 
-    def to_representation(self, instance):
-        data = super(RemoteSystemSerializer, self).to_representation(instance)
-        data["can_edit"] = True
-        return data
-
     # ====================================== validate ========================
     def validate_code(self, value):
         if self.instance:
@@ -145,6 +139,31 @@ class RemoteSystemSerializer(BaseModelSerializer):
         if DomainValidateService().is_safe_url(value):
             return value
         raise ParamError(_("不合法的域名"))
+
+    def to_representation(self, instance):
+        data = super(RemoteSystemSerializer, self).to_representation(instance)
+        data["can_edit"] = True
+        data["owners"] = list(instance.owners.values_list("username", flat=True))
+        return data
+
+    def create(self, validated_data):
+        from django.contrib.auth import get_user_model
+
+        User = get_user_model()
+        owners = validated_data.pop("owners", [])
+        instance = super(RemoteSystemSerializer, self).create(validated_data)
+        instance.owners.set(User.objects.filter(username__in=owners))
+        return instance
+
+    def update(self, instance, validated_data):
+        from django.contrib.auth import get_user_model
+
+        User = get_user_model()
+        owners = validated_data.pop("owners", None)
+        instance = super(RemoteSystemSerializer, self).update(instance, validated_data)
+        if owners is not None:
+            instance.owners.set(User.objects.filter(username__in=owners))
+        return instance
 
 
 class RemoteApiSerializer(DynamicFieldsModelSerializer):
@@ -170,8 +189,8 @@ class RemoteApiSerializer(DynamicFieldsModelSerializer):
         choices=[("GET", "GET"), ("POST", "POST")], default="GET"
     )
     desc = serializers.CharField(max_length=LEN_LONG, required=False, allow_blank=True)
-    owners = serializers.CharField(
-        required=False, max_length=LEN_XX_LONG, allow_blank=True
+    owners = serializers.ListField(
+        child=serializers.CharField(), required=False, default=list
     )
 
     is_activated = serializers.BooleanField(required=True)
@@ -213,8 +232,6 @@ class RemoteApiSerializer(DynamicFieldsModelSerializer):
 
     def to_internal_value(self, data):
         data = super(RemoteApiSerializer, self).to_internal_value(data)
-        if "owners" in data:
-            data["owners"] = dotted_name(data["owners"])
         return data
 
     def to_representation(self, instance):
@@ -226,12 +243,31 @@ class RemoteApiSerializer(DynamicFieldsModelSerializer):
         ).count()
 
         data["count"] = field_count + state_count
-        data["owners"] = normal_name(data.get("owners"))
+        data["owners"] = list(instance.owners.values_list("username", flat=True))
         if instance.remote_system.project_key == PUBLIC_PROJECT_PROJECT_KEY:
             return self.update_auth_actions(instance, data)
 
         data["auth_actions"] = []
         return data
+
+    def create(self, validated_data):
+        from django.contrib.auth import get_user_model
+
+        User = get_user_model()
+        owners = validated_data.pop("owners", [])
+        instance = super(RemoteApiSerializer, self).create(validated_data)
+        instance.owners.set(User.objects.filter(username__in=owners))
+        return instance
+
+    def update(self, instance, validated_data):
+        from django.contrib.auth import get_user_model
+
+        User = get_user_model()
+        owners = validated_data.pop("owners", None)
+        instance = super(RemoteApiSerializer, self).update(instance, validated_data)
+        if owners is not None:
+            instance.owners.set(User.objects.filter(username__in=owners))
+        return instance
 
     # ====================================== validate ========================
     def validate_name(self, value):

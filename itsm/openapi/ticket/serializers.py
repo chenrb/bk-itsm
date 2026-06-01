@@ -172,8 +172,6 @@ class TicketRetrieveSerializer(serializers.Serializer):
     end_at = serializers.DateTimeField(read_only=True)
     creator = serializers.CharField(read_only=True)
     create_at = serializers.DateTimeField(read_only=True)
-    is_biz_need = serializers.BooleanField(read_only=True)
-    bk_biz_id = serializers.IntegerField(read_only=True)
     fields = serializers.JSONField(read_only=True, source="ticket_fields")
     iframe_ticket_url = serializers.CharField(read_only=True)
 
@@ -315,8 +313,6 @@ class TicketListSerializer(serializers.Serializer):
     end_at = serializers.DateTimeField(read_only=True)
     creator = serializers.CharField(read_only=True)
     create_at = serializers.DateTimeField(read_only=True)
-    is_biz_need = serializers.BooleanField(read_only=True)
-    bk_biz_id = serializers.IntegerField(read_only=True)
     ticket_url = serializers.CharField(read_only=True)
     iframe_ticket_url = serializers.CharField(read_only=True)
 
@@ -413,7 +409,6 @@ class TicketCreateSerializer(TicketSerializer):
             "has_relationships",
             "priority_name",
             "meta",
-            "bk_biz_id",
             "project_key",
             "task_schemas",
             "tag",

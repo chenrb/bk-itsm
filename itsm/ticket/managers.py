@@ -40,7 +40,6 @@ from django.utils.translation import gettext as _
 from common.log import logger
 from itsm.component.constants import (
     CUSTOM_ACTION_OPERATE,
-    DEFAULT_BK_BIZ_ID,
     DEFAULT_ENGINE_VERSION,
     DEFAULT_STRING,
     EMPTY_DICT,
@@ -110,20 +109,7 @@ class StatusManager(Manager):
             )
 
         bk_user_roles = BKUserRole.get_or_update_user_roles(username)
-        cmdb_roles, organization_ids = (
-            bk_user_roles["cmdb"],
-            bk_user_roles["organization"],
-        )
-
-        # CMDB
-        for role, role_info in cmdb_roles.items():
-            if not role_info["bizs"]:
-                continue
-            filters.append(
-                Q(bk_biz_id__in=role_info["bizs"])
-                & Q(processors_type="CMDB")
-                & Q(processors__contains=role_info["role_id"])
-            )
+        organization_ids = bk_user_roles["organization"]
 
         # ORGANIZATION
         for organization_id in organization_ids:
@@ -234,19 +220,7 @@ class TicketManager(Manager):
 
         # CMDB
         bk_user_roles = BKUserRole.get_or_update_user_roles(username)
-        cmdb_roles, organization_ids = (
-            bk_user_roles["cmdb"],
-            bk_user_roles["organization"],
-        )
-
-        for role, role_info in cmdb_roles.items():
-            if not role_info["bizs"]:
-                continue
-
-            filters.append(
-                Q(bk_biz_id__in=role_info["bizs"])
-                & Q(current_processors__contains=dotted_name(role_info["role_id"]))
-            )
+        organization_ids = bk_user_roles["organization"]
 
         # ORGANIZATION
         for organization_id in organization_ids:
@@ -272,7 +246,7 @@ class TicketManager(Manager):
         dotted_username = dotted_name(username)
         return queryset.filter(
             Q(updated_by__contains=dotted_username)
-            | Q(history_task_processors=dotted_username)
+            | Q(history_task_processors__username=username)
         ).exclude(creator=username)
 
     def get_iam_auth_tickets(self, queryset, username):
@@ -354,7 +328,6 @@ class TicketManager(Manager):
         filter_conditions = {
             key: value
             for key, value in dict(
-                bk_biz_id=kwargs.get("bk_biz_id"),
                 service_id=kwargs.get("service_id"),
                 flow_id=kwargs.get("flow_id"),
                 catalog_id__in=ServiceCatalog.get_descendant_ids(
@@ -434,7 +407,7 @@ class TicketManager(Manager):
         import os
         import datetime
 
-        from distutils.dir_util import copy_tree
+        from shutil import copytree
         from itsm.workflow.models import WorkflowVersion
         from itsm.ticket.models import TicketField
         from itsm.iadmin.models import SystemSettings
@@ -489,7 +462,7 @@ class TicketManager(Manager):
                         new_path = os.path.join(
                             system_file_path, "{}_{}".format(ticket.id, new_state_id)
                         )
-                        copy_tree(old_path, new_path)
+                        copytree(old_path, new_path, dirs_exist_ok=True)
 
                 old_ticket_status = ticket.current_status
                 ticket.current_status = "RUNNING"
@@ -530,11 +503,6 @@ class TicketManager(Manager):
                     for field_id in state["fields"]:
                         field = copy.deepcopy(new_flow.get_field(field_id))
                         if not field:
-                            continue
-                        if (
-                            field["key"] == "bk_biz_id"
-                            and ticket.bk_biz_id == DEFAULT_BK_BIZ_ID
-                        ):
                             continue
                         field.update(state_id=state_id)
                         field.update(ticket_id=ticket.id)

@@ -27,7 +27,7 @@ from datetime import datetime, timedelta, time
 from functools import reduce
 
 from django.db import connection
-from django.db.models import Count, Q, Case, When, Max
+from django.db.models import Count, Q, Max
 from django.utils.translation import gettext as _
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
@@ -47,7 +47,6 @@ from itsm.component.drf.pagination import CustomPageNumberPagination
 from itsm.component.exceptions import ParamError
 from itsm.component.drf.permissions import IamAuthSystemPermit
 from itsm.component.utils.basic import dictfetchall, group_by
-from itsm.component.utils.client_backend_query import get_biz_names
 from itsm.component.utils.misc import (
     get_days,
     get_month_list,
@@ -110,7 +109,6 @@ class OperationalDataViewSet(component_viewsets.ReadOnlyModelViewSet):
                 "service_count": (
                     1 if service_id else project_analysis.get_service_count()
                 ),
-                "biz_count": project_analysis.get_biz_count(),
                 "user_count": (
                     project_analysis.get_ticket_user_count()
                     if service_id
@@ -171,15 +169,6 @@ class OperationalDataViewSet(component_viewsets.ReadOnlyModelViewSet):
             2,
         )
 
-        this_week_biz_count = this_week_project_analysis.get_biz_count()
-        last_week_biz_count = last_week_project_analysis.get_biz_count()
-        biz_ratio = round(
-            (this_week_biz_count - last_week_biz_count)
-            / (last_week_biz_count or 1)
-            * 100,
-            2,
-        )
-
         this_week_user_count = (
             this_week_project_analysis.get_ticket_user_count()
             if service_id
@@ -209,11 +198,6 @@ class OperationalDataViewSet(component_viewsets.ReadOnlyModelViewSet):
                     "last_week_count": last_week_service_count,
                     "ratio": "{}%".format(service_ratio),
                 },
-                "biz": {
-                    "this_week_count": this_week_biz_count,
-                    "last_week_count": last_week_biz_count,
-                    "ratio": "{}%".format(biz_ratio),
-                },
                 "user": {
                     "this_week_count": this_week_user_count,
                     "last_week_count": last_week_user_count,
@@ -225,7 +209,6 @@ class OperationalDataViewSet(component_viewsets.ReadOnlyModelViewSet):
     @action(detail=False, methods=["get"])
     def service_statistics(self, request):
         # "select service_id, count(*) as count, count(distinct creator),  "
-        # "count(distinct case when bk_biz_id>-1 then bk_biz_id else null end) "
         # "from `ticket_ticket` where create_at BETWEEN '{}' AND '{}' "
         # "group by service_id order by {} {} limit 0,10;".format(kwargs["create_at__gte"],
         #                                                         kwargs["create_at__lte"],
@@ -261,9 +244,6 @@ class OperationalDataViewSet(component_viewsets.ReadOnlyModelViewSet):
             .annotate(
                 count=Count("id"),
                 creator_count=Count("creator", distinct=True),
-                biz_count=Count(
-                    Case(When(bk_biz_id__gt=-1, then="bk_biz_id")), distinct=True
-                ),
             )
             .order_by(order)
         )
@@ -281,49 +261,12 @@ class OperationalDataViewSet(component_viewsets.ReadOnlyModelViewSet):
                     ],
                     "count": ticket["count"],
                     "creator_count": ticket["creator_count"],
-                    "biz_count": ticket["biz_count"],
                     "ratio": "{}%".format(
                         round(ticket["count"] / ticket_count * 100, 2)
                     ),
                 }
             )
         return self.get_paginated_response(service_info)
-
-    @action(detail=False, methods=["get"])
-    def biz_statistics(self, request):
-        project_key = request.query_params.get("project_key", None)
-        filter_serializer = StatisticsSerializer(data=request.query_params)
-        filter_serializer.is_valid(raise_exception=True)
-        kwargs = self.combine_date(filter_serializer.validated_data)
-        biz_id = kwargs.pop("biz_id", "")
-        biz_names = get_biz_names()
-        order = kwargs.pop("order_by")
-
-        queryset = self.queryset.filter(**kwargs).filter(bk_biz_id__gt=-1)
-        if project_key:
-            queryset = queryset.filter(project_key=project_key)
-        if biz_id:
-            queryset = queryset.filter(bk_biz_id__in=biz_id.split(","))
-
-        ticket_info = (
-            queryset.values("bk_biz_id")
-            .annotate(
-                count=Count("id"), service_count=Count("service_id", distinct=True)
-            )
-            .order_by(order)
-        )
-        ticket_info = self.paginate_queryset(ticket_info)
-        biz_info = []
-        for ticket in ticket_info:
-            biz_info.append(
-                {
-                    "bk_biz_id": ticket["bk_biz_id"],
-                    "bk_biz_name": biz_names.get(str(ticket["bk_biz_id"]), ""),
-                    "count": ticket["count"],
-                    "service_count": ticket["service_count"],
-                }
-            )
-        return self.get_paginated_response(biz_info)
 
     @action(detail=False, methods=["get"])
     def category_statistics(self, request):
@@ -421,7 +364,6 @@ class OperationalDataViewSet(component_viewsets.ReadOnlyModelViewSet):
 
         statistics = {
             "ticket": Ticket.get_ticket_statistics,
-            "biz": Ticket.get_biz_statistics,
         }
         dates_range = statistics[resource_type](time_delta, kwargs)
         return Response(dates_range)

@@ -125,7 +125,6 @@ TICKET_STATUS_CHOICES = [(item["key"], item["name"]) for item in BUILTIN_TICKET_
 TICKET_STATUS_DICT = dict(TICKET_STATUS_CHOICES)
 
 # 内置字段标识
-FIELD_BIZ = "bk_biz_id"
 FIELD_TITLE = "title"
 FIELD_PY_IMPACT = "impact"
 FIELD_PX_URGENCY = "urgency"
@@ -164,7 +163,6 @@ JSON_HANDLE_FIELDS = [
 EXPORT_FIELDS = [
     {"id": "sn", "name": _("工单编号")},
     {"id": "title", "name": _("标题")},
-    {"id": "bk_biz_id", "name": _("关联业务")},
     {"id": "service_type_name", "name": _("工单类型")},
     {"id": "catalog_fullname", "name": _("服务目录")},
     {"id": "current_status_display", "name": _("状态")},

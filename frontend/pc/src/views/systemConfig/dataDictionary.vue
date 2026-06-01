@@ -241,7 +241,7 @@
         this.isDataLoading = true;
         this.listError = false;
         this.$store.dispatch('datadict/list', params).then((res) => {
-          this.dataList = res.data.items.map(item => ({ ...item, ownersInputValue: item.owners ? item.owners.split(',') : [] }));
+          this.dataList = res.data.items.map(item => ({ ...item, ownersInputValue: item.owners || [] }));
           // 分页
           this.pagination.current = res.data.page;
           this.pagination.count = res.data.count;
@@ -331,7 +331,7 @@
       },
       // 新增字典
       openAddData(item) {
-        this.slideData = { ...item, ownersInputValue: item.owners ? item.owners.split(',') : [] };
+        this.slideData = { ...item, ownersInputValue: item.owners || [] };
         this.customSettings.title = item.id ? this.$t('m.systemConfig["编辑字典"]') : this.$t('m.systemConfig["新增字典"]');
         this.customSettings.isShow = true;
         this.isFormChanged = false;

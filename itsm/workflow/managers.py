@@ -47,7 +47,6 @@ from itsm.component.constants import (
     EMPTY,
     END_STATE,
     FIELD_BACK_MSG,
-    FIELD_BIZ,
     FIELD_STATUS,
     FIELD_TERM_MSG,
     NORMAL_STATE,
@@ -272,7 +271,7 @@ class WorkflowManager(Manager):
             TaskConfig,
         )
         from itsm.iadmin.models import SystemSettings
-        from distutils.dir_util import copy_tree
+        from shutil import copytree
 
         states = data.pop("states")
         transitions = data.pop("transitions")
@@ -283,14 +282,14 @@ class WorkflowManager(Manager):
         notify = data.pop("notify")
         table_data = data.pop("table")
 
-        # 更新WorkflowVersion的is_biz_needed、is_supervise_needed、supervise_type、supervisor
+        # 更新WorkflowVersion的is_supervise_needed、supervise_type、supervisor
         if for_migrate:
-            data["is_biz_needed"] = data.get("extras", {}).get("biz_related", False)
             data["supervisor"] = data.get("extras", {}).get("urgers", "")
             data["is_supervise_needed"] = data.get("extras", {}).get("need_urge", False)
             data["supervise_type"] = data.get("extras", {}).get("urgers_type", "EMPTY")
 
         # remove and update some fields
+        owners_list = data.pop("owners", [])
         for field in [
             "id",
             "creator",
@@ -311,7 +310,6 @@ class WorkflowManager(Manager):
         data.update(
             creator=operator,
             updated_by=operator,
-            owners=operator,
             name=data["name"]
             if data.get("is_builtin")
             else "{name}-{version_number}".format(**data),
@@ -328,6 +326,21 @@ class WorkflowManager(Manager):
             workflow = self.create(**data)
             workflow.notify.set(notify)
             workflow.save()
+
+        # M2M: add operator as owner
+        if operator:
+            from django.contrib.auth import get_user_model
+
+            User = get_user_model()
+            user, _ = User.objects.get_or_create(username=operator)
+            workflow.owners.add(user)
+
+        # M2M: set owners from imported data (list of usernames)
+        if owners_list:
+            from django.contrib.auth import get_user_model
+
+            User = get_user_model()
+            workflow.owners.set(User.objects.filter(username__in=owners_list))
 
         # 恢复table
         table, table_fields_map = Table.objects.restore(table_data)
@@ -399,7 +412,7 @@ class WorkflowManager(Manager):
                         new_workflow_id, _state_map.get(int(state_id), state_id)
                     ),
                 )
-                copy_tree(old_path, new_path)
+                copytree(old_path, new_path, dirs_exist_ok=True)
 
         # 刷新自动过单的配置
         workflow.is_auto_approve = data.get("is_auto_approve", False)
@@ -439,7 +452,6 @@ class WorkflowManager(Manager):
             workflows = workflows.filter(id=flow_id)
 
         group = False
-        biz_instance = kwargs.get("biz_instance")
 
         for workflow in workflows:
             # fix transitions of router about accept transition
@@ -672,18 +684,6 @@ class WorkflowManager(Manager):
                     except Exception:
                         pass
 
-                # 提单节点业务字段
-                if state.type == "NORMAL" and state.is_builtin is True:
-                    if workflow.is_biz_needed:
-                        Field._objects.filter(
-                            key=FIELD_BIZ, id__in=state.fields
-                        ).update(
-                            api_instance_id=biz_instance.id,
-                            source_type="API",
-                            type="SELECT",
-                            kv_relation={"name": "bk_biz_name", "key": "bk_biz_id"},
-                            desc="请选择业务",
-                        )
                 # 更新
                 state.fields = state_fields
 
@@ -1379,10 +1379,6 @@ class FieldManager(Manager):
 
         for field_id, field in fields.items():
             try:
-                # 去除以前业务字段是由is_valid判断是否出现的逻辑
-                if field["key"] == FIELD_BIZ and not workflow.is_biz_needed:
-                    continue
-
                 # 去除以前FIELD_BACK_MSG, FIELD_TERM_MSG
                 if field["key"] in [FIELD_BACK_MSG, FIELD_TERM_MSG] and for_migrate:
                     continue
@@ -1463,17 +1459,6 @@ class TemplateFieldManager(Manager):
             if self.filter(key=f[4]).exists():
                 # 防止重复创建覆盖已有的内容
                 instance = self.filter(key=f[4]).first()
-                if f[4] == "bk_biz_id":
-                    if instance.api_instance_id == 0:
-                        api_instance = RemoteApiInstance.create_default_api_instance(
-                            func_name="search_business",
-                            req_params={},
-                            req_body={"fields": ["bk_biz_id", "bk_biz_name"]},
-                            rsp_data="data.info",
-                        )
-                        instance.api_instance_id = api_instance.id
-                    instance.kv_relation = {"name": "bk_biz_name", "key": "bk_biz_id"}
-                    instance.save()
                 instance.project_key = PUBLIC_PROJECT_PROJECT_KEY
                 instance.save()
                 continue

@@ -215,7 +215,6 @@
           current_status__in: this.$t('m["状态"]'),
           create_at__gte: this.$t('m["提单时间开始"]'),
           create_at__lte: this.$t('m["提单时间结束"]'),
-          bk_biz_id: this.$t('m["业务"]'),
         },
       };
     },

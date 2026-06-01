@@ -75,7 +75,7 @@ class ModifyPublicFieldComponent(BaseComponent):
             self.data.set_outputs("field_key__display", first_field.name)
             self.data.set_outputs("field_value__display", first_field.display_value)
 
-        if dst_field_key in ["bk_biz_id", "current_status", "title"]:
+        if dst_field_key in ["current_status", "title"]:
             setattr(dst_ticket, dst_field_key, dst_field_value)
             dst_ticket.save(update_fields=[dst_field_key])
         return True

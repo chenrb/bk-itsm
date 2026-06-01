@@ -343,7 +343,7 @@ class ServiceViewSet(component_viewsets.AuthModelViewSet):
     """服务项视图集合"""
 
     serializer_class = ServiceSerializer
-    queryset = Service.objects.all()
+    queryset = Service.objects.prefetch_related("owners").all()
     permission_classes = (ServicePermit,)
     permission_free_actions = ["retrieve"]
     permission_action_default = "service_manage"
@@ -544,10 +544,6 @@ class ServiceViewSet(component_viewsets.AuthModelViewSet):
 
         for field in from_service_fields:
             workflow_id = to_service.workflow.workflow_id
-            if field["key"] == "bk_biz_id":
-                workflow = Workflow.objects.get(id=workflow_id)
-                workflow.is_biz_needed = True
-                workflow.save()
 
             field.pop("id")
             field.pop("project_key", None)
@@ -694,7 +690,9 @@ class SysDictViewSet(DynamicListModelMixin, component_viewsets.ReadOnlyModelView
     """数据字典视图集合"""
 
     serializer_class = SysDictSerializer
-    queryset = SysDict.objects.filter(is_show=True).order_by("-is_builtin", "create_at")
+    queryset = SysDict.objects.prefetch_related("owners").filter(is_show=True).order_by(
+        "-is_builtin", "create_at"
+    )
     permission_classes = (perm.IamAuthWithoutResourcePermit,)
 
     filter_fields = {

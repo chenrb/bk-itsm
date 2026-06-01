@@ -56,7 +56,6 @@ from itsm.component.exceptions import ComponentCallError
 from itsm.component.utils.basic import now, namedtuplefetchall, dotted_name
 from itsm.component.utils.lock import share_lock
 from itsm.component.notify import EmailNotifier
-from itsm.component.utils.client_backend_query import get_biz_choices
 from itsm.ticket.schedule_monitor import AutoSchedules
 from itsm.iadmin.models import SystemSettings
 from itsm.sla_engine.constants import TO_SECOND
@@ -118,13 +117,8 @@ def weekly_statical():
         "where is_deleted = false  {where_condition} group by service_id "
         "order by ticket_count desc;"
     )
-    sql_group_by_biz_template = (
-        "select bk_biz_id, count(*) as ticket_count from ticket_ticket "
-        "where is_deleted = false {where_condition}  group by bk_biz_id "
-        "order by ticket_count desc;"
-    )
 
-    all_bizs = {int(biz["key"]): biz["name"] for biz in get_biz_choices()}
+    all_bizs = {}  # biz tracking removed
     all_services = {s.id: s.name for s in Service.objects.all()}
     all_services_include_deleted = {s.id: s.name for s in Service._objects.all()}
     with connection.cursor() as cursor:
@@ -133,10 +127,6 @@ def weekly_statical():
         total_tickets_count = sum(
             [item.ticket_count for item in tickets_group_by_service]
         )
-
-    with connection.cursor() as cursor:
-        cursor.execute(sql_group_by_biz_template.format(where_condition=""))
-        tickets_group_by_biz = namedtuplefetchall(cursor)
 
     # 上一周记录
     last_week_time = (datetime.now() - timedelta(days=7)).strftime(
@@ -153,14 +143,6 @@ def weekly_statical():
             [item.ticket_count for item in tickets_group_by_service_of_last_week]
         )
 
-    with connection.cursor() as cursor:
-        cursor.execute(
-            sql_group_by_biz_template.format(
-                where_condition=" and create_at > '%s'" % last_week_time
-            )
-        )
-        tickets_group_by_biz_of_last_week = namedtuplefetchall(cursor)
-
     # 增加的服务信息
     sql_new_services = (
         "select name from service_service where create_at >= '%s' and is_deleted = false group by name"
@@ -171,23 +153,7 @@ def weekly_statical():
         cursor.execute(sql_new_services)
         new_services = [service.name for service in namedtuplefetchall(cursor)]
 
-    # 增加的业务信息
-    sql_bizs_last_week_ago = (
-        "select bk_biz_id "
-        "from ticket_ticket "
-        "where create_at > '%s' "
-        "and is_deleted = false "
-        "group by bk_biz_id "
-    )  # noqa
-    new_bizs = []  # 新增的业务
-    with connection.cursor() as cursor:
-        cursor.execute(sql_bizs_last_week_ago)
-        bizs_last_week_ago = [item.bk_biz_id for item in namedtuplefetchall(cursor)]
-        new_bizs = [item.bk_biz_id for item in tickets_group_by_biz_of_last_week]
-        new_bizs = [
-            "{biz_name}({biz_id})".format(biz_name=all_bizs[biz_id], biz_id=biz_id)
-            for biz_id in set(new_bizs).difference(set(bizs_last_week_ago))
-        ]
+    new_bizs = []  # no longer tracked
 
     message = render_mako_tostring("weekly_statical_report.html", locals())
 

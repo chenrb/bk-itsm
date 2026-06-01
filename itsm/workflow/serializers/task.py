@@ -37,8 +37,6 @@ from itsm.component.constants import (
 from itsm.workflow.serializers import (
     TemplateFieldSerializer,
     DynamicFieldsModelSerializer,
-    dotted_name,
-    normal_name,
 )
 
 
@@ -54,8 +52,8 @@ class TaskSchemaSerializer(DynamicFieldsModelSerializer):
     component_type = serializers.ChoiceField(
         required=True, choices=TASK_COMPONENT_CHOICE
     )
-    owners = serializers.CharField(
-        required=False, max_length=LEN_XX_LONG, allow_blank=True
+    owners = serializers.ListField(
+        child=serializers.CharField(), required=False, default=list
     )
     is_draft = serializers.BooleanField(required=True)
 
@@ -66,14 +64,31 @@ class TaskSchemaSerializer(DynamicFieldsModelSerializer):
 
     def to_internal_value(self, data):
         data = super(TaskSchemaSerializer, self).to_internal_value(data)
-        if "owners" in data:
-            data["owners"] = dotted_name(data["owners"])
         return data
 
     def to_representation(self, instance):
         data = super(TaskSchemaSerializer, self).to_representation(instance)
-        data["owners"] = normal_name(data.get("owners"))
+        data["owners"] = list(instance.owners.values_list("username", flat=True))
         return data
+
+    def create(self, validated_data):
+        from django.contrib.auth import get_user_model
+
+        User = get_user_model()
+        owners = validated_data.pop("owners", [])
+        instance = super(TaskSchemaSerializer, self).create(validated_data)
+        instance.owners.set(User.objects.filter(username__in=owners))
+        return instance
+
+    def update(self, instance, validated_data):
+        from django.contrib.auth import get_user_model
+
+        User = get_user_model()
+        owners = validated_data.pop("owners", None)
+        instance = super(TaskSchemaSerializer, self).update(instance, validated_data)
+        if owners is not None:
+            instance.owners.set(User.objects.filter(username__in=owners))
+        return instance
 
 
 class TaskFieldSchemaSerializer(TemplateFieldSerializer):

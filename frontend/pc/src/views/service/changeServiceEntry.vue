@@ -282,7 +282,7 @@
           display_type: displayType || 'OPEN',
           display_role: displayRole || '',
           // 负责人
-          admin: owners ? owners.split(',') : [],
+          admin: owners || [],
           owners: owners || '',
           // 服务目录
           catalog_id: isEmpty(catalogId) ? 0 : catalogId,
@@ -317,7 +317,7 @@
           return;
         }
 
-        this.directory.formInfo.owners = this.directory.formInfo.admin.join(',');
+        this.directory.formInfo.owners = this.directory.formInfo.admin;
         if (this.$refs.displayRange) {
           const data = this.$refs.displayRange.getValue();
           this.directory.formInfo.display_type = data.type;

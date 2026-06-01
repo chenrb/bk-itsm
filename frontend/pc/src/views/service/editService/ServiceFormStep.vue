@@ -433,8 +433,6 @@
       // 获取已有字段（公共字段）
       getPublicFieldList() {
         this.$store.dispatch('publicField/get_template_common_fields', { project_key: this.$store.state.project.id }).then((res) => {
-          // 隐藏字段
-          // const list = res.data.filter(item => item.key !== 'title' && !item.is_builtin && item.key !== 'bk_biz_id')
           this.fieldlist = res.data;
           this.publicFields = res.data;
         })

@@ -208,13 +208,7 @@
           is_draft: false,
         };
         return this.$store.dispatch('taskTemplate/getTemplateList', params).then((res) => {
-          this.taskTemplateList = res.data.filter((task) => {
-            // 流程未关联业务，则不显示标准运维模板
-            if (!this.workflowInfo.is_biz_needed && task.component_type === 'SOPS') {
-              return false;
-            }
-            return true;
-          });
+          this.taskTemplateList = res.data;
         })
           .catch((res) => {
             errorHandler(res, this);

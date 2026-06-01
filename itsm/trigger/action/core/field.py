@@ -36,7 +36,6 @@ from common.template.template import Template
 from itsm.role.models import UserRole
 from itsm.postman.models import RemoteApi
 from itsm.component.constants import (
-    DEFAULT_BK_BIZ_ID,
     EMPTY_DICT,
     PROCESSOR_CHOICES,
     PERSON,
@@ -277,10 +276,9 @@ class MemberField(BaseField):
     def _convert_to_users(member_value, context, **kwargs):
         members = []
         parse_tool = ParamParseTool(context)
-        bk_biz_id = context.get("bk_biz_id", DEFAULT_BK_BIZ_ID)
         for member in copy.deepcopy(member_value):
             member["value"] = UserRole.get_users_by_type(
-                bk_biz_id, member["value"]["member_type"], member["value"]["members"]
+                member["value"]["member_type"], member["value"]["members"]
             )
             parse_people = parse_tool(param=member)
             members.extend(

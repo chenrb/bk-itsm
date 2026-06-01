@@ -29,7 +29,6 @@ from django.db import transaction
 from django.db.models import Q
 
 from itsm.component.constants import (
-    FIELD_BIZ,
     SIGN_STATE,
     SIGN_VARIABLES,
     SIGN_FIELDS,
@@ -190,9 +189,6 @@ def init_after_workflow_created(sender, instance, created, *args, **kwargs):
         fields = TemplateField.objects.filter(
             id__in=instance.table.fields_order, is_builtin=True
         )
-
-        if not instance.is_biz_needed:
-            fields.exclude(key=FIELD_BIZ)
 
         fields = fields.extra(select={"ordering": ordering}, order_by=("ordering",)) # review
 

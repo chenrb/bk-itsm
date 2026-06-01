@@ -39,7 +39,6 @@ from itsm.component.constants import (
     ACTION_CHOICES,
     ALL_ACTION_CHOICES,
     CLAIM_OPERATE,
-    DEFAULT_BK_BIZ_ID,
     DEFAULT_ENGINE_VERSION,
     FIELD_BACK_MSG,
     FIELD_TERM_MSG,
@@ -78,7 +77,7 @@ from itsm.component.utils.basic import (
     dotted_name,
     generate_random_sn,
 )
-from itsm.component.utils.client_backend_query import get_biz_names, get_template_list
+from itsm.component.utils.client_backend_query import get_template_list
 from itsm.component.utils.client_backend_query import get_bk_users
 from itsm.component.utils.misc import (
     transform_single_username,
@@ -280,7 +279,7 @@ class StatusSerializer(serializers.ModelSerializer):
             sign_tasks_processor_list = [task["processor"] for task in sign_tasks_list]
             # 获取当前任务的处理人列表
             user_list = UserRole.get_users_by_type(
-                inst.bk_biz_id, inst.processors_type, inst.processors, inst.ticket
+                inst.processors_type, inst.processors, inst.ticket
             )
             # 得到节点当前任务的已处理人
             current_tasks_processors = list(
@@ -369,13 +368,12 @@ class StatusSerializer(serializers.ModelSerializer):
         info = []
         if not task_params:
             return info
-        apps = get_biz_names()
         info.append(
             {
                 "key": "bk_biz_id",
                 "name": sops_info["bk_biz_id"]["name"],
-                "value": apps.get(str(task_params["bk_biz_id"])),
-                "params_value": task_params["bk_biz_id"],
+                "value": str(task_params.get("bk_biz_id", "")),
+                "params_value": task_params.get("bk_biz_id", ""),
             }
         )
         info.append(
@@ -498,7 +496,6 @@ class TicketList:
                 "service_id",
                 "service_type",
                 "meta",
-                "bk_biz_id",
                 "current_status",
                 "create_at",
                 "creator",
@@ -754,7 +751,6 @@ class TicketSerializer(AuthModelSerializer):
             "has_relationships",
             "priority_name",
             "meta",
-            "bk_biz_id",
             "project_key",
             "task_schemas",
         ) + model.FIELDS
@@ -832,7 +828,6 @@ class TicketSerializer(AuthModelSerializer):
                     "creator", self.context["request"].user.username
                 ),
                 "title": fields_kv["title"],
-                "bk_biz_id": fields_kv.get("bk_biz_id", DEFAULT_BK_BIZ_ID),
                 "attention": data.get("attention", False),
             }
         )
@@ -1061,7 +1056,6 @@ class TicketRetrieveSerializer(TicketSerializer):
             can_derive=inst.can_derive(username),
             can_invite_followers=inst.can_invite_followers(username),
             profile=profile,
-            is_biz_need=inst.bk_biz_id != DEFAULT_BK_BIZ_ID,
             can_withdraw=inst.can_withdraw(username),
             can_close=inst.can_close(username),
             can_supervise=inst.can_supervise(username),
@@ -1230,7 +1224,6 @@ class BaseFilterSerializer(serializers.Serializer):
 class TicketFilterSerializer(BaseFilterSerializer):
     """单据节点操作序列化"""
 
-    bk_biz_id = serializers.IntegerField(required=False)
     catalog_id = serializers.IntegerField(required=False)
     service_id = serializers.IntegerField(required=False)
     flow_id = serializers.IntegerField(required=False)
@@ -1355,7 +1348,7 @@ class TicketStateOperateSerializer(serializers.Serializer):
         # 校验节点操作的合法性
         self.validators = [
             StateOperateValidator(
-                validated_data["current_node"], bk_biz_id=self.ticket.bk_biz_id
+                validated_data["current_node"]
             )
         ]
 
@@ -1411,7 +1404,7 @@ class TicketStateOperateExceptionSerializer(serializers.Serializer):
         # 校验节点操作的合法性
         self.validators = [
             StateOperateValidator(
-                validated_data["current_node"], bk_biz_id=self.ticket.bk_biz_id
+                validated_data["current_node"]
             )
         ]
 
@@ -1428,7 +1421,6 @@ class TicketExportSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     sn = serializers.CharField()
     title = serializers.CharField()
-    bk_biz_id = serializers.CharField()
     service_type_name = serializers.CharField()
     catalog_fullname = serializers.CharField()
     current_status_display = serializers.CharField()

@@ -27,9 +27,6 @@
     <div class="mb20">
       <bk-radio-group v-model="picked">
         <bk-radio :value="'One'" class="mr20">{{ $t('m.newCommon["直接评价"]') }}</bk-radio>
-        <bk-radio :value="'Two'" class="mr20" v-if="isShowSMSComment">
-          {{ $t('m.newCommon["短信评价"]') }}
-        </bk-radio>
         <bk-radio :value="'Three'">{{ $t('m.newCommon["邮件评价"]') }}</bk-radio>
       </bk-radio-group>
     </div>
@@ -61,32 +58,6 @@
             :rows="3"
             v-model="scoreInfo.comments">
           </bk-input>
-        </bk-form-item>
-      </bk-form>
-    </template>
-    <!-- 短信评价 -->
-    <template v-if="picked === 'Two'">
-      <bk-form
-        :label-width="200"
-        form-type="vertical"
-        :model="scoreInfo"
-        ref="telephoneForm">
-        <bk-form-item
-          :label="$t(`m.newCommon['手机号码：']`)"
-          :required="true">
-          <bk-input :clearable="true"
-            v-model="scoreInfo.telephone"
-            :disabled="!!satisfactInfo.has_invited"
-            :placeholder="$t(`m.newCommon['请输入，多个用英文逗号分隔']`)">
-          </bk-input>
-          <div style="margin-top: 4px;position: relative;">
-            <span v-if="!satisfactInfo.has_invited" style="color: #979BA5">
-              {{ $t('m.newCommon["提交后系统会发送信息至需求方进行满意度评价"]') }}</span>
-            <span v-else style="color: #979BA5">
-              {{ $t('m.newCommon["你已发送过满意度评价短信给"]') }}
-              <span style="padding: 0 10px; color: #3c96ff;">{{satisfactInfo.has_invited}}</span>{{ $t('m.newCommon["的用户"]') }}
-            </span>
-          </div>
         </bk-form-item>
       </bk-form>
     </template>
@@ -163,24 +134,19 @@
         picked: 'One',
         // 评价
         scoreInfo: {
-          // TODO: 临时解决方案
           scoreList: SCORE_LIST,
           comments: '',
           startInfo: 0,
           clickSecond: false,
-          telephone: '',
           email: '',
-          // 用于member组件临时使用
           emailTempInfo: {
             val: [],
             showFeild: true,
             desc: this.$t('m.newCommon["请输入蓝鲸用户"]'),
             evaluDisable: false,
           },
-          teleCheck: false,
           title: '',
           content: '',
-          inviteType: '',
         },
       };
     },
@@ -197,18 +163,12 @@
           disabled: this.scoreInfo.clickSecond || !!this.satisfactInfo.has_invited,
         };
       },
-      // 是否展示短信评论
-      isShowSMSComment() {
-        return this.$store.state.openFunction.SMS_COMMENT_SWITCH && window.run_site !== 'bmw';
-      },
     },
     methods: {
       // 提交
       onSubmit() {
         if (this.picked === 'One') {
           this.postEvaluation();
-        } else if (this.picked === 'Two') {
-          this.openSendPhone();
         } else {
           this.openSendEmail();
         }
@@ -257,26 +217,6 @@
             this.$emit('updatePendingStatus', false);
           });
       },
-      openSendPhone() {
-        if (this.scoreInfo.teleCheck || !this.scoreInfo.telephone) {
-          this.$bkMessage({
-            message: this.$t('m.newCommon["请输入正确的手机号"]'),
-            theme: 'error',
-          });
-          return;
-        }
-        this.scoreInfo.title = this.$t('m.newCommon["确认发送此短信？"]');
-        this.scoreInfo.content = this.$t('m.newCommon["发送一次以后不能再进行发送操作，请谨慎操作"]');
-        this.scoreInfo.inviteType = 'mobile';
-        this.$bkInfo({
-          type: 'warning',
-          title: this.scoreInfo.title,
-          subTitle: this.scoreInfo.content,
-          confirmFn: () => {
-            this.sendTelephone();
-          },
-        });
-      },
       openSendEmail() {
         if (this.checkEmail()) {
           this.$bkMessage({
@@ -287,13 +227,12 @@
         }
         this.scoreInfo.title = this.$t('m.newCommon["确认发送此邮件？"]');
         this.scoreInfo.content = this.$t('m.newCommon["发送一次以后不能再进行发送操作，请谨慎操作"]');
-        this.scoreInfo.inviteType = 'email';
         this.$bkInfo({
           type: 'warning',
           title: this.scoreInfo.title,
           subTitle: this.scoreInfo.content,
           confirmFn: () => {
-            this.sendTelephone();
+            this.sendEmail();
           },
         });
       },
@@ -310,35 +249,18 @@
             errorHandler(res, this);
           });
       },
-      // 邀请评价
-      // 校验电话规则
-      checkTelephone() {
-        const res = /^1[34578]\d{9}$/;
-        const val = this.scoreInfo.telephone.trim().split(',');
-        const result = val.some(item => !res.test(item));
-        this.scoreInfo.teleCheck = result;
-      },
-      sendTelephone() {
+      sendEmail() {
         if (this.scoreInfo.clickSecond) {
           return;
         }
         this.scoreInfo.clickSecond = true;
-        let url = '';
-        const params = {};
-        let id = '';
-        if (this.scoreInfo.inviteType === 'mobile') {
-          url = 'evaluation/sendTelephone';
-          params.receiver = this.scoreInfo.telephone;
-          params.comment_id = this.ticketInfo.comment_id;
-          id = this.ticketInfo.id;
-        } else {
-          url = 'evaluation/sendEmail';
-          params.receiver = this.scoreInfo.emailTempInfo.val.join(',');
-          id = this.ticketInfo.id;
-        }
+        const params = {
+          receiver: this.scoreInfo.emailTempInfo.val.join(','),
+        };
+        const id = this.ticketInfo.id;
 
         this.$emit('updatePendingStatus', true);
-        this.$store.dispatch(url, { params, id }).then(() => {
+        this.$store.dispatch('evaluation/sendEmail', { params, id }).then(() => {
           this.$bkMessage({
             message: this.$t('m.newCommon["发送成功"]'),
             theme: 'success',

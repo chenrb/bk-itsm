@@ -109,15 +109,6 @@ const SEARCH_FORMS = [
     list: [],
     placeholder: i18n.t('m.tickets["请选择提单时间"]'),
   },
-  {
-    name: i18n.t('m.tickets["业务"]'),
-    key: 'bk_biz_id',
-    type: 'select',
-    display: true,
-    value: '',
-    list: [],
-    placeholder: i18n.t('m.tickets["请选择业务"]'),
-  },
 ];
 
 /**

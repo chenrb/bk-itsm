@@ -5,7 +5,6 @@ from django.db.models.signals import post_save
 from rest_framework import serializers
 from django.utils.translation import gettext as _
 
-from itsm.component.constants import DEFAULT_BK_BIZ_ID
 from itsm.component.exceptions import ParamError
 from itsm.component.utils.basic import TempDisableSignal
 from itsm.openapi.base_service.utils import WorkflowInitHandler
@@ -64,7 +63,6 @@ class OpenApiServiceSerializer(ServiceSerializer):
                     desc="",
                     flow_type="other",
                     notify_freq="0",
-                    is_biz_needed=False,
                     is_iam_used=False,
                     is_enabled=True,
                     is_draft=False,
@@ -114,7 +112,6 @@ class OpenApiServiceSerializer(ServiceSerializer):
             desc="",
             flow_type="other",
             notify_freq="0",
-            is_biz_needed=False,
             is_iam_used=False,
             is_enabled=True,
             is_draft=False,
@@ -227,7 +224,6 @@ class TicketCreateSerializer(TicketSerializer):
             "has_relationships",
             "priority_name",
             "meta",
-            "bk_biz_id",
             "project_key",
             "task_schemas",
             "tag",
@@ -259,7 +255,6 @@ class TicketCreateSerializer(TicketSerializer):
                     "creator", self.context["request"].user.username
                 ),
                 "title": fields_kv["title"],
-                "bk_biz_id": fields_kv.get("bk_biz_id", DEFAULT_BK_BIZ_ID),
                 "attention": data.get("attention", False),
             }
         )

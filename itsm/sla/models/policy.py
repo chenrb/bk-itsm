@@ -329,16 +329,18 @@ class Action(Model):
 
     @staticmethod
     def receivers(ticket, receiver_roles):
-        roles = receiver_roles.split(",")
+        roles = receiver_roles if isinstance(receiver_roles, list) else receiver_roles.split(",")
         all_users = set()
         for role in roles:
             if role == "PROCESSORS":
                 all_users.update(ticket.real_current_processors)
             elif role == "ADMIN":
-                all_users.update(ticket.service_instance.owners.split(","))
+                all_users.update(
+                    [u.username for u in ticket.service_instance.owners.all()]
+                )
             elif role == "HISTORY_HANDLER":
                 all_users.update(ticket.history_handlers)
-        return ",".join([user for user in all_users if user])
+        return list(user for user in all_users if user)
 
 
 class ActionPolicy(Model):

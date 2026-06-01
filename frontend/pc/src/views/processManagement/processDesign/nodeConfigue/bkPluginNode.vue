@@ -394,9 +394,7 @@
         if (this.configur.distribute_type !== 'DISTRIBUTE_THEN_PROCESS' && this.configur.distribute_type !== 'DISTRIBUTE_THEN_CLAIM') {
           excludeProcessor.push('BY_ASSIGNOR');
         }
-        if (!this.flowInfo.is_biz_needed) {
-          excludeProcessor.push('CMDB');
-        }
+        excludeProcessor.push('CMDB');
         this.excludeProcessor = [...['EMPTY', 'API'], ...excludeProcessor];
       },
       handleVarClick(item, path) {

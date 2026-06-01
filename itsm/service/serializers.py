@@ -54,7 +54,7 @@ from itsm.component.drf.serializers import (
     AuthModelSerializer,
 )
 from itsm.component.exceptions import ServiceCatalogValidateError, ServerError
-from itsm.component.utils.basic import dotted_name, list_by_separator, normal_name
+from itsm.component.utils.basic import dotted_name, list_by_separator
 from itsm.component.utils.misc import transform_single_username
 from itsm.project.models import Project
 from itsm.service.models import (
@@ -297,8 +297,8 @@ class ServiceSerializer(AuthModelSerializer):
     catalog_id = serializers.IntegerField(required=False)
     project_key = serializers.CharField(required=True, max_length=LEN_SHORT)
     source = serializers.ChoiceField(required=False, choices=SERVICE_SOURCE_CHOICES)
-    owners = serializers.CharField(
-        required=False, error_messages={"blank": _("服务负责人不能为空")}
+    owners = serializers.ListField(
+        child=serializers.CharField(), required=False, default=list
     )
     # TODO sla开始节点结束节点交叉校验
     sla = ServiceSlaSerializer(required=False, many=True)
@@ -349,6 +349,12 @@ class ServiceSerializer(AuthModelSerializer):
     @transaction.atomic
     def create(self, validated_data):
         """创建后立即绑定"""
+        from django.contrib.auth import get_user_model
+
+        User = get_user_model()
+
+        # pop owners before super().create()
+        owners = validated_data.pop("owners", [])
 
         # 初始化一个流程
         work_flow_instance = self.init_work_flow(validated_data)
@@ -363,6 +369,7 @@ class ServiceSerializer(AuthModelSerializer):
         sla_tasks = validated_data.pop("sla", [])
 
         instance = super(ServiceSerializer, self).create(validated_data)
+        instance.owners.set(User.objects.filter(username__in=owners))
         instance.bind_catalog(catalog_id, instance.project_key)
         instance.update_service_sla(sla_tasks)
 
@@ -380,12 +387,10 @@ class ServiceSerializer(AuthModelSerializer):
             desc="",
             flow_type="other",
             notify_freq="0",
-            is_biz_needed=False,
             is_iam_used=False,
             is_enabled=True,
             is_draft=False,
             table_id=self.get_default_table_id(),
-            owners="",
             engine_version=DEFAULT_ENGINE_VERSION,
             creator=validated_data["creator"],
             updated_by=validated_data["updated_by"],
@@ -394,14 +399,21 @@ class ServiceSerializer(AuthModelSerializer):
 
     def update(self, instance, validated_data):
         """更新后重新绑定目录"""
+        from django.contrib.auth import get_user_model
+
+        User = get_user_model()
+
         catalog_id = validated_data.pop("catalog_id", 0)
         sla_tasks = validated_data.pop("sla", [])
+        owners = validated_data.pop("owners", None)
         with transaction.atomic():
             instance.key = validated_data["key"]
             instance.name = validated_data["name"]
             instance.desc = validated_data["desc"]
             instance.updated_by = validated_data["updated_by"]
             instance.save()
+            if owners is not None:
+                instance.owners.set(User.objects.filter(username__in=owners))
             instance.bind_catalog(catalog_id, instance.project_key)
             instance.update_service_sla(sla_tasks)
 
@@ -413,8 +425,6 @@ class ServiceSerializer(AuthModelSerializer):
         if "workflow" in data:
             data["workflow"] = data["workflow"]["id"]
         data["display_role"] = dotted_name(data.get("display_role", ""))
-        if "owners" in data:
-            data["owners"] = dotted_name(data["owners"])
 
         return data
 
@@ -436,7 +446,6 @@ class ServiceSerializer(AuthModelSerializer):
             data["display_role"] = ",".join(list_by_separator(data["display_role"]))
         data["first_state_id"] = workflow_instance.first_state.id
         data["workflow_id"] = instance.workflow.workflow_id
-        data["is_biz_needed"] = workflow_instance.is_biz_needed
         data["notify"] = [
             {"type": notify.type, "name": notify.name}
             for notify in workflow_instance.notify.all()
@@ -446,7 +455,7 @@ class ServiceSerializer(AuthModelSerializer):
         data["is_supervise_needed"] = workflow_instance.is_supervise_needed
         data["revoke_config"] = workflow_instance.revoke_config
         data["extras"] = workflow_instance.extras
-        data["owners"] = ",".join(list_by_separator(data["owners"]))
+        data["owners"] = list(instance.owners.values_list("username", flat=True))
         data["favorite"] = username in self.favorite_service.get(instance.id, [])
         return self.update_auth_actions(instance, data)
 
@@ -636,8 +645,8 @@ class SysDictSerializer(DynamicFieldsModelSerializer):
         error_messages={"blank": _("名称不能为空")},
         max_length=LEN_MIDDLE,
     )
-    owners = serializers.CharField(
-        required=False, max_length=LEN_XX_LONG, allow_blank=True
+    owners = serializers.ListField(
+        child=serializers.CharField(), required=False, default=list
     )
     desc = serializers.CharField(required=False, max_length=LEN_LONG, allow_blank=True)
 
@@ -657,15 +666,32 @@ class SysDictSerializer(DynamicFieldsModelSerializer):
 
     def to_internal_value(self, data):
         data = super(SysDictSerializer, self).to_internal_value(data)
-        if "owners" in data:
-            data["owners"] = dotted_name(data["owners"])
         return data
 
     def to_representation(self, instance):
         data = super(SysDictSerializer, self).to_representation(instance)
         data["name"] = _(data["name"])
-        data["owners"] = normal_name(data.get("owners"))
+        data["owners"] = list(instance.owners.values_list("username", flat=True))
         return data
+
+    def create(self, validated_data):
+        from django.contrib.auth import get_user_model
+
+        User = get_user_model()
+        owners = validated_data.pop("owners", [])
+        instance = super(SysDictSerializer, self).create(validated_data)
+        instance.owners.set(User.objects.filter(username__in=owners))
+        return instance
+
+    def update(self, instance, validated_data):
+        from django.contrib.auth import get_user_model
+
+        User = get_user_model()
+        owners = validated_data.pop("owners", None)
+        instance = super(SysDictSerializer, self).update(instance, validated_data)
+        if owners is not None:
+            instance.owners.set(User.objects.filter(username__in=owners))
+        return instance
 
 
 class DictKeySerializer(serializers.Serializer):
@@ -743,7 +769,6 @@ class WorkflowImportSerializer(serializers.Serializer):
     fields = serializers.DictField(required=True)
 
     # 业务属性字段
-    is_biz_needed = serializers.BooleanField(required=True)
     is_iam_used = serializers.BooleanField(required=True)
     is_task_needed = serializers.BooleanField(required=True)
     is_supervise_needed = serializers.BooleanField(required=True)

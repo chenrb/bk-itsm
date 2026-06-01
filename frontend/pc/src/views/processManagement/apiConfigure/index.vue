@@ -191,7 +191,7 @@
         };
         await this.$store.dispatch('apiRemote/get_remote_api_detail', params).then((res) => {
           this.apiDetailInfo = res.data;
-          this.apiDetailInfo.ownersInputValue = this.apiDetailInfo.owners ? this.apiDetailInfo.owners.split(',') : [];
+          this.apiDetailInfo.ownersInputValue = this.apiDetailInfo.owners || [];
           if (!this.apiDetailInfo.req_headers.length) {
             this.apiDetailInfo.req_headers = [];
           }

@@ -331,7 +331,7 @@
           // create or update
           const params = {
             ...this.addTableInfo.formInfo,
-            owners: this.addTableInfo.formInfo.ownersInputValue.join(','),
+            owners: this.addTableInfo.formInfo.ownersInputValue,
           };
           delete params.ownersInputValue;
           if (!this.addTableInfo.formInfo.id) {

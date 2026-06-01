@@ -180,21 +180,6 @@ DEFAULT_TEMPLATE_FIELDS = [
         True,
         "EMPTY",
     ),
-    (
-        "关联业务",
-        "SELECT",
-        "API",
-        [],
-        FIELD_BIZ,
-        True,
-        {},
-        "",
-        "请选择关联业务",
-        True,
-        False,
-        True,
-        "EMPTY",
-    ),
 ]
 
 # 内置数据字典·
@@ -416,7 +401,6 @@ USER_ROLE_CHOICES = [
 
 ROLE_CHOICES = [
     # type    name    is_display   is_processor
-    (CMDB, "CMDB业务公用角色", True, True),
     (GENERAL, "自定义角色", True, True),
     (ADMIN, "管理员角色表", True, False),
     (OPEN, "不限", False, True),

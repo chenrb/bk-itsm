@@ -31,7 +31,7 @@
           <bk-input :maxlength="120"
             :ext-cls="'bk-custom-input'"
             :clearable="true"
-            :disabled="(changeInfo.is_builtin || changeInfo.source === 'TABLE') && formInfo.key !== 'bk_biz_id'"
+            :disabled="(changeInfo.is_builtin || changeInfo.source === 'TABLE')"
             v-model="item.name"
             :placeholder="$t(`m.treeinfo['请输入选项名']`)"
             @blur="putChar(item, itemIndex)">
@@ -45,7 +45,7 @@
             </bk-checkbox>
           </template>
           <bk-input :ext-cls="'bk-custom-input'"
-            :disabled="(changeInfo.is_builtin || changeInfo.source === 'TABLE' || (changeInfo.meta && changeInfo.meta.code === 'APPROVE_RESULT')) && formInfo.key !== 'bk_biz_id'"
+            :disabled="(changeInfo.is_builtin || changeInfo.source === 'TABLE' || (changeInfo.meta && changeInfo.meta.code === 'APPROVE_RESULT'))"
             v-model="item.key"
             :placeholder="$t(`m.treeinfo['请输入选项ID']`)">
           </bk-input>

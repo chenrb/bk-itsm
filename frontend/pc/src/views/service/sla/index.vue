@@ -502,7 +502,7 @@
                     owners,
                     sla,
                     workflow,
-                    admin: owners.split(','),
+                    admin: owners || [],
                     project_key: this.$store.state.project.id,
                 };
                 // SLA开关

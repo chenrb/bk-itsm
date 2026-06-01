@@ -216,7 +216,7 @@
         // response Jsonschema数据结构
         const responseRootdata = await this.listToJsonschema(this.DetailInfo.responseTreeDataList);
         this.DetailInfo.rsp_data = await responseRootdata.root; // root初始 Jsonschema数据结构
-        this.DetailInfo.owners = this.DetailInfo.ownersInputValue.join(',');
+        this.DetailInfo.owners = this.DetailInfo.ownersInputValue;
         delete this.DetailInfo.ownersInputValue;
         await delete this.DetailInfo.treeDataList;
         await delete this.DetailInfo.responseTreeDataList;

@@ -286,7 +286,6 @@
           TASK_SWITCH: 'task',
           FIRST_STATE_SWITCH: 'basic',
           TABLE_FIELDS_SWITCH: 'module',
-          SMS_COMMENT_SWITCH: 'smsComment',
         },
         // 开关功能总体信息
         moduleInfo: {
@@ -341,12 +340,6 @@
           trigger: {
             id: '',
             title: this.$t('m.home["触发器功能开关："]'),
-            open: false,
-            isAvailable: true,
-          },
-          smsComment: {
-            id: '',
-            title: this.$t('m.home["短信评论开关："]'),
             open: false,
             isAvailable: true,
           },

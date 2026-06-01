@@ -29,7 +29,6 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 
 from itsm.component.constants import ResponseCodeStatus
-from itsm.component.utils.basic import dotted_name
 
 
 class ApiGenericMixin:
@@ -249,4 +248,4 @@ class DynamicListModelMixin:
 class ObjectManagerMixin:
     def is_obj_manager(self, username):
         """新增和修改权限：创建人和负责人"""
-        return username == self.creator or dotted_name(username) in self.owners
+        return username == self.creator or self.owners.filter(username=username).exists()

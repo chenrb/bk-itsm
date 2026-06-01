@@ -1,8 +1,8 @@
 [
-    {
+  {
     "is_deleted": false,
-    "name": "\u4e00\u822c\u5ba1\u6279\u6d41\u7a0b",
-    "desc": "\u4e00\u822c\u8bf7\u6c42\u7684\u5ba1\u6279\u6d41\u7a0b\u3002",
+    "name": "一般审批流程",
+    "desc": "一般请求的审批流程。",
     "flow_type": "other",
     "is_enabled": true,
     "is_revocable": true,
@@ -12,7 +12,6 @@
     "owners": ",admin,",
     "notify_rule": "ONCE",
     "notify_freq": 0,
-    "is_biz_needed": false,
     "is_supervise_needed": false,
     "supervise_type": "EMPTY",
     "supervisor": "",
@@ -20,7 +19,7 @@
     "version_number": "20201109144419",
     "table": {
       "is_deleted": false,
-      "name": "\u5ba1\u6279",
+      "name": "审批",
       "is_builtin": true,
       "desc": "",
       "version": "EMPTY",
@@ -38,7 +37,7 @@
           "kv_relation": {},
           "type": "STRING",
           "key": "title",
-          "name": "\u6807\u9898",
+          "name": "标题",
           "layout": "COL_12",
           "validate_type": "REQUIRE",
           "show_type": 1,
@@ -46,7 +45,7 @@
           "regex": "EMPTY",
           "regex_config": {},
           "custom_regex": "",
-          "desc": "\u8bf7\u8f93\u5165\u6807\u9898",
+          "desc": "请输入标题",
           "tips": "",
           "is_tips": false,
           "default": "",
@@ -69,7 +68,7 @@
           "kv_relation": {},
           "type": "SELECT",
           "key": "current_status",
-          "name": "\u5de5\u5355\u72b6\u6001",
+          "name": "工单状态",
           "layout": "COL_12",
           "validate_type": "REQUIRE",
           "show_type": 1,
@@ -77,7 +76,7 @@
           "regex": "EMPTY",
           "regex_config": {},
           "custom_regex": "",
-          "desc": "\u8bf7\u9009\u62e9\u5de5\u5355\u72b6\u6001",
+          "desc": "请选择工单状态",
           "tips": "",
           "is_tips": false,
           "default": "",
@@ -100,7 +99,7 @@
           "kv_relation": {},
           "type": "TEXT",
           "key": "apply_content",
-          "name": "\u7533\u8bf7\u5185\u5bb9",
+          "name": "申请内容",
           "layout": "COL_12",
           "validate_type": "REQUIRE",
           "show_type": 1,
@@ -136,7 +135,7 @@
           "kv_relation": {},
           "type": "TEXT",
           "key": "apply_reason",
-          "name": "\u7533\u8bf7\u7406\u7531",
+          "name": "申请理由",
           "layout": "COL_12",
           "validate_type": "REQUIRE",
           "show_type": 1,
@@ -183,7 +182,7 @@
         "workflow": 5,
         "id": 20,
         "key": 20,
-        "name": "\u5f00\u59cb",
+        "name": "开始",
         "desc": "",
         "distribute_type": "PROCESS",
         "axis": {
@@ -223,7 +222,7 @@
         "workflow": 5,
         "id": 21,
         "key": 21,
-        "name": "\u63d0\u5355",
+        "name": "提单",
         "desc": "",
         "distribute_type": "PROCESS",
         "axis": {
@@ -273,7 +272,7 @@
         "workflow": 5,
         "id": 22,
         "key": 22,
-        "name": "\u7ed3\u675f",
+        "name": "结束",
         "desc": "",
         "distribute_type": "PROCESS",
         "axis": {
@@ -313,7 +312,7 @@
         "workflow": 5,
         "id": 24,
         "key": 24,
-        "name": "\u8d1f\u8d23\u4eba\u5ba1\u6279",
+        "name": "负责人审批",
         "desc": "",
         "distribute_type": "PROCESS",
         "axis": {
@@ -329,18 +328,18 @@
               "state": 24,
               "type": "STRING",
               "key": "ef1ecec2fb4d68acbd8f98e7a232c398",
-              "name": "\u5ba1\u6279\u7ed3\u679c",
+              "name": "审批结果",
               "meta": {
                 "code": "NODE_APPROVE_RESULT",
                 "type": "SELECT",
                 "choice": [
                   {
                     "key": "false",
-                    "name": "\u62d2\u7edd"
+                    "name": "拒绝"
                   },
                   {
                     "key": "true",
-                    "name": "\u901a\u8fc7"
+                    "name": "通过"
                   }
                 ]
               }
@@ -384,7 +383,7 @@
         "workflow": 5,
         "id": 25,
         "key": 25,
-        "name": "\u7ba1\u7406\u5458\u5ba1\u6279",
+        "name": "管理员审批",
         "desc": "",
         "distribute_type": "PROCESS",
         "axis": {
@@ -400,18 +399,18 @@
               "state": 25,
               "type": "STRING",
               "key": "4047de3c051c98acc6896ede7ea3d0eb",
-              "name": "\u5ba1\u6279\u7ed3\u679c",
+              "name": "审批结果",
               "meta": {
                 "code": "NODE_APPROVE_RESULT",
                 "type": "SELECT",
                 "choice": [
                   {
                     "key": "false",
-                    "name": "\u62d2\u7edd"
+                    "name": "拒绝"
                   },
                   {
                     "key": "true",
-                    "name": "\u901a\u8fc7"
+                    "name": "通过"
                   }
                 ]
               }
@@ -490,7 +489,7 @@
         "id": 28,
         "from_state": 21,
         "to_state": 24,
-        "name": "\u9ed8\u8ba4",
+        "name": "默认",
         "axis": {
           "start": "Right",
           "end": "Left"
@@ -522,7 +521,7 @@
         "id": 30,
         "from_state": 24,
         "to_state": 25,
-        "name": "\u901a\u8fc7",
+        "name": "通过",
         "axis": {
           "start": "Right",
           "end": "Left"
@@ -545,11 +544,11 @@
                     "choice": [
                       {
                         "key": "false",
-                        "name": "\u62d2\u7edd"
+                        "name": "拒绝"
                       },
                       {
                         "key": "true",
-                        "name": "\u901a\u8fc7"
+                        "name": "通过"
                       }
                     ]
                   }
@@ -572,7 +571,7 @@
         "id": 31,
         "from_state": 24,
         "to_state": 22,
-        "name": "\u62d2\u7edd",
+        "name": "拒绝",
         "axis": {
           "start": "Bottom",
           "end": "Left"
@@ -595,11 +594,11 @@
                     "choice": [
                       {
                         "key": "false",
-                        "name": "\u62d2\u7edd"
+                        "name": "拒绝"
                       },
                       {
                         "key": "true",
-                        "name": "\u901a\u8fc7"
+                        "name": "通过"
                       }
                     ]
                   }
@@ -622,7 +621,7 @@
         "id": 32,
         "from_state": 25,
         "to_state": 22,
-        "name": "\u9ed8\u8ba4",
+        "name": "默认",
         "axis": {
           "start": "Bottom",
           "end": "Top"
@@ -665,7 +664,7 @@
         "kv_relation": {},
         "type": "STRING",
         "key": "title",
-        "name": "\u6807\u9898",
+        "name": "标题",
         "layout": "COL_12",
         "validate_type": "REQUIRE",
         "show_type": 1,
@@ -673,7 +672,7 @@
         "regex": "EMPTY",
         "regex_config": {},
         "custom_regex": "",
-        "desc": "\u8bf7\u8f93\u5165\u6807\u9898",
+        "desc": "请输入标题",
         "tips": "",
         "is_tips": false,
         "default": "",
@@ -697,7 +696,7 @@
         "kv_relation": {},
         "type": "TEXT",
         "key": "apply_content",
-        "name": "\u7533\u8bf7\u5185\u5bb9",
+        "name": "申请内容",
         "layout": "COL_12",
         "validate_type": "REQUIRE",
         "show_type": 1,
@@ -734,7 +733,7 @@
         "kv_relation": {},
         "type": "TEXT",
         "key": "apply_reason",
-        "name": "\u7533\u8bf7\u7406\u7531",
+        "name": "申请理由",
         "layout": "COL_12",
         "validate_type": "REQUIRE",
         "show_type": 1,
@@ -771,7 +770,7 @@
         "kv_relation": {},
         "type": "MEMBERS",
         "key": "ZHIDINGSHENPIREN",
-        "name": "\u6307\u5b9a\u5ba1\u6279\u4eba",
+        "name": "指定审批人",
         "layout": "COL_12",
         "validate_type": "REQUIRE",
         "show_type": 1,
@@ -808,7 +807,7 @@
         "kv_relation": {},
         "type": "RADIO",
         "key": "27924a83a1b9d239086e9724264a53e3",
-        "name": "\u5ba1\u6279\u610f\u89c1",
+        "name": "审批意见",
         "layout": "COL_6",
         "validate_type": "REQUIRE",
         "show_type": 1,
@@ -823,11 +822,11 @@
         "choice": [
           {
             "key": "true",
-            "name": "\u901a\u8fc7"
+            "name": "通过"
           },
           {
             "key": "false",
-            "name": "\u62d2\u7edd"
+            "name": "拒绝"
           }
         ],
         "related_fields": {},
@@ -851,7 +850,7 @@
         "kv_relation": {},
         "type": "TEXT",
         "key": "63f03ddeb567ba12dd711db71ee46e66",
-        "name": "\u5907\u6ce8",
+        "name": "备注",
         "layout": "COL_12",
         "validate_type": "OPTION",
         "show_type": 0,
@@ -893,7 +892,7 @@
         "kv_relation": {},
         "type": "TEXT",
         "key": "71f9445928b83fd2aec3c2e0deea4889",
-        "name": "\u5907\u6ce8",
+        "name": "备注",
         "layout": "COL_12",
         "validate_type": "REQUIRE",
         "show_type": 0,
@@ -935,7 +934,7 @@
         "kv_relation": {},
         "type": "RADIO",
         "key": "a00592c80f7febec616849b177a6cf5d",
-        "name": "\u5ba1\u6279\u610f\u89c1",
+        "name": "审批意见",
         "layout": "COL_6",
         "validate_type": "REQUIRE",
         "show_type": 1,
@@ -950,11 +949,11 @@
         "choice": [
           {
             "key": "true",
-            "name": "\u901a\u8fc7"
+            "name": "通过"
           },
           {
             "key": "false",
-            "name": "\u62d2\u7edd"
+            "name": "拒绝"
           }
         ],
         "related_fields": {},
@@ -978,7 +977,7 @@
         "kv_relation": {},
         "type": "TEXT",
         "key": "94c49c3a5047dda38ed1e07fb53c025d",
-        "name": "\u5907\u6ce8",
+        "name": "备注",
         "layout": "COL_12",
         "validate_type": "OPTION",
         "show_type": 0,
@@ -1020,7 +1019,7 @@
         "kv_relation": {},
         "type": "TEXT",
         "key": "3d1fbe249001dd755c075418904be892",
-        "name": "\u5907\u6ce8",
+        "name": "备注",
         "layout": "COL_12",
         "validate_type": "REQUIRE",
         "show_type": 0,
@@ -1055,11 +1054,11 @@
       2
     ],
     "task_schemas": []
-  }, 
-    {
+  },
+  {
     "is_deleted": false,
-    "name": "\u53d8\u66f4\u53d1\u5e03",
-    "desc": "\u53d8\u66f4\u53d1\u5e03\u6d41\u7a0b",
+    "name": "变更发布",
+    "desc": "变更发布流程",
     "flow_type": "other",
     "is_enabled": true,
     "is_revocable": true,
@@ -1069,7 +1068,6 @@
     "owners": ",admin,",
     "notify_rule": "ONCE",
     "notify_freq": 0,
-    "is_biz_needed": true,
     "is_supervise_needed": false,
     "supervise_type": "EMPTY",
     "supervisor": "",
@@ -1077,9 +1075,9 @@
     "version_number": "20201109144424",
     "table": {
       "is_deleted": false,
-      "name": "\u53d8\u66f4", 
+      "name": "变更",
       "is_builtin": true,
-      "desc": "\u53d8\u66f4\u7ba1\u7406\u57fa\u7840\u6a21\u578b",
+      "desc": "变更管理基础模型",
       "version": "EMPTY",
       "fields": [
         {
@@ -1095,7 +1093,7 @@
           "kv_relation": {},
           "type": "STRING",
           "key": "title",
-          "name": "\u6807\u9898",
+          "name": "标题",
           "layout": "COL_12",
           "validate_type": "REQUIRE",
           "show_type": 1,
@@ -1103,7 +1101,7 @@
           "regex": "EMPTY",
           "regex_config": {},
           "custom_regex": "",
-          "desc": "\u8bf7\u8f93\u5165\u6807\u9898",
+          "desc": "请输入标题",
           "tips": "",
           "is_tips": false,
           "default": "",
@@ -1126,7 +1124,7 @@
           "kv_relation": {},
           "type": "SELECT",
           "key": "impact",
-          "name": "\u5f71\u54cd\u8303\u56f4",
+          "name": "影响范围",
           "layout": "COL_12",
           "validate_type": "REQUIRE",
           "show_type": 1,
@@ -1134,7 +1132,7 @@
           "regex": "EMPTY",
           "regex_config": {},
           "custom_regex": "",
-          "desc": "\u8bf7\u9009\u62e9\u5f71\u54cd\u8303\u56f4",
+          "desc": "请选择影响范围",
           "tips": "",
           "is_tips": false,
           "default": "",
@@ -1157,7 +1155,7 @@
           "kv_relation": {},
           "type": "SELECT",
           "key": "urgency",
-          "name": "\u7d27\u6025\u7a0b\u5ea6",
+          "name": "紧急程度",
           "layout": "COL_12",
           "validate_type": "REQUIRE",
           "show_type": 1,
@@ -1165,7 +1163,7 @@
           "regex": "EMPTY",
           "regex_config": {},
           "custom_regex": "",
-          "desc": "\u8bf7\u9009\u62e9\u7d27\u6025\u7a0b\u5ea6",
+          "desc": "请选择紧急程度",
           "tips": "",
           "is_tips": false,
           "default": "",
@@ -1188,7 +1186,7 @@
           "kv_relation": {},
           "type": "SELECT",
           "key": "priority",
-          "name": "\u4f18\u5148\u7ea7",
+          "name": "优先级",
           "layout": "COL_12",
           "validate_type": "REQUIRE",
           "show_type": 1,
@@ -1196,7 +1194,7 @@
           "regex": "EMPTY",
           "regex_config": {},
           "custom_regex": "",
-          "desc": "\u8bf7\u9009\u62e9\u4f18\u5148\u7ea7",
+          "desc": "请选择优先级",
           "tips": "",
           "is_tips": false,
           "default": "",
@@ -1224,7 +1222,7 @@
           "kv_relation": {},
           "type": "SELECT",
           "key": "current_status",
-          "name": "\u5de5\u5355\u72b6\u6001",
+          "name": "工单状态",
           "layout": "COL_12",
           "validate_type": "REQUIRE",
           "show_type": 1,
@@ -1232,7 +1230,7 @@
           "regex": "EMPTY",
           "regex_config": {},
           "custom_regex": "",
-          "desc": "\u8bf7\u9009\u62e9\u5de5\u5355\u72b6\u6001",
+          "desc": "请选择工单状态",
           "tips": "",
           "is_tips": false,
           "default": "",
@@ -1259,8 +1257,7 @@
       ]
     },
     "extras": {
-      "task_settings": {
-      }
+      "task_settings": {}
     },
     "creator": "admin",
     "updated_by": "admin",
@@ -1271,7 +1268,7 @@
         "workflow": 3,
         "id": 5,
         "key": 5,
-        "name": "\u5f00\u59cb",
+        "name": "开始",
         "desc": "",
         "distribute_type": "PROCESS",
         "axis": {
@@ -1311,7 +1308,7 @@
         "workflow": 3,
         "id": 6,
         "key": 6,
-        "name": "\u53d8\u66f4\u63d0\u5355",
+        "name": "变更提单",
         "desc": "",
         "distribute_type": "PROCESS",
         "axis": {
@@ -1345,7 +1342,6 @@
           8,
           9,
           15,
-          10,
           22,
           18,
           14
@@ -1366,7 +1362,7 @@
         "workflow": 3,
         "id": 7,
         "key": 7,
-        "name": "\u7ed3\u675f",
+        "name": "结束",
         "desc": "",
         "distribute_type": "PROCESS",
         "axis": {
@@ -1406,7 +1402,7 @@
         "workflow": 3,
         "id": 8,
         "key": 8,
-        "name": "\u8d1f\u8d23\u4eba\u5ba1\u6838",
+        "name": "负责人审核",
         "desc": "",
         "distribute_type": "PROCESS",
         "axis": {
@@ -1422,18 +1418,18 @@
               "state": 85,
               "type": "STRING",
               "key": "d93af9432ab455cd19921933884ebca8",
-              "name": "\u5ba1\u6279\u7ed3\u679c",
+              "name": "审批结果",
               "meta": {
                 "code": "NODE_APPROVE_RESULT",
                 "type": "SELECT",
                 "choice": [
                   {
                     "key": "false",
-                    "name": "\u62d2\u7edd"
+                    "name": "拒绝"
                   },
                   {
                     "key": "true",
-                    "name": "\u901a\u8fc7"
+                    "name": "通过"
                   }
                 ]
               }
@@ -1477,7 +1473,7 @@
         "workflow": 3,
         "id": 9,
         "key": 9,
-        "name": "\u8fd0\u7ef4\u786e\u8ba4",
+        "name": "运维确认",
         "desc": "",
         "distribute_type": "PROCESS",
         "axis": {
@@ -1533,7 +1529,7 @@
         "workflow": 3,
         "id": 10,
         "key": 10,
-        "name": "\u6d4b\u8bd5\u9a8c\u8bc1",
+        "name": "测试验证",
         "desc": "",
         "distribute_type": "PROCESS",
         "axis": {
@@ -1589,7 +1585,7 @@
         "workflow": 3,
         "id": 11,
         "key": 11,
-        "name": "\u8fd0\u7ef4\u53d1\u5e03",
+        "name": "运维发布",
         "desc": "",
         "distribute_type": "PROCESS",
         "axis": {
@@ -1672,7 +1668,7 @@
         "id": 6,
         "from_state": 8,
         "to_state": 9,
-        "name": "\u8f6c\u8fd0\u7ef4",
+        "name": "转运维",
         "axis": {
           "start": "Right",
           "end": "Left"
@@ -1704,7 +1700,7 @@
         "id": 7,
         "from_state": 10,
         "to_state": 7,
-        "name": "\u9a8c\u8bc1\u901a\u8fc7",
+        "name": "验证通过",
         "axis": {
           "start": "Right",
           "end": "Left"
@@ -1741,7 +1737,7 @@
         "id": 20,
         "from_state": 9,
         "to_state": 11,
-        "name": "\u9ed8\u8ba4",
+        "name": "默认",
         "axis": {
           "start": "Right",
           "end": "Left"
@@ -1773,7 +1769,7 @@
         "id": 21,
         "from_state": 6,
         "to_state": 8,
-        "name": "\u9ed8\u8ba4",
+        "name": "默认",
         "axis": {
           "start": "Right",
           "end": "Left"
@@ -1805,7 +1801,7 @@
         "id": 22,
         "from_state": 11,
         "to_state": 10,
-        "name": "\u9ed8\u8ba4",
+        "name": "默认",
         "axis": {
           "start": "Right",
           "end": "Left"
@@ -1837,7 +1833,7 @@
         "id": 23,
         "from_state": 10,
         "to_state": 9,
-        "name": "\u9a8c\u8bc1\u4e0d\u901a\u8fc7",
+        "name": "验证不通过",
         "axis": {
           "start": "Bottom",
           "end": "Bottom"
@@ -1885,7 +1881,7 @@
         "kv_relation": {},
         "type": "STRING",
         "key": "title",
-        "name": "\u6807\u9898",
+        "name": "标题",
         "layout": "COL_12",
         "validate_type": "REQUIRE",
         "show_type": 1,
@@ -1893,7 +1889,7 @@
         "regex": "EMPTY",
         "regex_config": {},
         "custom_regex": "",
-        "desc": "\u8bf7\u8f93\u5165\u6807\u9898",
+        "desc": "请输入标题",
         "tips": "",
         "is_tips": false,
         "default": "",
@@ -1917,7 +1913,7 @@
         "kv_relation": {},
         "type": "SELECT",
         "key": "impact",
-        "name": "\u5f71\u54cd\u8303\u56f4",
+        "name": "影响范围",
         "layout": "COL_6",
         "validate_type": "REQUIRE",
         "show_type": 1,
@@ -1938,7 +1934,7 @@
           }
         },
         "custom_regex": "",
-        "desc": "\u8bf7\u9009\u62e9\u5f71\u54cd\u8303\u56f4",
+        "desc": "请选择影响范围",
         "tips": "",
         "is_tips": false,
         "default": "",
@@ -1966,7 +1962,7 @@
         "kv_relation": {},
         "type": "SELECT",
         "key": "urgency",
-        "name": "\u7d27\u6025\u7a0b\u5ea6",
+        "name": "紧急程度",
         "layout": "COL_6",
         "validate_type": "REQUIRE",
         "show_type": 1,
@@ -1987,7 +1983,7 @@
           }
         },
         "custom_regex": "",
-        "desc": "\u8bf7\u9009\u62e9\u7d27\u6025\u7a0b\u5ea6",
+        "desc": "请选择紧急程度",
         "tips": "",
         "is_tips": false,
         "default": "",
@@ -2002,503 +1998,6 @@
         "state_id": "",
         "source": "TABLE"
       },
-      "10": {
-        "id": 10,
-        "api_info": {
-          "api_instance_info": {
-            "creator": "",
-            "updated_by": "",
-            "is_deleted": false,
-            "remote_api": 40,
-            "name": "",
-            "desc": "",
-            "req_params": {},
-            "req_body": {
-              "fields": [],
-              "page": {
-                "sort": "bk_biz_id",
-                "start": 0,
-                "limit": 200
-              },
-              "condition": {}
-            },
-            "rsp_data": "data.info",
-            "succeed_conditions": {},
-            "end_conditions": {},
-            "need_poll": false,
-            "map_code": "",
-            "before_req": "",
-            "remote_api_info": {
-              "id": 7,
-              "remote_system": 1,
-              "remote_system_name": "\u84dd\u9cb8\u914d\u7f6e\u5e73\u53f0",
-              "name": "\u67e5\u8be2\u4e1a\u52a1",
-              "owners": "",
-              "path": "/api/c/compapi/v2/cc/search_business/",
-              "version": "v2",
-              "method": "POST",
-              "func_name": "search_business",
-              "desc": "\u67e5\u8be2\u4e1a\u52a1",
-              "is_activated": true,
-              "req_headers": [],
-              "req_params": [],
-              "req_body": {
-                "$schema": "http://json-schema.org/draft-04/schema#",
-                "type": "object",
-                "description": "\u521d\u59cb\u5316\u6570\u636e",
-                "properties": {
-                  "fields": {
-                    "type": "array",
-                    "description": "\u6307\u5b9a\u67e5\u8be2\u7684\u5b57\u6bb5\uff0c\u53c2\u6570\u4e3a\u4e1a\u52a1\u7684\u4efb\u610f\u5c5e\u6027\uff0c\u5982\u679c\u4e0d\u586b\u5199\u5b57\u6bb5\u4fe1\u606f\uff08\u586b\u5199\u8bf7\u5148\u5230API\u914d\u7f6e\u6dfb\u52a0\u4e00\u4e2a\u9009\u9879\uff09\uff0c\u7cfb\u7edf\u4f1a\u8fd4\u56de\u4e1a\u52a1\u7684\u6240\u6709\u5b57\u6bb5"
-                  },
-                  "page": {
-                    "required": [
-                      "start",
-                      "limit"
-                    ],
-                    "type": "object",
-                    "description": "\u5206\u9875\u6761\u4ef6",
-                    "properties": {
-                      "sort": {
-                        "default": "bk_biz_id",
-                        "type": "string",
-                        "description": "\u6392\u5e8f\u5b57\u6bb5\uff0c\u901a\u8fc7\u5728\u5b57\u6bb5\u524d\u9762\u589e\u52a0 -\uff0c\u5982 sort:\"-field\" \u53ef\u4ee5\u8868\u793a\u6309\u7167\u5b57\u6bb5 field\u964d\u5e8f"
-                      },
-                      "start": {
-                        "default": 0,
-                        "type": "number",
-                        "description": "\u8bb0\u5f55\u5f00\u59cb\u4f4d\u7f6e"
-                      },
-                      "limit": {
-                        "default": 200,
-                        "type": "number",
-                        "description": "\u6bcf\u9875\u9650\u5236\u6761\u6570,\u6700\u5927200"
-                      }
-                    }
-                  },
-                  "condition": {
-                    "type": "object",
-                    "description": "\u67e5\u8be2\u6761\u4ef6\uff0c\u53c2\u6570\u4e3a\u4e1a\u52a1\u7684\u4efb\u610f\u5c5e\u6027\uff0c\u5982\u679c\u4e0d\u5199\u4ee3\u8868\u641c\u7d22\u5168\u90e8\u6570\u636e\uff08\u586b\u5199\u8bf7\u5148\u5230API\u914d\u7f6e\u6dfb\u52a0\u9009\u9879\uff09",
-                    "properties": {}
-                  }
-                }
-              },
-              "rsp_data": {
-                "$schema": "http://json-schema.org/draft-04/schema#",
-                "required": [
-                  "message",
-                  "code",
-                  "data",
-                  "result",
-                  "request_id"
-                ],
-                "type": "object",
-                "description": "\u521d\u59cb\u5316\u6570\u636e",
-                "properties": {
-                  "message": {
-                    "default": "success",
-                    "type": "string",
-                    "description": "\u8fd4\u56de\u4fe1\u606f"
-                  },
-                  "code": {
-                    "default": 0,
-                    "type": "number",
-                    "description": "\u8fd4\u56decode"
-                  },
-                  "data": {
-                    "required": [
-                      "count",
-                      "info"
-                    ],
-                    "type": "object",
-                    "description": "\u8fd4\u56de\u6570\u636e",
-                    "properties": {
-                      "count": {
-                        "default": 59,
-                        "type": "number",
-                        "description": "\u4e1a\u52a1\u6570\u91cf"
-                      },
-                      "info": {
-                        "items": {
-                          "required": [
-                            "bk_biz_id",
-                            "language",
-                            "life_cycle",
-                            "bk_biz_developer",
-                            "bk_biz_maintainer",
-                            "bk_biz_tester",
-                            "time_zone",
-                            "default",
-                            "create_time",
-                            "bk_biz_productor",
-                            "bk_supplier_account",
-                            "bk_biz_name",
-                            "bk_supplier_id"
-                          ],
-                          "type": "object",
-                          "description": "",
-                          "properties": {
-                            "bk_biz_id": {
-                              "default": 90,
-                              "type": "number",
-                              "description": "\u4e1a\u52a1ID"
-                            },
-                            "language": {
-                              "default": "1",
-                              "type": "string",
-                              "description": "\u8bed\u8a00"
-                            },
-                            "life_cycle": {
-                              "default": "2",
-                              "type": "string",
-                              "description": "\u751f\u547d\u5468\u671f"
-                            },
-                            "bk_biz_developer": {
-                              "default": "admin",
-                              "type": "string",
-                              "description": "\u5f00\u53d1\u4eba\u5458"
-                            },
-                            "bk_biz_maintainer": {
-                              "default": "admin",
-                              "type": "string",
-                              "description": "\u8fd0\u7ef4\u4eba\u5458"
-                            },
-                            "bk_biz_tester": {
-                              "default": "admin",
-                              "type": "string",
-                              "description": "\u6d4b\u8bd5\u4eba\u5458"
-                            },
-                            "time_zone": {
-                              "default": "Asia/Shanghai",
-                              "type": "string",
-                              "description": "\u65f6\u533a"
-                            },
-                            "default": {
-                              "default": 0,
-                              "type": "number",
-                              "description": ""
-                            },
-                            "create_time": {
-                              "default": "2019-08-09T10:20:57.137+08:00",
-                              "type": "string",
-                              "description": "\u521b\u5efa\u65f6\u95f4"
-                            },
-                            "bk_biz_productor": {
-                              "default": "admin",
-                              "type": "string",
-                              "description": "\u4ea7\u54c1\u4eba\u5458"
-                            },
-                            "bk_supplier_account": {
-                              "default": "0",
-                              "type": "string",
-                              "description": "\u5f00\u53d1\u5546\u8d26\u6237"
-                            },
-                            "bk_biz_name": {
-                              "default": "cctest",
-                              "type": "string",
-                              "description": "\u4e1a\u52a1\u540d\u79f0"
-                            },
-                            "bk_supplier_id": {
-                              "default": 0,
-                              "type": "number",
-                              "description": "\u5f00\u53d1\u5546\u8d26\u6237ID"
-                            }
-                          }
-                        },
-                        "type": "array",
-                        "description": "\u4e1a\u52a1\u5217\u8868"
-                      }
-                    }
-                  },
-                  "result": {
-                    "default": true,
-                    "type": "boolean",
-                    "description": "\u8fd4\u56de\u7ed3\u679c"
-                  },
-                  "request_id": {
-                    "default": "50e80f1def5a4d608a7e8186bda4b9ed",
-                    "type": "string",
-                    "description": "\u8bf7\u6c42ID"
-                  }
-                }
-              },
-              "map_code": "",
-              "before_req": "",
-              "create_at": "2020-05-27 16:26:22",
-              "update_at": "2020-05-27 16:26:22",
-              "creator": "system",
-              "updated_by": "system",
-              "is_builtin": true,
-              "auth_actions": [],
-              "count": 4
-            }
-          },
-          "remote_api_info": {
-            "creator": "system",
-            "updated_by": "system",
-            "is_deleted": false,
-            "remote_system": 1,
-            "name": "\u67e5\u8be2\u4e1a\u52a1(20201102191556)",
-            "path": "/api/c/compapi/v2/cc/search_business/",
-            "version": "v2",
-            "func_name": "search_business",
-            "method": "POST",
-            "desc": "\u67e5\u8be2\u4e1a\u52a1",
-            "owners": "",
-            "before_req": "",
-            "map_code": "",
-            "is_activated": true,
-            "is_builtin": false,
-            "read_only": false,
-            "req_headers": [],
-            "req_params": [],
-            "req_body": {
-              "$schema": "http://json-schema.org/draft-04/schema#",
-              "type": "object",
-              "description": "\u521d\u59cb\u5316\u6570\u636e",
-              "properties": {
-                "fields": {
-                  "type": "array",
-                  "description": "\u6307\u5b9a\u67e5\u8be2\u7684\u5b57\u6bb5\uff0c\u53c2\u6570\u4e3a\u4e1a\u52a1\u7684\u4efb\u610f\u5c5e\u6027\uff0c\u5982\u679c\u4e0d\u586b\u5199\u5b57\u6bb5\u4fe1\u606f\uff08\u586b\u5199\u8bf7\u5148\u5230API\u914d\u7f6e\u6dfb\u52a0\u4e00\u4e2a\u9009\u9879\uff09\uff0c\u7cfb\u7edf\u4f1a\u8fd4\u56de\u4e1a\u52a1\u7684\u6240\u6709\u5b57\u6bb5"
-                },
-                "page": {
-                  "required": [
-                    "start",
-                    "limit"
-                  ],
-                  "type": "object",
-                  "description": "\u5206\u9875\u6761\u4ef6",
-                  "properties": {
-                    "sort": {
-                      "default": "bk_biz_id",
-                      "type": "string",
-                      "description": "\u6392\u5e8f\u5b57\u6bb5\uff0c\u901a\u8fc7\u5728\u5b57\u6bb5\u524d\u9762\u589e\u52a0 -\uff0c\u5982 sort:\"-field\" \u53ef\u4ee5\u8868\u793a\u6309\u7167\u5b57\u6bb5 field\u964d\u5e8f"
-                    },
-                    "start": {
-                      "default": 0,
-                      "type": "number",
-                      "description": "\u8bb0\u5f55\u5f00\u59cb\u4f4d\u7f6e"
-                    },
-                    "limit": {
-                      "default": 200,
-                      "type": "number",
-                      "description": "\u6bcf\u9875\u9650\u5236\u6761\u6570,\u6700\u5927200"
-                    }
-                  }
-                },
-                "condition": {
-                  "type": "object",
-                  "description": "\u67e5\u8be2\u6761\u4ef6\uff0c\u53c2\u6570\u4e3a\u4e1a\u52a1\u7684\u4efb\u610f\u5c5e\u6027\uff0c\u5982\u679c\u4e0d\u5199\u4ee3\u8868\u641c\u7d22\u5168\u90e8\u6570\u636e\uff08\u586b\u5199\u8bf7\u5148\u5230API\u914d\u7f6e\u6dfb\u52a0\u9009\u9879\uff09",
-                  "properties": {}
-                }
-              }
-            },
-            "rsp_data": {
-              "$schema": "http://json-schema.org/draft-04/schema#",
-              "required": [
-                "message",
-                "code",
-                "data",
-                "result",
-                "request_id"
-              ],
-              "type": "object",
-              "description": "\u521d\u59cb\u5316\u6570\u636e",
-              "properties": {
-                "message": {
-                  "default": "success",
-                  "type": "string",
-                  "description": "\u8fd4\u56de\u4fe1\u606f"
-                },
-                "code": {
-                  "default": 0,
-                  "type": "number",
-                  "description": "\u8fd4\u56decode"
-                },
-                "data": {
-                  "required": [
-                    "count",
-                    "info"
-                  ],
-                  "type": "object",
-                  "description": "\u8fd4\u56de\u6570\u636e",
-                  "properties": {
-                    "count": {
-                      "default": 59,
-                      "type": "number",
-                      "description": "\u4e1a\u52a1\u6570\u91cf"
-                    },
-                    "info": {
-                      "items": {
-                        "required": [
-                          "bk_biz_id",
-                          "language",
-                          "life_cycle",
-                          "bk_biz_developer",
-                          "bk_biz_maintainer",
-                          "bk_biz_tester",
-                          "time_zone",
-                          "default",
-                          "create_time",
-                          "bk_biz_productor",
-                          "bk_supplier_account",
-                          "bk_biz_name",
-                          "bk_supplier_id"
-                        ],
-                        "type": "object",
-                        "description": "",
-                        "properties": {
-                          "bk_biz_id": {
-                            "default": 90,
-                            "type": "number",
-                            "description": "\u4e1a\u52a1ID"
-                          },
-                          "language": {
-                            "default": "1",
-                            "type": "string",
-                            "description": "\u8bed\u8a00"
-                          },
-                          "life_cycle": {
-                            "default": "2",
-                            "type": "string",
-                            "description": "\u751f\u547d\u5468\u671f"
-                          },
-                          "bk_biz_developer": {
-                            "default": "admin",
-                            "type": "string",
-                            "description": "\u5f00\u53d1\u4eba\u5458"
-                          },
-                          "bk_biz_maintainer": {
-                            "default": "admin",
-                            "type": "string",
-                            "description": "\u8fd0\u7ef4\u4eba\u5458"
-                          },
-                          "bk_biz_tester": {
-                            "default": "admin",
-                            "type": "string",
-                            "description": "\u6d4b\u8bd5\u4eba\u5458"
-                          },
-                          "time_zone": {
-                            "default": "Asia/Shanghai",
-                            "type": "string",
-                            "description": "\u65f6\u533a"
-                          },
-                          "default": {
-                            "default": 0,
-                            "type": "number",
-                            "description": ""
-                          },
-                          "create_time": {
-                            "default": "2019-08-09T10:20:57.137+08:00",
-                            "type": "string",
-                            "description": "\u521b\u5efa\u65f6\u95f4"
-                          },
-                          "bk_biz_productor": {
-                            "default": "admin",
-                            "type": "string",
-                            "description": "\u4ea7\u54c1\u4eba\u5458"
-                          },
-                          "bk_supplier_account": {
-                            "default": "0",
-                            "type": "string",
-                            "description": "\u5f00\u53d1\u5546\u8d26\u6237"
-                          },
-                          "bk_biz_name": {
-                            "default": "cctest",
-                            "type": "string",
-                            "description": "\u4e1a\u52a1\u540d\u79f0"
-                          },
-                          "bk_supplier_id": {
-                            "default": 0,
-                            "type": "number",
-                            "description": "\u5f00\u53d1\u5546\u8d26\u6237ID"
-                          }
-                        }
-                      },
-                      "type": "array",
-                      "description": "\u4e1a\u52a1\u5217\u8868"
-                    }
-                  }
-                },
-                "result": {
-                  "default": true,
-                  "type": "boolean",
-                  "description": "\u8fd4\u56de\u7ed3\u679c"
-                },
-                "request_id": {
-                  "default": "50e80f1def5a4d608a7e8186bda4b9ed",
-                  "type": "string",
-                  "description": "\u8bf7\u6c42ID"
-                }
-              }
-            },
-            "system_info": {
-              "creator": "",
-              "updated_by": "",
-              "is_deleted": false,
-              "system_id": 2,
-              "name": "\u84dd\u9cb8\u914d\u7f6e\u5e73\u53f0",
-              "code": "CC",
-              "desc": "\u84dd\u9cb8\u914d\u7f6e\u5e73\u53f0\u662f\u4e00\u6b3e\u9762\u5411\u5e94\u7528\u7684CMDB\uff0c\u5728ITIL\u4f53\u7cfb\u91cc\uff0cCMDB\u662f\u6784\u5efa\u5176\u5b83\u6d41\u7a0b\u7684\u57fa\u77f3\uff0c\u800c\u5728\u84dd\u9cb8\u667a\u4e91\u4f53\u7cfb\u91cc\uff0c\u914d\u7f6e\u5e73\u53f0\u5c31\u626e\u6f14\u7740\u57fa\u77f3\u7684\u89d2\u8272\uff0c\u4e3a\u5e94\u7528\u63d0\u4f9b\u4e86\u5404\u79cd\u8fd0\u7ef4\u573a\u666f\u7684\u914d\u7f6e\u6570\u636e\u670d\u52a1\u3002",
-              "owners": "",
-              "contact_information": "",
-              "is_builtin": true,
-              "domain": "",
-              "is_activated": true,
-              "headers": [],
-              "cookies": [],
-              "variables": []
-            }
-          }
-        },
-        "is_deleted": false,
-        "is_builtin": true,
-        "is_readonly": false,
-        "is_valid": true,
-        "display": true,
-        "source_type": "API",
-        "source_uri": "",
-        "api_instance_id": 1,
-        "kv_relation": {
-          "key": "bk_biz_id",
-          "name": "bk_biz_name"
-        },
-        "type": "SELECT",
-        "key": "bk_biz_id",
-        "name": "\u5173\u8054\u4e1a\u52a1",
-        "layout": "COL_6",
-        "validate_type": "REQUIRE",
-        "show_type": 1,
-        "show_conditions": {},
-        "regex": "EMPTY",
-        "regex_config": {
-          "rule": {
-            "expressions": [
-              {
-                "condition": "",
-                "key": "",
-                "source": "field",
-                "type": "SELECT",
-                "value": ""
-              }
-            ],
-            "type": "and"
-          }
-        },
-        "custom_regex": "",
-        "desc": "\u8bf7\u9009\u62e9\u5173\u8054\u4e1a\u52a1",
-        "tips": "",
-        "is_tips": false,
-        "default": "\u84dd\u76fe",
-        "choice": [],
-        "related_fields": {
-          "rely_on": []
-        },
-        "meta": {},
-        "workflow_id": 3,
-        "state_id": 6,
-        "source": "CUSTOM"
-      },
       "11": {
         "id": 11,
         "is_deleted": false,
@@ -2512,7 +2011,7 @@
         "kv_relation": {},
         "type": "RADIO",
         "key": "b416ef64ca8fc2939679a2acec276114",
-        "name": "\u5ba1\u6279\u610f\u89c1",
+        "name": "审批意见",
         "layout": "COL_6",
         "validate_type": "REQUIRE",
         "show_type": 1,
@@ -2527,11 +2026,11 @@
         "choice": [
           {
             "key": "true",
-            "name": "\u901a\u8fc7"
+            "name": "通过"
           },
           {
             "key": "false",
-            "name": "\u62d2\u7edd"
+            "name": "拒绝"
           }
         ],
         "related_fields": {},
@@ -2555,7 +2054,7 @@
         "kv_relation": {},
         "type": "TEXT",
         "key": "214029a9156f17938fdc33cb8d50a457",
-        "name": "\u5907\u6ce8",
+        "name": "备注",
         "layout": "COL_12",
         "validate_type": "OPTION",
         "show_type": 0,
@@ -2597,7 +2096,7 @@
         "kv_relation": {},
         "type": "TEXT",
         "key": "029a9b5363d5b6c5ce3411deef8ecfd1",
-        "name": "\u5907\u6ce8",
+        "name": "备注",
         "layout": "COL_12",
         "validate_type": "REQUIRE",
         "show_type": 0,
@@ -2639,7 +2138,7 @@
         "kv_relation": {},
         "type": "RICHTEXT",
         "key": "BIANGENGXIANGQING",
-        "name": "\u53d8\u66f4\u8be6\u60c5",
+        "name": "变更详情",
         "layout": "COL_12",
         "validate_type": "REQUIRE",
         "show_type": 1,
@@ -2660,8 +2159,8 @@
           }
         },
         "custom_regex": "",
-        "desc": "\u8bf7\u586b\u5199\u53d8\u66f4\u7684\u8be6\u7ec6\u5185\u5bb9",
-        "tips": "\u6309\u6a21\u677f\u586b\u5199\u53d8\u66f4\u5355",
+        "desc": "请填写变更的详细内容",
+        "tips": "按模板填写变更单",
         "is_tips": true,
         "default": "",
         "choice": [],
@@ -2684,7 +2183,7 @@
         "kv_relation": {},
         "type": "DATETIME",
         "key": "YUQIBIANGENGSHIJIAN",
-        "name": "\u9884\u671f\u53d8\u66f4\u65f6\u95f4",
+        "name": "预期变更时间",
         "layout": "COL_6",
         "validate_type": "OPTION",
         "show_type": 1,
@@ -2705,8 +2204,8 @@
           }
         },
         "custom_regex": "",
-        "desc": "\u8bf7\u9009\u62e9\u9884\u671f\u7684\u53d8\u66f4\u65f6\u95f4",
-        "tips": "\u8bf7\u9009\u62e9\u9884\u671f\u7684\u53d8\u66f4\u65f6\u95f4",
+        "desc": "请选择预期的变更时间",
+        "tips": "请选择预期的变更时间",
         "is_tips": true,
         "default": "",
         "choice": [],
@@ -2729,7 +2228,7 @@
         "kv_relation": {},
         "type": "SELECT",
         "key": "BIANGENGCHANGJING",
-        "name": "\u53d8\u66f4\u573a\u666f",
+        "name": "变更场景",
         "layout": "COL_6",
         "validate_type": "REQUIRE",
         "show_type": 1,
@@ -2750,14 +2249,14 @@
           }
         },
         "custom_regex": "",
-        "desc": "\u8bf7\u9009\u62e9\u53d8\u66f4\u7684\u573a\u666f",
+        "desc": "请选择变更的场景",
         "tips": "",
         "is_tips": false,
         "default": "",
         "choice": [
           {
             "key": "GATEWAY",
-            "name": "\u7f51\u5173"
+            "name": "网关"
           },
           {
             "key": "DOCKERHOST",
@@ -2765,11 +2264,11 @@
           },
           {
             "key": "MICROSERVICE",
-            "name": "\u5fae\u670d\u52a1"
+            "name": "微服务"
           },
           {
             "key": "OTHER",
-            "name": "\u5176\u4ed6"
+            "name": "其他"
           }
         ],
         "related_fields": {},
@@ -2791,7 +2290,7 @@
         "kv_relation": {},
         "type": "RICHTEXT",
         "key": "JIAOFUXINXI",
-        "name": "\u5907\u6ce8",
+        "name": "备注",
         "layout": "COL_12",
         "validate_type": "OPTION",
         "show_type": 1,
@@ -2836,7 +2335,7 @@
         "kv_relation": {},
         "type": "FILE",
         "key": "FUJIAN",
-        "name": "\u9644\u4ef6",
+        "name": "附件",
         "layout": "COL_12",
         "validate_type": "OPTION",
         "show_type": 1,
@@ -2873,7 +2372,7 @@
         "kv_relation": {},
         "type": "RADIO",
         "key": "YANZHENGFANG",
-        "name": "\u9a8c\u8bc1\u65b9",
+        "name": "验证方",
         "layout": "COL_12",
         "validate_type": "REQUIRE",
         "show_type": 1,
@@ -2901,19 +2400,19 @@
         "choice": [
           {
             "key": "KAIFAYANZHENG",
-            "name": "\u5f00\u53d1\u9a8c\u8bc1"
+            "name": "开发验证"
           },
           {
             "key": "YUNWEIYANZHENG",
-            "name": "\u8fd0\u7ef4\u9a8c\u8bc1"
+            "name": "运维验证"
           },
           {
             "key": "YONGHUYANZHENG",
-            "name": "\u7528\u6237\u9a8c\u8bc1"
+            "name": "用户验证"
           },
           {
             "key": "CESHIYANZHENG",
-            "name": "\u6d4b\u8bd5\u9a8c\u8bc1"
+            "name": "测试验证"
           }
         ],
         "related_fields": {},
@@ -2935,7 +2434,7 @@
         "kv_relation": {},
         "type": "RADIO",
         "key": "YANZHENGJIEGUO",
-        "name": "\u9a8c\u8bc1\u7ed3\u679c",
+        "name": "验证结果",
         "layout": "COL_12",
         "validate_type": "REQUIRE",
         "show_type": 1,
@@ -2955,11 +2454,11 @@
         "choice": [
           {
             "key": "TONGGUO",
-            "name": "\u901a\u8fc7"
+            "name": "通过"
           },
           {
             "key": "BUTONGGUO",
-            "name": "\u4e0d\u901a\u8fc7"
+            "name": "不通过"
           }
         ],
         "related_fields": {},
@@ -2981,7 +2480,7 @@
         "kv_relation": {},
         "type": "RICHTEXT",
         "key": "BEIZHUSHUOMING",
-        "name": "\u5907\u6ce8\u8bf4\u660e",
+        "name": "备注说明",
         "layout": "COL_12",
         "validate_type": "OPTION",
         "show_type": 1,
@@ -3005,7 +2504,7 @@
         "desc": "",
         "tips": "",
         "is_tips": false,
-        "default": "<p>\uff08\u5982\u9a8c\u8bc1\u7ed3\u679c\u6709\u5f02\u5e38\uff0c\u53ef\u5728\u8fd9\u91cc\u7b80\u8981\u8bf4\u660e\u3002\uff09</p>",
+        "default": "<p>（如验证结果有异常，可在这里简要说明。）</p>",
         "choice": [],
         "related_fields": {},
         "meta": {},
@@ -3026,7 +2525,7 @@
         "kv_relation": {},
         "type": "SELECT",
         "key": "priority",
-        "name": "\u4f18\u5148\u7ea7",
+        "name": "优先级",
         "layout": "COL_6",
         "validate_type": "REQUIRE",
         "show_type": 1,
@@ -3047,7 +2546,7 @@
           }
         },
         "custom_regex": "",
-        "desc": "\u8bf7\u9009\u62e9\u4f18\u5148\u7ea7",
+        "desc": "请选择优先级",
         "tips": "",
         "is_tips": false,
         "default": "",
@@ -3076,7 +2575,7 @@
         "kv_relation": {},
         "type": "RADIO",
         "key": "FABUCHULIREN",
-        "name": "\u53d1\u5e03\u5904\u7406\u4eba",
+        "name": "发布处理人",
         "layout": "COL_12",
         "validate_type": "REQUIRE",
         "show_type": 1,
@@ -3104,11 +2603,11 @@
         "choice": [
           {
             "key": "YUNWEIFABU",
-            "name": "\u8fd0\u7ef4\u53d1\u5e03"
+            "name": "运维发布"
           },
           {
             "key": "ZHINENGHUAFABU",
-            "name": "\u804c\u80fd\u5316\u53d1\u5e03"
+            "name": "职能化发布"
           }
         ],
         "related_fields": {},
@@ -3130,7 +2629,7 @@
         "kv_relation": {},
         "type": "RADIO",
         "key": "FABUFANGSHI",
-        "name": "\u53d1\u5e03\u65b9\u5f0f",
+        "name": "发布方式",
         "layout": "COL_12",
         "validate_type": "REQUIRE",
         "show_type": 1,
@@ -3150,15 +2649,15 @@
         "choice": [
           {
             "key": "BIAOZHUNYUNWEI",
-            "name": "\u6807\u51c6\u8fd0\u7ef4"
+            "name": "标准运维"
           },
           {
             "key": "ZUOYEPINGTAI",
-            "name": "\u4f5c\u4e1a\u5e73\u53f0"
+            "name": "作业平台"
           },
           {
             "key": "LIUSHUIXIAN",
-            "name": "\u6d41\u6c34\u7ebf"
+            "name": "流水线"
           }
         ],
         "related_fields": {},
@@ -3180,7 +2679,7 @@
         "kv_relation": {},
         "type": "TEXT",
         "key": "CHULISHUOMING",
-        "name": "\u5904\u7406\u8bf4\u660e",
+        "name": "处理说明",
         "layout": "COL_12",
         "validate_type": "OPTION",
         "show_type": 1,
@@ -3217,7 +2716,7 @@
         "kv_relation": {},
         "type": "RADIO",
         "key": "BUSHUJIEGUO",
-        "name": "\u90e8\u7f72\u7ed3\u679c",
+        "name": "部署结果",
         "layout": "COL_12",
         "validate_type": "REQUIRE",
         "show_type": 1,
@@ -3237,11 +2736,11 @@
         "choice": [
           {
             "key": "WANCHENG",
-            "name": "\u5b8c\u6210"
+            "name": "完成"
           },
           {
             "key": "QUXIAO",
-            "name": "\u53d6\u6d88"
+            "name": "取消"
           }
         ],
         "related_fields": {},
@@ -3254,7 +2753,6 @@
     "notify": [
       1
     ],
-    "task_schemas": [
-    ]
+    "task_schemas": []
   }
 ]

@@ -97,7 +97,7 @@
           </bk-table-column>
           <bk-table-column :render-header="$renderHeader" :show-overflow-tooltip="true" :label="$t(`m.user['人员']`)">
             <template #default="props">
-              <span :title="props.row.members">{{props.row.members}}</span>
+              <span :title="props.row.members ? props.row.members.join(',') : ''">{{props.row.members ? props.row.members.join(',') : ''}}</span>
             </template>
           </bk-table-column>
           <bk-table-column :render-header="$renderHeader" :show-overflow-tooltip="true" :label="$t(`m.common['创建人']`)">
@@ -107,7 +107,7 @@
           </bk-table-column>
           <bk-table-column :render-header="$renderHeader" :show-overflow-tooltip="true" :label="$t(`m.common['负责人']`)">
             <template #default="props">
-              <span :title="props.row.owners">{{props.row.owners || '--'}}</span>
+              <span :title="props.row.owners && props.row.owners.length ? props.row.owners.join(',') : '--'">{{props.row.owners && props.row.owners.length ? props.row.owners.join(',') : '--'}}</span>
             </template>
           </bk-table-column>
           <bk-table-column :label="$t(`m.user['操作']`)" width="150" fixed="right">
@@ -288,8 +288,8 @@
           this.tableList = res.data;
           this.searchToggle = res.data.length !== 0;
           this.tableList.forEach((item) => {
-            item['staffInputValue'] = item.members ? item.members.split(',') : [];
-            item['ownersInputValue'] = item.owners ? item.owners.split(',') : [];
+            item['staffInputValue'] = item.members || [];
+            item['ownersInputValue'] = item.owners || [];
           });
         })
           .catch((res) => {
@@ -329,8 +329,8 @@
           role_type: 'GENERAL',
           project_key: this.$store.state.project.id,
         };
-        params.members = this.formData.staffInputValue.join(',');
-        params.owners = this.formData.ownersInputValue.join(',');
+        params.members = this.formData.staffInputValue;
+        params.owners = this.formData.ownersInputValue;
         this.$store.dispatch('user/submit', params).then(() => {
           this.$bkMessage({
             message: this.$t('m.user[\'新增成功\']'),
@@ -356,8 +356,8 @@
           role_type: 'GENERAL',
           project_key: this.$store.state.project.id,
         };
-        params.members = this.formData.staffInputValue.join(',');
-        params.owners = this.formData.ownersInputValue.join(',');
+        params.members = this.formData.staffInputValue;
+        params.owners = this.formData.ownersInputValue;
         this.$store.dispatch('user/update', params).then(() => {
           this.$bkMessage({
             message: this.$t('m.user[\'保存成功\']'),

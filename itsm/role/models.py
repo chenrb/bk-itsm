@@ -23,8 +23,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
-from multiprocessing.dummy import Pool as ThreadPool
-
 from django.conf import settings
 from django.core.cache import cache
 from django.db import models
@@ -34,9 +32,7 @@ from common.log import logger
 from itsm.component.constants import (
     ADMIN_STATICS_MANAGER_KEY,
     ADMIN_SUPERUSER_KEY,
-    CACHE_5MIN,
     CACHE_30MIN,
-    DEFAULT_BK_BIZ_ID,
     EMPTY_STRING,
     LEN_MIDDLE,
     LEN_NORMAL,
@@ -48,14 +44,10 @@ from itsm.component.constants import (
 )
 from itsm.component.drf.mixins import ObjectManagerMixin
 from itsm.component.db import managers
-
-
 def _default_roles():
     return {"cmdb": {}, "organization": []}
-from itsm.component.platform_client.http import client_backend
 from itsm.component.utils.basic import list_by_separator
 from itsm.component.utils.client_backend_query import (
-    get_bk_business,
     get_department_users,
     get_user_departments,
     get_user_leader,
@@ -276,149 +268,24 @@ class UserRole(ObjectManagerMixin, Model):
         return cls.objects.filter(members__username=username).values("role_type", "id")
 
     @classmethod
-    def get_cmdb_role_by_user(cls, username):
-        """获取用户的cmdb角色
-        返回示例：{
-            u'secondline': {'bizs': [], 'role_id': 54},
-            u'bk_biz_developer': {'bizs': [5], 'role_id': 10},
-            u'bk_biz_maintainer': {'bizs': [2, 11], 'role_id': 13},
-            u'operator': {'bizs': [2], 'role_id': 11},
-        }
-        """
-        cache_key = "{}cmdb_roles_{}".format(PREFIX_KEY, username)
-        cmdb_roles = cache.get(cache_key)
-        if cmdb_roles:
-            return cmdb_roles
-
-        try:
-            cmdb_roles = {
-                item["role_key"]: {"role_id": item["id"], "bizs": set()}
-                for item in cls.objects.filter(role_type="CMDB").values(
-                    "role_key", "id"
-                )
-            }
-            apps = cls.get_app_list_by_user(username, cmdb_roles)
-
-            for app in apps:
-                # 用户在哪些业务(bizs)下有哪些角色(key)的权限
-                for key, value in list(app.items()):
-                    if not (key in cmdb_roles and value):
-                        continue
-                    if username not in value.split(","):
-                        continue
-                    cmdb_roles[key]["bizs"].add(app["bk_biz_id"])
-
-            cache.set(cache_key, cmdb_roles, CACHE_5MIN)
-
-            return cmdb_roles
-        except Exception as e:
-            logger.error("get_cmdb_role_by_user exception: %s" % e)
-            return {}
-
-    @staticmethod
-    def get_app_list_by_user(username, all_roles):
-        """获取用户有权限的业务列表，即：在任何一个角色下存在该用户"""
-
-        def _get_app_list_by_role(params=None):
-            if params is None:
-                params = {}
-            apps = client_backend.cc.search_business(
-                {
-                    "bk_supplier_id": 0,
-                    "fields": params["search_fields"],
-                    "condition": {params["role"]: params["username"]},
-                    "page": {"start": 0, "limit": 1000, "sort": ""},
-                }
-            ).get("info")
-
-            return apps
-
-        def _batch_get_apps():
-            """多线程并发查询"""
-
-            search_fields = [role for role in all_roles]
-            search_fields.extend(["bk_biz_id", "bk_biz_name"])
-
-            args_list = [
-                {"role": role, "username": username, "search_fields": search_fields}
-                for role in all_roles
-            ]
-
-            pool = ThreadPool(20)
-            apps_map = pool.map(_get_app_list_by_role, args_list)
-            pool.close()
-            pool.join()
-
-            return apps_map
-
-        apps = []
-        for item in _batch_get_apps():
-            apps.extend(item)
-
-        return apps
-
-    @classmethod
-    def update_cmdb_common_roles(cls):
-        """创建或更新cmdb中业务模型下的通用角色"""
-
-        cache_key = "{}cmdb_roles".format(PREFIX_KEY)
-        cmdb_roles = cache.get(cache_key)
-        if cmdb_roles is not None:
-            return True
-
-        try:
-            # 查询通用角色列表
-            res = client_backend.cc.search_object_attribute(
-                {"bk_obj_id": "biz", "bk_supplier_account": "0"}
-            )
-            roles = {
-                item["bk_property_id"]: item["bk_property_name"]
-                for item in res
-                if item["bk_property_group"] == "role"
-            }
-
-            for role in roles:
-                cls.objects.update_or_create(
-                    defaults={"name": roles[role]},
-                    **{"role_type": "CMDB", "role_key": role}
-                )
-
-            cache.set(cache_key, roles, CACHE_5MIN)
-
-            return True
-
-        except Exception as error:
-            logger.error("update_cmdb_common_roles error: %s" % error)
-            return False
-
-    @classmethod
-    def get_users_by_type(cls, bk_biz_id, user_type, users, ticket=None):
+    def get_users_by_type(cls, user_type, users, ticket=None):
         """
         通过角色类型获取人名，返回人名列表
         """
 
-        if user_type in ["GENERAL", "CMDB"]:
+        if user_type == "CMDB":
+            return []
 
+        if user_type == "GENERAL":
             roles = UserRole.objects.filter(role_type=user_type)
             if users:
                 role_ids = [role_id for role_id in str(users).split(",") if role_id]
                 roles = roles.filter(id__in=role_ids)
-
-                if user_type == "CMDB":
-                    if bk_biz_id == DEFAULT_BK_BIZ_ID:
-                        return []
-
-                    cmdb_users = get_bk_business(
-                        bk_biz_id, role_type=[role.role_key for role in roles]
-                    )
-                    return list_by_separator(cmdb_users)
-
-                if user_type == "GENERAL":
-                    return list(
-                        UserRole.objects.filter(id__in=roles)
-                        .values_list("members__username", flat=True)
-                        .distinct()
-                    )
+                return list(
+                    UserRole.objects.filter(id__in=roles)
+                    .values_list("members__username", flat=True)
+                    .distinct()
+                )
 
         if user_type in ["PERSON", "EMPTY", "VARIABLE"] and users:
             return list_by_separator(users)
@@ -461,10 +328,6 @@ class UserRole(ObjectManagerMixin, Model):
                 )
             }
             bkuser_roles = BKUserRole.get_or_update_user_roles(username)
-            roles["cmdb"] = {
-                str(role["role_id"]): role["bizs"]
-                for role in bkuser_roles["cmdb"].values()
-            }
             roles["organization"] = bkuser_roles["organization"]
             cache.set(cache_key, roles, CACHE_30MIN)
         return cache.get(cache_key)
@@ -507,9 +370,6 @@ class BKUserRole(models.Model):
             "cmdb": {},
             "organization": [],
         }
-        # 更新cmdb角色
-        cmdb_roles = UserRole.get_cmdb_role_by_user(username)
-        roles.update(cmdb=cmdb_roles)
 
         # 更新组织架构角色
         if SystemSettings.objects.get(key=ORGANIZATION_KEY).value == SWITCH_ON:

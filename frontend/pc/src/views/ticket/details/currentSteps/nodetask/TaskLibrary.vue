@@ -217,7 +217,6 @@
               taskParams.fields[field.key] = {
                 id: field.value.id,
                 template_source: field.value.template_source,
-                bk_biz_id: field.value.bk_biz_id,
                 constants: field.value.constants,
               };
               taskParams.exclude_task_nodes_id = [];

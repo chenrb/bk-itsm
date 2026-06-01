@@ -38,7 +38,6 @@ from itsm.component.platform_client.http import client_backend
 from itsm.component.exceptions import ComponentCallError
 from itsm.component.utils.basic import build_tree
 from itsm.component.utils.client_backend_query import (
-    get_biz_choices,
     get_list_departments,
     get_list_department_profiles,
 )
@@ -114,11 +113,6 @@ def get_all_users(request):
     cache.set(cache_key, users, CACHE_30MIN)
 
     return Success(users).json()
-
-
-@cache_page(CACHE_5MIN, cache="default")
-def get_app_list(request):
-    return Success(get_biz_choices()).json()
 
 
 @cache_page(CACHE_5MIN, cache="default")

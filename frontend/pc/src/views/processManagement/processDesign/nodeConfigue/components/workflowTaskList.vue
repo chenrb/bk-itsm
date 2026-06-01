@@ -333,10 +333,6 @@
             ...pubTask,
             checked: false,
           }));
-          // 流程未关联业务，则不显示标准运维模板
-          if (!this.workflowInfo.is_biz_needed) {
-            this.taskDialogInfo.list = this.taskDialogInfo.list.filter(template => template.component_type !== 'SOPS');
-          }
         })
           .catch((res) => {
             errorHandler(res, this);

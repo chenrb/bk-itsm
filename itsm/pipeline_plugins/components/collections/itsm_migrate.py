@@ -73,7 +73,6 @@ class ItsmMigrateService(ItsmService):
         else:
             status = RUNNING
         defaults = {
-            "bk_biz_id": ticket.bk_biz_id,
             "name": state.name,
             "action_type": TRANSITION_OPERATE,
             "distribute_type": 'PROCESS',

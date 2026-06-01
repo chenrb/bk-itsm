@@ -34,7 +34,6 @@ from rest_framework.validators import UniqueValidator
 from itsm.component.utils.iam_stub import IamRequest
 from itsm.component.drf.serializers import AuthModelSerializer
 from itsm.component.constants import (
-    FIELD_BIZ,
     LAYOUT_CHOICES,
     LEN_LONG,
     LEN_MIDDLE,
@@ -384,16 +383,8 @@ class FieldSerializer(TemplateFieldSerializer):
 
     def create(self, validated_data):
         """BEP: 创建state后的自定义行为"""
-        state = validated_data["state"]
-        workflow = validated_data["workflow"]
         instance = super(FieldSerializer, self).create(validated_data)
         with transaction.atomic():
-            if (
-                workflow.first_state.id == state.id
-                and validated_data["key"] == "bk_biz_id"
-            ):
-                workflow.is_biz_needed = True
-                workflow.save()
             instance.state.fields.append(instance.pk)
             instance.state.save()
         return instance
@@ -513,8 +504,6 @@ class TableRetrieveSerializer(AuthModelSerializer):
         data = super(TableRetrieveSerializer, self).to_representation(instance)
 
         query_set = TemplateField.objects.filter(id__in=data["fields"])
-        if self.context.get("is_biz_needed", True) is False:
-            query_set = query_set.exclude(key=FIELD_BIZ)
 
         ordering = "FIELD(`id`, %s)" % ",".join(
             [str(int(field_id)) for field_id in instance.fields_order]

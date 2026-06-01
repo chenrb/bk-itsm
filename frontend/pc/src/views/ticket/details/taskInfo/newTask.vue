@@ -319,10 +319,6 @@
                   .bk_biz_id
                   ? 'business'
                   : 'common',
-                bk_biz_id:
-                  this.basicInfomation.bk_biz_id !== -1
-                    ? this.basicInfomation.bk_biz_id
-                    : '',
                 constants: sopsContent.constants,
               };
               if (

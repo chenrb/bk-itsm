@@ -56,10 +56,6 @@ export default {
     changeId(state, id) {
       state.processInfo.id = id;
     },
-    // 是否和业务关联
-    changeBiz(state, bizNeed) {
-      state.processInfo.is_biz_needed = bizNeed;
-    },
     // 赋值配置字段
     changeConfigur(state, value) {
       state.configurInfo = value;

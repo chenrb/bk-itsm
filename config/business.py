@@ -25,10 +25,8 @@ USER_WHITE_FIELDS = (
     os.environ.get("USER_WHITE_FIELDS") or USER_DEFAULT_FIELDS
 ).split(",")
 
-# 短信评价
-IS_USE_INVITE_SMS = os.environ.get("IS_USE_INVITE_SMS", None)
+# 自动评价
 AUTO_COMMENT_DAYS = int(os.environ.get("AUTO_COMMENT_DAYS", 3))
-TICKET_INVITE_SMS_COUNT = int(os.getenv("TICKET_INVITE_SMS_COUNT", 10))
 
 # 系统账户
 SYSTEM_CALL_USER = "admin"

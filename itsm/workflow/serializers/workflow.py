@@ -28,7 +28,6 @@ from rest_framework import serializers
 
 from itsm.component.constants import (
     EMPTY_INT,
-    FIELD_BIZ,
     LEN_LONG,
     LEN_MIDDLE,
     LEN_NORMAL,
@@ -38,12 +37,12 @@ from itsm.component.constants import (
     LEN_XX_LONG,
 )
 from itsm.component.drf.serializers import DynamicFieldsModelSerializer
-from itsm.component.utils.basic import dotted_name, dotted_property, normal_name
+from itsm.component.utils.basic import dotted_name, dotted_property
 from itsm.component.utils.misc import transform_single_username
 from itsm.workflow.models import Notify, Table, Workflow, WorkflowVersion
 from itsm.workflow.serializers import FieldSerializer, NotifySerializer
 from itsm.workflow.serializers.state import StateSerializer
-from itsm.workflow.validators import WorkflowPipelineValidator, related_validate
+from itsm.workflow.validators import WorkflowPipelineValidator
 
 
 class WorkflowSerializer(DynamicFieldsModelSerializer):
@@ -62,8 +61,8 @@ class WorkflowSerializer(DynamicFieldsModelSerializer):
     desc = serializers.CharField(
         required=False, max_length=LEN_LONG, min_length=1, allow_blank=True
     )
-    owners = serializers.CharField(
-        required=False, max_length=LEN_XX_LONG, allow_blank=True
+    owners = serializers.ListField(
+        child=serializers.CharField(), required=False, default=list
     )
     deploy = serializers.BooleanField(required=False)
     deploy_name = serializers.CharField(
@@ -73,8 +72,6 @@ class WorkflowSerializer(DynamicFieldsModelSerializer):
     table = serializers.PrimaryKeyRelatedField(
         required=True, queryset=Table.objects.all()
     )
-    # 业务属性字段
-    is_biz_needed = serializers.BooleanField(required=False)
     # 是否自动过单
     is_auto_approve = serializers.BooleanField(required=False)
     is_iam_used = serializers.BooleanField(required=False)
@@ -107,7 +104,6 @@ class WorkflowSerializer(DynamicFieldsModelSerializer):
             "notify",
             "notify_rule",
             "notify_freq",
-            "is_biz_needed",
             "is_iam_used",
             "is_enabled",
             "is_draft",
@@ -127,18 +123,29 @@ class WorkflowSerializer(DynamicFieldsModelSerializer):
         read_only_fields = ("creator", "create_at", "update_at", "end_at")
 
     def save(self, **kwargs):
-        instance = super(WorkflowSerializer, self).save(**kwargs)
-        instance.update_biz_field()
+        return super(WorkflowSerializer, self).save(**kwargs)
+
+    def create(self, validated_data):
+        from django.contrib.auth import get_user_model
+
+        User = get_user_model()
+        owners = validated_data.pop("owners", [])
+        instance = super(WorkflowSerializer, self).create(validated_data)
+        instance.owners.set(User.objects.filter(username__in=owners))
         return instance
 
     def update(self, instance, validated_data):
+        from django.contrib.auth import get_user_model
+
+        User = get_user_model()
+
         deploy = validated_data.pop("deploy", None)
         deploy_name = validated_data.pop("deploy_name", None)
+        owners = validated_data.pop("owners", None)
 
-        is_biz_needed = validated_data.get("is_biz_needed", None)
-        if is_biz_needed is False and instance.is_biz_needed is True:
-            related_validate(instance.fields.get(key=FIELD_BIZ))
         flow = super(WorkflowSerializer, self).update(instance, validated_data)
+        if owners is not None:
+            flow.owners.set(User.objects.filter(username__in=owners))
         if "task_settings" in validated_data.get("extras", {}):
             flow.create_task(validated_data["extras"]["task_settings"])
 
@@ -162,9 +169,6 @@ class WorkflowSerializer(DynamicFieldsModelSerializer):
                 type__in=(notify["type"] for notify in notify_list)
             ).values_list("pk", flat=True)
 
-        if "owners" in validated_data:
-            validated_data["owners"] = dotted_name(validated_data["owners"])
-
         if (
             "is_enabled" in validated_data
             and "extras" not in validated_data
@@ -179,7 +183,7 @@ class WorkflowSerializer(DynamicFieldsModelSerializer):
 
     def to_representation(self, instance):
         data = super(WorkflowSerializer, self).to_representation(instance)
-        data["owners"] = normal_name(data.get("owners"))
+        data["owners"] = list(instance.owners.values_list("username", flat=True))
         data["updated_by"] = transform_single_username(data["updated_by"])
 
         if "supervise_type" in data and data["supervise_type"] == "PERSON":

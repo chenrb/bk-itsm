@@ -26,6 +26,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 __author__ = "蓝鲸智云"
 __copyright__ = "Copyright © 2025 Tencent BlueKing. All Rights Reserved."
 
+from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext as _
 
@@ -76,7 +77,12 @@ class TaskSchema(Model):
     )
     is_draft = models.BooleanField(_("是否为草稿"), default=True)
     is_enabled = models.BooleanField(_("是否为开启状态"), default=False)
-    owners = models.CharField(_("负责人"), max_length=LEN_XX_LONG, default=EMPTY_STRING)
+    owners = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name="owned_task_schemas",
+        blank=True,
+        verbose_name=_("负责人"),
+    )
 
     can_edit = models.BooleanField(
         _("是否可编辑状态"),

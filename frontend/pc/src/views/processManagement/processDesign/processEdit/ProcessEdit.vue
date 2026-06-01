@@ -77,8 +77,7 @@
         :is-new-flow="isNewFlow"
         :process-id="processId"
         :flow-info="flowInfo"
-        @saveFlowInfo="saveFlowInfo"
-        @onBusinessChange="onBusinessChange">
+        @saveFlowInfo="saveFlowInfo">
       </create-process>
       <config-process
         v-if="step === 'pipelineDesign'"
@@ -90,8 +89,7 @@
         v-if="step === 'processCreate'"
         :flow-info="flowInfo"
         :process-id="processId"
-        :is-new-flow="isNewFlow"
-        :business="business">
+        :is-new-flow="isNewFlow">
       </activation-process>
     </div>
     <!-- 流程节点配置 -->
@@ -172,7 +170,6 @@
     data() {
       return {
         isloading: false,
-        business: false,
         // 保存中
         isSaveing: false,
         // 显示配置页面
@@ -261,7 +258,6 @@
         this.$store.dispatch('design/getFlowDetail', { params: this.processId }).then((res) => {
           const { data } = res;
           this.flowInfo = data;
-          this.business = data.is_biz_needed;
         })
           .catch((res) => {
             errorHandler(res, this);
@@ -357,9 +353,6 @@
           .finally(() => {
             this.isSaveing = false;
           });
-      },
-      onBusinessChange(value) {
-        this.business = value;
       },
       // 跳转到 process 列表
       onBackProcessHome() {

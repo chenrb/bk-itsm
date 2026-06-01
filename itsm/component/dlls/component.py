@@ -41,9 +41,13 @@ class BaseComponentMeta(type):
         if not parents:
             return super_new(cls, name, bases, attrs)
 
-        # Create the class
+        # Create the class, propagating __classcell__ for super() support
         module_name = attrs.pop('__module__')
-        new_class = super_new(cls, name, bases, {'__module__': module_name})
+        classcell = attrs.pop('__classcell__', None)
+        new_attrs = {'__module__': module_name}
+        if classcell is not None:
+            new_attrs['__classcell__'] = classcell
+        new_class = super_new(cls, name, bases, new_attrs)
         module = importlib.import_module(module_name)
 
         for obj_name, obj in attrs.items():

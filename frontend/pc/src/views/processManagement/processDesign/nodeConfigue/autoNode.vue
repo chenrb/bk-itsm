@@ -389,9 +389,7 @@
         if (this.configur.distribute_type !== 'DISTRIBUTE_THEN_PROCESS' && this.configur.distribute_type !== 'DISTRIBUTE_THEN_CLAIM') {
           excludeRoleTypeList.push('BY_ASSIGNOR');
         }
-        if (!this.flowInfo.is_biz_needed) {
-          excludeRoleTypeList.push('CMDB');
-        }
+        excludeRoleTypeList.push('CMDB');
         this.excludeRoleTypeList = [...['EMPTY', 'API'], ...excludeRoleTypeList];
       },
       // 确认

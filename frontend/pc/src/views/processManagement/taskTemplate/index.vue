@@ -425,7 +425,7 @@
         const params = {
           name: this.firstStepInfo.name,
           component_type: 'NORMAL',
-          owners: this.firstStepInfo.ownersInputValue.join(','),
+          owners: this.firstStepInfo.ownersInputValue,
           is_draft: true,
           desc: this.firstStepInfo.desc,
         };

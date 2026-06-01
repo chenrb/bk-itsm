@@ -422,7 +422,6 @@
           isShow: false,
           isAdd: true,
           taskInfo: {},
-          bk_biz_id: '',
         },
         // 处理任务
         dealTaskInfo: {
@@ -543,7 +542,6 @@
           isShow: true,
           isAdd: true,
           taskInfo: {},
-          bk_biz_id: this.ticketInfo.bk_biz_id,
         };
       },
       // 编辑任务
@@ -552,7 +550,6 @@
           isShow: true,
           isAdd: false,
           taskInfo: row,
-          bk_biz_id: this.ticketInfo.bk_biz_id,
         };
       },
       // 删除任务
@@ -624,7 +621,6 @@
           isShow: true,
           isView: type !== 'deal',
           taskInfo: row,
-          bk_biz_id: this.ticketInfo.bk_biz_id,
         };
       },
       onTaskOrderClick(row) {

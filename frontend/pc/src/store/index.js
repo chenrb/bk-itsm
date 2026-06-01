@@ -263,7 +263,6 @@ export default createStore({
       TASK_SWITCH: false,
       TABLE_FIELDS_SWITCH: false,
       FIRST_STATE_SWITCH: false,
-      SMS_COMMENT_SWITCH: false,
     },
     platformInfo: { // 项目全局配置
       favicon: `${window.SITE_URL}static/core/images/bk_itsm.png`,
@@ -481,9 +480,6 @@ export default createStore({
     },
     getTaskList({ commit }, query) {
       return ajax.get("task/get_tasks/", { params: { ...query } }).then((response) => response.data);
-    },
-    getBkBizList({ commit }, query) {
-      return ajax.get("gateway/cmdb/get_app_list", { params: { ...query } }).then((response) => response.data);
     },
     operateTask({ commit }, params) {
       return ajax.post(`task/operate_task/`, params).then((response) => response.data);

@@ -259,12 +259,6 @@
         type: [String, Number],
         required: true,
       },
-      business: {
-        type: Boolean,
-        default() {
-          return false;
-        },
-      },
     },
     data() {
       return {
@@ -445,7 +439,7 @@
         this.$store.dispatch('cdeploy/getUser', { params }).then((res) => {
           const selectgroup = ['CMDB', 'PERSON', 'GENERAL', 'EMPTY'];
           const grouplistorigin = res.data.filter(item => selectgroup.indexOf(item.type) !== -1);
-          this.roles.grouplist = this.business ? grouplistorigin : grouplistorigin.filter(item => item.type !== 'CMDB');
+          this.roles.grouplist = grouplistorigin.filter(item => item.type !== 'CMDB');
           this.roles.grouplist.forEach((item) => {
             if (item.type === 'EMPTY') {
               item.name = '提单人';

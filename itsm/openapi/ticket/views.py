@@ -191,7 +191,6 @@ class TicketViewSet(ApiGatewayMixin, component_viewsets.ModelViewSet):
         end_at__gte = request.data.get("end_at__gte", "")
         username = request.data.get("username", "")
         service_id__in = request.data.get("service_id__in", [])
-        bk_biz_id__in = request.data.get("bk_biz_id__in", [])
         current_status__in = request.data.get("current_status__in", [])
         tag = request.data.get("tag", None)
         project_key = request.data.get("project_key", None)
@@ -212,8 +211,6 @@ class TicketViewSet(ApiGatewayMixin, component_viewsets.ModelViewSet):
             queryset = queryset.filter(end_at__lte=end_at__lte)
         if end_at__gte:
             queryset = queryset.filter(end_at__gte=end_at__gte)
-        if bk_biz_id__in:
-            queryset = queryset.filter(bk_biz_id__in=bk_biz_id__in)
         if current_status__in:
             queryset = queryset.filter(current_status__in=current_status__in)
         if tag:

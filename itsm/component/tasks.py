@@ -25,10 +25,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from celery import shared_task
 from celery.schedules import crontab
-from celery import shared_task
 from django.core.cache import cache
 from django.conf import settings
-from itsm.component.constants import CACHE_10MIN, CACHE_5MIN
+from itsm.component.constants import CACHE_10MIN
 from itsm.component.platform_client.http import client_backend
 from itsm.component.utils.lock import share_lock
 from itsm.component.exceptions import ComponentCallError
@@ -54,31 +53,6 @@ def update_user_cache(cache_key, ret_type="list", name_type="bk_username", users
     if bk_users:
         cache.set(cache_key, bk_users, CACHE_10MIN)
     return bk_users
-
-
-@shared_task
-def update_bk_business(cache_key, bk_biz_id, role_type):
-    """更新CMDB缓存"""
-
-    @share_lock(identify=cache_key)
-    def update():
-        try:
-            search_business_list = client_backend.cc.search_business(
-                {
-                    "bk_supplier_id": 0,
-                    "fields": role_type,
-                    "condition": {"bk_biz_id": int(bk_biz_id)},
-                    "page": {"start": 0, "limit": 200, "sort": ""},
-                }
-            ).get("info")
-            cache.set(cache_key, search_business_list, CACHE_5MIN)
-            return search_business_list
-        except ComponentCallError as e:
-            print("获取业务角色人员失败: %s" % e)
-            return []
-
-    result = update()
-    return result if result else []
 
 
 @shared_task

@@ -58,7 +58,6 @@ from itsm.component.constants import (
     DEFAULT_ENGINE_VERSION,
     DISTRIBUTE_TYPE_CHOICES,
     FAULT_SOURCE_CHOICES,
-    FIELD_BIZ,
     FLOW_CONDITION_TYPE_CHOICES,
     LAYOUT_CHOICES,
     METHOD_CHOICES,
@@ -184,11 +183,10 @@ class WorkflowViewSet(
     + list
     """
 
-    queryset = Workflow.objects.prefetch_related("notify").order_by("-update_at")
+    queryset = Workflow.objects.prefetch_related("notify", "owners").order_by("-update_at")
     serializer_class = WorkflowSerializer
     filter_fields = {
         "id": ["in"],
-        "is_biz_needed": ["exact", "in"],
         "name": ["exact", "contains", "startswith", "icontains"],
         "is_enabled": ["exact", "in"],
         "is_draft": ["exact", "in"],
@@ -356,7 +354,7 @@ class WorkflowViewSet(
             )
         return Response(
             TableRetrieveSerializer(
-                workflow.table, context={"is_biz_needed": workflow.is_biz_needed}
+                workflow.table
             ).data
         )
 
@@ -702,15 +700,9 @@ class FieldViewSet(BaseFieldViewSet):
     def list(self, request, *args, **kwargs):
         """支持根据流程和节点查询字段，关闭分页"""
 
-        workflow_id = self.request.query_params.get("workflow")
         state_id = self.request.query_params.get("state")
 
         queryset = self.filter_queryset(self.get_queryset())
-
-        if workflow_id:
-            workflow = Workflow.objects.get(id=workflow_id)
-            if not workflow.is_biz_needed:
-                queryset = queryset.exclude(key=FIELD_BIZ)
 
         if state_id:
             valid_fields = State.objects.fields_of_state(state_id)
@@ -743,12 +735,6 @@ class FieldViewSet(BaseFieldViewSet):
         自动从State的fields中移除该字段
         """
         with transaction.atomic():
-            if (
-                instance.key == "bk_biz_id"
-                and instance.id == instance.workflow.first_state.id
-            ):
-                instance.workflow.is_biz_needed = False
-                instance.workflow.save()
             if instance.source != TABLE:
                 related_validate(instance)
             if instance.state:
@@ -1159,7 +1145,7 @@ class TaskSchemaViewSet(DynamicListModelMixin, component_viewsets.ModelViewSet):
     任务模版视图
     """
 
-    queryset = TaskSchema.objects.filter(can_edit=True)
+    queryset = TaskSchema.objects.prefetch_related("owners").filter(can_edit=True)
     serializer_class = TaskSchemaSerializer
     filter_fields = {
         "name": ["exact", "in", "contains", "icontains"],

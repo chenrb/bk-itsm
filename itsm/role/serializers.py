@@ -132,7 +132,7 @@ class UserRoleSerializer(DynamicFieldsModelSerializer):
     def to_representation(self, instance):
         data = super(UserRoleSerializer, self).to_representation(instance)
 
-        data["owners"] = ",".join(
+        data["owners"] = list(
             instance.owners.values_list("username", flat=True)
         )
         data["name"] = _(data["name"])
@@ -143,7 +143,7 @@ class UserRoleSerializer(DynamicFieldsModelSerializer):
                 instance.members.values_list("username", flat=True)
             )
             data["count"] = len(member_list)
-            data["members"] = ",".join(member_list)
+            data["members"] = member_list
 
         if "access" in data:
             data["access_name"] = _(

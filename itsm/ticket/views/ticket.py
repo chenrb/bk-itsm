@@ -155,7 +155,6 @@ from itsm.ticket.validators import (
     email_invite_validate,
     merge_validate,
     proceed_validate,
-    sms_invite_validate,
     supervise_validate,
     terminate_validate,
     withdraw_validate,
@@ -226,7 +225,6 @@ class TicketModelViewSet(ModelViewSet):
         "current_status": ["exact", "in"],
         "service_id": ["exact", "in"],
         "create_at": ["lte", "gte"],
-        "bk_biz_id": ["exact", "in"],
         "tag": ["exact"],
     }
     ordering_fields = ("create_at",)
@@ -510,74 +508,6 @@ class TicketModelViewSet(ModelViewSet):
         return Response(data)
 
     @action(detail=True, methods=["post"])
-    def send_sms(self, request, *args, **kwargs):
-        """通过电话号码发送短信"""
-
-        ticket = self.get_object()
-        invitor = request.user.username
-        receiver = request.data.get("receiver", "")
-        numbers = receiver.split(",")
-
-        sms_invite_validate(ticket, numbers, invitor)
-
-        try:
-            # 发送逻辑
-            custom_notify = CustomNotice.objects.get(
-                project_key=ticket.project_key, action=INVITE_OPERATE, notify_type=SMS
-            )
-        except CustomNotice.DoesNotExist:
-            custom_notify = CustomNotice.objects.get(
-                action=INVITE_OPERATE, notify_type=SMS, project_key="public"
-            )
-
-        content_template = (
-            custom_notify.title_template + "：" + custom_notify.content_template
-        )
-        context = ticket.get_notify_context()
-        context.update(action=ACTION_CHOICES_DICT.get(INVITE_OPERATE))
-
-        # 发送前创建邀请记录
-        links = []
-        fail_numbers = []
-        title = Template(custom_notify.title_template).render(**context)
-        for number in numbers:
-            code = TicketCommentInvite.get_unique_code()
-            ticket_url = "{}{}".format(OUT_LINK, code)
-            context.update(ticket_url=ticket_url)
-            links.append(ticket_url)
-
-            notifier = SmsNotifier(
-                title=title,
-                receivers=receiver,
-                message=Template(content_template).render(**context),
-                receiver_nums=number,
-            )
-
-            try:
-                notifier.send()
-                TicketCommentInvite.objects.create(
-                    receiver=number, comment_id=ticket.comment_id, code=code
-                )
-            except ComponentCallError as e:
-                fail_numbers.append(number)
-                logger.warning("send_sms[{}] exception: {}".format(number, e))
-
-        return Response(
-            {
-                "result": len(fail_numbers) == 0,
-                "message": (
-                    _(
-                        "【{}】发送短信失败，请检查电话号码是否正确或联系管理员！"
-                    ).format(",".join(fail_numbers))
-                    if fail_numbers
-                    else "success"
-                ),
-                "data": links,
-                "code": "OK" if len(fail_numbers) == 0 else "SEND_SMS_FAILED",
-            }
-        )
-
-    @action(detail=True, methods=["post"])
     def send_email(self, request, *args, **kwargs):
         """通过邮件邀请评价"""
 
@@ -677,7 +607,7 @@ class TicketModelViewSet(ModelViewSet):
             TicketField.objects.filter(
                 ticket_id__in=queryset.values_list("id", flat=True)
             )
-            .exclude(key__in=["bk_biz_id", "title"])
+            .exclude(key__in=["title"])
             .order_by("-create_at"),
             many=True,
         ).data
@@ -757,7 +687,6 @@ class TicketModelViewSet(ModelViewSet):
             # ]
 
             # 获取导出的所有字段内容 -- 当前的id如果较多，这里大量拉取，估计有点问题
-            all_service_field_keys.append("bk_biz_id")
             return FieldExportSerializer(
                 TicketField.objects.filter(
                     ticket_id__in=queryset.filter(
@@ -1490,7 +1419,6 @@ class TicketModelViewSet(ModelViewSet):
                 many=many,
                 context={
                     "username": request.user.username,
-                    "bk_biz_id": ticket.bk_biz_id,
                     "show_all_fields": show_all_fields,
                     "is_master_proxy": getattr(ticket, "is_master_proxy", False),
                 },

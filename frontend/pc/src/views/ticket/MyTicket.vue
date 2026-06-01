@@ -460,15 +460,6 @@
       list: [],
       placeholder: i18n.t('m.tickets["请选择提单时间"]'),
     },
-    {
-      name: i18n.t('m.tickets["业务"]'),
-      key: 'bk_biz_id',
-      type: 'select',
-      display: true,
-      value: '',
-      list: [],
-      placeholder: i18n.t('m.tickets["请选择业务"]'),
-    },
   ];
   export default {
     name: 'MyTicket',
@@ -590,7 +581,6 @@
         this.searchForms = deepClone(SEARCH_FORMS);
         this.getTicketStatusTypes();
         this.getTypeStatus();
-        this.getBusinessList();
         this.getServiceTree();
       },
       // 获取单据列表
@@ -674,16 +664,6 @@
           .dispatch('ticketStatus/getTypeStatus', { type, params })
           .then((res) => {
             this.colorHexList = res.data;
-          })
-          .catch((res) => {
-            errorHandler(res, this);
-          });
-      },
-      getBusinessList() {
-        this.$store
-          .dispatch('eventType/getAppList')
-          .then((res) => {
-            this.searchForms.find(item => item.key === 'bk_biz_id').list = res.data;
           })
           .catch((res) => {
             errorHandler(res, this);

@@ -175,15 +175,6 @@
           list: [],
           placeholder: this.$t('m.tickets["请选择提单时间"]'),
         },
-        {
-          name: this.$t('m.tickets["业务"]'),
-          key: 'bk_biz_id',
-          type: 'select',
-          display: true,
-          value: '',
-          list: [],
-          placeholder: this.$t('m.tickets["请选择业务"]'),
-        },
       ];
       return {
         isExportDialogShow: false,
@@ -221,7 +212,6 @@
         this.getTypeStatus();
         // 获取全局视图状态
         this.getGlobalStatus();
-        this.getBusinessList();
       },
       // 获取所有单据列表
       getAllTicketList() {
@@ -286,16 +276,6 @@
           .dispatch('ticketStatus/getTypeStatus')
           .then((res) => {
             this.colorHexList = res.data;
-          })
-          .catch((res) => {
-            errorHandler(res, this);
-          });
-      },
-      getBusinessList() {
-        this.$store
-          .dispatch('eventType/getAppList')
-          .then((res) => {
-            this.searchForms.find((item) => item.key === 'bk_biz_id').list = res.data;
           })
           .catch((res) => {
             errorHandler(res, this);

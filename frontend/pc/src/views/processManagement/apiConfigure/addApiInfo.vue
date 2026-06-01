@@ -269,7 +269,7 @@
           remote_system: this.directory.formInfo.key,
           name: this.directory.formInfo.name,
           method: this.directory.formInfo.type,
-          owners: this.directory.formInfo.ownersInputValue.join(','),
+          owners: this.directory.formInfo.ownersInputValue,
           path: this.directory.formInfo.road,
           is_activated: this.directory.formInfo.is_activated,
           desc: this.directory.formInfo.desc,

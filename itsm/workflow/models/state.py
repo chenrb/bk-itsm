@@ -75,7 +75,6 @@ class State(Model):
     extras:
         extras.sops_info 标准运维模版信息
         sops_info.template_id 模版id
-        sops_info.bk_biz_id:object{value_type value}   业务id
         sops_info.constants: [{}] 变量信息
         constants.item :object{key name type value_type value}
 
@@ -179,21 +178,6 @@ class State(Model):
     extras = models.JSONField(
         _("额外信息"),
         default=dict,
-        null=True,
-        blank=True,
-    )
-
-    # deprecated fields
-    followers_type = models.CharField(
-        _("关注人类型"),
-        max_length=LEN_SHORT,
-        choices=PROCESSOR_CHOICES,
-        default="EMPTY",
-    )
-    followers = models.CharField(
-        _("关注人列表"),
-        max_length=LEN_LONG,
-        default=EMPTY_STRING,
         null=True,
         blank=True,
     )

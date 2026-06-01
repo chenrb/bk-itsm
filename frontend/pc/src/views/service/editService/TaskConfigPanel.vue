@@ -162,7 +162,6 @@
         selectedDealNodeIds: [],
         useTask: false,
         nodeListLoading: false,
-        isBizNeed: false,
       };
     },
     computed: {
@@ -220,13 +219,7 @@
           is_draft: false,
         };
         return this.$store.dispatch('taskTemplate/getTemplateList', params).then((res) => {
-          this.taskTemplateList = res.data.filter((task) => {
-            // 流程未关联业务，则不显示标准运维模板
-            if (!this.isBizNeed && task.component_type === 'SOPS') {
-              return false;
-            }
-            return true;
-          });
+          this.taskTemplateList = res.data;
         })
           .catch((res) => {
             errorHandler(res, this);
@@ -310,9 +303,7 @@
         }));
       },
       async getUpdatedFlow() {
-        await this.$store.dispatch('design/getFlowDetail', { params: this.serviceInfo.workflow_id }).then((res) => {
-          this.isBizNeed = res.data.is_biz_needed;
-        });
+        await this.$store.dispatch('design/getFlowDetail', { params: this.serviceInfo.workflow_id });
       },
       handleUseTaskChange(val) {
         if (val && !this.taskConditionList.length) {

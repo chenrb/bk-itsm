@@ -216,7 +216,7 @@
       async initData() {
         this.changedTemplateInfo = JSON.parse(JSON.stringify(this.templateInfo.itemInfo));
         this.firstStepInfo.name = this.changedTemplateInfo.name;
-        this.firstStepInfo.ownersInputValue = this.changedTemplateInfo.owners ? this.changedTemplateInfo.owners.split(',') : [];
+        this.firstStepInfo.ownersInputValue = this.changedTemplateInfo.owners || [];
         this.firstStepInfo.desc = this.changedTemplateInfo.desc;
       },
       cancelStep() {
@@ -239,7 +239,7 @@
             component_type: this.changedTemplateInfo.component_type,
             is_draft: isDraft ? true : (this.step === 2 ? false : this.changedTemplateInfo.is_draft),
             is_builtin: false,
-            owners: this.firstStepInfo.ownersInputValue.join(','),
+            owners: this.firstStepInfo.ownersInputValue,
             desc: this.firstStepInfo.desc,
           },
           id: this.changedTemplateInfo.id,
@@ -292,7 +292,7 @@
         if (type === 'changeName') {
           this.firstStepInfo.name = this.changedTemplateInfo.name;
         } else if (type === 'changeOwners') {
-          this.firstStepInfo.ownersInputValue = this.changedTemplateInfo.owners ? this.changedTemplateInfo.owners.split(',') : [];
+          this.firstStepInfo.ownersInputValue = this.changedTemplateInfo.owners || [];
         } else {
           this.firstStepInfo.desc = this.changedTemplateInfo.desc;
         }

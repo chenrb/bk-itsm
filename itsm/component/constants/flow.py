@@ -356,13 +356,6 @@ DEFAULT_FLOW_CONDITION = {
     "type": "and",
 }
 
-DEFAULT_API_INSTANCE = {
-    "bk_biz_id": {
-        "req_body": {"fields": ["bk_biz_id", "bk_biz_name"]},
-        "rsp_data": "data.info",
-    }
-}
-
 NORMAL_STATE_LABEL_PREFIX = "|N"
 ROUTER_STATE_LABEL_PREFIX = "|P"
 COVERAGE_STATE_LABEL_PREFIX = "|C"

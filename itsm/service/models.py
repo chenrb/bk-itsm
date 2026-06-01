@@ -198,7 +198,12 @@ class Service(ObjectManagerMixin, Model):
         on_delete=models.CASCADE,
     )
 
-    owners = models.TextField(help_text=_("服务负责人"), default=ADMIN)
+    owners = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name="owned_services",
+        blank=True,
+        verbose_name=_("服务负责人"),
+    )
 
     can_ticket_agency = models.BooleanField(_("是否可以代提单"), default=False)
     is_valid = models.BooleanField(_("是否有效"), default=True)
@@ -377,12 +382,20 @@ class Service(ObjectManagerMixin, Model):
         ServiceSla.objects.bulk_create([ServiceSla(**task) for task in sla_tasks])
 
     def update_service_configs(self, service_config):
+        from django.contrib.auth import get_user_model
+
+        User = get_user_model()
+
         self.can_ticket_agency = service_config["can_ticket_agency"]
         self.display_type = service_config["display_type"]
         self.display_role = dotted_name(service_config.get("display_role", ""))
         self.workflow_id = service_config["workflow_id"]
         if "owners" in service_config:
-            self.owners = dotted_name(service_config["owners"])
+            self.owners.set(
+                User.objects.filter(
+                    username__in=list_by_separator(service_config["owners"])
+                )
+            )
         self.is_valid = True
         self.save()
 
@@ -418,7 +431,7 @@ class Service(ObjectManagerMixin, Model):
             "name": self.name,
             "desc": self.desc,
             "workflow": workflow.tag_data(need_tag_task=True),
-            "owners": self.owners,
+            "owners": list(self.owners.values_list("username", flat=True)),
             "can_ticket_agency": self.can_ticket_agency,
             "is_valid": self.is_valid,
             "display_type": self.display_type,
@@ -851,7 +864,12 @@ class SysDict(ObjectManagerMixin, Model):
     desc = models.CharField(
         _("描述"), max_length=LEN_LONG, null=True, blank=True, default=EMPTY_STRING
     )
-    owners = models.CharField(_("负责人"), max_length=LEN_XX_LONG, default=EMPTY_STRING)
+    owners = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name="owned_sysdicts",
+        blank=True,
+        verbose_name=_("负责人"),
+    )
     is_enabled = models.BooleanField(_("是否启用"), default=True)
     is_readonly = models.BooleanField(_("是否只读"), default=False)
     is_show = models.BooleanField(
@@ -1057,7 +1075,7 @@ class DictData(BaseMpttModel):
         """字典数据转换为表记录"""
 
         objs = []
-        for k, v in data_dict:
+        for k, v in data_dict.items():
             obj = cls.create_item(dict_table, key=k, name=v, is_builtin=True)
             objs.append(obj)
 

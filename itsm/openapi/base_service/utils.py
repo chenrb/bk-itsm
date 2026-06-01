@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from itsm.component.constants import FIELD_STATUS
 from itsm.component.exceptions import WorkFlowError
-from itsm.workflow.models import State, Transition, TemplateField, FIELD_BIZ, Field
+from itsm.workflow.models import State, Transition, TemplateField, Field
 
 
 class WorkflowInitHandler:
@@ -21,10 +21,7 @@ class WorkflowInitHandler:
                 id__in=self.instance.table.fields_order, is_builtin=True
             )
 
-            if not self.instance.is_biz_needed:
-                fields.exclude(key=FIELD_BIZ)
-
-            fields = fields.extra(select={"ordering": ordering}, order_by=("ordering",))   # review 
+            fields = fields.extra(select={"ordering": ordering}, order_by=("ordering",))   # review
 
             try:
                 Field.objects.create_table_fields(self.instance, fields)

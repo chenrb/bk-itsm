@@ -28,11 +28,9 @@ from django.utils.translation import gettext as _
 
 from common.log import logger
 from itsm.component.constants import (
-    NOTIFY_TYPE_MAPPING,
     NOTIFY_TYPE_CHOICES,
     BUILTIN_NOTIFY_TYPE,
 )
-from itsm.component.platform_client.http import client_backend
 
 
 def translate_constant_2(constant):
@@ -45,18 +43,7 @@ def translate_constant_2(constant):
 
 
 def init_notify_type_choice():
-    """获取ESB接入通知类型"""
-    try:
-        result = client_backend.cmsi.get_msg_type()
-        notify_type_choice = [
-            (NOTIFY_TYPE_MAPPING.get(ins["type"], ins["type"].upper()), ins["label"])
-            for ins in result
-            if ins["is_active"]
-        ]
-        return notify_type_choice
-    except Exception as e:
-        logger.error("查询消息通知类型失败，error:{}".format(e))
-
+    """获取通知类型（本地配置）"""
     return NOTIFY_TYPE_CHOICES
 
 

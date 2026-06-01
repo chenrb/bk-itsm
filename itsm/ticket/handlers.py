@@ -117,10 +117,6 @@ class ProjectOperationalData:
         """"获取服务总数"""
         return Service.get_count(self.scope, self.project_queryset)
 
-    def get_biz_count(self):
-        """获取业务总数"""
-        return Ticket.get_biz_count(self.service_id, self.scope, self.project_queryset)
-
     def get_ticket_user_count(self):
         """获取用户总数"""
         return Ticket.get_ticket_user_count(self.service_id, self.scope, self.project_queryset)

@@ -78,7 +78,6 @@ export const useRootStore = defineStore('root', {
       TASK_SWITCH: false,
       TABLE_FIELDS_SWITCH: false,
       FIRST_STATE_SWITCH: false,
-      SMS_COMMENT_SWITCH: false,
     },
     platformInfo: {
       favicon: `${window.SITE_URL}static/core/images/bk_itsm.png`,
@@ -381,9 +380,6 @@ export const useRootStore = defineStore('root', {
     },
     getTaskList(query) {
       return ajax.get("task/get_tasks/", { params: { ...query } }).then((response) => response.data)
-    },
-    getBkBizList(query) {
-      return ajax.get("gateway/cmdb/get_app_list", { params: { ...query } }).then((response) => response.data)
     },
     operateTask(params) {
       return ajax.post(`task/operate_task/`, params).then((response) => response.data)

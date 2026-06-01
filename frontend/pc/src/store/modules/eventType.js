@@ -81,13 +81,6 @@ export default {
         return res;
       });
     },
-    // 获取业务系统
-    getAppList({ commit, state, dispatch }) {
-      return ajax.get("gateway/cmdb/get_app_list/").then((response) => {
-        const res = response.data;
-        return res;
-      });
-    },
     // 获取发送途径接口
     getTheWay({ commit, state, dispatch }) {
       return ajax.get("ticket/receipts/get_global_choices/").then((response) => {

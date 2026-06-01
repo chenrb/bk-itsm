@@ -217,7 +217,7 @@ class Task(Model):
     def processor_user_list(self):
         """任务的所有处理人列表"""
         return UserRole.get_users_by_type(
-            self.ticket.bk_biz_id, self.processors_type, self.processors, self.ticket
+            self.processors_type, self.processors, self.ticket
         )
 
     @property

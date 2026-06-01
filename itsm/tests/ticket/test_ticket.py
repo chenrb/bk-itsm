@@ -647,8 +647,11 @@ class TicketTest(TestCase):
 
         service = Service.objects.get(name="账号开通申请")
         print("service name === {}".format(service.name))
-        service.owners = ",admin,"
-        service.save()
+        from django.contrib.auth import get_user_model
+
+        User = get_user_model()
+        admin_user, _ = User.objects.get_or_create(username="admin")
+        service.owners.set([admin_user])
 
         data = {
             "catalog_id": 3,

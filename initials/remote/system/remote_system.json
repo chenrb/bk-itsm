@@ -35,13 +35,6 @@
         "builtin": true
     },
     {
-        "remark": "蓝鲸消息管理，用于支持向用户发送多种类型的消息，包括邮件、短信、语音通知等",
-        "id": 5,
-        "name": "CMSI",
-        "label": "蓝鲸消息管理",
-        "builtin": false
-    },
-    {
         "remark": "蓝鲸管控平台",
         "id": 3,
         "name": "GSE",

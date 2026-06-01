@@ -84,7 +84,6 @@ EMPTY_DISPLAY_STRING = "--"
 EMPTY_LIST = []
 EMPTY_DICT = ConstantDict({})
 EMPTY_VARIABLE = {"inputs": [], "outputs": []}
-DEFAULT_BK_BIZ_ID = -1
 EMPTY = "EMPTY"
 
 # 公共常量定义
@@ -110,8 +109,6 @@ NOTIFY_TYPE_CHOICES = [
     (EMAIL, "邮箱"),
     (SMS, "短信"),
 ]
-
-NOTIFY_TYPE_MAPPING = {"mail": EMAIL, "sms": SMS}
 
 BUILTIN_NOTIFY_TYPE = [EMAIL, SMS, GENERAL_NOTICE]
 
@@ -260,12 +257,6 @@ TICKET_GLOBAL_VARIABLES = [
     {
         "key": "ticket_current_status_display",
         "name": _("单据状态名称"),
-        "source": "ticket",
-        "type": "STRING",
-    },
-    {
-        "key": "ticket_bk_biz_id",
-        "name": _("关联业务ID"),
         "source": "ticket",
         "type": "STRING",
     },

@@ -155,31 +155,3 @@ SERVICE_TICKET_COUNT_SQL = {
         " service_id={} and create_at<'{}' group by years;"
     ),
 }
-
-SERVICE_BIZ_COUNT_SQL = {
-    "days": (
-        "SELECT t1.date_str, COALESCE(t2.count, 0) as count FROM(SELECT @cdate:= date_add(@cdate,interval - 1 day) as"
-        " date_str , 0 as count FROM (SELECT @cdate:=date_add(CURDATE(),interval + 1 day) from ticket_ticket limit 366)"
-        " tmp1 where @cdate >= '{}') t1 LEFT JOIN(select DATE_FORMAT(create_at,'%Y-%m-%d') date_str, count(distinct"
-        " bk_biz_id) as count from ticket_ticket where service_id={} and bk_biz_id>-1 GROUP BY date_str) t2 on"
-        " t1.date_str = t2.date_str where t1.date_str<='{}' order by t1.date_str; "
-    ),
-    "weeks": (
-        "SELECT t1.date_str, COALESCE(t2.count, 0) as count FROM(SELECT @cdate:= date_add(@cdate,interval - 1 week) as"
-        " date_str , 0 as count FROM (SELECT @cdate:=date_add(subdate(curdate(),date_format(curdate(),'%w')-1),interval"
-        " + 1 week) from ticket_ticket) tmp1 where @cdate > '{}') t1 LEFT JOIN(select DATE_FORMAT(create_at,'%Y%u')"
-        " date_str, count(distinct bk_biz_id) as count from ticket_ticket where service_id={} and bk_biz_id>-1 GROUP BY"
-        " date_str) t2 on YEARWEEK(t1.date_str,1) = t2.date_str where t1.date_str<='{}' order by t1.date_str;"
-    ),
-    "months": (
-        "SELECT t1.date_str, COALESCE(t2.count, 0) as count FROM(SELECT @cdate:= date_add(@cdate,interval - 1 month) as"
-        " date_str , 0 as count FROM (SELECT @cdate:=date_add(curdate()-day(curdate())+1,interval 1 month) from"
-        " ticket_ticket) tmp1 where @cdate > '{}') t1 LEFT JOIN(select DATE_FORMAT(create_at,'%Y-%m') date_str,"
-        " count(distinct bk_biz_id) as count from ticket_ticket where service_id={} and bk_biz_id>-1 GROUP BY date_str)"
-        " t2 on left(t1.date_str,7) = t2.date_str where t1.date_str<='{}' order by t1.date_str;"
-    ),
-    "years": (
-        "SELECT DATE_FORMAT(create_at,'%Y') years,count(distinct bk_biz_id) count from ticket_ticket where"
-        " create_at>'{}' and service_id={} and create_at<'{}' and bk_biz_id>-1 group by years;"
-    ),
-}

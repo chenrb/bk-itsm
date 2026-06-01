@@ -62,7 +62,6 @@ def notify_log_validate(data, operator):
             _("发送关注通知校验失败：单据不存在，请联系管理员")
         )
 
-    bk_biz_id = ticket.bk_biz_id
     if not ticket.can_invite_followers(operator):
         raise serializers.ValidationError(
             _("发送关注通知校验失败：单据已结束或权限不足")
@@ -71,12 +70,12 @@ def notify_log_validate(data, operator):
     followers = data.get("followers")
     followers_type = data.get("followers_type")
     receivers = UserRole.get_users_by_type(
-        bk_biz_id=bk_biz_id, user_type=followers_type, users=followers
+        user_type=followers_type, users=followers
     )
     if not receivers:
         logger.error(
-            "发送关注通知校验失败：接收人不存在：receivers={}, bk_biz_id={}, followers={}, followers_type={}".format(
-                receivers, bk_biz_id, followers, followers_type
+            "发送关注通知校验失败：接收人不存在：receivers={}, followers={}, followers_type={}".format(
+                receivers, followers, followers_type
             )
         )
         raise serializers.ValidationError(
@@ -86,46 +85,6 @@ def notify_log_validate(data, operator):
     return ticket, ",".join(receivers)
 
 
-def sms_comment_validate(queryset, data):
-    """接收短信评价校验"""
-    try:
-        comment = queryset.get(invite__code=data.get("code"))
-    except TicketComment.DoesNotExist:
-        raise serializers.ValidationError(_("单据评论信息不存在，请联系管理员！"))
-    try:
-        stars = int(data.get("stars"))
-    except ValueError:
-        raise serializers.ValidationError(_("评价信息不正确，请联系管理员！"))
-    if comment.ticket.sn != data.get("sn"):
-        raise serializers.ValidationError(_("单据评论信息不匹配"))
-    if comment.stars:
-        raise serializers.ValidationError(_("该单据已经被评论，请勿重复评论！"))
-    if stars not in list(range(1, 6)):
-        raise serializers.ValidationError(_("请从（1~5星）选择评价星级！"))
-    return comment, stars
-
-
-def sms_invite_validate(ticket, numbers, invitor):
-    """发送号码前评论校验"""
-
-    if not ticket.can_comment(invitor):
-        raise serializers.ValidationError(_("抱歉，您无权发送评价邀请"))
-
-    if settings.TICKET_INVITE_SMS_COUNT:
-        if len(numbers) > settings.TICKET_INVITE_SMS_COUNT:
-            raise serializers.ValidationError(_("SMS 发送评价邀请超过限额"))
-
-        invite_count = TicketCommentInvite.objects.filter(
-            comment__ticket__id=ticket.id
-        ).count()
-        if invite_count > settings.TICKET_INVITE_SMS_COUNT:
-            raise serializers.ValidationError(_("SMS 发送评价邀请超过限额"))
-
-    for number in numbers:
-        try:
-            Regex(validate_type="phone_num").validate(number)
-        except Exception as error:
-            raise serializers.ValidationError("【{}】{}".format(number, str(error)))
 
 
 def email_invite_validate(ticket, invitor, receivers):

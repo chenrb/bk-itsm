@@ -56,10 +56,6 @@ export const useDesignStore = defineStore('design', {
     changeId(id) {
       this.processInfo.id = id
     },
-    // 是否和业务关联
-    changeBiz(bizNeed) {
-      this.processInfo.is_biz_needed = bizNeed
-    },
     // 赋值配置字段
     changeConfigur(value) {
       this.configurInfo = value

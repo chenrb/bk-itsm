@@ -241,3 +241,50 @@ Phase 2 后发现的零散死代码清理。
 ## 待规划阶段
 
 <!-- 在此添加新的重构计划 -->
+
+### P11: WorkflowVersion M2M owners 创建修复
+
+`create_version()` 在 `WorkflowVersion.objects.create(**data)` 中直接传 `owners`（list），但 P7 已改为 ManyToManyField，导致 `TypeError: Direct assignment to the forward side of a many-to-many set is prohibited`。
+
+- 从 `data` 中 `pop("owners", [])`
+- `create()` 后 `version.owners.set(User.objects.filter(username__in=owners))`
+
+### P12: DictData 初始化修复
+
+`DictData.create_builtin_dicts_data()` 遍历 dict 时 `for k, v in data_dict` 缺少 `.items()`，导致 `ValueError: too many values to unpack`。
+
+- `for k, v in data_dict` → `for k, v in data_dict.items()`
+
+### P13: distutils 移除
+
+Python 3.13 已删除 `distutils` 模块，`copy_tree` 引用导致 `No module named 'distutils'` 错误。
+
+- `itsm/workflow/managers.py`、`itsm/ticket/managers.py`：`from distutils.dir_util import copy_tree` → `from shutil import copytree`
+- `copy_tree(old_path, new_path)` → `copytree(old_path, new_path, dirs_exist_ok=True)`
+
+### P14: 去除 CMSI 远程调用 + SMS 评价功能
+
+去除蓝鲸 CMSI 消息通知 API 调用，通知类型改为本地常量管理。完整删除 SMS 短信评价功能。
+
+- `init_notify_type_choice()` 直接返回 `NOTIFY_TYPE_CHOICES`，不再调用 `client_backend.cmsi.get_msg_type()`
+- 删除 `NOTIFY_TYPE_MAPPING` 常量、CMSI 远程系统定义
+- 删除 `SMS_COMMENT_SWITCH` 功能开关及全局设置 UI
+- 删除 `post_comment`/`send_sms` 视图、`sms_comment_validate`/`sms_invite_validate` 验证器
+- 删除 `IS_USE_INVITE_SMS`、`TICKET_INVITE_SMS_COUNT` 配置
+- 前端：删除短信评价 radio/template/方法，简化 `sendEmail()`
+
+### P15: 去除蓝鲸业务 (bk_biz_id)
+
+完整移除蓝鲸 CMDB 业务绑定功能，包括 `bk_biz_id` 字段、`is_biz_needed` 开关、CMDB 处理人类型。
+
+- **常量**：删除 `DEFAULT_BK_BIZ_ID`、`FIELD_BIZ`、`DEFAULT_API_INSTANCE`、CMDB from `PROCESSOR_CHOICES`/`ROLE_CHOICES`
+- **模型**：删除 `Ticket.bk_biz_id`、`Status.bk_biz_id`、`Workflow/WorkflowVersion.is_biz_needed`，更新 0001_initial 迁移
+- **处理人解析**：`get_users_by_type()` 移除 `bk_biz_id` 参数，CMDB 类型返回空列表；删除 `get_app_list_by_user`、`get_cmdb_role_by_user`、`get_biz_choices`、`get_bk_business`、`update_bk_business`
+- **Gateway**：删除 `get_app_list` 视图和 `cmdb/get_app_list/` URL 路由
+- **Ticket 层**：清理 validators、serializers、managers、tasks、SQL queries 中所有 `bk_biz_id` 引用
+- **Workflow 层**：清理 validators、serializers、views、managers 中 `is_biz_needed` 和 `FIELD_BIZ` 引用
+- **Service/OpenAPI**：清理 `is_biz_needed` 和 `bk_biz_id` 处理
+- **前端（29 文件）**：移除 `bk_biz_id` 搜索过滤、`is_biz_needed` 开关、`get_app_list` action、节点配置 CMDB 选项
+- **初始数据（3 JSON 文件）**：清理 `bk_biz_id` 字段定义和 `is_biz_needed`/`biz_related` 属性
+- **远程 API 初始化**：从 `iadmin/apps.py` 移除 `init_default_system()` 和 `init_default_remote_api()`
+- 117 files, -3774/+1937 lines

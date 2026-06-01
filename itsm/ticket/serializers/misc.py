@@ -185,7 +185,6 @@ class FollowerNotifyLogSerializer(serializers.ModelSerializer):
         data["create_at"] = "{}".format(get_time(instance.create_at))
         data["group"] = transform_username(
             UserRole.get_users_by_type(
-                bk_biz_id=instance.ticket.bk_biz_id,
                 users=instance.followers,
                 user_type=instance.followers_type,
                 ticket=instance.ticket,

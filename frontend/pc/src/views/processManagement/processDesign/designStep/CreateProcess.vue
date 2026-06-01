@@ -57,11 +57,6 @@
             </bk-select>
           </bk-form-item>
           <bk-form-item
-            :label="$t(`m.deployPage['是否关联业务']`)"
-            :required="true">
-            <bk-switcher v-model="formInfo.business" size="small"></bk-switcher>
-          </bk-form-item>
-          <bk-form-item
             :label="$t(`m.newCommon['是否使用权限中心角色']`)"
             :required="true">
             <bk-switcher v-model="formInfo.useIam" size="small"></bk-switcher>
@@ -143,8 +138,6 @@
           flowType: '',
           // 基础模型类型
           flowModuleType: '',
-          // 关联业务
-          business: false,
           // 流程配置中使用权限中心角色
           useIam: false,
           flowModuleTypeDisabled: false,
@@ -191,12 +184,11 @@
       // 通过ID获取数据
       initInfo() {
         this.formInfo.name = this.flowInfo.name;
-        this.formInfo.owners = this.flowInfo.owners ? this.flowInfo.owners.split(',') : [];
+        this.formInfo.owners = this.flowInfo.owners || [];
         this.formInfo.desc = this.flowInfo.desc;
         this.formInfo.flowType = this.flowInfo.flow_type;
         this.formInfo.flowModuleType = this.flowInfo.table || '';
         this.formInfo.flowModuleTypeDisabled = !!this.flowInfo.table;
-        this.formInfo.business = this.flowInfo.is_biz_needed;
         this.formInfo.useIam = this.flowInfo.is_iam_used;
       },
       // 数据校验
@@ -213,16 +205,14 @@
         // 基础参数
         const params = {
           name: this.formInfo.name,
-          owners: this.formInfo.owners.join(','),
+          owners: this.formInfo.owners,
           flow_type: this.formInfo.flowType || 'other',
           table: this.formInfo.flowModuleType,
           desc: this.formInfo.desc,
-          is_biz_needed: this.formInfo.business,
           is_iam_used: this.formInfo.useIam,
         };
         // 保存
         this.$emit('saveFlowInfo', params, this.isNewFlow);
-        this.$emit('onBusinessChange', this.formInfo.business);
       },
       previousStep() {
         this.$router.push({

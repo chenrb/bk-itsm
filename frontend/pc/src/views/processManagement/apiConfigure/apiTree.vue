@@ -393,7 +393,7 @@
           if (this.secondClick) {
             return;
           }
-          this.dictDataTable.formInfo.owners = this.dictDataTable.formInfo.personInCharge.join(',');
+          this.dictDataTable.formInfo.owners = this.dictDataTable.formInfo.personInCharge;
           const params = {
             name: this.dictDataTable.formInfo.name,
             desc: this.dictDataTable.formInfo.desc,
@@ -466,7 +466,7 @@
           domain: item ? item.domain : '',
           code: item ? item.code : '',
           owners: item ? item.owners : '',
-          personInCharge: item && item.owners && item.owners.length > 0 ? item.owners.split(',') : [],
+          personInCharge: item && item.owners && item.owners.length > 0 ? item.owners : [],
           contact_information: item ? item.contact_information : '',
           id: item ? item.id : '',
           system_id: item ? item.system_id : '',

@@ -58,13 +58,11 @@ class OperationalDataTicketSerializer(serializers.ModelSerializer):
                     "valid_processor": log.operator if log else "",
                     "operate_at": log.operate_at.strftime("%Y-%m-%d %H:%M:%S") if log else None,
                     "processors": UserRole.get_users_by_type(
-                        bk_biz_id=instance.bk_biz_id,
                         user_type=state["processors_type"],
                         users=state["processors"],
                         ticket=instance,
                     ),
                     "followers": UserRole.get_users_by_type(
-                        bk_biz_id=instance.bk_biz_id,
                         user_type=state["followers_type"],
                         users=state["followers"],
                         ticket=instance,

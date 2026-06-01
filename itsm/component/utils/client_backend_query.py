@@ -31,37 +31,16 @@ from django.core.cache import cache
 from django.utils.translation import gettext as _
 
 from common.log import logger
-from itsm.component.constants import CACHE_5MIN, CACHE_30MIN, PREFIX_KEY
+from itsm.component.constants import CACHE_5MIN, PREFIX_KEY
 from itsm.component.platform_client.http import client_backend
 from itsm.component.exceptions import ComponentCallError
 from itsm.component.platform_client.http import bk
 from itsm.component.tasks import (
     update_user_cache,
-    update_bk_business,
     update_user_departments,
 )
 
 adapter_api = settings.ADAPTER_API
-
-
-def get_biz_choices():
-    cache_key = "%sapp_list" % PREFIX_KEY
-    app_list = cache.get(cache_key)
-    if app_list is not None:
-        return app_list
-
-    apps = get_all_apps()
-    app_list = [
-        {
-            "key": item["bk_biz_id"],
-            "name": item["bk_biz_name"],
-            "desc": _("请选择关联业务"),
-        }
-        for item in apps
-    ]
-
-    cache.set(cache_key, app_list, CACHE_30MIN)
-    return app_list
 
 
 def get_attr_enum(bk_obj_id, enum_bk_property_id):
@@ -82,35 +61,6 @@ def get_attr_enum(bk_obj_id, enum_bk_property_id):
     return enum
 
 
-def get_biz_names():
-    """
-    获取业务的名称，返回字典
-    """
-    cache_key = "%sget_biz_names" % PREFIX_KEY
-    biz_names = cache.get(cache_key)
-    if biz_names is not None:
-        return biz_names
-
-    biz_list = get_biz_choices()
-    biz_names = {str(biz["key"]): biz["name"] for biz in biz_list}
-
-    cache.set(cache_key, biz_names, 60 * 60)
-    return biz_names
-
-
-def get_all_apps():
-    """通过search_bussiness 获取APP列表"""
-
-    params = {"bk_supplier_id": 0, "fields": [], "condition": {}}
-
-    try:
-        all_apps = client_backend.cc.search_business(params).get("info")
-    except ComponentCallError as error:
-        logger.warning("获取业务列表失败：%s" % str(error))
-        all_apps = []
-    return all_apps
-
-
 def get_bk_users(format="list", name_type="bk_username", users=None):
     """
     抽出获取bk_users的逻辑，并添加10分钟缓存，不再支持全量查询
@@ -123,36 +73,6 @@ def get_bk_users(format="list", name_type="bk_username", users=None):
     if not bk_users:
         bk_users = update_user_cache(cache_key, format, name_type, users)
     return bk_users
-
-
-def get_bk_business(bk_biz_id, role_type):
-    """
-    抽离cc查询业务逻辑，并添加5分钟缓存
-    """
-
-    cache_key = "%sbk_business_%s_%s" % (PREFIX_KEY, bk_biz_id, "_".join(role_type))
-    search_business_list = cache.get(cache_key)
-
-    if not isinstance(search_business_list, list):
-        search_business_list = update_bk_business(cache_key, bk_biz_id, role_type)
-    else:
-        update_bk_business.delay(cache_key, bk_biz_id, role_type)
-
-    if not search_business_list:
-        return ""
-
-    bk_business = []
-    print("----search_business_list is {}".format(search_business_list))
-    print("----search_business_list type is {}".format(type(search_business_list)))
-    for business in search_business_list:
-        if not business:
-            continue
-        for _type in role_type:
-            role_info = business.get(_type)
-            if role_info:
-                bk_business.append(role_info)
-
-    return ",".join(bk_business)
 
 
 def get_list_department_profiles(params, page_size=500):

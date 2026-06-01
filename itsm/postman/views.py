@@ -51,7 +51,6 @@ from itsm.postman.constants import (
     RPC_CODE,
 )
 from itsm.postman.models import RemoteApi, RemoteApiInstance, RemoteSystem
-from itsm.postman.permissions import RemoteApiPermit, RemoteApiInstancePermit
 from itsm.postman.rpc.core.request import CompRequest
 from itsm.postman.serializers import (
     ApiInstanceSerializer,
@@ -105,7 +104,7 @@ class RemoteSystemViewSet(ModelViewSet):
     """系统设置视图"""
 
     serializer_class = RemoteSystemSerializer
-    queryset = RemoteSystem.objects.all()
+    queryset = RemoteSystem.objects.prefetch_related("owners").all()
     permission_classes = (WorkflowElementManagePermission,)
     # 平台管理
     permission_action_platform = "public_apis_manage"
@@ -200,7 +199,7 @@ class RemoteApiViewSet(DynamicListModelMixin, ModelViewSet):
     """第三方系统API请求配置表"""
 
     serializer_class = RemoteApiSerializer
-    queryset = RemoteApi.objects.all()
+    queryset = RemoteApi.objects.prefetch_related("owners").all()
 
     permission_classes = (RemoteApiPermit,)
     permission_resource_is_project = True

@@ -143,7 +143,7 @@
 
       <bk-table-column :render-header="$renderHeader" :show-overflow-tooltip="true" :label="$t(`m.common['负责人']`)">
         <template #default="props">
-          <span :title="props.row.owners">{{props.row.owners || '--'}}</span>
+          <span :title="props.row.owners && props.row.owners.length ? props.row.owners.join(',') : '--'">{{props.row.owners && props.row.owners.length ? props.row.owners.join(',') : '--'}}</span>
         </template>
       </bk-table-column>
       <bk-table-column :render-header="$renderHeader" :show-overflow-tooltip="true" :label="$t(`m.common['创建人']`)">

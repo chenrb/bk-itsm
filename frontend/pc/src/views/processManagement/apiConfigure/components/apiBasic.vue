@@ -39,7 +39,7 @@
         <li>
           <!-- eslint-disable-next-line no-irregular-whitespace -->
           <span class="bk-info-title">{{ $t('m.user["负 责 人："]') }}</span>
-          <span class="bk-info-content">{{apiDetailInfo.owners || '--'}}</span>
+          <span class="bk-info-content">{{apiDetailInfo.owners && apiDetailInfo.owners.length ? apiDetailInfo.owners.join(',') : '--'}}</span>
         </li>
         <li>
           <!-- eslint-disable-next-line no-irregular-whitespace -->

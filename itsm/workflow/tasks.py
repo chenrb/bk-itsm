@@ -14,14 +14,13 @@ from itsm.workflow.utils import init_notify_type_choice
 @share_lock()
 def check_and_update_notify_type():
     choice = init_notify_type_choice()
-    # esb 目前的
-    esb_notify_set = {item[0] for item in choice}
+    configured_notify_set = {item[0] for item in choice}
     # 当前DB 目前的
     current_notify_set = set(Notify.objects.all().values_list("type", flat=True))
-    deleted_notify_type_set = current_notify_set - esb_notify_set
+    deleted_notify_type_set = current_notify_set - configured_notify_set
     if deleted_notify_type_set:
         logger.info(
-            "[check_and_update_notify_type]正在删除相关的通知方式，该通知方式在ESB已经下架 = {}".format(
+            "[check_and_update_notify_type]正在删除相关的通知方式，该通知方式在本地配置中已移除 = {}".format(
                 deleted_notify_type_set
             )
         )
@@ -44,11 +43,11 @@ def check_and_update_notify_type():
             )
         )
 
-    add_notify_set = esb_notify_set - current_notify_set
+    add_notify_set = configured_notify_set - current_notify_set
 
     if add_notify_set:
         logger.info(
-            "[check_and_update_notify_type]正在新增相关的通知方式，该通知方式在ESB是新增的 = {}".format(
+            "[check_and_update_notify_type]正在新增相关的通知方式，该通知方式在本地配置中新增的 = {}".format(
                 add_notify_set
             )
         )

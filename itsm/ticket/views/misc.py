@@ -58,7 +58,7 @@ from itsm.ticket.serializers import (
     StateDraftSerializer,
     TemplateSerializer,
 )
-from itsm.ticket.validators import notify_log_validate, sms_comment_validate
+from itsm.ticket.validators import notify_log_validate
 
 
 class TemplateViewSet(component_viewsets.NormalModelViewSet):
@@ -134,20 +134,6 @@ class CommentViewSet(component_viewsets.NormalModelViewSet):
             "is_rated": True if comment.stars else False,
         }
         return Response(data)
-
-    @action(detail=False, methods=["post"])
-    def post_comment(self, request):
-        data = request.data
-
-        comment, stars = sms_comment_validate(self.queryset, data)
-
-        comment.stars = stars
-        comment.comments = data.get("comment")
-        comment.source = "SMS"
-        comment.creator = comment.invite.get(code=data.get("code")).number
-        comment.save()
-
-        return Response()
 
 
 class CommentInviteViewSet(component_viewsets.NormalModelViewSet):

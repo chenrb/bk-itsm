@@ -7,7 +7,7 @@ from itsm.component.decorators import custom_apigw_required
 from itsm.component.exceptions import ParamError
 from itsm.openapi.base_service.serializers import BatchSaveFieldSerializer
 from itsm.openapi.decorators import catch_openapi_exception
-from itsm.workflow.models import Field, Workflow, FIELD_BIZ, State, TABLE
+from itsm.workflow.models import Field, Workflow, State, TABLE
 from itsm.workflow.serializers import FieldSerializer
 from itsm.workflow.validators import related_validate
 from itsm.workflow.views import BaseFieldViewSet
@@ -63,8 +63,6 @@ class FieldViewSet(BaseFieldViewSet):
 
         if workflow_id:
             workflow = Workflow.objects.get(id=workflow_id)
-            if not workflow.is_biz_needed:
-                queryset = queryset.exclude(key=FIELD_BIZ)
 
         if state_id:
             valid_fields = State.objects.fields_of_state(state_id)
@@ -97,12 +95,6 @@ class FieldViewSet(BaseFieldViewSet):
         自动从State的fields中移除该字段
         """
         with transaction.atomic():
-            if (
-                instance.key == "bk_biz_id"
-                and instance.id == instance.workflow.first_state.id
-            ):
-                instance.workflow.is_biz_needed = False
-                instance.workflow.save()
             if instance.source != TABLE:
                 related_validate(instance)
             if instance.state:

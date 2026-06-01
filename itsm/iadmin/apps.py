@@ -33,21 +33,16 @@ from django.db.models.signals import post_migrate
 
 def app_ready_handler(sender, **kwargs):
     from itsm.iadmin.models import CustomNotice, SystemSettings, ReleaseVersionLog
-    from itsm.postman.models import RemoteApi, RemoteSystem
     from itsm.service.models import Service
     from itsm.workflow.models import TemplateField, Table, Workflow, Notify
     from itsm.component.constants import DEFAULT_TEMPLATE_FIELDS, DEFAULT_TABLE
-    
+
     print("update notify type")
     Notify.init_builtin_notify()
     print("update notify template")
     CustomNotice.init_default_template()
     print("update notify system_settings")
     SystemSettings.init_default_settings()
-    print("create default remote sys")
-    RemoteSystem.init_default_system()
-    print("create default remote api")
-    RemoteApi.init_default_remote_api()
     # 解析release.md文件将版本日志信息存入存入数据库
     ReleaseVersionLog.objects.init_version_log_info("zh-cn")
     ReleaseVersionLog.objects.init_version_log_info("en")

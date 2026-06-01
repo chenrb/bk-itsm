@@ -197,7 +197,13 @@ class ServiceManager(managers.Manager):
             version_number = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
             tag_data["name"] = "{}_copy_{}".format(tag_data["name"], version_number)
             tag_data["creator"] = tag_data["updated_by"] = username
+            owners = tag_data.pop("owners", [])
             service = self.create(**tag_data)
+            if owners:
+                from django.contrib.auth import get_user_model
+
+                User = get_user_model()
+                service.owners.set(User.objects.filter(username__in=owners))
             project_key = tag_data["project_key"]
             if catalog_id is None:
                 catalog_id = get_catalog_id(project_key=project_key)

@@ -25,6 +25,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from collections import OrderedDict
 
 
+from django.conf import settings
 from django.db import models, transaction
 from django.db.models import Q
 from django.forms import model_to_dict
@@ -37,7 +38,6 @@ from itsm.component.constants import (
     DEFAULT_VERSION,
     EMPTY_INT,
     EMPTY_STRING,
-    FIELD_BIZ,
     LEN_LONG,
     LEN_MIDDLE,
     LEN_NORMAL,
@@ -60,13 +60,11 @@ from itsm.component.constants import (
 from itsm.component.drf.mixins import ObjectManagerMixin
 from itsm.component.utils.basic import create_version_number, list_by_separator
 from itsm.component.utils.graph import dfs_paths
-from itsm.postman.models import RemoteApiInstance
-from itsm.trigger.api import copy_triggers_by_source
 from itsm.trigger.models import Trigger
 from itsm.service.models import Service
 from itsm.workflow import managers
 from .base import Model
-from .field import Field, Table
+from .field import Table
 from .task import TaskSchema, TaskConfig
 from .common import GlobalVariable, Notify
 
@@ -108,7 +106,12 @@ class WorkflowBase(ObjectManagerMixin, Model):
     is_task_needed = models.BooleanField(
         _("是否需要关联子任务"), default=False, null=True
     )
-    owners = models.CharField(_("负责人"), max_length=LEN_XX_LONG, default=EMPTY_STRING)
+    owners = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name="owned_%(class)ss",
+        blank=True,
+        verbose_name=_("负责人"),
+    )
 
     notify = models.ManyToManyField(
         "workflow.Notify", help_text=_("可关联多种通知方式")
@@ -119,7 +122,6 @@ class WorkflowBase(ObjectManagerMixin, Model):
     notify_freq = models.IntegerField(_("重试间隔(s)"), default=EMPTY_INT)
 
     # 业务逻辑字段
-    is_biz_needed = models.BooleanField(_("是否绑定业务"), default=False)
     # 是否自动过单
     is_auto_approve = models.BooleanField(_("是否自动过单"), default=False)
     is_iam_used = models.BooleanField(_("是否使用IAM角色"), default=False)
@@ -258,12 +260,9 @@ class Workflow(WorkflowBase):
                 "service_property",
                 "_state",
                 "master",
+                "owners",
             ],
         )
-
-        exclude_fields = []
-        if not self.is_biz_needed:
-            exclude_fields.append(FIELD_BIZ)
 
         if need_tag_task:
             task_config = TaskConfig.objects.filter(workflow_id=self.id)
@@ -280,13 +279,14 @@ class Workflow(WorkflowBase):
         data.update(
             creator=operator,
             updated_by=operator,
+            owners=list(self.owners.values_list("username", flat=True)),
             workflow_id=self.id,
             version_number=create_version_number(),
             version_message=message,
             states=states,
             transitions=transitions,
             triggers=triggers,
-            table=self.table.tag_data(exclude=exclude_fields) if self.table else None,
+            table=self.table.tag_data() if self.table else None,
             fields=fields,
             notify=list(self.notify.values_list("id", flat=True)),
             engine_version=DEFAULT_ENGINE_VERSION,
@@ -307,9 +307,14 @@ class Workflow(WorkflowBase):
             data.update(name=name)
 
         notify = data.pop("notify", [])
+        owners = data.pop("owners", [])
         version = WorkflowVersion.objects.create(**data)
         version.tag_task()
         version.notify.set(notify)
+        if owners:
+            from django.contrib.auth import get_user_model
+            User = get_user_model()
+            version.owners.set(User.objects.filter(username__in=owners))
         version.save()
 
         # 创建触发器的版本信息
@@ -341,50 +346,9 @@ class Workflow(WorkflowBase):
         '' -> ''
         ',aaa,bbb,ccc', -> 'aaa,bbb,ccc'
         """
+        if name == "owners":
+            return list(self.owners.values_list("username", flat=True))
         return ",".join(list_by_separator(getattr(self, name, "")))
-
-    def update_biz_field(self):
-        """更新关联业务字段"""
-
-        # 兼容不关联业务流程转关联业务流程
-
-        try:
-            biz_field = self.fields.get(key=FIELD_BIZ)
-        except Field.DoesNotExist:
-            api_instance = RemoteApiInstance.create_default_api_instance(
-                func_name="search_business",
-                req_params={},
-                req_body={"fields": ["bk_biz_id", "bk_biz_name"]},
-                rsp_data="data.info",
-            )
-
-            biz_field = Field.objects.create(
-                **{
-                    "key": FIELD_BIZ,
-                    "name": "关联业务",
-                    "type": "SELECT",
-                    "source_type": "API",
-                    "choice": [],
-                    "display": True,
-                    "related_fields": {},
-                    "desc": "请选择关联业务",
-                    "is_builtin": True,
-                    "is_readonly": False,
-                    "is_valid": True,
-                    "regex": "EMPTY",
-                    "api_instance_id": api_instance.id,
-                    "kv_relation": {"name": "bk_biz_name", "key": "bk_biz_id"},
-                    "workflow_id": self.id,
-                    "state_id": self.first_state.id,
-                }
-            )
-
-        if self.is_biz_needed:
-            self.first_state.append_to_fields(biz_field.id, index=1)
-        else:
-            self.first_state.remove_fields(biz_field.id)
-            RemoteApiInstance.objects.filter(id=biz_field.api_instance_id).delete()
-            biz_field.hard_delete()
 
     @property
     def first_state(self):
@@ -416,8 +380,7 @@ class Workflow(WorkflowBase):
         :return:
         """
         if self.table:
-            query_set = self.table.fields.all()
-            return query_set if self.is_biz_needed else query_set.exclude(key=FIELD_BIZ)
+            return self.table.fields.all()
         return None
 
     @property
