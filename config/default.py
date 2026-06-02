@@ -3,6 +3,7 @@
 Django settings 入口 — 按类别拆分，此文件仅做聚合。
 各子模块见 config/*.py
 """
+from config import *  # noqa
 from config.apps import *  # noqa
 from config.celery import *  # noqa
 from config.logging import *  # noqa

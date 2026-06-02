@@ -161,7 +161,9 @@ Phase 2 后发现的零散死代码清理。
 - `python manage.py check` 通过（0 issues，0 warnings）
 - `python manage.py migrate` 不再触发任何初始化逻辑
 - `python manage.py init_builtin_data` 执行全部内置数据初始化
-- 零蓝鲸硬依赖残留（blueapps、blueking、apigw_manager、bk_notice_sdk、bkstorages、iam SDK、auth_iam、esb、apigw、bkchat、helper、core — 全部归零）
+- `python manage.py runserver` 启动无 RuntimeWarning，页面可访问
+- 前端 `npm run dev` 启动成功，295 个 `.vue` 文件全部编译通过
+- 零蓝鲸硬依赖残留（blueapps、blueking、apigw_manager、bk_notice_sdk、bkstorages、iam SDK、auth_iam、esb、apigw、bkchat、helper、core、bkapi — 全部归零）
 - MySQL 驱动：mysqlclient 2.2.8（PyMySQL 已完全移除）
 - JSONField：Django 内置（jsonfield 已完全移除）
 - DRF 缓存：本地 `cache_response`（drf-extensions 已完全移除）
@@ -301,3 +303,43 @@ Python 3.13 已删除 `distutils` 模块，`copy_tree` 引用导致 `No module n
 - **初始数据（3 JSON 文件）**：清理 `bk_biz_id` 字段定义和 `is_biz_needed`/`biz_related` 属性
 - **远程 API 初始化**：从 `iadmin/apps.py` 移除 `init_default_system()` 和 `init_default_remote_api()`
 - 117 files, -3774/+1937 lines
+
+### P17: Pipeline 启动时 DB 查询延迟到 post_migrate
+
+消除 Django 6.0 的 `RuntimeWarning: Accessing the database during app initialization is discouraged`。Pipeline 框架 3 个 app 的 `ready()` 在应用注册阶段（`apps.ready = False`）执行 DB 写入，触发警告。
+
+**根因**：`ready()` 在 `apps.populate()` 内调用，此时 `apps.ready` 尚为 `False`。Django 6.0 检测到此状态下的 DB 访问并发出警告。
+
+**方案**：`ready()` 只做内存注册（autodiscover + 信号连接），DB 写入延迟到 `post_migrate` 信号（`migrate` 完成后触发，此时 `apps.ready = True`）。组件/变量元类和信号 handler 加 `apps.ready` 守卫，启动期间跳过 DB 访问。
+
+- **`pipeline/engine/apps.py`**：`FunctionSwitch.objects.init_db()` 从 `ready()` 移到 `post_migrate`
+- **`pipeline/component_framework/apps.py`**：组件 DB 状态同步从 `ready()` 移到 `post_migrate`；移除 `migrate` 命令跳过逻辑（autodiscover 因 `apps.ready` 守卫不再触发 DB 查询）；同步逻辑改用 `update_or_create` 覆盖创建+激活
+- **`pipeline/component_framework/base.py`**：组件元类 `ComponentMeta.__new__` 中的 `ComponentModel.objects.update_or_create()` 加 `apps.ready` 守卫
+- **`pipeline/variable_framework/apps.py`**：变量 DB 状态同步从 `ready()` 移到 `post_migrate`；同步逻辑改用 `update_or_create` 覆盖创建+激活
+- **`pipeline/variable_framework/signals/handlers.py`**：`pre_variable_register_handler` 加 `apps.ready` 守卫
+
+### P2-18: 前端 Vue 3 编译与运行时错误修复
+
+Phase 1 后前端 dev server 启动但大量页面编译失败、运行时崩溃。系统性修复 Vue 3 兼容性问题和模板语法错误。详见 [`phase2-cleanup/frontend-vue3-fixes.md`](phase2-cleanup/frontend-vue3-fixes.md)。
+
+- **依赖缺失**：`package.json` 添加 `less`；复制 `static/js/renderform/` → `frontend/pc/public/js/renderform/`
+- **SCSS 路径**：`bk-new-change.scss` 路径修正；全局 `~@/` → `@/`（Vite 不需要 webpack 的 `~` 前缀），20 处
+- **`<template #slot>` 闭合标签**：约 90 个 `.vue` 文件，`<template #slotName>` 缺少 `</template>`
+- **`<template v-for>` 的 `:key`**：33 个文件，`:key` 从子元素移到 `<template>` 上
+- **命名插槽错位**：5 个文件，`#prepend`/`#append` 放在非直接子级
+- **导入路径错误**：3 个文件，少一层 `../`
+- **Vue 2 遗留**：移除 `Vue.use(Router)`、未用 i18n import
+- **vue-i18n v9**：30 个文件，`i18n.t(` → `t(`（`i18n.global.t`）
+- **mitt 事件总线**：8 个文件，`bus.$on/emit/off` → `bus.on/emit/off`
+- 约 **150 个前端文件**，295 个 `.vue` 文件全部编译通过
+- **关键提交**：`3b94eec3`
+
+### P18: Django settings 缺失项修复
+
+`runserver` 访问页面暴露多个 settings 配置遗漏，逐一补齐并清理残余蓝鲸模块。
+
+- **`ROOT_URLCONF` / `WSGI_APPLICATION` 缺失** — 添加到 `config/web.py`（Django 必需设置项，P5 重构时遗失）
+- **`STORE` 缺失** — 添加 `FileSystemStorage()` 到 `config/web.py`（蓝鲸 `BKStore` 已移除但 `workflow/views.py`、`misc/views.py` 仍引用）
+- **`config/__init__.py` 变量未传播** — `SECRET_KEY`、`APP_CODE`、`DEBUG` 等在 `config/__init__.py` 定义但未被 `config/default.py` 导入；添加 `from config import *` 到 `config/default.py` 头部
+- **`OUT_LINK` 死引用** — 从 `itsm/ticket/views/ticket.py` 删除无用 `from config.default import OUT_LINK`
+- **`apigw.py` 删除** — `itsm/openapi/base_service/views/apigw.py` 依赖已移除的 `bkapi` SDK，删除文件并从 `urls.py` 移除 `ApiGwViewSet` 注册

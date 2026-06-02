@@ -2,8 +2,8 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import path from 'path'
 
-const HOST = ''
-const ORIGIN = `http://${HOST}`
+const HOST = 'paas.bking.com'
+const ORIGIN = `http://${HOST}:8001`
 const SET_URL = ''
 
 export default defineConfig({

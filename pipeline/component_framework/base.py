@@ -73,12 +73,18 @@ class ComponentMeta(type):
             ComponentLibrary.register_component(
                 component_code=new_class.code, version=new_class.version, component_cls=new_class
             )
-            try:
-                ComponentModel.objects.update_or_create(
-                    code=new_class.code, version=new_class.version, defaults={"name": new_name, "status": __debug__}
-                )
-            except Exception as e:
-                if not isinstance(e, ProgrammingError):
-                    logging.exception(e)
+            # Defer DB registration to after apps are fully ready
+            from django.apps import apps
+
+            if apps.ready:
+                try:
+                    ComponentModel.objects.update_or_create(
+                        code=new_class.code,
+                        version=new_class.version,
+                        defaults={"name": new_name, "status": __debug__},
+                    )
+                except Exception as e:
+                    if not isinstance(e, ProgrammingError):
+                        logging.exception(e)
 
         return new_class

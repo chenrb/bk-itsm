@@ -21,6 +21,11 @@ from pipeline.variable_framework.models import VariableModel
 
 @receiver(pre_variable_register, sender=LazyVariable)
 def pre_variable_register_handler(sender, variable_cls, **kwargs):
+    from django.apps import apps
+
+    if not apps.ready:
+        return  # Skip during app init, startup sync in apps.py handles registration
+
     try:
         obj, created = VariableModel.objects.get_or_create(code=variable_cls.code, defaults={"status": __debug__})
         if not created and not obj.status:

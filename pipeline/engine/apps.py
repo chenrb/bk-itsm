@@ -27,4 +27,12 @@ class EngineConfig(AppConfig):
         from pipeline.engine.models import FunctionSwitch
 
         valve.set_valve_function(FunctionSwitch.objects.is_frozen)
-        FunctionSwitch.objects.init_db()
+
+        # Defer DB init to post_migrate (avoids RuntimeWarning from ready())
+        from django.db.models.signals import post_migrate
+
+        def _init_function_switch(sender, **kwargs):
+            post_migrate.disconnect(_init_function_switch)
+            FunctionSwitch.objects.init_db()
+
+        post_migrate.connect(_init_function_switch)

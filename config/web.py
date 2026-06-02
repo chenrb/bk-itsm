@@ -5,6 +5,12 @@ import os
 from config import APP_CODE, BASE_DIR, PROJECT_ROOT  # noqa
 
 # ==============================================================================
+# Core URL / WSGI
+# ==============================================================================
+ROOT_URLCONF = "urls"
+WSGI_APPLICATION = "wsgi.application"
+
+# ==============================================================================
 # REST FRAMEWORK
 # ==============================================================================
 REST_FRAMEWORK = {
@@ -80,6 +86,13 @@ MEDIA_URL = "%smedia/" % os.environ.get("SITE_URL", "/")
 MEDIA_ROOT = os.path.join(os.environ.get("PROJECT_ROOT", os.path.dirname(BASE_DIR)), "USERRES")
 
 FILE_CHARSET = "utf-8"
+
+# ==============================================================================
+# File storage
+# ==============================================================================
+from django.core.files.storage import FileSystemStorage
+
+STORE = FileSystemStorage()
 
 # ==============================================================================
 # CSRF / Session

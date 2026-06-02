@@ -10,22 +10,38 @@ BK-ITSM (蓝鲸流程服务) is an IT Service Management application. Backend is
 
 ### Backend
 
+Use `.venv/Scripts/python` for all Python commands (virtual environment in project root).
+
 ```bash
-pip install -r requirements.txt    # Install dependencies
-python manage.py runserver         # Dev server (requires MySQL + Redis + env vars)
-python manage.py migrate           # Run migrations
-python manage.py init_builtin_data # Initialize built-in data (first deploy or after DB reset)
-python manage.py init_builtin_data --list   # List available modules
-# Use .venv for all Python commands:
-.venv/Scripts/python manage.py check       # System check
-.venv/Scripts/python manage.py makemigrations  # Generate migrations
-python manage.py test itsm.tests   # Run all tests (Django test runner)
-python manage.py test itsm.tests.workflow.test_workflow                                    # Single module
+pip install -r requirements.txt                # Install dependencies
+.venv/Scripts/python manage.py runserver       # Dev server (requires MySQL + Redis + env vars)
+.venv/Scripts/python manage.py migrate         # Run migrations
+.venv/Scripts/python manage.py init_builtin_data                # Initialize built-in data (first deploy or after DB reset)
+.venv/Scripts/python manage.py init_builtin_data --list         # List available init modules
+.venv/Scripts/python manage.py init_builtin_data --app role     # Run specific module only
+.venv/Scripts/python manage.py init_builtin_data --skip sla     # Skip specific module
+.venv/Scripts/python manage.py check                            # System check
+.venv/Scripts/python manage.py makemigrations                   # Generate migrations
+```
+
+### Testing
+
+```bash
+# Django test runner
+python manage.py test itsm.tests                                              # All tests
+python manage.py test itsm.tests.workflow.test_workflow                       # Single module
 python manage.py test itsm.tests.workflow.test_workflow.TestWorkflow.test_create_workflow  # Single method
-pytest itsm/tests/workflow/test_workflow.py  # Alternative (pytest.ini config)
-flake8 .          # Lint
-black .           # Format
-isort .           # Sort imports
+
+# pytest (pytest.ini configures DJANGO_SETTINGS_MODULE, --reuse-db)
+pytest itsm/tests/workflow/test_workflow.py
+```
+
+### Linting & Formatting
+
+```bash
+flake8 .       # Lint (max-line-length 120, max-complexity 25)
+black .        # Format (line length 100)
+isort .        # Sort imports (line_length=100, known_third_party=rest_framework, known_django=django)
 ```
 
 ### Frontend
@@ -53,32 +69,36 @@ Copy `.env.example` to `.env` and edit. Redis and MySQL are both required.
 APP_CODE=bk_itsm         SECRET_KEY=changeme-in-production
 DEBUG=true
 BROKER_URL=redis://localhost:6379/0
-REDIS_HOST=localhost     REDIS_PORT=6379       REDIS_PASSWORD=
+REDIS_HOST=localhost     REDIS_PORT=6379       REDIS_PASSWORD=    REDIS_DB=0
+REDIS_MODE=single
 MYSQL_NAME=bk_itsm      MYSQL_USER=root       MYSQL_PASSWORD=root
 MYSQL_HOST=localhost     MYSQL_PORT=3306       MYSQL_TEST_NAME=bk_itsm_test
 PLATFORM_API_BASE_URL=   # Optional: base URL for platform_client HTTP calls
 ```
 
+See `.env.example` for the full list including email, monitoring, notification, and business config.
+
 ## Architecture
 
-### Settings loading
-
-`settings.py` (root) is minimal — it sets `DJANGO_SETTINGS_MODULE`, then does `from config.default import *`. `config/__init__.py` defines `celery_app`, `BASE_DIR`, `APP_CODE`, `SECRET_KEY`, `DEBUG`. `config/default.py` aggregates 10 sub-modules by concern:
+### Settings loading chain
 
 ```
-config/apps.py         → INSTALLED_APPS, MIDDLEWARE, AUTHENTICATION_BACKENDS
-config/celery.py       → CELERY_IMPORTS, broker, serializer
-config/database.py     → DATABASES (MySQL via mysqlclient)
-config/logging.py      → LOGGING
-config/web.py          → TEMPLATES, STATIC_URL, etc.
-config/i18n.py         → LANGUAGES, LOCALE_PATHS
-config/pipeline.py     → pipeline engine config + is_superuser permission check
-config/business.py     → AUTO_TIMEOUT_MINUTES, business constants
-config/integrations.py → platform URLs, frontend URL, webhook, docs
-config/monitoring.py   → monitoring/sentry config
+settings.py (root)                    # os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
+  └→ config/default import *          # from config.default import *
+       ├→ config/apps.py              #   INSTALLED_APPS, MIDDLEWARE, AUTHENTICATION_BACKENDS
+       ├→ config/celery.py            #   CELERY_IMPORTS, broker, serializer
+       ├→ config/database.py          #   DATABASES (MySQL via mysqlclient), REDIS dict, DEFAULT_AUTO_FIELD
+       ├→ config/logging.py           #   LOGGING
+       ├→ config/web.py               #   TEMPLATES, STATIC_URL, Mako config
+       ├→ config/i18n.py              #   LANGUAGES, LOCALE_PATHS
+       ├→ config/pipeline.py          #   pipeline engine config + is_superuser permission check
+       ├→ config/business.py          #   AUTO_TIMEOUT_MINUTES, business constants
+       ├→ config/integrations.py      #   platform URLs, frontend URL, webhook, docs
+       └→ config/monitoring.py        #   monitoring/sentry config
+  └→ config/local_settings import *   # gitignored — use for personal overrides
 ```
 
-`config/local_settings.py` is gitignored — use it for personal overrides.
+`config/__init__.py` defines `celery_app`, `BASE_DIR`, `APP_CODE`, `SECRET_KEY`, `DEBUG`.
 
 ### Auth
 
@@ -105,9 +125,12 @@ Custom user model: `AUTH_USER_MODEL = "users.User"` defined in `itsm/component/u
 | `monitor/` | Prometheus monitoring endpoints |
 | `misc/` | Miscellaneous utilities |
 
+Each app follows Django conventions: `models.py` (or `models/`), `views.py` (or `views/`), `serializers.py`, `urls.py`, `tasks.py`.
+
 ### API routing
 
 `urls.py` (root) dispatches:
+- `/admin/` → Django admin
 - `/account/` → `itsm.component.users.urls` (login/auth)
 - `/api/` → `itsm.api.v1`
 - `/openapi/` → `itsm.api.open_v1`
@@ -115,8 +138,6 @@ Custom user model: `AUTH_USER_MODEL = "users.User"` defined in `itsm/component/u
 - `/monitor/` → `itsm.monitor.urls`
 - `/eri/admin/` → `pipeline.contrib.engine_admin.urls` (pipeline engine admin)
 - `/` → `itsm.sites.urls` (frontend entry points)
-
-Each `itsm/` app follows Django conventions: `models.py` (or `models/`), `views.py` (or `views/`), `serializers.py`, `urls.py`, `tasks.py`.
 
 ### Pipeline engine
 
@@ -161,12 +182,8 @@ See `frontend/pc/CLAUDE.md` for full Vue conventions. Key: Vue 3 + Vite 4 + Vuex
 
 ## CI
 
-GitHub Actions (`.github/workflows/django.yml`): Python 3.13 + MySQL + Redis → install deps → migrate → test → Codecov. **Note:** CI currently references `./scripts/workflows/bk_ci.sh` which was deleted during Phase 2 cleanup — the workflow file needs updating before CI will pass.
+GitHub Actions (`.github/workflows/django.yml`): Python 3.13 + MySQL + Redis → install deps → migrate → `coverage run manage.py test itsm.tests` → Codecov.
 
 ## Refactoring
 
-Refactoring plans and history are in `docs/refactor/`. Phase 1 (去蓝鲸依赖) and Phase 2 (死代码清理) are complete. P3 (迁移重置) has reset all migrations to a single `0001_initial` per app — existing databases must be dropped and recreated. When modifying code during refactoring, follow the rules in `docs/refactor/plan.md`: always clean unused imports, dead dependencies, and stale config after deleting code.
-
-## Virtual Environment
-
-Use `.venv` in the project root as the Python virtual environment. All `python` / `manage.py` commands should use `.venv/Scripts/python`.
+Refactoring plans and history are in `docs/refactor/`. Phases 1–16 are complete — the project is fully decoupled from BlueKing PaaS with all dead code cleaned. Migration history was reset in P3 (single `0001_initial` per app) — existing databases must be dropped and recreated. When modifying code during refactoring, follow the rules in `docs/refactor/plan.md`: always clean unused imports, dead dependencies, and stale config after deleting code.

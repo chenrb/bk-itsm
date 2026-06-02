@@ -36,13 +36,27 @@ class VariableFrameworkConfig(AppConfig):
         for path in settings.VARIABLE_AUTO_DISCOVER_PATH:
             autodiscover_collections(path)
 
-        from pipeline.variable_framework.models import VariableModel
-        from pipeline.core.data.library import VariableLibrary
+        # Defer DB status sync to post_migrate (avoids RuntimeWarning from ready())
+        from django.db.models.signals import post_migrate
 
-        try:
-            VariableModel.objects.exclude(code__in=list(VariableLibrary.variables.keys())).update(status=False)
-        except (ProgrammingError, OperationalError):
-            logger.warning(
-                "[variable_framework] 数据库表尚未创建，跳过变量注册。"
-                "请先执行 python manage.py migrate"
-            )
+        def _sync_on_migrate(sender, **kwargs):
+            post_migrate.disconnect(_sync_on_migrate)
+            _do_variable_sync()
+
+        post_migrate.connect(_sync_on_migrate)
+
+
+def _do_variable_sync():
+    """Sync variable status in DB with registered variables (runs after apps are ready)."""
+    from pipeline.variable_framework.models import VariableModel
+    from pipeline.core.data.library import VariableLibrary
+
+    try:
+        for code in VariableLibrary.variables:
+            VariableModel.objects.update_or_create(code=code, defaults={"status": True})
+        VariableModel.objects.exclude(code__in=list(VariableLibrary.variables.keys())).update(status=False)
+    except (ProgrammingError, OperationalError):
+        logger.warning(
+            "[variable_framework] 数据库表尚未创建，跳过变量注册。"
+            "请先执行 python manage.py migrate"
+        )

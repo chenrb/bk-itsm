@@ -45,7 +45,6 @@ from rest_framework.response import Response
 from common.log import logger
 from common.redis import Cache
 from common.template.template import Template
-from config.default import OUT_LINK
 from itsm.component.cache_keys import cache_response, ticket_cache_key
 from itsm.component.constants import (
     CACHE_5MIN,

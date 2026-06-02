@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 """
 
 import logging
-import sys
 
 from django.apps import AppConfig
 from django.db.utils import InternalError, OperationalError, ProgrammingError
@@ -22,37 +21,22 @@ from pipeline.utils.register import autodiscover_collections
 
 logger = logging.getLogger("root")
 
-DJANGO_MANAGE_CMD = "manage.py"
-INIT_PASS_TRIGGER = {"migrate"}
 
-
-def init_component_framework(**kwargs):
-    """
-    注册公共部分和当前RUN_VER下的标准插件到数据库
-    :return: 
-    """
-    if sys.argv and sys.argv[0] == DJANGO_MANAGE_CMD:
-        try:
-            command = sys.argv[1]
-        except IndexError:
-            return
-        else:
-            if command in INIT_PASS_TRIGGER:
-                logger.info("ignore components init for command: {}".format(sys.argv))
-                return
-
-    for path in settings.COMPONENT_AUTO_DISCOVER_PATH:
-        autodiscover_collections(path)
-
+def _do_component_sync():
+    """Sync component status in DB with registered components (runs after apps are ready)."""
     from pipeline.component_framework.models import ComponentModel
     from pipeline.component_framework.library import ComponentLibrary
 
     try:
-        ComponentModel.objects.all().update(status=False)
         for code in ComponentLibrary.codes():
-            ComponentModel.objects.filter(code=code, version__in=ComponentLibrary.versions(code)).update(
-                status=True
-            )
+            for version in ComponentLibrary.versions(code):
+                component_cls = ComponentLibrary.get_component_class(code=code, version=version)
+                group_name = getattr(component_cls, "group_name", "")
+                new_name = "{}-{}".format(group_name, component_cls.name)
+                ComponentModel.objects.update_or_create(
+                    code=code, version=version, defaults={"name": new_name, "status": True}
+                )
+        ComponentModel.objects.exclude(code__in=list(ComponentLibrary.codes())).update(status=False)
     except InternalError:
         logger.warning(
             "[component_framework] 数据库版本字段迁移中，跳过组件注册"
@@ -62,6 +46,24 @@ def init_component_framework(**kwargs):
             "[component_framework] 数据库表尚未创建，跳过组件注册。"
             "请先执行 python manage.py migrate"
         )
+
+
+def init_component_framework(**kwargs):
+    """
+    注册公共部分和当前RUN_VER下的标准插件到数据库
+    :return:
+    """
+    for path in settings.COMPONENT_AUTO_DISCOVER_PATH:
+        autodiscover_collections(path)
+
+    # Defer DB status sync to post_migrate (avoids RuntimeWarning from ready())
+    from django.db.models.signals import post_migrate
+
+    def _sync_on_migrate(sender, **kwargs):
+        post_migrate.disconnect(_sync_on_migrate)
+        _do_component_sync()
+
+    post_migrate.connect(_sync_on_migrate)
 
 
 class ComponentFrameworkConfig(AppConfig):
