@@ -24,56 +24,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
 from django.apps import AppConfig
-from django.conf import settings
-from django.db.models.signals import post_migrate
-
-# 执行app初始化操作，步骤位于migrate操作后，需要print信息到标准输出
-# http://www.koopman.me/2015/01/django-signals-example/
-
-
-def app_ready_handler(sender, **kwargs):
-    from itsm.iadmin.models import CustomNotice, SystemSettings, ReleaseVersionLog
-    from itsm.service.models import Service
-    from itsm.workflow.models import TemplateField, Table, Workflow, Notify
-    from itsm.component.constants import DEFAULT_TEMPLATE_FIELDS, DEFAULT_TABLE
-
-    print("update notify type")
-    Notify.init_builtin_notify()
-    print("update notify template")
-    CustomNotice.init_default_template()
-    print("update notify system_settings")
-    SystemSettings.init_default_settings()
-    # 解析release.md文件将版本日志信息存入存入数据库
-    ReleaseVersionLog.objects.init_version_log_info("zh-cn")
-    ReleaseVersionLog.objects.init_version_log_info("en")
-    print("create_default_template_field")
-    TemplateField.objects.create_default_template_field(DEFAULT_TEMPLATE_FIELDS)
-    print("create default tables")
-    Table.objects.init_table(DEFAULT_TABLE)
-    print("create default workflows")
-    Workflow.objects.init_builtin_workflow()
-    print("create default services")
-    Service.objects.init_builtin_services()
-    print("init superusers")
-    init_super_user()
-
-
-def init_super_user():
-    from django.contrib.auth import get_user_model
-    User = get_user_model()
-
-    for name in settings.INIT_SUPERUSER:
-        try:
-            User.objects.update_or_create(
-                username=name,
-                defaults={"is_staff": True, "is_active": True, "is_superuser": True},
-            )
-        except BaseException as error:
-            print("init superuser %s error： %s" % (name, str(error)))
 
 
 class IadminConfig(AppConfig):
     name = "itsm.iadmin"
-
-    def ready(self):
-        post_migrate.connect(app_ready_handler, sender=self)

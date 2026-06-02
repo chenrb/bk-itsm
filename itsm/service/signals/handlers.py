@@ -27,33 +27,36 @@ import traceback
 from django.db import transaction
 
 
+def init_builtin_approve_service():
+    from itsm.component.constants import INVISIBLE
+    from itsm.service.models import Service, ServiceCatalog
+    from itsm.workflow.signals.handlers import builtin_approval_workflow_create
+
+    with transaction.atomic():
+        parent = ServiceCatalog.objects.get(key="root")
+        catalog, created = ServiceCatalog._objects.update_or_create(
+            defaults={'name': "内置审批目录", "parent": parent, "is_deleted": False}, **{'key': "approve_service_catalog"}
+        )
+        version = builtin_approval_workflow_create()
+
+        instance, created = Service.objects.get_or_create(
+            defaults={'key': "request", "workflow": version, "creator": ""},
+            **{"name": "内置审批服务", "display_type": INVISIBLE}
+        )
+        if created:
+            instance.bind_catalog(catalog.id)
+
+
 def register_builtin_approve_service(sender, **kwargs):
     try:
-        from itsm.component.constants import INVISIBLE
-        from itsm.service.models import Service, ServiceCatalog
-        from itsm.workflow.signals.handlers import builtin_approval_workflow_create
-
         print("register builtin approve service begin")
-
-        with transaction.atomic():
-            parent = ServiceCatalog.objects.get(key="root")
-            catalog, created = ServiceCatalog._objects.update_or_create(
-                defaults={'name': "内置审批目录", "parent": parent, "is_deleted": False}, **{'key': "approve_service_catalog"}
-            )
-            version = builtin_approval_workflow_create()
-
-            instance, created = Service.objects.get_or_create(
-                defaults={'key': "request", "workflow": version, "creator": ""},
-                **{"name": "内置审批服务", "display_type": INVISIBLE}
-            )
-            if created:
-                instance.bind_catalog(catalog.id)
+        init_builtin_approve_service()
     except Exception as e:
         print(traceback.format_exc())
         print('register builtin approve service exception, msg is {} '.format(e))
 
 
-def register_builtin_service(sender, **kwargs):
+def init_builtin_services_from_files():
     import os
     import json
     from django.conf import settings
@@ -61,7 +64,6 @@ def register_builtin_service(sender, **kwargs):
     from itsm.service.models import Service, ServiceCatalog
     from itsm.role.models import UserRole
 
-    print("start to  register_builtin_service ")
     file_path = os.path.join(settings.PROJECT_ROOT, 'initials/service/')
 
     parent = ServiceCatalog.objects.get(key="root")
@@ -100,3 +102,12 @@ def register_builtin_service(sender, **kwargs):
                     username__in=[u for u in owner_names.split(",") if u]
                 )
             )
+
+
+def register_builtin_service(sender, **kwargs):
+    try:
+        print("start to  register_builtin_service ")
+        init_builtin_services_from_files()
+    except Exception as e:
+        print(traceback.format_exc())
+        print('register builtin service exception, msg is {} '.format(e))

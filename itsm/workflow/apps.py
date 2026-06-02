@@ -26,26 +26,10 @@ from django.apps import AppConfig
 from django.db.models import signals
 
 
-def app_ready_handler(sender, **kwarg):
-    from .models import TaskSchema
-
-    # 初始化数据
-    if not TaskSchema.objects.filter(component_type="SOPS", is_deleted=False).exists():
-        print("create sops task schema")
-        TaskSchema.objects.create(
-            component_type="SOPS",
-            name="标准运维任务模板",
-            is_builtin=True,
-            is_draft=False,
-            is_enabled=True,
-        )
-
-
 class WorkflowConfig(AppConfig):
     name = "itsm.workflow"
 
     def ready(self):
-        # post_migrate.connect(app_ready_handler, sender=self)
         # ======================================================================
         # WORKFLOW SIGNALS REGISTER
         # ======================================================================
@@ -57,8 +41,6 @@ class WorkflowConfig(AppConfig):
             after_base_field_saved,
             task_schema_created_handler,
         )
-
-        signals.post_migrate.connect(app_ready_handler, sender=self)
 
         signals.post_save.connect(init_after_workflow_created, Workflow)
         signals.post_save.connect(after_basic_model_saved, Table)

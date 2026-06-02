@@ -14,6 +14,8 @@ BK-ITSM (蓝鲸流程服务) is an IT Service Management application. Backend is
 pip install -r requirements.txt    # Install dependencies
 python manage.py runserver         # Dev server (requires MySQL + Redis + env vars)
 python manage.py migrate           # Run migrations
+python manage.py init_builtin_data # Initialize built-in data (first deploy or after DB reset)
+python manage.py init_builtin_data --list   # List available modules
 # Use .venv for all Python commands:
 .venv/Scripts/python manage.py check       # System check
 .venv/Scripts/python manage.py makemigrations  # Generate migrations

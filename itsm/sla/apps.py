@@ -23,50 +23,11 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
-import traceback
-
-from django.apps import AppConfig
-from django.db.models.signals import post_migrate
-
-
 __author__ = "蓝鲸智云"
 __copyright__ = "Copyright © 2025 Tencent BlueKing. All Rights Reserved."
 
-
-def app_ready_handler(sender, **kwargs):
-    from itsm.sla.models import PriorityMatrix
-
-    print('PriorityMatrix.init_matrix')
-    try:
-        PriorityMatrix.objects.init_matrix()
-    except BaseException:
-        print(traceback.format_exc())
-
-    print('Sla.init_sla')
-
-    from itsm.sla.models import Sla, Schedule, SlaTimerRule, SlaTicketHighlight
-
-    try:
-        Sla.init_sla(Schedule.init_schedule())
-    except BaseException:
-        print(traceback.format_exc())
-
-    print('Sla.init_sla_timer_rule')
-
-    try:
-        SlaTimerRule.init_sla_timer_rule()
-    except BaseException:
-        print(traceback.format_exc())
-
-    print('Sla.init_ticket_hightlight')
-    try:
-        SlaTicketHighlight.init_sla_ticket_hightlight()
-    except BaseException:
-        print(traceback.format_exc())        
+from django.apps import AppConfig
 
 
 class SlaConfig(AppConfig):
-    name = 'itsm.sla'
-
-    def ready(self):
-        post_migrate.connect(app_ready_handler, sender=self)
+    name = "itsm.sla"

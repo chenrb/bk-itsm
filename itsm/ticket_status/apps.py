@@ -26,28 +26,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 __author__ = "蓝鲸智云"
 __copyright__ = "Copyright © 2025 Tencent BlueKing. All Rights Reserved."
 
-import traceback
-
 from django.apps import AppConfig
-from django.db.models.signals import post_migrate
-
-
-def app_ready_handler(sender, **kwargs):
-    from itsm.ticket_status.models import TicketStatusConfig, TicketStatus, StatusTransit
-
-    try:
-        print('init ticket_status data')
-        TicketStatus.init_ticket_status()
-        print('init ticket_status_transit data')
-        StatusTransit.init_status_transit()
-        print('init ticket_status_config data')
-        TicketStatusConfig.init_ticket_status_config()
-    except Exception:
-        print("init ticket_status data exception: %s" % traceback.format_exc())
 
 
 class TicketStatusConfig(AppConfig):
-    name = 'itsm.ticket_status'
-
-    def ready(self):
-        post_migrate.connect(app_ready_handler, sender=self)
+    name = "itsm.ticket_status"

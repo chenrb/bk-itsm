@@ -26,40 +26,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 __author__ = "蓝鲸智云"
 __copyright__ = "Copyright © 2025 Tencent BlueKing. All Rights Reserved."
 
-# 执行app初始化操作，步骤位于migrate操作后，需要print信息到标准输出
-# http://www.koopman.me/2015/01/django-signals-example/
-
-import traceback
-
 from django.apps import AppConfig
-from django.db.models.signals import post_migrate
-from itsm.service.signals.handlers import (
-    register_builtin_approve_service,
-    register_builtin_service,
-)
-
-
-def app_ready_handler(sender, **kwargs):
-    from itsm.service.models import (
-        ServiceCatalog,
-        ServiceCategory,
-        SysDict,
-    )
-    from itsm.component.constants import CATALOG
-
-    try:
-        ServiceCategory.init_service_data()
-        SysDict.objects.init_builtin_dicts()
-        ServiceCatalog.objects.init_default_catalog(CATALOG)
-    except Exception as e:
-        print(traceback.format_exc())
-        print('init/update service data exception: %s' % str(e))
 
 
 class ServiceConfig(AppConfig):
-    name = 'itsm.service'
-
-    def ready(self):
-        post_migrate.connect(app_ready_handler, sender=self)
-        post_migrate.connect(register_builtin_approve_service, sender=self)
-        post_migrate.connect(register_builtin_service, sender=self)
+    name = "itsm.service"

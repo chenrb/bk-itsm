@@ -145,9 +145,22 @@ Phase 2 后发现的零散死代码清理。
   - `itsm/trigger/action/core/component.py`：移除 `CallableChoiceIterator` import，改用 `callable()` 判断
   - `itsm/workflow/utils.py`：`get_notify_type_choice` 捕获所有异常回退到默认值
 
+### P16: post_migrate 初始化重构
+
+将 7 个 app 的 9 个 `post_migrate` handler 中的初始化逻辑集中到管理命令 `init_builtin_data`，让 `migrate` 回归纯粹的 schema 迁移。
+
+- **新建管理命令** `itsm/iadmin/management/commands/init_builtin_data.py`
+  - 9 个初始化模块按依赖顺序执行：role → project → iadmin → workflow → service → ticket_status → sla → superuser → version_log
+  - 支持 `--app`（指定模块）、`--skip`（跳过模块）、`--list`（列出模块）
+- **重构 signal handlers** — `itsm/service/signals/handlers.py`：提取 `init_builtin_approve_service()`、`init_builtin_services_from_files()` 为无 signal 参数的普通函数，原 `register_builtin_*` 保留为薄包装
+- **移除 post_migrate** — 7 个 `apps.py`（iadmin、service、role、project、ticket_status、sla、workflow）删除所有 `post_migrate.connect()` 和 handler 函数
+- **首次部署流程**：`migrate` → `init_builtin_data`
+
 ### 验证状态
 
 - `python manage.py check` 通过（0 issues，0 warnings）
+- `python manage.py migrate` 不再触发任何初始化逻辑
+- `python manage.py init_builtin_data` 执行全部内置数据初始化
 - 零蓝鲸硬依赖残留（blueapps、blueking、apigw_manager、bk_notice_sdk、bkstorages、iam SDK、auth_iam、esb、apigw、bkchat、helper、core — 全部归零）
 - MySQL 驱动：mysqlclient 2.2.8（PyMySQL 已完全移除）
 - JSONField：Django 内置（jsonfield 已完全移除）

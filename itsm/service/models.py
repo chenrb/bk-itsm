@@ -34,7 +34,6 @@ from django.utils.translation import gettext as _
 from mptt.models import TreeForeignKey
 
 from itsm.component.constants import (
-    ADMIN,
     DEFAULT_STRING,
     DISPLAY_CHOICES,
     EMPTY_INT,
@@ -44,7 +43,6 @@ from itsm.component.constants import (
     LEN_NORMAL,
     LEN_SHORT,
     SERVICE_CATEGORY,
-    LEN_XX_LONG,
     TIME_DELTA,
     SERVICE_SOURCE_CHOICES,
     DEFAULT_PROJECT_PROJECT_KEY,

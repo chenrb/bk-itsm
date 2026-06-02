@@ -60,6 +60,7 @@ from itsm.component.constants import (
 from itsm.component.drf.mixins import ObjectManagerMixin
 from itsm.component.utils.basic import create_version_number, list_by_separator
 from itsm.component.utils.graph import dfs_paths
+from itsm.trigger.api import copy_triggers_by_source
 from itsm.trigger.models import Trigger
 from itsm.service.models import Service
 from itsm.workflow import managers
