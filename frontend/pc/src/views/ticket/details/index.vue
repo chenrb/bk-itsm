@@ -285,7 +285,7 @@
       },
     },
     created() {
-      bus.$on('getIsProcessStatus', data => {
+      bus.on('getIsProcessStatus', data => {
         this.noPermitResp = deepClone(data);
         const { id, step_id } = data.config.params;
         const params = {
@@ -303,7 +303,7 @@
             this.processedInfo = res.data.detail;
             this.isShowDialog = true;
           } else {
-            bus.$emit('processData', this.noPermitResp);
+            bus.emit('processData', this.noPermitResp);
           }
         });
       });

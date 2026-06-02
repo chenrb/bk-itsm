@@ -77,8 +77,6 @@ const OperationService = () => import('../views/operation/service.vue');
 // const ServiceList = () => import('../views/service/ServiceList.vue')
 // const EditService = () => import('../views/service/editService/index.vue')
 
-Vue.use(Router);
-
 // from webpack 2.4
 // https://github.com/webpack/webpack/releases/tag/v2.4.0
 
@@ -300,10 +298,10 @@ const router = createRouter({
 connectToMain(router);
 
 router.beforeEach((to, from, next) => {
-  bus.$on('api-error:user-permission-denied', () => {
+  bus.on('api-error:user-permission-denied', () => {
     next({ path: '/limitAccess' });
   });
-  bus.$on('api-error:application-deployed', () => {
+  bus.on('api-error:application-deployed', () => {
     next({ path: '/exception' });
   });
   next();

@@ -25,10 +25,9 @@
     <p class="bk-ticket-title">{{ $t(`m.manageCommon['关联类型']`) }}</p>
     <div class="bk-ticket-content">
       <bk-radio-group v-model="typeSelected" @change="clearFieldList">
-        <template v-for="radio in typeSelectRadio">
+        <template v-for="radio in typeSelectRadio" :key="radio.key">
           <bk-radio
             :value="radio.key"
-            :key="radio.key"
             class="mr20"
           >{{ radio.name }}</bk-radio
           >
@@ -148,12 +147,14 @@
               </span>
             </template>
           </bk-table-column>
-          <template #empty><div class="empty">
-            <empty
-              :is-error="listError"
-              @onRefresh="getList()">
-            </empty>
-          </div>
+          <template #empty>
+            <div class="empty">
+              <empty
+                :is-error="listError"
+                @onRefresh="getList()">
+              </empty>
+            </div>
+          </template>
         </bk-table>
       </div>
       <div class="bk-ticket-button">

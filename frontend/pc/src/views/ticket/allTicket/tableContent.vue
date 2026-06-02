@@ -138,14 +138,16 @@
           @setting-change="handleSettingChange">
         </bk-table-setting-content>
       </bk-table-column>
-      <template #empty><div class="empty">
-        <empty
-          :is-error="listError"
-          :is-search="true"
-          @onRefresh="$parent.getAllTicketList()"
-          @onClearSearch="$emit('clearSearch')">
-        </empty>
-      </div>
+      <template #empty>
+        <div class="empty">
+          <empty
+            :is-error="listError"
+            :is-search="true"
+            @onRefresh="$parent.getAllTicketList()"
+            @onClearSearch="$emit('clearSearch')">
+          </empty>
+        </div>
+      </template>
     </bk-table>
     <!-- 评价弹窗 -->
     <evaluation-ticket-modal

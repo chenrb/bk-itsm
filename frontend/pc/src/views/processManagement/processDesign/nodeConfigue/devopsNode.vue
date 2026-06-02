@@ -179,10 +179,12 @@
   import NoData from '@/components/common/NoData.vue';
   import { errorHandler } from '../../../../utils/errorHandler';
   import i18n from '@/i18n/index.js';
+
+  const t = i18n.global.t.bind(i18n.global);
   function newRequiredRule() {
     return {
       required: true,
-      message: i18n.t('m.treeinfo["字段必填"]'),
+      message: t('m.treeinfo["字段必填"]'),
       trigger: 'blur',
     };
   }
@@ -435,7 +437,7 @@
             this.pipelineData[item.id] = this.hookVarList[item.id] ? `\${${item.defaultValue}}` : item.defaultValue;
             this.pipelineRules[item.id] = [{
               required: item.required,
-              message: i18n.t('m.treeinfo["字段必填"]'),
+              message: t('m.treeinfo["字段必填"]'),
               trigger: 'blur',
             }];
           });

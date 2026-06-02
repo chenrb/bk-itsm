@@ -88,9 +88,9 @@
   </div>
 </template>
 <script>
-  import memberSelect from '../../commonComponent/memberSelect';
-  import SelectTree from '../../../components/form/selectTree/index.vue';
-  import { errorHandler } from '../../../utils/util.js';
+  import memberSelect from '../../../commonComponent/memberSelect';
+  import SelectTree from '../../../../components/form/selectTree/index.vue';
+  import { errorHandler } from '../../../../utils/util.js';
 
   export default {
     name: 'dealPerson',

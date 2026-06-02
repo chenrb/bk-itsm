@@ -38,9 +38,9 @@
       {{ $t('m.treeinfo["结束"]') }}
     </div>
     <!-- 手动节点 -->
-    <template v-for="(item, index) in typeList">
+    <template v-for="(item, index) in typeList" :key="index">
       <template v-if="node.type === item.type">
-        <div class="common-node" :key="index">
+        <div class="common-node">
           <span class="common-auto-icon"
             :class="{ 'bk-is-draft': (node.nodeInfo && node.nodeInfo.is_draft) }"
             @click.stop="openconfigu">

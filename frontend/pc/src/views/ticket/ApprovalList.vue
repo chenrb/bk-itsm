@@ -151,14 +151,16 @@
             @setting-change="handleSettingChange">
           </bk-table-setting-content>
         </bk-table-column>
-        <template #empty><div class="empty">
-          <empty
-            :is-error="listError"
-            :is-search="searchToggle"
-            @onRefresh="getTicketList()"
-            @onClearSearch="$refs.advancedSearch.onClearClick()">
-          </empty>
-        </div>
+        <template #empty>
+          <div class="empty">
+            <empty
+              :is-error="listError"
+              :is-search="searchToggle"
+              @onRefresh="getTicketList()"
+              @onClearSearch="$refs.advancedSearch.onClearClick()">
+            </empty>
+          </div>
+        </template>
       </bk-table>
       <div class="loading" v-if="progressInfo.show">
         <bk-round-progress :width="progressInfo.width" :percent="progressInfo.percent" :config="progressInfo.config" :content="progressInfo.content"></bk-round-progress>
@@ -197,62 +199,64 @@
   import { useTicketListMixins } from '@/composables/useTicketListMixins';
   import Empty from '../../components/common/Empty.vue';
 
+  const t = i18n.global.t.bind(i18n.global);
+
   const COLUMN_LIST = [
     {
       id: 'id',
-      label: i18n.t('m.manageCommon[\'单号\']'),
+      label: t('m.manageCommon[\'单号\']'),
       width: '200',
       disabled: true,
     },
     {
       id: 'title',
-      label: i18n.t('m.manageCommon[\'标题\']'),
+      label: t('m.manageCommon[\'标题\']'),
       minWidth: '180' },
     {
       id: 'creator',
-      label: i18n.t('m.manageCommon[\'提单人\']'),
+      label: t('m.manageCommon[\'提单人\']'),
       minWidth: '140',
       prop: 'creator' },
     {
       id: 'create_at',
-      label: i18n.t('m.manageCommon[\'提单时间\']'),
+      label: t('m.manageCommon[\'提单时间\']'),
       minWidth: '140',
       sortable: 'custom',
       prop: 'create_at' },
     {
       id: 'service_type_name',
-      label: i18n.t('m.manageCommon[\'类型\']'),
+      label: t('m.manageCommon[\'类型\']'),
       minWidth: '80' },
     {
       id: 'service_name',
-      label: i18n.t('m.home[\'服务\']'),
+      label: t('m.home[\'服务\']'),
       minWidth: '140',
       prop: 'service_name' },
     {
       id: 'priority',
-      label: i18n.t('m.slaContent[\'优先级\']'),
+      label: t('m.slaContent[\'优先级\']'),
       minWidth: '120',
       sortable: 'custom',
       prop: 'priority_name' },
     {
       id: 'current_steps',
-      label: i18n.t('m.newCommon[\'当前步骤\']'),
+      label: t('m.newCommon[\'当前步骤\']'),
       minWidth: '80',
       prop: 'current_steps' },
     {
       id: 'current_processors',
-      label: i18n.t('m.manageCommon[\'当前处理人\']'),
+      label: t('m.manageCommon[\'当前处理人\']'),
       width: '130',
       prop: 'current_processors' },
     {
       id: 'status',
-      label: i18n.t('m.manageCommon[\'状态\']'),
+      label: t('m.manageCommon[\'状态\']'),
       minWidth: '120',
       sortable: 'custom',
       prop: 'status' },
     {
       id: 'operate',
-      label: i18n.t('m.manageCommon[\'操作\']'),
+      label: t('m.manageCommon[\'操作\']'),
       minWidth: '80' },
   ];
 

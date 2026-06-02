@@ -65,14 +65,16 @@
           </div>
         </template>
       </bk-table-column>
-      <template #empty><div class="empty">
-        <empty
-          :is-error="listError"
-          :is-search="searchToggle"
-          @onRefresh="refresh(0)"
-          @onClearSearch="refresh(1)">
-        </empty>
-      </div>
+      <template #empty>
+        <div class="empty">
+          <empty
+            :is-error="listError"
+            :is-search="searchToggle"
+            @onRefresh="refresh(0)"
+            @onClearSearch="refresh(1)">
+          </empty>
+        </div>
+      </template>
     </bk-table>
   </div>
 </template>

@@ -137,14 +137,16 @@
               </bk-button>
             </template>
           </bk-table-column>
-          <template #empty><div class="empty">
-            <empty
-              :is-error="listError"
-              :is-search="!searchToggle"
-              @onRefresh="getList()"
-              @onClearSearch="getList(1)">
-            </empty>
-          </div>
+          <template #empty>
+            <div class="empty">
+              <empty
+                :is-error="listError"
+                :is-search="!searchToggle"
+                @onRefresh="getList()"
+                @onClearSearch="getList(1)">
+              </empty>
+            </div>
+          </template>
         </bk-table>
       </template>
     </div>

@@ -24,6 +24,8 @@ import cloneDeepWith from 'lodash/cloneDeepWith';
 import { checkDataType } from './getDataType';
 import i18n from '@/i18n/index.js';
 
+const t = i18n.global.t.bind(i18n.global);
+
 export function isVNode(node) {
   return typeof node === 'object' && Object.prototype.hasOwnProperty.call(node, 'componentOptions');
 }
@@ -282,12 +284,12 @@ export function convertTimeArrToMS(tArr = [0, 0, 0, 0, 0, 0]) {
 export function convertTimeArrToString(tArr = []) {
   if (!(tArr instanceof Array)) return;
   const timeRule = [
-    i18n.t('m.newCommon["年"]'),
-    i18n.t('m.newCommon["个月"]'),
-    i18n.t('m.newCommon["天"]'),
-    i18n.t('m.newCommon["小时"]'),
-    i18n.t('m.newCommon["分"]'),
-    i18n.t('m.newCommon["秒"]'),
+    t('m.newCommon["年"]'),
+    t('m.newCommon["个月"]'),
+    t('m.newCommon["天"]'),
+    t('m.newCommon["小时"]'),
+    t('m.newCommon["分"]'),
+    t('m.newCommon["秒"]'),
   ];
   const str = tArr.reduce((str, num, index) => {
     if (num) {

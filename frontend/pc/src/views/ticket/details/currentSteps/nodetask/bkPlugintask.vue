@@ -15,6 +15,8 @@
 
 <script>
   import i18n from '@/i18n/index.js';
+
+  const t = i18n.global.t.bind(i18n.global);
   export default {
     name: 'bkPluginTask',
     components: {
@@ -56,7 +58,7 @@
               this.formData[item] = this.nodeInfo.contexts.build_params.inputs[item];
               this.rules[item] = [{
                 required: true,
-                message: i18n.t('m.treeinfo["字段必填"]'),
+                message: t('m.treeinfo["字段必填"]'),
                 trigger: 'blur',
               }];
               return {

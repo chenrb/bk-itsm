@@ -133,16 +133,18 @@
         v-model:is-show="sliderInfo.show"
         :title="sliderInfo.title"
         :width="sliderInfo.width">
-        <template #content><div class="p20" v-if="sliderInfo.show">
-          <add-field
-            @getRelatedFields="getRelatedFields"
-            :change-info="changeInfo"
-            :sosp-info="showTabData"
-            :workflow="flowInfo.id"
-            :state="configur.id"
-            @closeShade="closeShade">
-          </add-field>
-        </div>
+        <template #content>
+          <div class="p20" v-if="sliderInfo.show">
+            <add-field
+              @getRelatedFields="getRelatedFields"
+              :change-info="changeInfo"
+              :sosp-info="showTabData"
+              :workflow="flowInfo.id"
+              :state="configur.id"
+              @closeShade="closeShade">
+            </add-field>
+          </div>
+        </template>
       </bk-sideslider>
       <common-trigger-list
         :origin="'state'"

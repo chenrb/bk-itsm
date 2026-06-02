@@ -25,16 +25,18 @@
     <nav-title :show-icon="true"
       :title-name="serviceInfo.name || $t(`m['新建服务']`)"
       @goBack="onBackIconClick">
-      <template #step><div>
-        <bk-steps ext-cls="steps-icon"
-          data-test-id="service_steps_serviceEditStep"
-          :controllable="true"
-          line-type="solid"
-          :cur-step="currStep"
-          :steps="stepList"
-          @step-changed="onStepChange">
-        </bk-steps>
-      </div>
+      <template #step>
+        <div>
+          <bk-steps ext-cls="steps-icon"
+            data-test-id="service_steps_serviceEditStep"
+            :controllable="true"
+            line-type="solid"
+            :cur-step="currStep"
+            :steps="stepList"
+            @step-changed="onStepChange">
+          </bk-steps>
+        </div>
+      </template>
     </nav-title>
     <!-- <div class="steps-container">
             <bk-steps ext-cls="steps-icon"
@@ -320,7 +322,7 @@
   };
 </script>
 <style lang="scss" scoped>
-@import '~@/scss/mixins/scroller.scss';
+@import '@/scss/mixins/scroller.scss';
 .steps-container {
     position: relative;
     width: 100%;

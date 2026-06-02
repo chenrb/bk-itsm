@@ -139,13 +139,15 @@
       :render-directive="'if'"
       :ext-cls="'bk-preview-overflow'">
       <field-preview :fields="previewTab"></field-preview>
-      <template #footer><div>
-        <bk-button
-          theme="default"
-          @click="processInfo.isShow = false">
-          {{ $t('m.home["取消"]') }}
-        </bk-button>
-      </div>
+      <template #footer>
+        <div>
+          <bk-button
+            theme="default"
+            @click="processInfo.isShow = false">
+            {{ $t('m.home["取消"]') }}
+          </bk-button>
+        </div>
+      </template>
     </bk-dialog>
     <!-- 新增字段 -->
     <bk-sideslider
@@ -154,21 +156,23 @@
       :title="sliderInfo.title"
       :width="sliderInfo.width"
       :before-close="handleBeforeClose">
-      <template #content><div class="p20" v-if="sliderInfo.show">
-        <add-field
-          :change-info="changeInfo"
-          :template-info="templateInfo"
-          :template-stage="templateStage"
-          :nodes-list="nodesList"
-          :add-origin="addOrigin"
-          :table-list="showTabList"
-          :is-edit-public="isEditPublic"
-          :workflow="flowInfo ? flowInfo.id : 0"
-          :state="configur.id ? configur.id : 0"
-          @change="isFormChanged = true"
-          @closeShade="closeShade">
-        </add-field>
-      </div>
+      <template #content>
+        <div class="p20" v-if="sliderInfo.show">
+          <add-field
+            :change-info="changeInfo"
+            :template-info="templateInfo"
+            :template-stage="templateStage"
+            :nodes-list="nodesList"
+            :add-origin="addOrigin"
+            :table-list="showTabList"
+            :is-edit-public="isEditPublic"
+            :workflow="flowInfo ? flowInfo.id : 0"
+            :state="configur.id ? configur.id : 0"
+            @change="isFormChanged = true"
+            @closeShade="closeShade">
+          </add-field>
+        </div>
+      </template>
     </bk-sideslider>
     <!-- 模型字段 -->
     <bk-dialog

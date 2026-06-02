@@ -133,10 +133,10 @@
       },
     },
     async created() {
-      bus.$on('showPermissionModal', (data) => {
+      bus.on('showPermissionModal', (data) => {
         this.$refs.permissionModal && this.$refs.permissionModal.show(data);
       });
-      bus.$on('togglePermissionApplyPage', (show, type, permission) => {
+      bus.on('togglePermissionApplyPage', (show, type, permission) => {
         this.permissinApplyShow = show;
         this.permissionData = {
           type,
@@ -311,7 +311,7 @@
         if (!verified) {
           await this.refreshPermissionInfo();
         } else {
-          bus.$emit('togglePermissionApplyPage', false);
+          bus.emit('togglePermissionApplyPage', false);
         }
       },
       // 刷新已有权限信息
@@ -320,9 +320,9 @@
         // await this.loadProjectInfo()
         const { verified, data } = this.checkPagePermission();
         if (!verified) {
-          bus.$emit('togglePermissionApplyPage', true, 'other', data);
+          bus.emit('togglePermissionApplyPage', true, 'other', data);
         } else {
-          bus.$emit('togglePermissionApplyPage', false);
+          bus.emit('togglePermissionApplyPage', false);
         }
         this.localLoading = false;
       },

@@ -126,9 +126,11 @@
               <template #default="props">
                 <bk-popover placement="top" trigger="click" theme="light" max-width="500px">
                   <span style="cursor: pointer;" :title="props.row.service_count || '0'">{{props.row.service_count || '0'}}</span>
-                  <template #content><div style="white-space: normal;">
-                    <p>{{ props.row.service_names.toString() }}</p>
-                  </div>
+                  <template #content>
+                    <div style="white-space: normal;">
+                      <p>{{ props.row.service_names.toString() }}</p>
+                    </div>
+                  </template>
                 </bk-popover>
               </template>
             </bk-table-column>

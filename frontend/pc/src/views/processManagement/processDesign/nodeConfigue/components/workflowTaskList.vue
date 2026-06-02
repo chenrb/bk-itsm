@@ -126,18 +126,20 @@
         theme="primary"
         width="660"
         :mask-close="false">
-        <template #header><div class="trigger-dialog-header">
-          <span>{{$t(`m.taskTemplate['选择任务模板']`)}}</span>
-          <div class="bk-search-key">
-            <bk-input
-              :clearable="true"
-              :right-icon="'bk-icon icon-search'"
-              v-model="taskDialogInfo.searchKey"
-              @enter="searchInfo"
-              @clear="clearSearch">
-            </bk-input>
+        <template #header>
+          <div class="trigger-dialog-header">
+            <span>{{$t(`m.taskTemplate['选择任务模板']`)}}</span>
+            <div class="bk-search-key">
+              <bk-input
+                :clearable="true"
+                :right-icon="'bk-icon icon-search'"
+                v-model="taskDialogInfo.searchKey"
+                @enter="searchInfo"
+                @clear="clearSearch">
+              </bk-input>
+            </div>
           </div>
-        </div>
+        </template>
         <div class="trigger-dialog-box" v-bkloading="{ isLoading: taskDialogInfo.listLoading }">
           <p class="dialog-none-content" v-if="taskDialogInfo.list.length === 0">
             <i class="bk-icon icon-info-circle"></i>
@@ -160,25 +162,27 @@
             </li>
           </ul>
         </div>
-        <template #footer><div class="trigger-dialog-footer">
-          <bk-checkbox :value="Boolean((taskDialogInfo.list.length === citeList.length) && taskDialogInfo.list.length)"
-            :ext-cls="'checkbox'"
-            :disabled="!taskDialogInfo.list.length"
-            @change="selectAllFn">{{$t(`m.taskTemplate['全选']`)}}</bk-checkbox>
-          <span>{{$t(`m.taskTemplate['已选']`)}}<span>{{citeList.length}}</span>个</span>
-          <bk-button theme="primary"
-            class="mr10"
-            :title="$t(`m.taskTemplate['确定']`)"
-            @click="citeTask">
-            {{$t(`m.taskTemplate['确定']`)}}
-          </bk-button>
-          <bk-button theme="default"
-            class="mr10"
-            :title="$t(`m.taskTemplate['取消']`)"
-            @click="initDialogInfo">
-            {{$t(`m.taskTemplate['取消']`)}}
-          </bk-button>
-        </div>
+        <template #footer>
+          <div class="trigger-dialog-footer">
+            <bk-checkbox :value="Boolean((taskDialogInfo.list.length === citeList.length) && taskDialogInfo.list.length)"
+              :ext-cls="'checkbox'"
+              :disabled="!taskDialogInfo.list.length"
+              @change="selectAllFn">{{$t(`m.taskTemplate['全选']`)}}</bk-checkbox>
+            <span>{{$t(`m.taskTemplate['已选']`)}}<span>{{citeList.length}}</span>个</span>
+            <bk-button theme="primary"
+              class="mr10"
+              :title="$t(`m.taskTemplate['确定']`)"
+              @click="citeTask">
+              {{$t(`m.taskTemplate['确定']`)}}
+            </bk-button>
+            <bk-button theme="default"
+              class="mr10"
+              :title="$t(`m.taskTemplate['取消']`)"
+              @click="initDialogInfo">
+              {{$t(`m.taskTemplate['取消']`)}}
+            </bk-button>
+          </div>
+        </template>
       </bk-dialog>
     </template>
   </div>

@@ -122,9 +122,11 @@
         :title="customSettings.title"
         :quick-close="true"
         :width="customSettings.width">
-        <template #content><div class="p20" v-if="customSettings.isShow">
-          <logs-info :logs-object="customSettings.logsObject"></logs-info>
-        </div>
+        <template #content>
+          <div class="p20" v-if="customSettings.isShow">
+            <logs-info :logs-object="customSettings.logsObject"></logs-info>
+          </div>
+        </template>
       </bk-sideslider>
     </div>
   </div>

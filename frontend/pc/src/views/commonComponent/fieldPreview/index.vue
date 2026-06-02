@@ -22,15 +22,15 @@
 
 <template>
   <div class="field-view">
-    <template v-for="(item, index) in cloneFields">
-      <li v-if="item.type === 'TABLE'" style="width: 100%; margin-bottom: 10px;" :key="index">
+    <template v-for="(item, index) in cloneFields" :key="index">
+      <li v-if="item.type === 'TABLE'" style="width: 100%; margin-bottom: 10px;">
         <span class="bk-li-left">{{item.name}}：</span>
         <div class="bk-form-content bk-over-more" style="margin-left: 0px; overflow: hidden; width: 100%;">
           <bk-table :data="item.value"
             :size="'small'"
             :max-height="450">
-            <template v-for="title in item.choice">
-              <bk-table-column :label="title.name" :key="title.key">
+            <template v-for="title in item.choice" :key="title.key">
+              <bk-table-column :label="title.name">
                 <template #default="props">
                   <span :title="props.row[title.key]">{{ props.row[title.key] }}</span>
                 </template>
@@ -39,13 +39,13 @@
           </bk-table>
         </div>
       </li>
-      <li v-else-if="item.type === 'CUSTOMTABLE'" style="width: 100%; margin-bottom: 10px;" :key="index">
+      <li v-else-if="item.type === 'CUSTOMTABLE'" style="width: 100%; margin-bottom: 10px;">
         <span class="bk-li-left">{{item.name}}：</span>
         <div class="bk-form-content bk-over-more" style="margin-left: 0px; overflow: hidden; width: 100%;">
           <bk-table :data="item.value"
             :size="'small'">
-            <template v-for="column in item.meta.columns">
-              <bk-table-column :label="column.name" :key="column.key">
+            <template v-for="column in item.meta.columns" :key="column.key">
+              <bk-table-column :label="column.name">
                 <template #default="props">
                   <span :title="props.row[column.key]">{{ getCustomTableDisplayValue(column, props.row) || '--' }}</span>
                 </template>
@@ -55,8 +55,7 @@
         </div>
       </li>
       <li v-else-if="item.type === 'FILE'"
-        :class="{ 'bk-big-width': item.layout === 'COL_12' }"
-        :key="index">
+        :class="{ 'bk-big-width': item.layout === 'COL_12' }">
         <div v-for="(file, ind) in item.fileShow" :key="ind">
           <p style="line-height: 30px;">
             <span class="bk-li-left"><span v-if="ind === 0">{{item.name}}：</span></span>
@@ -69,16 +68,14 @@
         </div>
       </li>
       <li v-else-if="item.type === 'RICHTEXT'"
-        :class="{ 'bk-big-width': item.layout === 'COL_12' }"
-        :key="index">
+        :class="{ 'bk-big-width': item.layout === 'COL_12' }">
         <span class="bk-li-left" style="float: initial;">{{item.name}}：</span>
         <div class="bk-li-right">
           <RichTextEditor :is-preview="true" :value="item.value" />
         </div>
       </li>
       <li v-else-if="item.type === 'TEXT'"
-        :class="{ 'bk-big-width': item.layout === 'COL_12' }"
-        :key="index">
+        :class="{ 'bk-big-width': item.layout === 'COL_12' }">
         <span class="bk-li-left" style="float: initial;">{{item.name}}：</span>
         <span class="bk-li-right"
           :title="item.display_value">
@@ -87,13 +84,12 @@
       </li>
       <li v-else-if="item.type === 'LINK'"
         :class="{ 'bk-big-width': item.layout === 'COL_12' }"
-        :key="index" :title="item.value">
+        :title="item.value">
         <span class="bk-li-left">{{item.name}}：</span>
         <span class="bk-pot-after bk-li-link" @click="goToLink(item.value)">{{ $t('m.newCommon["点击查看"]') }}</span>
       </li>
       <li v-else-if="item.type === 'CUSTOM-FORM'"
-        :class="{ 'bk-big-width': item.layout === 'COL_12' }"
-        :key="index">
+        :class="{ 'bk-big-width': item.layout === 'COL_12' }">
         <div class="bk-li-left">{{item.name}}：</div>
         <div style="clear: left;">
           <render-view
@@ -103,8 +99,7 @@
         </div>
       </li>
       <li v-else
-        :class="{ 'bk-big-width': item.layout === 'COL_12' }"
-        :key="index">
+        :class="{ 'bk-big-width': item.layout === 'COL_12' }">
         <span class="bk-li-left">{{item.name}}：</span>
         <span class="bk-li-right"
           :title="item.display_value">{{item.display_value || item.value || '--'}}</span>

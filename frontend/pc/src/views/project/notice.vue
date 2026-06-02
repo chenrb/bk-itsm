@@ -65,14 +65,16 @@
             </bk-button>
           </template>
         </bk-table-column>
-        <template #empty><div class="empty">
-          <empty
-            :is-error="listError"
-            :is-search="searchToggle"
-            @onRefresh="getNoticeList()"
-            @onClearSearch="getNoticeList()">
-          </empty>
-        </div>
+        <template #empty>
+          <div class="empty">
+            <empty
+              :is-error="listError"
+              :is-search="searchToggle"
+              @onRefresh="getNoticeList()"
+              @onClearSearch="getNoticeList()">
+            </empty>
+          </div>
+        </template>
       </bk-table>
       <bk-dialog v-model="isShowEdit"
         width="690"

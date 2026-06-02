@@ -127,10 +127,9 @@
     <div v-show="crtForm" class="edit-service-field">
       <div class="edit-service-title">{{$t(`m['字段属性']`) }}</div>
       <div class="edit-service-forms">
-        <template v-for="form in ticketNodeForm">
+        <template v-for="form in ticketNodeForm" :key="form.id">
           <form-edit-item
             v-if="form.id === crtForm"
-            :key="form.id"
             :fields="ticketNodeForm"
             :form="form"
             :workflow-id="serviceInfo.workflow_id"
@@ -224,31 +223,33 @@
   import FormEditItem from './FormEditItem.vue';
   import i18n from '@/i18n/index.js';
 
+  const t = i18n.global.t.bind(i18n.global);
+
   const fieldsLibrary = [
-    { name: i18n.t('m[\'单行文本\']'), icon: 'icon-apps', type: 'STRING' },
-    { name: i18n.t('m[\'多行文本\']'), icon: 'icon-apps', type: 'TEXT' },
-    { name: i18n.t('m[\'数字\']'), icon: 'icon-apps', type: 'INT' },
-    { name: i18n.t('m[\'日期\']'), icon: 'icon-apps', type: 'DATE' },
-    { name: i18n.t('m[\'时间\']'), icon: 'icon-apps', type: 'DATETIME' },
-    { name: i18n.t('m[\'表格\']'), icon: 'icon-apps', type: 'TABLE' },
-    { name: i18n.t('m[\'单选下拉框\']'), icon: 'icon-apps', type: 'SELECT' },
-    { name: i18n.t('m[\'可输入单选下拉框\']'), icon: 'icon-apps', type: 'INPUTSELECT' },
-    { name: i18n.t('m[\'多选下拉框\']'), icon: 'icon-apps', type: 'MULTISELECT' },
-    { name: i18n.t('m[\'复选框\']'), icon: 'icon-apps', type: 'CHECKBOX' },
-    { name: i18n.t('m[\'单选框\']'), icon: 'icon-apps', type: 'RADIO' },
-    { name: i18n.t('m[\'单选人员选择\']'), icon: 'icon-apps', type: 'MEMBER' },
-    { name: i18n.t('m[\'多选人员选择\']'), icon: 'icon-apps', type: 'MEMBERS' },
-    { name: i18n.t('m[\'富文本\']'), icon: 'icon-apps', type: 'RICHTEXT' },
-    { name: i18n.t('m[\'附件上传\']'), icon: 'icon-apps', type: 'FILE' },
-    { name: i18n.t('m[\'自定义表格\']'), icon: 'icon-apps', type: 'CUSTOMTABLE' },
-    { name: i18n.t('m[\'树形选择\']'), icon: 'icon-apps', type: 'TREESELECT' },
-    { name: i18n.t('m[\'链接\']'), icon: 'icon-apps', type: 'LINK' },
-    { name: i18n.t('m[\'自定义表单\']'), icon: 'icon-apps', type: 'CUSTOM-FORM' },
+    { name: t('m[\'单行文本\']'), icon: 'icon-apps', type: 'STRING' },
+    { name: t('m[\'多行文本\']'), icon: 'icon-apps', type: 'TEXT' },
+    { name: t('m[\'数字\']'), icon: 'icon-apps', type: 'INT' },
+    { name: t('m[\'日期\']'), icon: 'icon-apps', type: 'DATE' },
+    { name: t('m[\'时间\']'), icon: 'icon-apps', type: 'DATETIME' },
+    { name: t('m[\'表格\']'), icon: 'icon-apps', type: 'TABLE' },
+    { name: t('m[\'单选下拉框\']'), icon: 'icon-apps', type: 'SELECT' },
+    { name: t('m[\'可输入单选下拉框\']'), icon: 'icon-apps', type: 'INPUTSELECT' },
+    { name: t('m[\'多选下拉框\']'), icon: 'icon-apps', type: 'MULTISELECT' },
+    { name: t('m[\'复选框\']'), icon: 'icon-apps', type: 'CHECKBOX' },
+    { name: t('m[\'单选框\']'), icon: 'icon-apps', type: 'RADIO' },
+    { name: t('m[\'单选人员选择\']'), icon: 'icon-apps', type: 'MEMBER' },
+    { name: t('m[\'多选人员选择\']'), icon: 'icon-apps', type: 'MEMBERS' },
+    { name: t('m[\'富文本\']'), icon: 'icon-apps', type: 'RICHTEXT' },
+    { name: t('m[\'附件上传\']'), icon: 'icon-apps', type: 'FILE' },
+    { name: t('m[\'自定义表格\']'), icon: 'icon-apps', type: 'CUSTOMTABLE' },
+    { name: t('m[\'树形选择\']'), icon: 'icon-apps', type: 'TREESELECT' },
+    { name: t('m[\'链接\']'), icon: 'icon-apps', type: 'LINK' },
+    { name: t('m[\'自定义表单\']'), icon: 'icon-apps', type: 'CUSTOM-FORM' },
   ];
   const serviceFormCreateWays = [
-    { name: i18n.t('m[\'选择推荐服务模板\']'), key: 'recom', icon: 'icon-apps' },
-    { name: i18n.t('m[\'从已有的服务复制\']'), key: 'created', icon: 'icon-apps' },
-    { name: i18n.t('m[\'自定义表单\']'), key: 'custom', icon: 'icon-apps' },
+    { name: t('m[\'选择推荐服务模板\']'), key: 'recom', icon: 'icon-apps' },
+    { name: t('m[\'从已有的服务复制\']'), key: 'created', icon: 'icon-apps' },
+    { name: t('m[\'自定义表单\']'), key: 'custom', icon: 'icon-apps' },
   ];
   export default {
     name: 'ServiceFormStep',
@@ -818,8 +819,8 @@
   };
 </script>
 <style lang='scss' scoped>
-@import '~@/scss/mixins/scroller.scss';
-@import '~@/scss/mixins/ellipsis.scss';
+@import '@/scss/mixins/scroller.scss';
+@import '@/scss/mixins/ellipsis.scss';
 .field-tab {
     ::v-deep  .bk-tab-label-wrapper {
         display: flex;

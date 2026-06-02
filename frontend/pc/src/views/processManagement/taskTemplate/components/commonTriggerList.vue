@@ -62,10 +62,12 @@
                       <i class="bk-icon icon-plus"></i>
                     </div>
                     </template>
-                    <template #dropdown-content><ul class="bk-dropdown-list">
-                      <li><a href="javascript:;" data-test-id="taskTemplate-li-addTrigger" @click="openNew('add')">{{$t(`m.taskTemplate['新建']`)}}</a></li>
-                      <li><a href="javascript:;" data-test-id="taskTemplate-li-quoteCommonTrigger" @click="openNew('cite')">{{$t(`m.taskTemplate['引用公共触发器']`)}}</a></li>
-                    </ul>
+                    <template #dropdown-content>
+                      <ul class="bk-dropdown-list">
+                        <li><a href="javascript:;" data-test-id="taskTemplate-li-addTrigger" @click="openNew('add')">{{$t(`m.taskTemplate['新建']`)}}</a></li>
+                        <li><a href="javascript:;" data-test-id="taskTemplate-li-quoteCommonTrigger" @click="openNew('cite')">{{$t(`m.taskTemplate['引用公共触发器']`)}}</a></li>
+                      </ul>
+                    </template>
                   </bk-dropdown-menu>
                 </ul>
               </div>
@@ -79,18 +81,20 @@
           theme="primary"
           width="660"
           :mask-close="false">
-          <template #header><div class="trigger-dialog-header">
-            <span>{{$t(`m.taskTemplate['引用公共触发器']`)}}</span>
-            <div class="bk-search-key">
-              <bk-input
-                :clearable="true"
-                :right-icon="'bk-icon icon-search'"
-                v-model="triggerDialogInfo.searchKey"
-                @enter="searchInfo"
-                @clear="clearSearch">
-              </bk-input>
+          <template #header>
+            <div class="trigger-dialog-header">
+              <span>{{$t(`m.taskTemplate['引用公共触发器']`)}}</span>
+              <div class="bk-search-key">
+                <bk-input
+                  :clearable="true"
+                  :right-icon="'bk-icon icon-search'"
+                  v-model="triggerDialogInfo.searchKey"
+                  @enter="searchInfo"
+                  @clear="clearSearch">
+                </bk-input>
+              </div>
             </div>
-          </div>
+          </template>
           <div class="trigger-dialog-box" v-bkloading="{ isLoading: triggerDialogInfo.listLoading }">
             <p class="dialog-none-content" v-if="triggerDialogInfo.list.length === 0">
               <i class="bk-icon icon-info-circle"></i>
@@ -115,27 +119,29 @@
               </ul>
             </template>
           </div>
-          <template #footer><div class="trigger-dialog-footer">
-            <bk-checkbox :value="Boolean((triggerDialogInfo.list.length === citeList.length) && triggerDialogInfo.list.length)"
-              :ext-cls="'checkbox'"
-              :disabled="!triggerDialogInfo.list.length"
-              @change="selectAllFn">{{$t(`m.taskTemplate['全选']`)}}</bk-checkbox>
-            <span>{{$t(`m.taskTemplate['已选']`)}}<span>{{citeList.length}}</span>个</span>
-            <bk-button theme="primary"
-              data-test-id="common-trigger-confirm"
-              class="mr10"
-              :title="$t(`m.taskTemplate['确定']`)"
-              :disabled="citeList.length === 0"
-              @click="citeTrigger">
-              {{$t(`m.taskTemplate['确定']`)}}
-            </bk-button>
-            <bk-button theme="default"
-              class="mr10"
-              :title="$t(`m.taskTemplate['取消']`)"
-              @click="initDialogInfo">
-              {{$t(`m.taskTemplate['取消']`)}}
-            </bk-button>
-          </div>
+          <template #footer>
+            <div class="trigger-dialog-footer">
+              <bk-checkbox :value="Boolean((triggerDialogInfo.list.length === citeList.length) && triggerDialogInfo.list.length)"
+                :ext-cls="'checkbox'"
+                :disabled="!triggerDialogInfo.list.length"
+                @change="selectAllFn">{{$t(`m.taskTemplate['全选']`)}}</bk-checkbox>
+              <span>{{$t(`m.taskTemplate['已选']`)}}<span>{{citeList.length}}</span>个</span>
+              <bk-button theme="primary"
+                data-test-id="common-trigger-confirm"
+                class="mr10"
+                :title="$t(`m.taskTemplate['确定']`)"
+                :disabled="citeList.length === 0"
+                @click="citeTrigger">
+                {{$t(`m.taskTemplate['确定']`)}}
+              </bk-button>
+              <bk-button theme="default"
+                class="mr10"
+                :title="$t(`m.taskTemplate['取消']`)"
+                @click="initDialogInfo">
+                {{$t(`m.taskTemplate['取消']`)}}
+              </bk-button>
+            </div>
+          </template>
         </bk-dialog>
       </template>
       <!-- 新增触发器 -->
@@ -146,17 +152,19 @@
           :width="triggerSliderInfo.width"
           :quick-close="true"
           :before-close="handleBeforeClose">
-          <template #content><div v-bkloading="{ isLoading: triggerSliderInfo.addLoading }" style="min-height: 300px;">
-            <add-trigger
-              v-if="triggerSliderInfo.isShow"
-              :node-type="nodeType"
-              :trigger-info="triggerSliderInfo.item"
-              :origin-info-to-trigger="originInfoToTrigger"
-              @closeTrigger="triggerSliderInfo.isShow = false"
-              @getList="getBoundTriggerList"
-              @change="isFormChanged = true">
-            </add-trigger>
-          </div>
+          <template #content>
+            <div v-bkloading="{ isLoading: triggerSliderInfo.addLoading }" style="min-height: 300px;">
+              <add-trigger
+                v-if="triggerSliderInfo.isShow"
+                :node-type="nodeType"
+                :trigger-info="triggerSliderInfo.item"
+                :origin-info-to-trigger="originInfoToTrigger"
+                @closeTrigger="triggerSliderInfo.isShow = false"
+                @getList="getBoundTriggerList"
+                @change="isFormChanged = true">
+              </add-trigger>
+            </div>
+          </template>
         </bk-sideslider>
       </template>
     </div>
@@ -505,7 +513,7 @@
 <style lang='scss' scoped>
     @import '../../publicTrigger/triggerCss/index';
     @import '../taskCss/commonTrigger';
-    @import '~@/scss/common-section-card.scss';
+    @import '@/scss/common-section-card.scss';
     .trigger-dropdown.bk-dropdown-menu {
       float: left;
       cursor: pointer;

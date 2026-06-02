@@ -84,12 +84,14 @@
           </bk-button>
         </template>
       </bk-table-column>
-      <template #empty><div class="empty">
-        <empty
-          :is-error="listError"
-          @onRefresh="getAssociatesHistory()">
-        </empty>
-      </div>
+      <template #empty>
+        <div class="empty">
+          <empty
+            :is-error="listError"
+            @onRefresh="getAssociatesHistory()">
+          </empty>
+        </div>
+      </template>
     </bk-table>
     <!-- 查看关联历史 -->
     <bk-dialog
@@ -125,19 +127,23 @@
             :label="$t(`m.newCommon['解绑时间']`)"
             prop="end_at"
           ></bk-table-column>
-          <template #empty><div class="empty">
-            <empty
-              :is-error="historyListError"
-              @onRefresh="getAssociates()">
-            </empty>
-          </div>
+          <template #empty>
+            <div class="empty">
+              <empty
+                :is-error="historyListError"
+                @onRefresh="getAssociates()">
+              </empty>
+            </div>
+          </template>
         </bk-table>
       </div>
-      <template #footer><div>
-        <bk-button theme="default" @click="closeHistory">
-          {{ $t('m.home["取消"]') }}
-        </bk-button>
-      </div>
+      <template #footer>
+        <div>
+          <bk-button theme="default" @click="closeHistory">
+            {{ $t('m.home["取消"]') }}
+          </bk-button>
+        </div>
+      </template>
     </bk-dialog>
 
     <bk-sideslider
@@ -147,16 +153,18 @@
       :before-close="closeSideslider"
       :width="750"
     >
-      <template #content><div class="p20">
-        <associated-dialog
-          ref="associated"
-          v-if="isShowAddAssociation"
-          :ticket-info="ticketInfo"
-          @close="isShowAddAssociation = false"
-          @submitSuccess="submitSuccess"
-        >
-        </associated-dialog>
-      </div>
+      <template #content>
+        <div class="p20">
+          <associated-dialog
+            ref="associated"
+            v-if="isShowAddAssociation"
+            :ticket-info="ticketInfo"
+            @close="isShowAddAssociation = false"
+            @submitSuccess="submitSuccess"
+          >
+          </associated-dialog>
+        </div>
+      </template>
     </bk-sideslider>
   </div>
 </template>

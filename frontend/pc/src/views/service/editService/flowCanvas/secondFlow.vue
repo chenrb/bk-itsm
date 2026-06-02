@@ -63,15 +63,17 @@
         v-model:is-show="customLine.isShow"
         :title="customLine.title"
         :width="customLine.width">
-        <template #content><div v-if="customLine.isShow">
-          <lineConfigue
-            :custom-line="customLine"
-            :flow-info="flowInfo"
-            @submitLine="submitLine"
-            @closeLine="closeLine"
-            @deleteLine="deleteLine">
-          </lineConfigue>
-        </div>
+        <template #content>
+          <div v-if="customLine.isShow">
+            <lineConfigue
+              :custom-line="customLine"
+              :flow-info="flowInfo"
+              @submitLine="submitLine"
+              @closeLine="closeLine"
+              @deleteLine="deleteLine">
+            </lineConfigue>
+          </div>
+        </template>
       </bk-sideslider>
     </div>
   </div>

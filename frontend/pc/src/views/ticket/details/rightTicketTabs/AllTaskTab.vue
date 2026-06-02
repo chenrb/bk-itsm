@@ -70,36 +70,42 @@
           </bk-button>
         </template>
       </bk-table-column>
-      <template #empty><div class="empty">
-        <empty
-          :is-error="listError"
-          @onRefresh="getTaskList()">
-        </empty>
-      </div>
+      <template #empty>
+        <div class="empty">
+          <empty
+            :is-error="listError"
+            @onRefresh="getTaskList()">
+          </empty>
+        </div>
+      </template>
     </bk-table>
     <bk-sideslider
       v-model:is-show="dealTaskInfo.show"
       :quick-close="true"
       :width="800"
     >
-      <template #header><div>
-        <task-handle-trigger
-          v-if="dealTaskInfo.show"
-          :task-info="dealTaskInfo.itemContent"
-          :title="dealTaskInfo.title"
-          @close-slider="dealTaskInfo.show = false"
-        ></task-handle-trigger>
-      </div>
-      <template #content><div style="min-height: 300px">
-        <deal-task
-          v-if="dealTaskInfo.show"
-          :deal-type="dealTaskInfo.type"
-          :task-info="dealTaskInfo.itemContent"
-          :basic-infomation="ticketInfo"
-          @close="dealTaskInfo.show = false"
-        >
-        </deal-task>
-      </div>
+      <template #header>
+        <div>
+          <task-handle-trigger
+            v-if="dealTaskInfo.show"
+            :task-info="dealTaskInfo.itemContent"
+            :title="dealTaskInfo.title"
+            @close-slider="dealTaskInfo.show = false"
+          ></task-handle-trigger>
+        </div>
+      </template>
+      <template #content>
+        <div style="min-height: 300px">
+          <deal-task
+            v-if="dealTaskInfo.show"
+            :deal-type="dealTaskInfo.type"
+            :task-info="dealTaskInfo.itemContent"
+            :basic-infomation="ticketInfo"
+            @close="dealTaskInfo.show = false"
+          >
+          </deal-task>
+        </div>
+      </template>
     </bk-sideslider>
   </div>
 </template>

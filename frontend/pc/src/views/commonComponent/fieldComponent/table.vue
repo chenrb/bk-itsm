@@ -25,8 +25,8 @@
     <bk-form-item :label="item.name" :required="item.validate_type === 'REQUIRE'" :desc="{ content: item.tips, allowHTML: false }" desc-type="icon">
       <bk-table :data="item.val"
         :size="'small'">
-        <template v-for="title in item.choice">
-          <bk-table-column :label="title.name" :key="title.key">
+        <template v-for="title in item.choice" :key="title.key">
+          <bk-table-column :label="title.name">
             <template #default="props">
               <bk-input :clearable="true" v-model="props.row[title.key]" :disabled="disabled"></bk-input>
             </template>

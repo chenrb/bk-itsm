@@ -133,6 +133,16 @@
 - 创建 3 个 DROP TABLE 迁移：`workflow/0053`、`service/0032`、`project/0008`
 - 修复 `service/models.py` 预存 `for ... in X):` 语法错误
 
+### P2-18: 前端 Vue 3 编译与运行时错误修复
+- 详见 [`frontend-vue3-fixes.md`](./frontend-vue3-fixes.md)
+- 依赖：`package.json` 加 `less`；`public/js/renderform/` 静态资源
+- SCSS 路径：`bk-new-change.scss` 修正、全局 `~@/` → `@/`
+- ~90 个 `.vue` 文件：`<template #slot>` 闭合标签、`:key` 移到 `<template v-for>` 上
+- 30 个文件：`i18n.t(` → `t(`（vue-i18n v9 用 `i18n.global.t`）
+- 8 个文件：`bus.$on/emit/off` → `bus.on/emit/off`（mitt API）
+- Vue 2 遗留：移除 `router/index.js` 的 `Vue.use(Router)`、`change.js` 未用 i18n import
+- 验证：295 个 `.vue` 文件全部编译通过
+
 ## 总影响
 
 | 指标 | 数值 |

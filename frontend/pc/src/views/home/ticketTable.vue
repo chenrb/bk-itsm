@@ -54,14 +54,16 @@
                       class="bk-current-step">
                       {{props.row.current_steps[0].name}}
                     </span>
-                    <template #content><div style="max-width: 200px;">
-                      <span class="bk-current-step auto-width"
-                        style=""
-                        v-for="(othernode, otherNodeIndex) in props.row.current_steps"
-                        :key="otherNodeIndex">
-                        {{othernode.name}}
-                      </span>
-                    </div>
+                    <template #content>
+                      <div style="max-width: 200px;">
+                        <span class="bk-current-step auto-width"
+                          style=""
+                          v-for="(othernode, otherNodeIndex) in props.row.current_steps"
+                          :key="otherNodeIndex">
+                          {{othernode.name}}
+                        </span>
+                      </div>
+                    </template>
                   </bk-popover>
                 </div>
                 <span v-else>--</span>
@@ -108,26 +110,28 @@
   import { useTicketList } from '@/composables/useTicketList';
   import { errorHandler } from '../../utils/errorHandler';
 
+  const t = i18n.global.t.bind(i18n.global);
+
   const PANELS = [
     {
       name: 'todo',
       id: 'myTodoTicket',
-      label: i18n.t('m.managePage[\'我的待办\']'),
+      label: t('m.managePage[\'我的待办\']'),
     },
     {
       name: 'approval',
       id: 'myApprovalTicket',
-      label: i18n.t('m.home[\'待我审批\']'),
+      label: t('m.home[\'待我审批\']'),
     },
     {
       name: 'created',
       id: 'myCreatedTicket',
-      label: i18n.t('m.home[\'我的申请\']'),
+      label: t('m.home[\'我的申请\']'),
     },
     {
       name: 'attention',
       id: 'myAttentionTicket',
-      label: i18n.t('m.home[\'我的关注\']'),
+      label: t('m.home[\'我的关注\']'),
     },
   ];
 

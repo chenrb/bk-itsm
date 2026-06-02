@@ -32,10 +32,12 @@
           :clearable="false"
           @toggle="onServicePanelToggle"
           @selected="onServiceChange">
-          <template #trigger><div class="selected-service" :class="{ 'panel-open': isServicePanelShow }">
-            <span class="service-name">{{ serviceName }}</span>
-            <i class="bk-icon icon-down-shape trigger-icon"></i>
-          </div>
+          <template #trigger>
+            <div class="selected-service" :class="{ 'panel-open': isServicePanelShow }">
+              <span class="service-name">{{ serviceName }}</span>
+              <i class="bk-icon icon-down-shape trigger-icon"></i>
+            </div>
+          </template>
           <bk-option v-for="option in serviceList"
             :key="option.id"
             :id="option.id"
@@ -128,6 +130,8 @@
   import LineChart from './components/lineChart.vue';
   import i18n from '@/i18n/index.js';
 
+  const t = i18n.global.t.bind(i18n.global);
+
   const FORMAT = 'YYYY-MM-DD';
 
   const CREATOR_TABLE_COLUMNS = [
@@ -139,15 +143,15 @@
     },
     {
       key: 'creator',
-      name: i18n.t('m[\'用户ID\']'),
+      name: t('m[\'用户ID\']'),
     },
     {
       key: 'organization',
-      name: i18n.t('m[\'所在组织\']'),
+      name: t('m[\'所在组织\']'),
     },
     {
       key: 'count',
-      name: i18n.t('m[\'提单量\']'),
+      name: t('m[\'提单量\']'),
       colorMark: true,
       align: 'right',
       width: 120,

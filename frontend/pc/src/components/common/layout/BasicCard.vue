@@ -88,5 +88,5 @@
   };
 </script>
 <style lang='scss' scoped>
-@import '~@/scss/common-section-card.scss';
+@import '@/scss/common-section-card.scss';
 </style>

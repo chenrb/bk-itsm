@@ -95,7 +95,7 @@
     },
     methods: {
       handleCreateProject() {
-        bus.$emit('openCreateProjectDialog');
+        bus.emit('openCreateProjectDialog');
       },
       async handleApplyProject() {
         const projectInfo = this.$store.state.project.projectInfo;

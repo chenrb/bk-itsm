@@ -142,6 +142,7 @@
                 <tr v-for="(tr, trIndex) in item.value" :key="trIndex">
                   <td v-for="(column, columnIndex) in item.meta.columns" :key="columnIndex">
                     <template v-for="key in Object.keys(tr)"
+                      :key="key"
                       v-if="key === column.key"
                       :title="tr[key]">
                       {{getCustomTableDisplayValue(column, tr) || '--'}}
@@ -285,6 +286,7 @@
                     <tr v-for="(tr, trIndex) in it.value" :key="trIndex">
                       <td v-for="(column, indexColumns) in it.meta.columns" :key="indexColumns">
                         <template v-for="key in Object.keys(tr)"
+                          :key="key"
                           v-if="key === column.key"
                           :title="tr[key]">
                           {{getCustomTableDisplayValue(column, tr) || '--'}}

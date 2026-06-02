@@ -43,7 +43,7 @@ if (location.hash.indexOf('token') !== -1) {
   const token = location.hash.split('token=')[1].split('&')[0];
   sessionStorage.setItem('itsm_token', token);
 }
-bus.$on('processData', (response) => {
+bus.on('processData', (response) => {
   const permissions = response.data.permission;
   let isViewApply = false;
   let viewType = 'other';
@@ -54,9 +54,9 @@ bus.$on('processData', (response) => {
     isViewApply = permissions.actions.some((item) => ['project_view', 'operational_data_view'].includes(item.id));
   }
   if (isViewApply) {
-    bus.$emit('togglePermissionApplyPage', true, viewType, permissions);
+    bus.emit('togglePermissionApplyPage', true, viewType, permissions);
   } else {
-    bus.$emit('showPermissionModal', permissions);
+    bus.emit('showPermissionModal', permissions);
   }
 });
 
@@ -132,26 +132,26 @@ instance.interceptors.response.use(
         }
         case 403: {
           // 权限控制
-          bus.$emit('api-error:user-permission-denied');
+          bus.emit('api-error:user-permission-denied');
           break;
         }
         case 502: {
-          bus.$emit('api-error:application-deployed');
+          bus.emit('api-error:application-deployed');
           break;
         }
         case 499: {
           if (response.config.url.match(/ticket\/receipts\/[0-9]+\//)) {
             if ('step_id' in response.config.params) {
               if (response.config.params.step_id) {
-                bus.$emit('getIsProcessStatus', response);
+                bus.emit('getIsProcessStatus', response);
               } else {
-                bus.$emit('processData', response);
+                bus.emit('processData', response);
               }
             } else {
-              bus.$emit('processData', response);
+              bus.emit('processData', response);
             }
           } else {
-            bus.$emit('processData', response);
+            bus.emit('processData', response);
           }
           break;
         }
@@ -188,7 +188,7 @@ instance.interceptors.response.use(
       }
 
       if (response.data.code === 'NGINX_SETTING_ERROR') {
-        bus.$emit('show-nginx-modal');
+        bus.emit('show-nginx-modal');
       }
 
       return Promise.reject(response);

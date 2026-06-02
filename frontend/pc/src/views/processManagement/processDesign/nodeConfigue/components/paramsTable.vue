@@ -32,16 +32,18 @@
             :disabled="!props.row.value"
             :ext-cls="props.row.value ? 'show-tippy' : ''"
             :transfer="true">
-            <template #content><div class="params-select-value">
-              <ul class="params-select">
-                <li v-for="(item, index) in wwwFormData"
-                  :key="index"
-                  @click="handleSelectContent(item)">
-                  {{item.name}}
-                  <span class="variable-key">({{item.key}})</span>
-                </li>
-              </ul>
-            </div>
+            <template #content>
+              <div class="params-select-value">
+                <ul class="params-select">
+                  <li v-for="(item, index) in wwwFormData"
+                    :key="index"
+                    @click="handleSelectContent(item)">
+                    {{item.name}}
+                    <span class="variable-key">({{item.key}})</span>
+                  </li>
+                </ul>
+              </div>
+            </template>
           </bk-popover>
         </template>
       </bk-table-column>

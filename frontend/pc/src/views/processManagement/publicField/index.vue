@@ -199,14 +199,16 @@
               </bk-button>
             </template>
           </bk-table-column>
-          <template #empty><div class="empty">
-            <empty
-              :is-error="listError"
-              :is-search="!searchToggle"
-              @onRefresh="getList()"
-              @onClearSearch="clearSearch()">
-            </empty>
-          </div>
+          <template #empty>
+            <div class="empty">
+              <empty
+                :is-error="listError"
+                :is-search="!searchToggle"
+                @onRefresh="getList()"
+                @onClearSearch="clearSearch()">
+              </empty>
+            </div>
+          </template>
         </bk-table>
       </template>
     </div>
@@ -218,18 +220,20 @@
         :quick-close="true"
         :before-close="closeSideslider"
         :width="sliderInfo.width">
-        <template #content><div class="p20" v-if="sliderInfo.show">
-          <add-field
-            ref="addField"
-            :change-info="changeInfo"
-            :table-list="listInfo"
-            :is-edit-public="isEditPublic"
-            :workflow="workflow"
-            :add-origin="addOrigin"
-            :state="stateId"
-            @closeShade="closeShade">
-          </add-field>
-        </div>
+        <template #content>
+          <div class="p20" v-if="sliderInfo.show">
+            <add-field
+              ref="addField"
+              :change-info="changeInfo"
+              :table-list="listInfo"
+              :is-edit-public="isEditPublic"
+              :workflow="workflow"
+              :add-origin="addOrigin"
+              :state="stateId"
+              @closeShade="closeShade">
+            </add-field>
+          </div>
+        </template>
       </bk-sideslider>
     </div>
   </div>
@@ -248,6 +252,8 @@
   import fieldSvg from '../../../images/illustration/field.svg';
   import useFieldSvg from '../../../images/illustration/use-field.svg';
 
+  const t = i18n.global.t.bind(i18n.global);
+
   export default {
     name: 'publicField',
     components: {
@@ -261,7 +267,7 @@
       projectId: String,
       title: {
         type: String,
-        default: i18n.t('m[\'字段\']'),
+        default: t('m[\'字段\']'),
       },
     },
     data() {

@@ -78,29 +78,31 @@
               class="bk-processor-check">
               {{ nodeInfo.is_sequential ? $t(`m.newCommon['点击查看']`) : $t(`m.newCommon['查看会签顺序']`) }}
             </span>
-            <template #content><div class="bk-processor-content">
-              <div v-for="(processor, pIndex) in nodeInfo.tasks" :key="pIndex" class="bk-processor-one">
-                <div v-if="nodeInfo.is_sequential && pIndex" class="bk-arrow">
-                  <i class="bk-itsm-icon icon-arrow-long arrow-cus"></i>
-                </div>
-                <div class="bk-processor-span">
-                  <span class="mr5 ml5">{{processor.processor}}</span>
-                  <span>
-                    <i v-if="processor.status === 'FINISHED'"
-                      class="bk-itsm-icon icon-icon-finish icon-icon-finish-cus"></i>
-                    <span
-                      v-if="nodeInfo.is_sequential
-                        && processor.status === 'WAIT'
-                        && ((nodeInfo.tasks[pIndex - 1]
-                        && nodeInfo.tasks[pIndex - 1].status === 'FINISHED')
-                        || !pIndex)"
-                      class="loading">
-                      <i class="bk-itsm-icon icon-icon-loading icon-icon-loading-cus"></i>
+            <template #content>
+              <div class="bk-processor-content">
+                <div v-for="(processor, pIndex) in nodeInfo.tasks" :key="pIndex" class="bk-processor-one">
+                  <div v-if="nodeInfo.is_sequential && pIndex" class="bk-arrow">
+                    <i class="bk-itsm-icon icon-arrow-long arrow-cus"></i>
+                  </div>
+                  <div class="bk-processor-span">
+                    <span class="mr5 ml5">{{processor.processor}}</span>
+                    <span>
+                      <i v-if="processor.status === 'FINISHED'"
+                        class="bk-itsm-icon icon-icon-finish icon-icon-finish-cus"></i>
+                      <span
+                        v-if="nodeInfo.is_sequential
+                          && processor.status === 'WAIT'
+                          && ((nodeInfo.tasks[pIndex - 1]
+                          && nodeInfo.tasks[pIndex - 1].status === 'FINISHED')
+                          || !pIndex)"
+                        class="loading">
+                        <i class="bk-itsm-icon icon-icon-loading icon-icon-loading-cus"></i>
+                      </span>
                     </span>
-                  </span>
+                  </div>
                 </div>
               </div>
-            </div>
+            </template>
           </bk-popover>
           <!-- 状态 icon, API 节点和标准运维节点才显示 -->
           <task-status :status="nodeInfo.status" :node-type="nodeInfo.type"></task-status>
@@ -161,23 +163,26 @@
                   :font-size="'medium'"
                   @show="isDropdownShow = true"
                   @hide="isDropdownShow = false">
-                  <template #dropdown-trigger><bk-button class="node-trigger-btn" style="width:auto;">
-                    <span>{{ $t('m.newCommon["更多操作"]') }}</span>
-                    <i :class="['bk-icon icon-angle-down',{ 'icon-flip': isDropdownShow }]"></i>
-                  </bk-button>
-                  <template #dropdown-content><ul class="bk-dropdown-list">
-                    <li v-for="(trigger, tIndex) in triggers" :key="tIndex">
-                      <a href="javascript:;" @click="openTriggerDialog(trigger)">{{trigger.display_name}}</a>
-                    </li>
-                  </ul>
+                  <template #dropdown-trigger>
+                    <bk-button class="node-trigger-btn" style="width:auto;">
+                      <span>{{ $t('m.newCommon["更多操作"]') }}</span>
+                      <i :class="['bk-icon icon-angle-down',{ 'icon-flip': isDropdownShow }]"></i>
+                    </bk-button>
+                  </template>
+                  <template #dropdown-content>
+                    <ul class="bk-dropdown-list">
+                      <li v-for="(trigger, tIndex) in triggers" :key="tIndex">
+                        <a href="javascript:;" @click="openTriggerDialog(trigger)">{{trigger.display_name}}</a>
+                      </li>
+                    </ul>
+                  </template>
                 </bk-dropdown-menu>
               </template>
             </api-node-handle-body>
             <div v-else-if="currSignProcessorInfo" class="bk-area-show-back">
               <!-- 静态展示 -->
-              <template v-for="(ite, fIndex) in currSignProcessorInfo.fields">
+              <template v-for="(ite, fIndex) in currSignProcessorInfo.fields" :key="fIndex">
                 <fields-done
-                  :key="fIndex"
                   :item="ite"
                   origin="log">
                 </fields-done>
@@ -194,10 +199,9 @@
           <div class="bk-form-btn" v-if="nodeInfo.type !== 'TASK'">
             <!-- 响应后才能处理 -->
             <template v-if="isShowDealBtns">
-              <template v-for="(btn, btnIndex) in nodeInfo.operations">
+              <template v-for="(btn, btnIndex) in nodeInfo.operations" :key="btn.key">
                 <bk-button class="mr10"
                   v-if="ignoreOperations.indexOf(btn.key) === -1"
-                  :key="btn.key"
                   :theme="btnIndex === 0 ? 'primary' : 'default'"
                   :title="btn.name"
                   :disabled="!btn.can_operate || !nodeInfo.is_schedule_ready"
@@ -222,15 +226,19 @@
               :font-size="'medium'"
               @show="isDropdownShow = true"
               @hide="isDropdownShow = false">
-              <template #dropdown-trigger><bk-button class="node-trigger-btn" style="width:auto;">
-                <span>{{ $t('m.newCommon["更多操作"]') }}</span>
-                <i :class="['bk-icon icon-angle-down',{ 'icon-flip': isDropdownShow }]"></i>
-              </bk-button>
-              <template #dropdown-content><ul class="bk-dropdown-list">
-                <li v-for="(trigger, tIndex) in triggers" :key="tIndex">
-                  <a href="javascript:;" @click="openTriggerDialog(trigger)">{{trigger.display_name}}</a>
-                </li>
-              </ul>
+              <template #dropdown-trigger>
+                <bk-button class="node-trigger-btn" style="width:auto;">
+                  <span>{{ $t('m.newCommon["更多操作"]') }}</span>
+                  <i :class="['bk-icon icon-angle-down',{ 'icon-flip': isDropdownShow }]"></i>
+                </bk-button>
+              </template>
+              <template #dropdown-content>
+                <ul class="bk-dropdown-list">
+                  <li v-for="(trigger, tIndex) in triggers" :key="tIndex">
+                    <a href="javascript:;" @click="openTriggerDialog(trigger)">{{trigger.display_name}}</a>
+                  </li>
+                </ul>
+              </template>
             </bk-dropdown-menu>
           </div>
         </div>
@@ -272,6 +280,8 @@
   import { errorHandler } from '@/utils/errorHandler.js';
   import { convertTimeArrToMS, convertTimeArrToString, convertMStoString } from '@/utils/util.js';
   import i18n from '@/i18n/index.js';
+
+  const t = i18n.global.t.bind(i18n.global);
 
   export default {
     name: 'CurrentStepItem',
@@ -485,7 +495,7 @@
             res.data.properties.forEach(item => {
               this.pipelineRules[item.id] = [{
                 required: item.required,
-                message: i18n.t('m.treeinfo["字段必填"]'),
+                message: t('m.treeinfo["字段必填"]'),
                 trigger: 'blur',
               }];
             });

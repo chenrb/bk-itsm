@@ -157,18 +157,20 @@
             ]"
           ></i>
         </div>
-        <template #dropdown-content><ul class="bk-dropdown-list-cus">
-          <li>
-            <bk-button
-              data-test-id="ticket_button_ticketPrint"
-              class="bk-dropdown-list-btn"
-              theme="default"
-              :text="true"
-              @click="onTicketBtnClick('print')"
-            >
-              {{ $t(`m.newCommon["打印"]`) }}
-            </bk-button>
-          </li>
+        </template>
+        <template #dropdown-content>
+          <ul class="bk-dropdown-list-cus">
+            <li>
+              <bk-button
+                data-test-id="ticket_button_ticketPrint"
+                class="bk-dropdown-list-btn"
+                theme="default"
+                :text="true"
+                @click="onTicketBtnClick('print')"
+              >
+                {{ $t(`m.newCommon["打印"]`) }}
+              </bk-button>
+            </li>
           <li>
             <bk-popover
               :content="disabledText"
@@ -273,6 +275,7 @@
             </bk-button>
           </li>
         </ul>
+        </template>
       </bk-dropdown-menu>
     </div>
     <!-- 单据触发器 dialog -->

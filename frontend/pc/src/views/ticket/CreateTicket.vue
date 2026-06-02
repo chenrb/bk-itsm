@@ -133,23 +133,25 @@
             class="mr10">
             {{$t(`m.common['存为模板']`)}}
           </bk-button>
-          <template #content><div style="width: 320px;">
-            <h3 class="save-title">{{$t(`m.common['存为模板']`)}}</h3>
-            <bk-form
-              width="320"
-              form-type="vertical"
-              :model="templateFormData"
-              :rules="rules"
-              ref="templateForm">
-              <bk-form-item :label="''" :required="true" :property="'name'">
-                <bk-input v-model="templateFormData.name" maxlength="120" :placeholder="$t(`m.common['请输入模板名称']`)"></bk-input>
-              </bk-form-item>
-            </bk-form>
-            <div class="btn-group">
-              <span @click="onSaveTemplate">{{$t(`m.systemConfig['确认']`)}}</span>
-              <span @click="cancelTemplate">{{$t(`m.systemConfig['取消']`)}}</span>
+          <template #content>
+            <div style="width: 320px;">
+              <h3 class="save-title">{{$t(`m.common['存为模板']`)}}</h3>
+              <bk-form
+                width="320"
+                form-type="vertical"
+                :model="templateFormData"
+                :rules="rules"
+                ref="templateForm">
+                <bk-form-item :label="''" :required="true" :property="'name'">
+                  <bk-input v-model="templateFormData.name" maxlength="120" :placeholder="$t(`m.common['请输入模板名称']`)"></bk-input>
+                </bk-form-item>
+              </bk-form>
+              <div class="btn-group">
+                <span @click="onSaveTemplate">{{$t(`m.systemConfig['确认']`)}}</span>
+                <span @click="cancelTemplate">{{$t(`m.systemConfig['取消']`)}}</span>
+              </div>
             </div>
-          </div>
+          </template>
         </bk-popover>
       </div>
     </div>

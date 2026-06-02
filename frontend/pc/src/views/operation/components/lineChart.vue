@@ -42,6 +42,8 @@
   import Chart from '@blueking/bkcharts';
   import i18n from '@/i18n/index.js';
 
+  const t = i18n.global.t.bind(i18n.global);
+
   export default {
     name: 'LineChart',
     props: {
@@ -63,19 +65,19 @@
           return [
             {
               key: 'days',
-              name: i18n.t('m[\'天\']'),
+              name: t('m[\'天\']'),
             },
             {
               key: 'weeks',
-              name: i18n.t('m[\'周\']'),
+              name: t('m[\'周\']'),
             },
             {
               key: 'months',
-              name: i18n.t('m[\'月\']'),
+              name: t('m[\'月\']'),
             },
             {
               key: 'years',
-              name: i18n.t('m[\'年\']'),
+              name: t('m[\'年\']'),
             },
           ];
         },

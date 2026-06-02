@@ -34,32 +34,36 @@
               @hide="dropdownHide"
               ref="dropdown"
               style="width: 70px; line-height: 30px;">
-              <template #dropdown-trigger><div class="dropdown-trigger-btn" style="padding-left: 6px;">
-                <span>{{ $t(`m.systemConfig['系统接入']`)}}</span>
-                <i :class="['bk-icon icon-angle-down',{ 'icon-flip': isDropdownShow }]"></i>
-              </div>
-              <template #dropdown-content><ul class="bk-dropdown-list">
-                <li>
-                  <a href="javascript:;"
-                    data-test-id="api_a_accessApi"
-                    v-cursor="{ active: !hasPermission(targetPerms, curPerms) }"
-                    :class="{ 'text-permission-disable': !hasPermission(targetPerms, curPerms) }"
-                    :title="$t(`m.systemConfig['系统接入']`)"
-                    @click="openDictionary('JION')">
-                    {{ $t(`m.systemConfig['系统接入']`) }}
-                  </a>
-                </li>
-                <li>
-                  <a href="javascript:;"
-                    data-test-id="api_a_createApi"
-                    v-cursor="{ active: !hasPermission(targetPerms, curPerms) }"
-                    :class="{ 'text-permission-disable': !hasPermission(targetPerms, curPerms) }"
-                    :title="$t(`m.systemConfig['系统新增']`)"
-                    @click="openDictionary('ADD')">
-                    {{$t(`m.systemConfig['系统新增']`)}}
-                  </a>
-                </li>
-              </ul>
+              <template #dropdown-trigger>
+                <div class="dropdown-trigger-btn" style="padding-left: 6px;">
+                  <span>{{ $t(`m.systemConfig['系统接入']`)}}</span>
+                  <i :class="['bk-icon icon-angle-down',{ 'icon-flip': isDropdownShow }]"></i>
+                </div>
+              </template>
+              <template #dropdown-content>
+                <ul class="bk-dropdown-list">
+                  <li>
+                    <a href="javascript:;"
+                      data-test-id="api_a_accessApi"
+                      v-cursor="{ active: !hasPermission(targetPerms, curPerms) }"
+                      :class="{ 'text-permission-disable': !hasPermission(targetPerms, curPerms) }"
+                      :title="$t(`m.systemConfig['系统接入']`)"
+                      @click="openDictionary('JION')">
+                      {{ $t(`m.systemConfig['系统接入']`) }}
+                    </a>
+                  </li>
+                  <li>
+                    <a href="javascript:;"
+                      data-test-id="api_a_createApi"
+                      v-cursor="{ active: !hasPermission(targetPerms, curPerms) }"
+                      :class="{ 'text-permission-disable': !hasPermission(targetPerms, curPerms) }"
+                      :title="$t(`m.systemConfig['系统新增']`)"
+                      @click="openDictionary('ADD')">
+                      {{$t(`m.systemConfig['系统新增']`)}}
+                    </a>
+                  </li>
+                </ul>
+              </template>
             </bk-dropdown-menu>
           </template>
         </bk-input>

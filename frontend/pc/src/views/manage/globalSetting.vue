@@ -242,9 +242,11 @@
       v-model:is-show="versionLogData.show"
       :title="versionLogData.title"
       :width="versionLogData.width">
-      <template #content><div class="p20" v-if="versionLogData.show">
-        <version-log :version-log-data="versionLogData"></version-log>
-      </div>
+      <template #content>
+        <div class="p20" v-if="versionLogData.show">
+          <version-log :version-log-data="versionLogData"></version-log>
+        </div>
+      </template>
     </bk-sideslider>
   </div>
 </template>

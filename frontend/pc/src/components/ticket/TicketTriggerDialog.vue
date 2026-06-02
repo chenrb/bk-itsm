@@ -45,10 +45,10 @@
           <modify-field :field-schema="item"></modify-field>
         </template>
         <template v-else>
-          <template v-for="(itemInfo, index) in item.field_schema">
+          <template v-for="(itemInfo, index) in item.field_schema" :key="index">
             <!-- 对于多层嵌套和单层嵌套的区别 -->
             <template v-if="itemInfo.type === 'SUBCOMPONENT'">
-              <send-message :key="index"
+              <send-message
                 :is-show-var="false"
                 :item-info="itemInfo">
               </send-message>
@@ -57,7 +57,6 @@
               <bk-form-item :ext-cls="itemInfo.required ? 'bk-field-schema mb20' : 'bk-field-schema no-require-item mb20'"
                 :label="itemInfo.name"
                 :required="itemInfo.required"
-                :key="index"
                 :desc="itemInfo.tips">
                 <change-conductor
                   :is-show-var="false"

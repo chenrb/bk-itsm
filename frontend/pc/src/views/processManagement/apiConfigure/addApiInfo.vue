@@ -92,24 +92,27 @@
         <bk-input v-model="directory.formInfo.road" placeholder="please input path"
           :disabled="(directory.formInfo.category === 'component' || directory.formInfo.category === 'buffet_component') && typeInfo !== 'ADD'"
           @change="$emit('change')">
-          <template #prepend>
-            <template #append>
+          <template #append>
             <bk-dropdown-menu class="group-text"
               @show="dropdownShow"
               @hide="dropdownHide"
               ref="requestwayDrop"
               :font-size="'normal'">
-              <template #dropdown-trigger><bk-button type="primary">
-                <span> {{ directory.formInfo.type }} </span>
-                <i :class="['bk-icon icon-angle-down',{ 'icon-flip': isDropdownShow }]"></i>
-              </bk-button>
-              <template #dropdown-content><ul class="bk-dropdown-list">
-                <li v-for="(requestway, requestwayIndex) in typeList" :key="requestwayIndex">
-                  <a href="javascript:;" @click="requestHandler(requestway, requestwayIndex)">
-                    {{ requestway.name }}
-                  </a>
-                </li>
-              </ul>
+              <template #dropdown-trigger>
+                <bk-button type="primary">
+                  <span> {{ directory.formInfo.type }} </span>
+                  <i :class="['bk-icon icon-angle-down',{ 'icon-flip': isDropdownShow }]"></i>
+                </bk-button>
+              </template>
+              <template #dropdown-content>
+                <ul class="bk-dropdown-list">
+                  <li v-for="(requestway, requestwayIndex) in typeList" :key="requestwayIndex">
+                    <a href="javascript:;" @click="requestHandler(requestway, requestwayIndex)">
+                      {{ requestway.name }}
+                    </a>
+                  </li>
+                </ul>
+              </template>
             </bk-dropdown-menu>
           </template>
         </bk-input>

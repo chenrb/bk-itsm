@@ -98,7 +98,7 @@
 </script>
 
 <style lang="scss" scoped>
-@import '~@/scss/animation/rotation.scss';
+@import '@/scss/animation/rotation.scss';
 $gray: #dcdee5;
 $blue: #3a84ff;
 $red: #ea3536;

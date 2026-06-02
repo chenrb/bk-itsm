@@ -80,8 +80,8 @@
                   :id="option.key"
                   :name="option.name">
                 </bk-option>
-                <template v-if="entry !== 'addField'">
-                  <template #extension><div @click="addNewItem(props.row)" style="cursor: pointer;">
+                <template v-if="entry !== 'addField'" #extension>
+                  <div @click="addNewItem(props.row)" style="cursor: pointer;">
                     <i class="bk-icon icon-plus-circle mr10"></i>{{ $t('m.treeinfo["添加变量"]') }}
                   </div>
                 </template>

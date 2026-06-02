@@ -34,7 +34,9 @@
               <span style="font-size: 14px;">{{ $t(`m.systemConfig['API接入']`)}}</span>
               <i :class="['bk-icon icon-angle-down',{ 'icon-flip': isDropdownShow }]"></i>
             </div>
-            <template #dropdown-content><ul class="bk-dropdown-list">
+            </template>
+            <template #dropdown-content>
+              <ul class="bk-dropdown-list">
               <li>
                 <a href="javascript:;"
                   v-cursor="{ active: !hasPermission(targetPerms, curPerms) }"
@@ -56,6 +58,7 @@
                 </a>
               </li>
             </ul>
+            </template>
           </bk-dropdown-menu>
           <bk-button
             data-test-id="api_button_apiTableuploadApi"
@@ -182,15 +185,17 @@
           </bk-button>
         </template>
       </bk-table-column>
-      <template #empty><div class="empty">
-        <empty
-          status="500"
-          :is-error="listError"
-          :is-search="searchtoggle"
-          @onRefresh="serchEntry()"
-          @onClearSearch="clearInfo()">
-        </empty>
-      </div>
+      <template #empty>
+        <div class="empty">
+          <empty
+            status="500"
+            :is-error="listError"
+            :is-search="searchtoggle"
+            @onRefresh="serchEntry()"
+            @onClearSearch="clearInfo()">
+          </empty>
+        </div>
+      </template>
     </bk-table>
     <bk-sideslider
       v-model:is-show="entryInfo.show"
@@ -198,15 +203,17 @@
       :width="entryInfo.width"
       :quick-close="true"
       :before-close="handleBeforeClose">
-      <template #content><div style="padding: 20px" v-if="entryInfo.show">
-        <add-api-info
-          :first-level-info="firstLevelInfo"
-          :path-list="pathList"
-          :tree-list="treeList"
-          :type-info="typeInfo"
-          @change="isFormChanged = true">
-        </add-api-info>
-      </div>
+      <template #content>
+        <div style="padding: 20px" v-if="entryInfo.show">
+          <add-api-info
+            :first-level-info="firstLevelInfo"
+            :path-list="pathList"
+            :tree-list="treeList"
+            :type-info="typeInfo"
+            @change="isFormChanged = true">
+          </add-api-info>
+        </div>
+      </template>
     </bk-sideslider>
   </div>
 </template>

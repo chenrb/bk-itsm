@@ -63,9 +63,11 @@
                 :id="option.id"
                 :name="option.name">
               </bk-option>
-              <template #extension><div @click="handleCreate" style="cursor: pointer;">
-                <i class="bk-icon icon-plus-circle"></i>{{$t(`m.slaContent['跳转新建']`)}}
-              </div>
+              <template #extension>
+                <div @click="handleCreate" style="cursor: pointer;">
+                  <i class="bk-icon icon-plus-circle"></i>{{$t(`m.slaContent['跳转新建']`)}}
+                </div>
+              </template>
             </bk-select>
           </bk-form-item>
         </bk-form>
@@ -86,24 +88,29 @@
               :type="'number'"
               :min="0">
               <template #append>
-              <bk-dropdown-menu class="group-text"
-                @show="dropdownShow(item, 'resp')"
-                @hide="dropdownHide(item, 'resp')"
-                :ref="'dropdown' + index"
-                :key="'dropdown' + index"
-                :font-size="'normal'">
-                <template #dropdown-trigger><bk-button type="primary" :ext-cls="'cus-width'">
-                  <span v-for="(time, timeIndex) in timeList" :key="timeIndex">
-                    <template v-if="item.reply_unit === time.id">{{ time.name }}</template>
-                  </span>
-                  <i :class="['bk-icon icon-angle-down',{ 'icon-flip': item.isRespDropdownShow }]"></i>
-                </bk-button>
-                <template #dropdown-content><ul class="bk-dropdown-list">
-                  <li v-for="(time, timeIndex) in timeList" :key="timeIndex">
-                    <a href="javascript:;" data-test-id="slaAgreement-a-timeHandler" @click="timeHandler('reply_unit', time, item, index, 0)">{{ time.name }}</a>
-                  </li>
-                </ul>
-              </bk-dropdown-menu>
+                <bk-dropdown-menu class="group-text"
+                  @show="dropdownShow(item, 'resp')"
+                  @hide="dropdownHide(item, 'resp')"
+                  :ref="'dropdown' + index"
+                  :key="'dropdown' + index"
+                  :font-size="'normal'">
+                  <template #dropdown-trigger>
+                    <bk-button type="primary" :ext-cls="'cus-width'">
+                      <span v-for="(time, timeIndex) in timeList" :key="timeIndex">
+                        <template v-if="item.reply_unit === time.id">{{ time.name }}</template>
+                      </span>
+                      <i :class="['bk-icon icon-angle-down',{ 'icon-flip': item.isRespDropdownShow }]"></i>
+                    </bk-button>
+                  </template>
+                  <template #dropdown-content>
+                    <ul class="bk-dropdown-list">
+                      <li v-for="(time, timeIndex) in timeList" :key="timeIndex">
+                        <a href="javascript:;" data-test-id="slaAgreement-a-timeHandler" @click="timeHandler('reply_unit', time, item, index, 0)">{{ time.name }}</a>
+                      </li>
+                    </ul>
+                  </template>
+                </bk-dropdown-menu>
+              </template>
             </bk-input>
             <div class="bk-disabled-li" v-if="!changeInfo.is_reply_need"></div>
           </bk-form-item>
@@ -130,18 +137,23 @@
                 @hide="dropdownHide(item, 'deal')"
                 :ref="'dropdown' + index"
                 :font-size="'normal'">
-                <template #dropdown-trigger><bk-button type="primary" :ext-cls="'cus-width'">
-                  <span v-for="(time, timeIndex) in timeList" :key="timeIndex">
-                    <template v-if="item.handle_unit === time.id">{{ time.name }}</template>
-                  </span>
-                  <i :class="['bk-icon icon-angle-down',{ 'icon-flip': item.isDealDropdownShow }]"></i>
-                </bk-button>
-                <template #dropdown-content><ul class="bk-dropdown-list">
-                  <li v-for="(time, timeIndex) in timeList" :key="timeIndex">
-                    <a href="javascript:;" @click="timeHandler('handle_unit', time, item, index, 1)">{{ time.name }}</a>
-                  </li>
-                </ul>
+                <template #dropdown-trigger>
+                  <bk-button type="primary" :ext-cls="'cus-width'">
+                    <span v-for="(time, timeIndex) in timeList" :key="timeIndex">
+                      <template v-if="item.handle_unit === time.id">{{ time.name }}</template>
+                    </span>
+                    <i :class="['bk-icon icon-angle-down',{ 'icon-flip': item.isDealDropdownShow }]"></i>
+                  </bk-button>
+                </template>
+                <template #dropdown-content>
+                  <ul class="bk-dropdown-list">
+                    <li v-for="(time, timeIndex) in timeList" :key="timeIndex">
+                      <a href="javascript:;" @click="timeHandler('handle_unit', time, item, index, 1)">{{ time.name }}</a>
+                    </li>
+                  </ul>
+                </template>
               </bk-dropdown-menu>
+              </template>
             </bk-input>
           </bk-form-item>
         </bk-form>

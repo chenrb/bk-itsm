@@ -92,13 +92,15 @@
                     :confirm-text="$t(`m.slaContent['确定']`)"
                     :cancel-text="$t(`m.slaContent['取消']`)"
                     @confirm="timeItem.name = timeItemNameTemplate">
-                    <template #content><div>
-                      <bk-input v-model.trim="timeItemNameTemplate"
-                        style="width:226px"
-                        maxlength="120"
-                        :placeholder="$t(`m.slaContent['请输入时段名称']`)">
-                      </bk-input>
-                    </div>
+                    <template #content>
+                      <div>
+                        <bk-input v-model.trim="timeItemNameTemplate"
+                          style="width:226px"
+                          maxlength="120"
+                          :placeholder="$t(`m.slaContent['请输入时段名称']`)">
+                        </bk-input>
+                      </div>
+                    </template>
                     <span @click="timeItemNameTemplate = timeItem.name" class="cus-ellipsis" :title="timeItem.name">{{ timeItem.name }}</span>
                   </bk-popconfirm>
                   <i class="bk-icon icon-delete"
@@ -170,13 +172,15 @@
                     :confirm-text="$t(`m.slaContent['确定']`)"
                     :cancel-text="$t(`m.slaContent['取消']`)"
                     @confirm="timeItem.name = timeItemNameTemplate">
-                    <template #content><div>
-                      <bk-input v-model.trim="timeItemNameTemplate"
-                        style="width:226px"
-                        maxlength="120"
-                        :placeholder="$t(`m.slaContent['请输入时段名称']`)">
-                      </bk-input>
-                    </div>
+                    <template #content>
+                      <div>
+                        <bk-input v-model.trim="timeItemNameTemplate"
+                          style="width:226px"
+                          maxlength="120"
+                          :placeholder="$t(`m.slaContent['请输入时段名称']`)">
+                        </bk-input>
+                      </div>
+                    </template>
                     <span @click="timeItemNameTemplate = timeItem.name" class="cus-ellipsis" :title="timeItem.name">{{ timeItem.name }}</span>
                   </bk-popconfirm>
                   <i class="bk-icon icon-delete"
@@ -262,13 +266,15 @@
                     :confirm-text="$t(`m.slaContent['确定']`)"
                     :cancel-text="$t(`m.slaContent['取消']`)"
                     @confirm="timeItem.name = timeItemNameTemplate">
-                    <template #content><div>
-                      <bk-input v-model.trim="timeItemNameTemplate"
-                        style="width:226px"
-                        maxlength="120"
-                        :placeholder="$t(`m.slaContent['请输入时段名称']`)">
-                      </bk-input>
-                    </div>
+                    <template #content>
+                      <div>
+                        <bk-input v-model.trim="timeItemNameTemplate"
+                          style="width:226px"
+                          maxlength="120"
+                          :placeholder="$t(`m.slaContent['请输入时段名称']`)">
+                        </bk-input>
+                      </div>
+                    </template>
                     <span @click="timeItemNameTemplate = timeItem.name" class="cus-ellipsis" :title="timeItem.name">{{ timeItem.name }}</span>
                   </bk-popconfirm>
                   <i class="bk-icon icon-delete"

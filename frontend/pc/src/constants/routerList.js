@@ -30,49 +30,51 @@
 
 import i18n from '@/i18n/index.js';
 
+const t = i18n.global.t.bind(i18n.global);
+
 const ROUTE_LIST = [
   {
-    name: i18n.t('m["服务台"]'),
+    name: t('m["服务台"]'),
     id: 'home',
     path: '/',
   },
   {
-    name: i18n.t('m["我的单据"]'),
+    name: t('m["我的单据"]'),
     id: 'workbench',
     path: '/workbench/ticket/todo',
     subRouters: [
       {
-        name: i18n.t('m[\'我的待办\']'),
+        name: t('m[\'我的待办\']'),
         id: 'myTodoTicket',
         icon: 'bk-itsm-icon icon-order-process',
         path: '/workbench/ticket/todo',
       },
       {
-        name: i18n.t('m[\'待我审批\']'),
+        name: t('m[\'待我审批\']'),
         id: 'myApprovalTicket',
         icon: 'bk-itsm-icon icon-ticket_time',
         path: '/workbench/ticket/approval',
       },
       {
-        name: i18n.t('m[\'我发起的\']'),
+        name: t('m[\'我发起的\']'),
         id: 'myCreatedTicket',
         icon: 'bk-itsm-icon icon-ticket_plus',
         path: '/workbench/ticket/created',
       },
       {
-        name: i18n.t('m[\'我关注的\']'),
+        name: t('m[\'我关注的\']'),
         id: 'myAttentionTicket',
         icon: 'bk-itsm-icon icon-ticket_star',
         path: '/workbench/ticket/attention',
       },
       {
-        name: i18n.t('m[\'我的已办\']'),
+        name: t('m[\'我的已办\']'),
         id: 'myHistoryTicket',
         icon: 'bk-itsm-icon icon-ticket_star',
         path: '/workbench/ticket/history',
       },
       {
-        name: i18n.t('m[\'所有单据\']'),
+        name: t('m[\'所有单据\']'),
         id: 'allUserTicket',
         icon: 'bk-itsm-icon icon-ticket_4',
         path: '/workbench/ticket/all',
@@ -80,31 +82,31 @@ const ROUTE_LIST = [
     ],
   },
   {
-    name: i18n.t('m["项目"]'),
+    name: t('m["项目"]'),
     id: 'project',
     path: '/project/service/list',
     subRouters: [
       {
-        name: i18n.t('m["服务"]'),
+        name: t('m["服务"]'),
         abbrName: 'Ser.',
         id: 'service',
         subRouters: [
           // {
-          //   name: i18n.t('m["单据"]'),
+          //   name: t('m["单据"]'),
           //   id: 'projectTicket',
           //   icon: 'bk-itsm-icon icon-ticket_4',
           //   path: '/project/ticket',
           //   prefix: ['/ticket/detail', '/ticket/create'],
           // },
           {
-            name: i18n.t('m["服务"]'),
+            name: t('m["服务"]'),
             id: 'projectServiceList',
             icon: 'bk-itsm-icon icon-it-new-sevice',
             path: '/project/service/list',
             prefix: ['/project/service/'],
           },
           // {
-          //     name: i18n.t(`m["服务目录"]`),
+          //     name: t(`m["服务目录"]`),
           //     id: 'serviceDirectory',
           //     icon: 'bk-itsm-icon icon-ticket_2',
           //     path: '/project/service_directory'
@@ -112,7 +114,7 @@ const ROUTE_LIST = [
         ],
       },
       {
-        name: i18n.t('m["元素"]'),
+        name: t('m["元素"]'),
         abbrName: 'Ele.',
         id: 'element',
         subRouters: [
@@ -123,7 +125,7 @@ const ROUTE_LIST = [
             path: '/project/api',
           },
           {
-            name: i18n.t('m["字段"]'),
+            name: t('m["字段"]'),
             id: 'projectFields',
             icon: 'bk-itsm-icon icon-aphabet_t',
             path: '/project/fields',
@@ -136,43 +138,43 @@ const ROUTE_LIST = [
         abbrName: 'SLA',
         subRouters: [
           {
-            name: i18n.t('m["协议"]'),
+            name: t('m["协议"]'),
             id: 'slaAgreement',
             icon: 'bk-itsm-icon icon-sla',
             path: '/project/sla_agreement',
           },
           {
-            name: i18n.t('m["模式"]'),
+            name: t('m["模式"]'),
             id: 'slaManage',
             icon: 'bk-itsm-icon icon-sla',
             path: '/project/sla_manage',
           },
           // {
-          //     name: i18n.t(`m["单据状态管理"]`),
+          //     name: t(`m["单据状态管理"]`),
           //     id: 'slaTicketStatus',
           //     path: 'project/ticketStatus'
           // }
         ],
       },
       {
-        name: i18n.t('m["管理"]'),
+        name: t('m["管理"]'),
         abbrName: 'Man',
         id: 'projectManage',
         subRouters: [
           {
-            name: i18n.t('m["触发器"]'),
+            name: t('m["触发器"]'),
             id: 'projectTrigger',
             icon: 'bk-itsm-icon icon-slide',
             path: '/project/trigger',
           },
           {
-            name: i18n.t('m["通知模板"]'),
+            name: t('m["通知模板"]'),
             id: 'projectNotice',
             icon: 'bk-itsm-icon icon-icon-notice-new',
             path: '/project/notice',
           },
           {
-            name: i18n.t('m["自定义角色组"]'),
+            name: t('m["自定义角色组"]'),
             id: 'projectRoles',
             icon: 'bk-itsm-icon icon-itsm-icon-two-zero',
             path: '/project/roles',
@@ -181,12 +183,12 @@ const ROUTE_LIST = [
       },
       // 2.6.0 等权限校验后显示
       {
-        name: i18n.t('m["分析"]'),
+        name: t('m["分析"]'),
         abbrName: 'Ana',
         id: 'analysis',
         subRouters: [
           {
-            name: i18n.t('m["运营分析"]'),
+            name: t('m["运营分析"]'),
             id: 'projectOperationHome',
             icon: 'bk-itsm-icon icon-operational-data',
             path: '/project/projectOperation/home',
@@ -197,66 +199,66 @@ const ROUTE_LIST = [
     ],
   },
   {
-    name: i18n.t('m["运营分析"]'),
+    name: t('m["运营分析"]'),
     id: 'operationAnalysis',
     icon: 'bk-itsm-icon icon-operational-data',
     path: '/operation/data',
   },
   {
-    name: i18n.t('m["平台管理"]'),
+    name: t('m["平台管理"]'),
     id: 'manage',
     path: '/manage/public_fields',
     subRouters: [
       {
-        name: i18n.t('m["公共字段"]'),
+        name: t('m["公共字段"]'),
         id: 'publicFields',
         icon: 'bk-itsm-icon icon-public_fields',
         path: '/manage/public_fields',
       },
       {
-        name: i18n.t('m["公共API"]'),
+        name: t('m["公共API"]'),
         id: 'publicAPI',
         icon: 'bk-itsm-icon icon-api-3',
         path: '/manage/public_api',
       },
       {
-        name: i18n.t('m["任务模板"]'),
+        name: t('m["任务模板"]'),
         id: 'taskTpl',
         icon: 'bk-itsm-icon icon-itsm-icon-file',
         path: '/manage/task_tpl',
       },
       {
-        name: i18n.t('m["通知配置"]'),
+        name: t('m["通知配置"]'),
         id: 'notifySetting',
         icon: 'bk-itsm-icon icon-itsm-icon-three-eight',
         path: '/manage/notify_setting',
       },
       {
-        name: i18n.t('m["优先级"]'),
+        name: t('m["优先级"]'),
         id: 'slaPriority',
         icon: 'bk-itsm-icon icon-sla',
         path: '/manage/sla_priority',
       },
       {
-        name: i18n.t('m["单据状态"]'),
+        name: t('m["单据状态"]'),
         id: 'ticketStatus',
         icon: 'bk-itsm-icon icon-sla',
         path: '/manage/ticket_status',
       },
       {
-        name: i18n.t('m["全局配置"]'),
+        name: t('m["全局配置"]'),
         id: 'globalSetting',
         icon: 'bk-itsm-icon icon-pc_setting',
         path: '/manage/global_setting',
       },
       // {
-      //     name: i18n.t(`m["基础模型"]`),
+      //     name: t(`m["基础模型"]`),
       //     id: 'basicModule',
       //     icon: 'bk-itsm-icon icon-itsm-icon-tasks',
       //     path: '/manage/basic_module'
       // },
       // {
-      //     name: i18n.t(`m["数据字典"]`),
+      //     name: t(`m["数据字典"]`),
       //     id: 'dataDictionary',
       //     icon: 'bk-itsm-icon icon-itsm-icon-open-folder',
       //     path: '/manage/data_dictionary'

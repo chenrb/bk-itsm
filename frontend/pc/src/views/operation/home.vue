@@ -204,6 +204,8 @@
   import PieChart from './components/pieChart.vue';
   import i18n from '@/i18n/index.js';
 
+  const t = i18n.global.t.bind(i18n.global);
+
   const FORMAT = 'YYYY-MM-DD';
 
   const SERVICE_TABLE_COLUMNS = [
@@ -215,7 +217,7 @@
     },
     {
       key: 'service_name',
-      name: i18n.t('m[\'服务名称\']'),
+      name: t('m[\'服务名称\']'),
       link: true,
       handler(data) {
         this.$router.push({ name: this.$route.query.project_id ? 'projectOperationService' : 'OperationService', params: { id: data.service_id }, query: { project_id: this.$route.query.project_id } });
@@ -223,11 +225,11 @@
     },
     {
       key: 'category',
-      name: i18n.t('m[\'服务类型\']'),
+      name: t('m[\'服务类型\']'),
     },
     {
       key: 'count',
-      name: i18n.t('m[\'单量（占比）\']'),
+      name: t('m[\'单量（占比）\']'),
       sort: true,
       align: 'right',
       format(data) {
@@ -236,14 +238,14 @@
     },
     {
       key: 'creator_count',
-      name: i18n.t('m[\'用户数\']'),
+      name: t('m[\'用户数\']'),
       sort: true,
       align: 'right',
       width: 100,
     },
     {
       key: 'biz_count',
-      name: i18n.t('m[\'业务使用数\']'),
+      name: t('m[\'业务使用数\']'),
       sort: true,
       align: 'right',
       width: 110,
@@ -258,17 +260,17 @@
     },
     {
       key: 'bk_biz_name',
-      name: i18n.t('m[\'业务名\']'),
+      name: t('m[\'业务名\']'),
     },
     {
       key: 'service_count',
-      name: i18n.t('m[\'使用服务数量\']'),
+      name: t('m[\'使用服务数量\']'),
       sort: true,
       align: 'right',
     },
     {
       key: 'count',
-      name: i18n.t('m[\'单量\']'),
+      name: t('m[\'单量\']'),
       sort: true,
       align: 'right',
       width: 120,
@@ -283,16 +285,16 @@
     },
     {
       key: 'creator',
-      name: i18n.t('m[\'用户ID\']'),
+      name: t('m[\'用户ID\']'),
       width: 120,
     },
     {
       key: 'organization',
-      name: i18n.t('m[\'所在组织\']'),
+      name: t('m[\'所在组织\']'),
     },
     {
       key: 'count',
-      name: i18n.t('m[\'提单量\']'),
+      name: t('m[\'提单量\']'),
       colorMark: true,
       align: 'right',
       width: 120,
@@ -300,10 +302,10 @@
   ];
 
   const STATUS_MAP = {
-    RUNNING: i18n.t('m[\'进行中\']'),
-    FINISHED: i18n.t('m[\'已完成\']'),
-    REVOKED: i18n.t('m[\'已撤销\']'),
-    TERMINATED: i18n.t('m[\'已终止\']'),
+    RUNNING: t('m[\'进行中\']'),
+    FINISHED: t('m[\'已完成\']'),
+    REVOKED: t('m[\'已撤销\']'),
+    TERMINATED: t('m[\'已终止\']'),
   };
 
   export default {

@@ -162,10 +162,9 @@
               </template>
               <template v-else-if="field.id === 'key'">
                 <template v-if="row.id !== changeFrom.serviceType">
-                  <template v-for="(type, typeIndex) in serviceTypesMap">
+                  <template v-for="(type, typeIndex) in serviceTypesMap" :key="typeIndex">
                     <span v-if="row.key === type.key"
-                      :title="type.name"
-                      :key="typeIndex">
+                      :title="type.name">
                       {{ type.name }}
                       <i
                         v-show="tableHoverId === row.id && hasPermission(['service_manage'], [...row.auth_actions, ...$store.state.project.projectAuthActions])"
@@ -315,28 +314,29 @@
               <!-- 删除 -->
               <bk-popover placement="bottom" theme="light">
                 <i class="bk-itsm-icon icon-move-new"></i>
-                <template #content><div style="white-space: normal;">
-                  <bk-button
-                    style="font-size: 12px;"
-                    data-test-id="service_button_deleteService1"
-                    v-if="!hasPermission(['service_manage'], [...props.row.auth_actions, ...$store.state.project.projectAuthActions])"
-                    v-cursor
-                    text
-                    theme="primary"
-                    class="btn-permission-disable"
-                    @click="onServicePermissonCheck(['service_manage'], props.row)">
-                    {{ $t('m.serviceConfig["删除"]') }}
-                  </bk-button>
-                  <template v-else>
+                <template #content>
+                  <div style="white-space: normal;">
                     <bk-button
                       style="font-size: 12px;"
-                      data-test-id="service_button_deleteService3"
-                      theme="primary"
+                      data-test-id="service_button_deleteService1"
+                      v-if="!hasPermission(['service_manage'], [...props.row.auth_actions, ...$store.state.project.projectAuthActions])"
+                      v-cursor
                       text
-                      @click="deleteOne(props.row)">
+                      theme="primary"
+                      class="btn-permission-disable"
+                      @click="onServicePermissonCheck(['service_manage'], props.row)">
                       {{ $t('m.serviceConfig["删除"]') }}
                     </bk-button>
-                  </template>
+                    <template v-else>
+                      <bk-button
+                        style="font-size: 12px;"
+                        data-test-id="service_button_deleteService3"
+                        theme="primary"
+                        text
+                        @click="deleteOne(props.row)">
+                        {{ $t('m.serviceConfig["删除"]') }}
+                      </bk-button>
+                    </template>
                   <bk-button
                     v-if="!hasPermission(['service_manage'], [...props.row.auth_actions, ...$store.state.project.projectAuthActions])"
                     style="font-size: 12px;"
@@ -357,6 +357,7 @@
                     {{ $t('m["导出"]') }}
                   </bk-button>
                 </div>
+              </template>
               </bk-popover>
             </template>
           </bk-table-column>
@@ -369,14 +370,16 @@
               @setting-change="handleSettingChange">
             </bk-table-setting-content>
           </bk-table-column>
-          <template #empty><div class="empty">
-            <empty
-              :is-error="listError"
-              :is-search="searchToggle"
-              @onRefresh="getList()"
-              @onClearSearch="clearSearch()">
-            </empty>
-          </div>
+          <template #empty>
+            <div class="empty">
+              <empty
+                :is-error="listError"
+                :is-search="searchToggle"
+                @onRefresh="getList()"
+                @onClearSearch="clearSearch()">
+              </empty>
+            </div>
+          </template>
         </bk-table>
       </div>
       <bk-dialog
@@ -431,6 +434,8 @@
   import i18n from '@/i18n/index.js';
   import Empty from '../../components/common/Empty.vue';
   // import selectTree from '@/components/form/selectTree/index.vue'
+
+  const t = i18n.global.t.bind(i18n.global);
   const FIELDS = [
     {
       id: 'id',
@@ -439,47 +444,47 @@
     },
     {
       id: 'name',
-      label: i18n.t('m["服务名称"]'),
+      label: t('m["服务名称"]'),
       minWidth: 200,
     },
     {
       id: 'key',
-      label: i18n.t('m["类型"]'),
+      label: t('m["类型"]'),
       minWidth: 200,
     },
     {
       id: 'desc',
-      label: i18n.t('m["描述"]'),
+      label: t('m["描述"]'),
       minWidth: 200,
     },
     {
       id: 'creator',
-      label: i18n.t('m["创建人"]'),
+      label: t('m["创建人"]'),
       minWidth: 100,
     },
     {
       id: 'updated_by',
-      label: i18n.t('m["更新人"]'),
+      label: t('m["更新人"]'),
       minWidth: 100,
     },
     {
       id: 'update_at',
-      label: i18n.t('m["更新时间"]'),
+      label: t('m["更新时间"]'),
       minWidth: 150,
     },
     {
       id: 'supervise_type',
-      label: i18n.t('m["可见范围"]'),
+      label: t('m["可见范围"]'),
       minWidth: 150,
     },
     {
       id: 'bounded_catalogs',
-      label: i18n.t('m["关联目录"]'),
+      label: t('m["关联目录"]'),
       minWidth: 200,
     },
     {
       id: 'is_valid',
-      label: i18n.t('m["状态"]'),
+      label: t('m["状态"]'),
       minWidth: 200,
     },
   ];
@@ -641,7 +646,7 @@
       setDisplayType(row) {
         const type = this.displayTypeList.find(item => item.type === row.display_type);
         if (type === undefined) {
-          return i18n.t('m["不可见"]');
+          return t('m["不可见"]');
         }
         if (row.display_role === '') {
           return type.name;
@@ -1142,7 +1147,7 @@
   };
 </script>
 <style lang='scss' scoped>
-@import '~@/scss/mixins/scroller.scss';
+@import '@/scss/mixins/scroller.scss';
 .icon-itsm-icon-fill-fit {
     color: #2bcb55;
 }

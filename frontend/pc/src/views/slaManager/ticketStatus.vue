@@ -91,12 +91,14 @@
               </bk-button>
             </template>
           </bk-table-column>
-          <template #empty><div class="empty">
-            <empty
-              :is-error="listError"
-              @onRefresh="getTypeStatusList()">
-            </empty>
-          </div>
+          <template #empty>
+            <div class="empty">
+              <empty
+                :is-error="listError"
+                @onRefresh="getTypeStatusList()">
+              </empty>
+            </div>
+          </template>
         </bk-table>
       </div>
     </div>

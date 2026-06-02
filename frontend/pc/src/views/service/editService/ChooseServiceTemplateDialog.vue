@@ -189,8 +189,8 @@
   };
 </script>
 <style lang='scss' scoped>
-@import '~@/scss/mixins/ellipsis.scss';
-@import '~@/scss/mixins/scroller.scss';
+@import '@/scss/mixins/ellipsis.scss';
+@import '@/scss/mixins/scroller.scss';
 .choose-service-template-dialog {
     .choose-service-template {
         position: relative;

@@ -36,8 +36,8 @@
           <span :title="nameFilter(props.row.name)">{{ nameFilter(props.row.name) }}</span>
         </template>
       </bk-table-column>
-      <template v-for="item in statusOwnList">
-        <bk-table-column :render-header="$renderHeader" :label="localeCookie ? item.name : item.flow_status" :key="item.id" :show-overflow-tooltip="true">
+      <template v-for="item in statusOwnList" :key="item.id">
+        <bk-table-column :render-header="$renderHeader" :label="localeCookie ? item.name : item.flow_status" :show-overflow-tooltip="true">
           <template #default="props">
             <template v-if="props.row.checkBoxStatus">
               <bk-checkbox class="bk-outline-none"
@@ -64,9 +64,11 @@
           </i>
         </template>
       </bk-table-column>
-      <template #empty><div class="empty">
-        <empty :is-error="listError" @onRefresh="getTypeStatus()"> </empty>
-      </div>
+      <template #empty>
+        <div class="empty">
+          <empty :is-error="listError" @onRefresh="getTypeStatus()"> </empty>
+        </div>
+      </template>
     </bk-table>
     <div class="mt20">
       <bk-button theme="default"
@@ -122,23 +124,28 @@
               :type="'number'"
               :min="0">
               <template #append>
-              <bk-dropdown-menu class="group-text"
-                @show="dropdownShow"
-                @hide="dropdownHide"
-                :font-size="'normal'"
-                ref="dropdown">
-                <template #dropdown-trigger><bk-button type="primary">
-                  <span v-for="(time, timeIndex) in timeList" :key="timeIndex">
-                    <template v-if="isAutoTemp.info.timeSpace === time.id">{{ time.name }}</template>
-                  </span>
-                  <i :class="['bk-icon icon-angle-down',{ 'icon-flip': isDropdownShow }]"></i>
-                </bk-button>
-                <template #dropdown-content><ul class="bk-dropdown-list">
-                  <li v-for="(time, timeIndex) in timeList" :key="timeIndex">
-                    <a href="javascript:;" @click="timeHandler(time)">{{ time.name }}</a>
-                  </li>
-                </ul>
-              </bk-dropdown-menu>
+                <bk-dropdown-menu class="group-text"
+                  @show="dropdownShow"
+                  @hide="dropdownHide"
+                  :font-size="'normal'"
+                  ref="dropdown">
+                  <template #dropdown-trigger>
+                    <bk-button type="primary">
+                      <span v-for="(time, timeIndex) in timeList" :key="timeIndex">
+                        <template v-if="isAutoTemp.info.timeSpace === time.id">{{ time.name }}</template>
+                      </span>
+                      <i :class="['bk-icon icon-angle-down',{ 'icon-flip': isDropdownShow }]"></i>
+                    </bk-button>
+                  </template>
+                  <template #dropdown-content>
+                    <ul class="bk-dropdown-list">
+                      <li v-for="(time, timeIndex) in timeList" :key="timeIndex">
+                        <a href="javascript:;" @click="timeHandler(time)">{{ time.name }}</a>
+                      </li>
+                    </ul>
+                  </template>
+                </bk-dropdown-menu>
+              </template>
             </bk-input>
           </bk-form-item>
           <p class="bk-auto-p">{{$t(`m.slaContent['时，将自动流转至']`)}}</p>

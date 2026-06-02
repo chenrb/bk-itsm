@@ -78,6 +78,7 @@
               @close="$refs.taskLibraryPopover.hideHandler()"
             ></task-library-opt-panel>
           </div>
+          </template>
         </bk-popover>
         <span
           class="refresh-tasks-icon"
@@ -267,61 +268,66 @@
       "
       :width="800"
     >
-      <template #content><div style="min-height: 300px">
-        <new-task
-          v-if="createInfo.isShow"
-          ref="newTask"
-          :node-info="nodeInfo"
-          :basic-infomation="ticketInfo"
-          :item-content="createInfo.taskInfo"
-          @closeSlider="createInfo.isShow = false"
-          @getTaskList="getTaskList"
-        ></new-task>
-      </div>
+      <template #content>
+        <div style="min-height: 300px">
+          <new-task
+            v-if="createInfo.isShow"
+            ref="newTask"
+            :node-info="nodeInfo"
+            :basic-infomation="ticketInfo"
+            :item-content="createInfo.taskInfo"
+            @closeSlider="createInfo.isShow = false"
+            @getTaskList="getTaskList"
+          ></new-task>
+        </div>
+      </template>
     </bk-sideslider>
     <bk-sideslider
       v-model:is-show="dealTaskInfo.show"
       :quick-close="true"
       :width="800"
     >
-      <template #header><div>
-        <task-handle-trigger
-          v-if="dealTaskInfo.show"
-          :task-info="dealTaskInfo.itemContent"
-          :title="dealTaskInfo.title"
-          :show-status="true"
-          @close-slider="dealTaskInfo.show = false"
-        >
-          <template #right-content>
-          <div
-            v-if="isShowJumpIcon(dealTaskInfo.itemContent)"
-            class="jump-to-other-system"
-            @click.stop="
-              onJumpToSopsClick(dealTaskInfo.itemContent)
-            "
+      <template #header>
+        <div>
+          <task-handle-trigger
+            v-if="dealTaskInfo.show"
+            :task-info="dealTaskInfo.itemContent"
+            :title="dealTaskInfo.title"
+            :show-status="true"
+            @close-slider="dealTaskInfo.show = false"
           >
-            <i
-              class="bk-itsm-icon icon-itsm-icon-three-seven icon-open-sops"
-            ></i>
-            <span
-              v-if="
-                dealTaskInfo.itemContent.component_type ===
-                  'SOPS'
-              "
-            >
-              {{ $t(`m.tickets['前往标准运维查看详情']`) }}
-            </span>
-            <span
-              v-if="
-                dealTaskInfo.itemContent.component_type ===
-                  'DEVOPS'
-              "
-            >
-              {{ $t(`m.tickets['前往蓝盾流水线查看详情']`) }}
-            </span>
-          </div>
-        </task-handle-trigger>
-      </div>
+            <template #right-content>
+              <div
+                v-if="isShowJumpIcon(dealTaskInfo.itemContent)"
+                class="jump-to-other-system"
+                @click.stop="
+                  onJumpToSopsClick(dealTaskInfo.itemContent)
+                "
+              >
+                <i
+                  class="bk-itsm-icon icon-itsm-icon-three-seven icon-open-sops"
+                ></i>
+                <span
+                  v-if="
+                    dealTaskInfo.itemContent.component_type ===
+                      'SOPS'
+                  "
+                >
+                  {{ $t(`m.tickets['前往标准运维查看详情']`) }}
+                </span>
+                <span
+                  v-if="
+                    dealTaskInfo.itemContent.component_type ===
+                      'DEVOPS'
+                  "
+                >
+                  {{ $t(`m.tickets['前往蓝盾流水线查看详情']`) }}
+                </span>
+              </div>
+            </template>
+          </task-handle-trigger>
+        </div>
+      </template>
       <template #content>
       <div
         v-bkloading="{ isLoading: dealTaskInfo.addLoading }"
@@ -351,6 +357,7 @@
           ></deal-task>
         </template>
       </div>
+      </template>
     </bk-sideslider>
     <!-- 任务库创建任务 -->
     <bk-sideslider
@@ -364,15 +371,17 @@
       :quick-close="true"
       :width="800"
     >
-      <template #content><div style="min-height: 300px">
-        <task-library
-          ref="taskLibrary"
-          v-if="taskLibrary.show"
-          :ticket-info="ticketInfo"
-          :node-info="nodeInfo"
-          @close="handleTaskLibraryClose"
-        ></task-library>
-      </div>
+      <template #content>
+        <div style="min-height: 300px">
+          <task-library
+            ref="taskLibrary"
+            v-if="taskLibrary.show"
+            :ticket-info="ticketInfo"
+            :node-info="nodeInfo"
+            @close="handleTaskLibraryClose"
+          ></task-library>
+        </div>
+      </template>
     </bk-sideslider>
   </div>
 </template>

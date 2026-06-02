@@ -31,8 +31,8 @@
         ext-cls="log-time-line"
         :list="list"
         @select="handleSelect">
-        <template v-for="(item, index) in list">
-          <div :key="index" :slot="`title${index}`" class="bk-timeline-title has-event" @click="handleSelect(item)">
+        <template v-for="(item, index) in list" :key="index">
+          <div :slot="`title${index}`" class="bk-timeline-title has-event" @click="handleSelect(item)">
             <span>{{item.tag}}</span>
           </div>
         </template>
@@ -88,6 +88,8 @@
   import { mapState } from 'vuex';
   import i18n from '@/i18n/index.js';
   import orderFinishedImg from '@/images/orderFinished.png';
+
+  const t = i18n.global.t.bind(i18n.global);
 
   export default {
     name: 'LogTab',
@@ -195,14 +197,14 @@
             from_state_name: item.name || '',
             from_state_type: '',
             id: -index,
-            message: `${i18n.t('m["正在进行中"]')}  ${item.processors}`,
+            message: `${t('m["正在进行中"]')}  ${item.processors}`,
             operate_at: item.update_at,
             operator: item.processors,
             processors: '',
             processors_type: '',
             showMore: false,
             tag:
-              `【${item.name}】${i18n.t('m["正在进行中"]')}, ${i18n.t('m["当前处理人"]')}${item.processors}`
+              `【${item.name}】${t('m["正在进行中"]')}, ${t('m["当前处理人"]')}${item.processors}`
               || '--',
             ticket: this.ticketInfo.id,
             ticket_id: this.ticketInfo.id,

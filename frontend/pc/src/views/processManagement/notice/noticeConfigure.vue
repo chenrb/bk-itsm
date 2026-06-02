@@ -61,12 +61,14 @@
             </bk-button>
           </template>
         </bk-table-column>
-        <template #empty><div class="empty">
-          <empty
-            :is-error="listError"
-            @onRefresh="getNoticeList()">
-          </empty>
-        </div>
+        <template #empty>
+          <div class="empty">
+            <empty
+              :is-error="listError"
+              @onRefresh="getNoticeList()">
+            </empty>
+          </div>
+        </template>
       </bk-table>
     </div>
     <!-- 编辑右侧弹窗 -->
@@ -77,14 +79,16 @@
         :quick-close="true"
         :before-close="closeSideslider"
         :width="noticeInfo.width">
-        <template #content><div style="padding: 20px 34px;" v-if="noticeInfo.show">
-          <editor-notice
-            ref="editorNotice"
-            :check-id="checkId"
-            :notice-info="noticeInfo.formInfo"
-            @closeEditor="closeEditor">
-          </editor-notice>
-        </div>
+        <template #content>
+          <div style="padding: 20px 34px;" v-if="noticeInfo.show">
+            <editor-notice
+              ref="editorNotice"
+              :check-id="checkId"
+              :notice-info="noticeInfo.formInfo"
+              @closeEditor="closeEditor">
+            </editor-notice>
+          </div>
+        </template>
       </bk-sideslider>
     </div>
   </div>

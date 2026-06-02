@@ -84,29 +84,31 @@
       :width="800"
       :quick-close="true"
       :title="$t(`m.task['查看任务']`)">
-      <template #content><div class="view-task-sideslider">
-        <bk-form :ext-cls="'mb10'"
-          :label-width="200"
-          form-type="vertical">
-          <!-- 处理人 -->
-          <bk-form-item :label="$t(`m.task['处理人']`)"
-            :required="true">
-            <deal-person
-              ref="personSelect"
-              class="deal-person"
-              :shortcut="true"
-              :value="viewTaskInfo.dealPerson">
-            </deal-person>
-          </bk-form-item>
-        </bk-form>
-        <field-info
-          v-if="viewTaskInfo.show"
-          ref="fieldInfo"
-          :fields="viewTaskInfo.item.fields"
-          :basic-infomation="ticketInfo">
-        </field-info>
-        <div class="bk-task-disabled"></div>
-      </div>
+      <template #content>
+        <div class="view-task-sideslider">
+          <bk-form :ext-cls="'mb10'"
+            :label-width="200"
+            form-type="vertical">
+            <!-- 处理人 -->
+            <bk-form-item :label="$t(`m.task['处理人']`)"
+              :required="true">
+              <deal-person
+                ref="personSelect"
+                class="deal-person"
+                :shortcut="true"
+                :value="viewTaskInfo.dealPerson">
+              </deal-person>
+            </bk-form-item>
+          </bk-form>
+          <field-info
+            v-if="viewTaskInfo.show"
+            ref="fieldInfo"
+            :fields="viewTaskInfo.item.fields"
+            :basic-infomation="ticketInfo">
+          </field-info>
+          <div class="bk-task-disabled"></div>
+        </div>
+      </template>
     </bk-sideslider>
   </div>
 </template>

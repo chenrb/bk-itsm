@@ -72,18 +72,20 @@
         :title="nodeContent.title"
         :width="nodeContent.width"
         :quick-close="nodeContent.quick">
-        <template #content><div v-if="nodeContent.isShow">
-          <node-info
-            @initInfo="initInfo"
-            :node-list="nodeInfo"
-            :read-only="nodeContent.isShow"
-            :current-step-list="currentStepList"
-            :basic-infomation="basicInfomation"
-            :open-node-info="openNodeInfo"
-            :is-loading="isNodeLoading"
-            @closeSlider="closeNodeContent">
-          </node-info>
-        </div>
+        <template #content>
+          <div v-if="nodeContent.isShow">
+            <node-info
+              @initInfo="initInfo"
+              :node-list="nodeInfo"
+              :read-only="nodeContent.isShow"
+              :current-step-list="currentStepList"
+              :basic-infomation="basicInfomation"
+              :open-node-info="openNodeInfo"
+              :is-loading="isNodeLoading"
+              @closeSlider="closeNodeContent">
+            </node-info>
+          </div>
+        </template>
       </bk-sideslider>
     </div>
   </div>

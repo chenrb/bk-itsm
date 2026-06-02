@@ -196,10 +196,9 @@
           </data-source>
         </bk-form-item>
         <template v-if="(formInfo.source_type !== 'DATADICT' && formInfo.source_type !== 'RPC') || (formInfo.source_type === 'RPC' && prcTable.length)">
-          <template v-for="(node, nodeIndex) in globalChoise.source_type">
+          <template v-for="(node, nodeIndex) in globalChoise.source_type" :key="nodeIndex">
             <bk-form-item
               v-if="node.typeName === formInfo.source_type"
-              :key="nodeIndex"
               :label="node.name"
               :desc="node.desc"
               :required="true"
@@ -282,9 +281,8 @@
           :label="$t(`m.treeinfo['布局要求']`)"
           :required="true">
           <bk-radio-group v-model="formInfo.layout" @change="$emit('change')">
-            <template v-for="(layout, layoutIndex) in globalChoise.layout_type">
+            <template v-for="(layout, layoutIndex) in globalChoise.layout_type" :key="layoutIndex">
               <bk-radio :ext-cls="'mr20'"
-                :key="layoutIndex"
                 :value="layout.typeName"
                 :disabled="showType.layoutList.some(node => node === formInfo.type)">
                 {{layout.name}}
@@ -296,9 +294,8 @@
           :label="$t(`m.treeinfo['字段必填']`)"
           :required="true">
           <bk-radio-group v-model="formInfo.validate" @change="$emit('change')">
-            <template v-for="(validate, validateIndex) in globalChoise.validate_type">
+            <template v-for="(validate, validateIndex) in globalChoise.validate_type" :key="validateIndex">
               <bk-radio :ext-cls="'mr20'"
-                :key="validateIndex"
                 :value="validate.typeName"
                 :disabled="changeInfo.key === 'title' || changeInfo.is_builtin">
                 {{validate.name}}

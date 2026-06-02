@@ -141,23 +141,25 @@
               {{ item.name }}
             </div>
           </bk-option>
-          <template #extension><div class="project-select-extension">
-            <div
-              data-test-id="navigation-div-createProject"
-              v-cursor="{ active: !hasPermission(['project_create']) }"
-              :class="['action-item', { 'text-permission-disable': !hasPermission(['project_create']) }]"
-              @click="handleCreateProject">
-              <i class="bk-icon icon-plus-circle"></i>
-              {{ $t(`m['新建项目']`) }}
+          <template #extension>
+            <div class="project-select-extension">
+              <div
+                data-test-id="navigation-div-createProject"
+                v-cursor="{ active: !hasPermission(['project_create']) }"
+                :class="['action-item', { 'text-permission-disable': !hasPermission(['project_create']) }]"
+                @click="handleCreateProject">
+                <i class="bk-icon icon-plus-circle"></i>
+                {{ $t(`m['新建项目']`) }}
+              </div>
+              <div
+                data-test-id="navigation-div-manageProject"
+                class="action-item"
+                @click="goToProjectManage">
+                <i class="bk-icon icon-apps"></i>
+                {{ $t(`m['项目管理']`) }}
+              </div>
             </div>
-            <div
-              data-test-id="navigation-div-manageProject"
-              class="action-item"
-              @click="goToProjectManage">
-              <i class="bk-icon icon-apps"></i>
-              {{ $t(`m['项目管理']`) }}
-            </div>
-          </div>
+          </template>
         </bk-select>
         <div v-else class="project-first-text">{{ projectFirstText }}</div>
       </template>
@@ -169,11 +171,10 @@
         item-active-icon-color="#3a84ff"
         :toggle-active="true"
         :default-active="activeSideRouter">
-        <template v-for="router in sideNav">
+        <template v-for="router in sideNav" :key="router.id">
           <div
             v-if="Array.isArray(router.subRouters) && router.subRouters.length > 0"
-            class="nav-group-wrap"
-            :key="router.id">
+            class="nav-group-wrap">
             <div class="group-name">{{ !isSideOpen && ['en', 'ja'].includes($store.state.language) ? router.abbrName : router.name }}</div>
             <bk-navigation-menu-item
               v-for="item in router.subRouters"
@@ -189,7 +190,6 @@
           <bk-navigation-menu-item
             :data-test-id="`navigation-menu-platformRouter-${router.id}`"
             v-else
-            :key="router.id"
             :id="router.id"
             :has-child="false"
             :icon="router.icon"
@@ -341,10 +341,10 @@
 
       this.curLanguage = ['zh', 'zh-cn'].includes(language) ? 'zh' : language;
       this.getAccessService();
-      bus.$on('openCreateTicketDialog', () => {
+      bus.on('openCreateTicketDialog', () => {
         this.isCreateTicketDialogShow = true;
       });
-      bus.$on('openCreateProjectDialog', () => {
+      bus.on('openCreateProjectDialog', () => {
         this.handleCreateProject();
       });
     },
@@ -460,7 +460,7 @@
         // if (router.id === 'manage') {
         //     await this.$store.dispatch('project/getProjectInfo')
         //     if (this.hasPermission(['project_view'])) {
-        //         bus.$emit('togglePermissionApplyPage', false)
+        //         bus.emit('togglePermissionApplyPage', false)
         //         this.$router.push(router.path)
         //     } else {
         //         const projectInfo = this.$store.state.project.projectInfo
@@ -471,7 +471,7 @@
         //             }]
         //         }
         //         const data = this.applyForPermission(['project_view'], [], resourceData, true)
-        //         bus.$emit('togglePermissionApplyPage', true, 'other', data)
+        //         bus.emit('togglePermissionApplyPage', true, 'other', data)
         //         this.activeNav = 'manage'
         //         this.sideRouters = []
         //         return

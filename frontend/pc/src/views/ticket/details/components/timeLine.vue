@@ -23,8 +23,8 @@
 <template>
   <div class="bk-timeline-contain">
     <div class="bk-timeline-contain-va">
-      <template v-for="(item, index) in lineList">
-        <li :key="index" :class="{ 'bk-timeline-item': true, 'content-va-sign': parent === 'sign' }">
+      <template v-for="(item, index) in lineList" :key="index">
+        <li :class="{ 'bk-timeline-item': true, 'content-va-sign': parent === 'sign' }">
           <div :class="{ 'bk-timeline-item-head-va': true, 'head-va-sign': parent === 'sign', 'head-va-sign-first': parent === 'sign' && !index }">
             <div class="bk-timeline-item-head">
               <header>

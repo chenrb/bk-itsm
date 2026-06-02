@@ -43,9 +43,8 @@
             <div class="bk-timeline-user-content">
               <div v-if="item.showMore" class="bk-area-show-back">
                 <!-- 静态展示 -->
-                <template v-for="(ite, inde) in item.form_data">
+                <template v-for="(ite, inde) in item.form_data" :key="inde">
                   <fields-done
-                    :key="inde"
                     :item="ite"
                     origin="log"
                   ></fields-done>

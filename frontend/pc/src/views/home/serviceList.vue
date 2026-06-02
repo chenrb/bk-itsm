@@ -236,7 +236,7 @@
         }
       },
       onCreateTicket() {
-        bus.$emit('openCreateTicketDialog');
+        bus.emit('openCreateTicketDialog');
       },
       handleClickoutside() {
         this.isSearchResultShow = false;

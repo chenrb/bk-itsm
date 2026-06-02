@@ -67,9 +67,11 @@
               @onFormEditClick="onFormEditClick"
               @onFormCloneClick="onFormCloneClick"
               @onFormDeleteClick="$emit('fieldDelete', $event)">
-              <template #draggable><div class="dragElement">
-                <i class="bk-itsm-icon icon-move-new"></i>
-              </div>
+              <template #draggable>
+                <div class="dragElement">
+                  <i class="bk-itsm-icon icon-move-new"></i>
+                </div>
+              </template>
             </form-view-item>
           </template>
         </draggable>
@@ -302,7 +304,7 @@
   };
 </script>
 <style lang='scss' scoped>
-@import '~@/scss/mixins/scroller.scss';
+@import '@/scss/mixins/scroller.scss';
 .service-ticket-form {
     // margin-top: 16px;
     position: relative;

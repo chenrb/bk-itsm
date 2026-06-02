@@ -23,8 +23,8 @@
 <template>
   <div class="bk-field-preview" id="bkPreview" ref="fieldContent">
     <bk-form :label-width="labelWidth" form-type="vertical" :ext-cls="'bk-ext-form'">
-      <template v-for="(item, index) in fields">
-        <div :key="index" v-if="item.showFeild" :class="{ 'bk-field-line': item.layout === 'COL_12', 'bk-field-half': item.layout === 'COL_6', 'bk-field-trigger': origin === 'trigger' }">
+      <template v-for="(item, index) in fields" :key="index">
+        <div v-if="item.showFeild" :class="{ 'bk-field-line': item.layout === 'COL_12', 'bk-field-half': item.layout === 'COL_6', 'bk-field-trigger': origin === 'trigger' }">
           <component :ref="'component' + index"
             :is="'CW-' + item.type"
             :item="item"

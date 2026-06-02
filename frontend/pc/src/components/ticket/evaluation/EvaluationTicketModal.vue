@@ -40,24 +40,26 @@
       </evaluation-ticket-content>
       <p v-if="satisfactInfo.has_invited" class="invited-tips">{{ $t('m.newCommon["满意度评价邀请已发送，等待用户评价"]') }}</p>
     </div>
-    <template #footer><div>
-      <bk-button v-if="satisfactInfo.has_invited" @click="isShow = false">
-        {{ $t('m.newCommon["关闭"]') }}
-      </bk-button>
-      <template v-else>
-        <bk-button
-          theme="primary"
-          :loading="submitting"
-          @click="onModelSubmitBtnClick">
-          {{ $t('m.newCommon["提交"]') }}
+    <template #footer>
+      <div>
+        <bk-button v-if="satisfactInfo.has_invited" @click="isShow = false">
+          {{ $t('m.newCommon["关闭"]') }}
         </bk-button>
-        <bk-button
-          theme="default"
-          @click="isShow = false">
-          {{ $t('m.newCommon["取消"]') }}
-        </bk-button>
-      </template>
-    </div>
+        <template v-else>
+          <bk-button
+            theme="primary"
+            :loading="submitting"
+            @click="onModelSubmitBtnClick">
+            {{ $t('m.newCommon["提交"]') }}
+          </bk-button>
+          <bk-button
+            theme="default"
+            @click="isShow = false">
+            {{ $t('m.newCommon["取消"]') }}
+          </bk-button>
+        </template>
+      </div>
+    </template>
   </bk-dialog>
 </template>
 

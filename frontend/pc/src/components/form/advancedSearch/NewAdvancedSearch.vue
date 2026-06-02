@@ -150,9 +150,11 @@
       width="560"
       :draggable="false"
       @confirm="highlightSettingConfirm">
-      <template #header><p style="text-align: left;">
-        {{$t(`m.slaContent["单据高亮设置"]`)}}
-      </p>
+      <template #header>
+        <p style="text-align: left;">
+          {{$t(`m.slaContent["单据高亮设置"]`)}}
+        </p>
+      </template>
       <div class="bk-highlight-setting">
         <div class="bk-itsm-version">
           <i class="bk-icon icon-info-circle"></i>

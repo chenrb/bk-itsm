@@ -33,8 +33,8 @@
     <div v-if="node.type === 'END'" class="endpoint">
       {{ $t('m.treeinfo["结束"]') }}
     </div>
-    <template v-for="(item, index) in typeList" v-if="node.type === item.type">
-      <div class="common-node" :class="{ 'common-auto': item.type === 'TASK' }" :key="index">
+    <template v-for="(item, index) in typeList" :key="index" v-if="node.type === item.type">
+      <div class="common-node" :class="{ 'common-auto': item.type === 'TASK' }">
         <span
           class="bk-tool-span"
           v-if="node.nodeInfo.statusInfo === 'WAIT'"

@@ -110,12 +110,14 @@
             </bk-button>
           </template>
         </bk-table-column>
-        <template #empty><div class="empty">
-          <empty
-            :is-error="listError"
-            @onRefresh="getInheritStateList()">
-          </empty>
-        </div>
+        <template #empty>
+          <div class="empty">
+            <empty
+              :is-error="listError"
+              @onRefresh="getInheritStateList()">
+            </empty>
+          </div>
+        </template>
       </bk-table>
     </div>
     <div
@@ -236,11 +238,13 @@
           ></bk-table-column>
         </bk-table>
       </div>
-      <template #footer><div>
-        <bk-button theme="default" @click="closeHistory">
-          {{ $t('m.home["取消"]') }}
-        </bk-button>
-      </div>
+      <template #footer>
+        <div>
+          <bk-button theme="default" @click="closeHistory">
+            {{ $t('m.home["取消"]') }}
+          </bk-button>
+        </div>
+      </template>
     </bk-dialog>
 
     <!-- 新建母子单 -->
@@ -251,16 +255,18 @@
       :before-close="closeSideslider"
       :width="750"
     >
-      <template #content><div class="p20">
-        <inherit-ticket-add-dialog
-          ref="addInheritTicket"
-          v-if="isShowAddInheritTicket"
-          :template-info="inheritStateInfo"
-          :ticket-info="ticketInfo"
-          @close="isShowAddInheritTicket = false"
-        >
-        </inherit-ticket-add-dialog>
-      </div>
+      <template #content>
+        <div class="p20">
+          <inherit-ticket-add-dialog
+            ref="addInheritTicket"
+            v-if="isShowAddInheritTicket"
+            :template-info="inheritStateInfo"
+            :ticket-info="ticketInfo"
+            @close="isShowAddInheritTicket = false"
+          >
+          </inherit-ticket-add-dialog>
+        </div>
+      </template>
     </bk-sideslider>
   </div>
 </template>

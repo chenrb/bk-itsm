@@ -110,13 +110,15 @@
         v-model:is-show="sliderInfo.show"
         :title="sliderInfo.title"
         :width="sliderInfo.width">
-        <template #content><div v-bkloading="{ isLoading: addLoading }" style="min-height: 300px;">
-          <add-basic-module
-            v-if="!addLoading && sliderInfo.show"
-            :public-list="publicList"
-            :slide-data="slideData">
-          </add-basic-module>
-        </div>
+        <template #content>
+          <div v-bkloading="{ isLoading: addLoading }" style="min-height: 300px;">
+            <add-basic-module
+              v-if="!addLoading && sliderInfo.show"
+              :public-list="publicList"
+              :slide-data="slideData">
+            </add-basic-module>
+          </div>
+        </template>
       </bk-sideslider>
     </div>
   </div>

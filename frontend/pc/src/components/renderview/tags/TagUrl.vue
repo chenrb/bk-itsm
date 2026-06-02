@@ -11,9 +11,11 @@
       :title="text"
       :width="800"
       ext-cls="custom-form-iframe-sideslider">
-      <template #content><div class="custom-form-iframe-content">
-        <iframe :src="form.value" frameborder="0"></iframe>
-      </div>
+      <template #content>
+        <div class="custom-form-iframe-content">
+          <iframe :src="form.value" frameborder="0"></iframe>
+        </div>
+      </template>
     </bk-sideslider>
   </div>
 </template>

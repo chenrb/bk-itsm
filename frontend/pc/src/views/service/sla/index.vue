@@ -112,13 +112,16 @@
       :quick-close="true"
       :before-close="clearLastNode"
       :width="695">
-      <template #header><div class="sideslider-header">
-        {{$t(`m.serviceConfig['绑定服务协议']`)}}
-        <div @click="viewAgreementIsShow = true" class="view-agreement-text">
-          {{$t(`m.serviceConfig['查看协议计时说明']`)}}
+      <template #header>
+        <div class="sideslider-header">
+          {{$t(`m.serviceConfig['绑定服务协议']`)}}
+          <div @click="viewAgreementIsShow = true" class="view-agreement-text">
+            {{$t(`m.serviceConfig['查看协议计时说明']`)}}
+          </div>
         </div>
-      </div>
-      <template #content><div class="sideslider-content">
+      </template>
+      <template #content>
+        <div class="sideslider-content">
         <bk-form
           :label-width="250"
           form-type="vertical"
@@ -178,9 +181,11 @@
                   @click.stop="handleEditAgreement(option)">
                 </i>
               </bk-option>
-              <template #extension><div @click="handleCreateAgreement" style="cursor: pointer;">
-                <i class="bk-icon icon-plus-circle"></i>{{$t(`m.serviceConfig['跳转新建协议']`)}}
-              </div>
+              <template #extension>
+                <div @click="handleCreateAgreement" style="cursor: pointer;">
+                  <i class="bk-icon icon-plus-circle"></i>{{$t(`m.serviceConfig['跳转新建协议']`)}}
+                </div>
+              </template>
             </bk-select>
           </bk-form-item>
           <bk-form-item
@@ -197,6 +202,7 @@
           </bk-button>
         </div>
       </div>
+      </template>
     </bk-sideslider>
     <bk-dialog
       v-model="viewAgreementIsShow"

@@ -135,14 +135,16 @@
             </bk-button>
           </template>
         </bk-table-column>
-        <template #empty><div class="empty">
-          <empty
-            :is-error="listError"
-            :is-search="Boolean(searchInfo.key)"
-            @onRefresh="getlist(1)"
-            @onClearSearch="onClearSearch">
-          </empty>
-        </div>
+        <template #empty>
+          <div class="empty">
+            <empty
+              :is-error="listError"
+              :is-search="Boolean(searchInfo.key)"
+              @onRefresh="getlist(1)"
+              @onClearSearch="onClearSearch">
+            </empty>
+          </div>
+        </template>
       </bk-table>
     </div>
     <!-- 新增字典 -->
@@ -154,15 +156,17 @@
         :transfer="true"
         :width="customSettings.width"
         :before-close="handleBeforeClose">
-        <template #content><div class="p20" v-if="customSettings.isShow">
-          <add-data-directory
-            :slide-data="slideData"
-            @change="isFormChanged = true"
-            @openAddData="openAddData"
-            @getList="getList"
-            @closeAddData="closeAddData">
-          </add-data-directory>
-        </div>
+        <template #content>
+          <div class="p20" v-if="customSettings.isShow">
+            <add-data-directory
+              :slide-data="slideData"
+              @change="isFormChanged = true"
+              @openAddData="openAddData"
+              @getList="getList"
+              @closeAddData="closeAddData">
+            </add-data-directory>
+          </div>
+        </template>
       </bk-sideslider>
     </div>
   </div>

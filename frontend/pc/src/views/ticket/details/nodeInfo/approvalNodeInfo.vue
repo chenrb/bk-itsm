@@ -23,9 +23,8 @@
 <template>
   <div class="bk-approval-node-content">
     <h3 class="bk-basic-h3">{{ $t('m.newCommon["节点信息"]') }}</h3>
-    <template v-for="(ite, inde) in nodeInfo.fields">
+    <template v-for="(ite, inde) in nodeInfo.fields" :key="inde">
       <fields-done
-        :key="inde"
         :item="ite"
         :origin="'notLog'">
       </fields-done>

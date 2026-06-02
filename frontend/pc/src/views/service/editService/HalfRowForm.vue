@@ -32,13 +32,12 @@
             @onEditConfirm="$emit('onEditConfirm', $event)">
         </form-edit-item> -->
     <div class="row-form-view">
-      <template v-for="(group, index) in localForms">
+      <template v-for="(group, index) in localForms" :key="index">
         <draggable
           class="form-drag-wrap"
           handle=".view-form"
           :data-rowindex="rowIndex"
           :value="group"
-          :key="index"
           item-key="id"
           :group="{
             name: 'view-form',
@@ -55,9 +54,11 @@
                 @onFormEditClick="$emit('onFormEditClick', $event)"
                 @onFormCloneClick="$emit('onFormCloneClick', $event)"
                 @onFormDeleteClick="$emit('onFormDeleteClick', $event)">
-                <template #draggable><div class="view-form">
-                  <i class="bk-itsm-icon icon-move-new"></i>
-                </div>
+                <template #draggable>
+                  <div class="view-form">
+                    <i class="bk-itsm-icon icon-move-new"></i>
+                  </div>
+                </template>
               </form-view-item>
             </div>
           </template>

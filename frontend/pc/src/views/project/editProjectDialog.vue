@@ -72,6 +72,8 @@
   import { deepClone } from '@/utils/util';
   import i18n from '@/i18n/index.js';
 
+  const t = i18n.global.t.bind(i18n.global);
+
   export default {
     name: 'EditProjectDialog',
     props: {
@@ -147,7 +149,7 @@
       projectValidateList(list, type) {
         const projectList = [];
         projectList.push(list);
-        if (this.title === i18n.t('m["编辑项目"]')) {
+        if (this.title === t('m["编辑项目"]')) {
           projectList.length = 0;
           const result = list.filter(item => item[type] !== this.project[type]);
           projectList.push(result);

@@ -118,9 +118,11 @@
           </template>
         </template>
       </bk-table-column>
-      <template #empty><div class="empty">
-        <empty :is-error="listError" @onRefresh="getTypeStatusList()"> </empty>
-      </div>
+      <template #empty>
+        <div class="empty">
+          <empty :is-error="listError" @onRefresh="getTypeStatusList()"> </empty>
+        </div>
+      </template>
     </bk-table>
     <div class="mt20">
       <bk-button

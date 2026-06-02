@@ -80,15 +80,15 @@
     </template>
     <template v-if="itemInfo.type === 'RADIO'">
       <bk-radio-group v-model="itemInfo.value">
-        <template v-for="(radioItem, radioIndex) in itemInfo.choice">
-          <bk-radio :value="radioItem.key" :ext-cls="'mr50'" :key="radioIndex">{{radioItem.name}}</bk-radio>
+        <template v-for="(radioItem, radioIndex) in itemInfo.choice" :key="radioIndex">
+          <bk-radio :value="radioItem.key" :ext-cls="'mr50'">{{radioItem.name}}</bk-radio>
         </template>
       </bk-radio-group>
     </template>
     <template v-if="itemInfo.type === 'CHECKBOX'">
       <bk-checkbox-group v-model="itemInfo.value">
-        <template v-for="(checkboxItem, checkboxIndex) in itemInfo.choice">
-          <bk-checkbox :value="checkboxItem.key" :ext-cls="'mr10'" :key="checkboxIndex">{{checkboxItem.name}}</bk-checkbox>
+        <template v-for="(checkboxItem, checkboxIndex) in itemInfo.choice" :key="checkboxIndex">
+          <bk-checkbox :value="checkboxItem.key" :ext-cls="'mr10'">{{checkboxItem.name}}</bk-checkbox>
         </template>
       </bk-checkbox-group>
     </template>

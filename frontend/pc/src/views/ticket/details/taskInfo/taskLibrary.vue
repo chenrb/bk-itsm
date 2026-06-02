@@ -135,10 +135,11 @@
       v-model:is-show="tableContent.show"
       :title="tableContent.title"
       :width="tableContent.width">
-      <template #content><div class="bk-task-library" v-if="tableContent.show">
-        <bk-form :ext-cls="'mb10'"
-          :label-width="200"
-          form-type="vertical">
+      <template #content>
+        <div class="bk-task-library" v-if="tableContent.show">
+          <bk-form :ext-cls="'mb10'"
+            :label-width="200"
+            form-type="vertical">
           <!-- 处理人 -->
           <bk-form-item :label="$t(`m.task['处理人']`)"
             :required="true">
@@ -171,13 +172,14 @@
           </bk-button>
         </div>
       </div>
+    </template>
     </bk-sideslider>
   </div>
 </template>
 
 <script>
-  import fieldInfo from '../../managePage/billCom/fieldInfo.vue';
-  import DealPerson from '../../processManagement/processDesign/nodeConfigue/components/dealPerson';
+  import fieldInfo from '../../../managePage/billCom/fieldInfo.vue';
+  import DealPerson from '../../../processManagement/processDesign/nodeConfigue/components/dealPerson';
   import { useCommonMix } from '@/composables/useCommonMix';
   import { useApiFieldsWatch } from '@/composables/useApiFieldsWatch';
   import { errorHandler } from '@/utils/errorHandler';

@@ -26,6 +26,8 @@ import { jsonp } from '../utils/util'
 import i18n from '@/i18n/index.js'
 import { getPlatformConfig, setShortcutIcon } from '@blueking/platform-config'
 
+const t = i18n.global.t.bind(i18n.global);
+
 export const useRootStore = defineStore('root', {
   state: () => ({
     language: "zh-cn",
@@ -81,8 +83,8 @@ export const useRootStore = defineStore('root', {
     },
     platformInfo: {
       favicon: `${window.SITE_URL}static/core/images/bk_itsm.png`,
-      name: window.log_name || i18n.t('m[\'流程服务\']'),
-      brandName: window.BK_PLATFORM_NAME || i18n.t('m[\'蓝鲸智云\']'),
+      name: window.log_name || t('m[\'流程服务\']'),
+      brandName: window.BK_PLATFORM_NAME || t('m[\'蓝鲸智云\']'),
       version: window.VERSION,
       i18n: {}
     },
@@ -122,7 +124,7 @@ export const useRootStore = defineStore('root', {
       function dataCheck(data, type) {
         // 非空校验
         if (!data) {
-          return i18n.t(`m.wiki["不能为空"]`)
+          return t(`m.wiki["不能为空"]`)
         }
         // 长度校验
         let typelist
@@ -146,14 +148,14 @@ export const useRootStore = defineStore('root', {
           })
           if (islength) {
             if (minlength && data.length < minlength) {
-              return i18n.t("m.wiki['长度应大于']") + `${minlength}`
+              return t("m.wiki['长度应大于']") + `${minlength}`
             }
             if (maxlength && data.length > maxlength) {
-              return i18n.t("m.wiki['长度应小于']") + `${minlength}`
+              return t("m.wiki['长度应小于']") + `${minlength}`
             }
             // 默认不超过255
             if (data.length > 255) {
-              return i18n.t("m.wiki['长度1~255']")
+              return t("m.wiki['长度1~255']")
             }
           }
         }
@@ -165,19 +167,19 @@ export const useRootStore = defineStore('root', {
               if (/^[一-龥_a-zA-Z0-9]+$/.test(data)) {
                 return ""
               }
-              return i18n.t("m.wiki['内容应由中文、数字、字母、下划线组成]")
+              return t("m.wiki['内容应由中文、数字、字母、下划线组成]")
             }
             // 判断输入字符串是否为数字、字母、下划线组成
             if (/^\w+$/.test(data)) {
               return ""
             }
-            return i18n.t("m.wiki['内容应由数字、字母、下划线组成]")
+            return t("m.wiki['内容应由数字、字母、下划线组成]")
           case "Number":
             // 判断输入字符串是否为数字、字母、下划线组成
             if (/^\d+$/.test(data)) {
               return ""
             }
-            return i18n.t("m.wiki['请填写数字']")
+            return t("m.wiki['请填写数字']")
           default:
             return ""
         }

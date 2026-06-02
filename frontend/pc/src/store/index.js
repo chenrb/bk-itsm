@@ -74,6 +74,8 @@ import project from "./modules/project.js";
 // 根据模板重新整理
 import ticket from "./modules/ticket";
 
+const t = i18n.global.t.bind(i18n.global);
+
 export default createStore({
   // 模块
   modules: {
@@ -266,8 +268,8 @@ export default createStore({
     },
     platformInfo: { // 项目全局配置
       favicon: `${window.SITE_URL}static/core/images/bk_itsm.png`,
-      name: window.log_name || i18n.t('m[\'流程服务\']'),
-      brandName: window.BK_PLATFORM_NAME || i18n.t('m[\'蓝鲸智云\']'),
+      name: window.log_name || t('m[\'流程服务\']'),
+      brandName: window.BK_PLATFORM_NAME || t('m[\'蓝鲸智云\']'),
       version: window.VERSION,
       i18n: {}
     },

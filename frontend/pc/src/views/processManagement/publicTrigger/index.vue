@@ -127,6 +127,7 @@
             @getList="getList">
           </add-trigger>
         </div>
+        </template>
       </bk-sideslider>
     </div>
   </div>

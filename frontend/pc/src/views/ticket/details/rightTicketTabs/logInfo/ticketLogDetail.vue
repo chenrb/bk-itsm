@@ -32,11 +32,13 @@
         }
       "
     >
-      <template v-if="logInfo">
-        <template #header><div class="slide-title">
-          {{ logInfo.from_state_name || logInfo.message }}
-        </div>
-        <template #content><div class="p20">
+      <template v-if="logInfo" #header>
+          <div class="slide-title">
+            {{ logInfo.from_state_name || logInfo.message }}
+          </div>
+      </template>
+      <template v-if="logInfo" #content>
+          <div class="p20">
           <div class="bk-timeline-user-content">
             <div class="bk-area-show-back">
               <!-- 基础信息 -->
@@ -106,9 +108,9 @@
                   </h3>
                   <template
                     v-for="(ite, inde) in logInfo.form_data"
+                    :key="inde"
                   >
                     <fields-done
-                      :key="inde"
                       :item="ite"
                       :origin="'log'"
                     >

@@ -181,7 +181,8 @@
       :title="entryInfo.title"
       :width="entryInfo.width"
       :quick-close="true">
-      <template #content><div style="padding: 20px" v-if="entryInfo.show">
+      <template #content>
+        <div style="padding: 20px" v-if="entryInfo.show">
         <bk-table
           v-bkloading="{ isLoading: isDataLoading }"
           :data="entryInfo.listInfo"
@@ -233,6 +234,7 @@
           </bk-button>
         </div>
       </div>
+      </template>
     </bk-sideslider>
   </div>
 </template>

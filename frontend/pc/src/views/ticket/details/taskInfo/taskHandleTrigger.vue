@@ -27,15 +27,19 @@
       <task-status v-if="showStatus" ext-cls="mr30" :status="taskInfo.status" type="block"></task-status>
       <bk-dropdown-menu
         v-if="triggerList.length" @show="dropdownShow = true" @hide="dropdownShow = false">
-        <template #dropdown-trigger><bk-button :loading="gettingTriggers">
-          <span>{{ $t('m.newCommon["更多操作"]') }}</span>
-          <i :class="['bk-icon icon-angle-down',{ 'icon-flip': dropdownShow }]"></i>
-        </bk-button>
-        <template #dropdown-content><ul class="bk-dropdown-list trigger-ul">
-          <li v-for="(trigger, tIndex) in triggerList" :key="tIndex">
-            <a href="javascript:;" @click="openTriggerDialog(trigger)">{{trigger.display_name}}</a>
-          </li>
-        </ul>
+        <template #dropdown-trigger>
+          <bk-button :loading="gettingTriggers">
+            <span>{{ $t('m.newCommon["更多操作"]') }}</span>
+            <i :class="['bk-icon icon-angle-down',{ 'icon-flip': dropdownShow }]"></i>
+          </bk-button>
+        </template>
+        <template #dropdown-content>
+          <ul class="bk-dropdown-list trigger-ul">
+            <li v-for="(trigger, tIndex) in triggerList" :key="tIndex">
+              <a href="javascript:;" @click="openTriggerDialog(trigger)">{{trigger.display_name}}</a>
+            </li>
+          </ul>
+        </template>
       </bk-dropdown-menu>
     </div>
     <div class="right-content">

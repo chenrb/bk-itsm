@@ -38,10 +38,9 @@
     </p>
     <div class="bk-ticket-content">
       <bk-radio-group v-model="templateInfo.inheritType">
-        <template v-for="radio in templateInfo.options">
+        <template v-for="radio in templateInfo.options" :key="radio.key">
           <bk-radio
             :value="radio.key"
-            :key="radio.key"
             class="mr20"
             :disabled="getFlag(radio.key, ticketInfo)"
             @change="changeRadio"

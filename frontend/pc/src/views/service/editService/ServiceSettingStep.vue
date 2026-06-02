@@ -424,8 +424,8 @@
   };
 </script>
 <style lang='scss' scoped>
-@import '~@/scss/mixins/scroller.scss';
-@import '~@/scss/common-section-card.scss';
+@import '@/scss/mixins/scroller.scss';
+@import '@/scss/common-section-card.scss';
 .bk-float-radio {
     float: left;
     line-height: 30px;

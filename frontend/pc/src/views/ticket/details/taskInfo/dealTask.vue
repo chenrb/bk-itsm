@@ -230,13 +230,15 @@
   import fieldInfo from '@/views/managePage/billCom/fieldInfo.vue';
   import fieldPreview from '@/views/commonComponent/fieldPreview/index.vue';
 
+  const t = i18n.global.t.bind(i18n.global);
+
   // 任务基础信息
   const baseTaskInfoList = [
-    { key: 'component_type', name: i18n.t('m.task[\'任务类型\']'), value: '' },
-    { key: 'name', name: i18n.t('m.task[\'任务名称\']'), value: '' },
-    { key: 'status', name: i18n.t('m.task[\'状态\']'), value: '' },
-    { key: 'processor_users', name: i18n.t('m.task[\'处理人\']'), value: '' },
-    { key: 'create_at', name: i18n.t('m.task[\'创建时间\']'), value: '' },
+    { key: 'component_type', name: t('m.task[\'任务类型\']'), value: '' },
+    { key: 'name', name: t('m.task[\'任务名称\']'), value: '' },
+    { key: 'status', name: t('m.task[\'状态\']'), value: '' },
+    { key: 'processor_users', name: t('m.task[\'处理人\']'), value: '' },
+    { key: 'create_at', name: t('m.task[\'创建时间\']'), value: '' },
   ];
   const specialFieldTypes = [
     'COMPLEX-MEMBERS', // 人员类型选择
@@ -434,7 +436,7 @@
   };
 </script>
 <style lang="scss" scoped>
-@import "~@/scss/mixins/form.scss";
+@import "@/scss/mixins/form.scss";
 .bk-status-normal {
     color: #3c96ff;
     border: 1px solid #3c96ff;

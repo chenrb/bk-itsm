@@ -42,6 +42,7 @@
               ]"
             ></i>
           </bk-button>
+          </template>
           <template #dropdown-content>
           <ul
             class="bk-dropdown-list bk-dropdown-list-cus"
@@ -70,6 +71,7 @@
               </a>
             </li>
           </ul>
+          </template>
         </bk-dropdown-menu>
         <div
           class="bk-task-library"
@@ -356,20 +358,23 @@
         >
         </new-task>
       </div>
+      </template>
     </bk-sideslider>
     <bk-sideslider
       :quick-close="true"
       v-model:is-show="dealTaskInfo.show"
       :width="dealTaskInfo.width"
     >
-      <template #header><div>
-        <task-handle-trigger
-          v-if="dealTaskInfo.show"
-          :task-info="dealTaskInfo.itemContent"
-          :title="dealTaskInfo.title"
-          @close-slider="dealTaskInfo.show = false"
-        ></task-handle-trigger>
-      </div>
+      <template #header>
+        <div>
+          <task-handle-trigger
+            v-if="dealTaskInfo.show"
+            :task-info="dealTaskInfo.itemContent"
+            :title="dealTaskInfo.title"
+            @close-slider="dealTaskInfo.show = false"
+          ></task-handle-trigger>
+        </div>
+      </template>
       <template #content>
       <div
         v-bkloading="{ isLoading: dealTaskInfo.addLoading }"
@@ -385,6 +390,7 @@
         >
         </deal-task>
       </div>
+      </template>
     </bk-sideslider>
     <bk-sideslider
       v-model:is-show="libraryInfo.show"
@@ -405,6 +411,7 @@
         >
         </task-library>
       </div>
+      </template>
     </bk-sideslider>
   </div>
 </template>

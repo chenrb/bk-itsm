@@ -48,9 +48,11 @@
             {{item.remindRuleText}}
             <span v-if="'remindRuleValue' in item" class="bk-border-bottom">
               <bk-popconfirm data-test-id="slaAgreement-popconfirm-remindRuleValue" placement="bottom" confirm-text="" cancel-text="" trigger="click">
-                <template #content><div style="width: 188px;padding-top: 6px">
-                  <bk-slider v-model="item.remindRuleValue"></bk-slider>
-                </div>
+                <template #content>
+                  <div style="width: 188px;padding-top: 6px">
+                    <bk-slider v-model="item.remindRuleValue"></bk-slider>
+                  </div>
+                </template>
                 {{item.remindRuleValue}}
                 {{item.remindRuleUnit}}
               </bk-popconfirm>
@@ -129,23 +131,26 @@
               <input data-test-id="slaAgreement-radio-notifyFreq" @change="notifyFreqChange(item.notify_freq, index)" type="number" v-model.number="item.notify_freq">
             </span>
             <span class="freq-unit">
-              <template #append>
               <bk-dropdown-menu class="group-text"
                 @show="dropdownShow()"
                 @hide="dropdownHide()"
                 :ref="'dropdown' + index"
                 :font-size="'normal'">
-                <template #dropdown-trigger><bk-button type="primary" :ext-cls="'cus-width'">
-                  <span v-for="(time, timeIndex) in timeList" :key="timeIndex">
-                    <template v-if="item.freq_unit === time.id">{{ time.name }}</template>
-                  </span>
-                  <i :class="['bk-icon icon-angle-down',{ 'icon-flip': item.isDropdownShow }]"></i>
-                </bk-button>
-                <template #dropdown-content><ul class="bk-dropdown-list">
-                  <li v-for="(time, timeIndex) in timeList" :key="timeIndex">
-                    <a href="javascript:;" :data-test-id="`slaAgreement-a-timeHandler-${timeIndex}`" @click="timeHandler(time, item, index)">{{ time.name }}</a>
-                  </li>
-                </ul>
+                <template #dropdown-trigger>
+                  <bk-button type="primary" :ext-cls="'cus-width'">
+                    <span v-for="(time, timeIndex) in timeList" :key="timeIndex">
+                      <template v-if="item.freq_unit === time.id">{{ time.name }}</template>
+                    </span>
+                    <i :class="['bk-icon icon-angle-down',{ 'icon-flip': item.isDropdownShow }]"></i>
+                  </bk-button>
+                </template>
+                <template #dropdown-content>
+                  <ul class="bk-dropdown-list">
+                    <li v-for="(time, timeIndex) in timeList" :key="timeIndex">
+                      <a href="javascript:;" :data-test-id="`slaAgreement-a-timeHandler-${timeIndex}`" @click="timeHandler(time, item, index)">{{ time.name }}</a>
+                    </li>
+                  </ul>
+                </template>
               </bk-dropdown-menu>
             </span>
             {{$t('m.slaContent["再次提醒"]')}}</bk-radio>

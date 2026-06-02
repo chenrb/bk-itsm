@@ -32,13 +32,15 @@
         class="bk-current-step">
         {{row.current_steps[0].name}}
       </span>
-      <template #content><div style="max-width: 200px;">
-        <span class="bk-current-step auto-width"
-          v-for="(othernode, otherNodeIndex) in row.current_steps"
-          :key="otherNodeIndex">
-          {{othernode.name}}
-        </span>
-      </div>
+      <template #content>
+        <div style="max-width: 200px;">
+          <span class="bk-current-step auto-width"
+            v-for="(othernode, otherNodeIndex) in row.current_steps"
+            :key="otherNodeIndex">
+            {{othernode.name}}
+          </span>
+        </div>
+      </template>
     </bk-popover>
   </div>
   <span v-else>--</span>

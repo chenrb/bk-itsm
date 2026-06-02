@@ -314,7 +314,7 @@
   };
 </script>
 <style lang='scss' scoped>
-@import '~@/scss/mixins/form.scss';
+@import '@/scss/mixins/form.scss';
 .bk-form-width {
     width: 240px;
     display: inline-block;

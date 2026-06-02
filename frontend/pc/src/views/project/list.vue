@@ -99,14 +99,16 @@
             </div>
           </template>
         </bk-table-column>
-        <template #empty><div class="empty">
-          <empty
-            :is-error="listError"
-            :is-search="searchToggle"
-            @onRefresh="getProjectList()"
-            @onClearSearch="onClearSearch()">
-          </empty>
-        </div>
+        <template #empty>
+          <div class="empty">
+            <empty
+              :is-error="listError"
+              :is-search="searchToggle"
+              @onRefresh="getProjectList()"
+              @onClearSearch="onClearSearch()">
+            </empty>
+          </div>
+        </template>
       </bk-table>
     </div>
     <edit-project-dialog
@@ -139,6 +141,8 @@
   import { usePermission } from '@/composables/usePermission';
   import EditProjectDialog from './editProjectDialog.vue';
   import Empty from '../../components/common/Empty.vue';
+
+  const t = i18n.global.t.bind(i18n.global);
 
   export default {
     name: 'ProjectList',
@@ -175,7 +179,7 @@
     },
     computed: {
       editDialogTitle() {
-        return this.editingProject ? i18n.t('m["编辑项目"]') : i18n.t('m["新建项目"]');
+        return this.editingProject ? t('m["编辑项目"]') : t('m["新建项目"]');
       },
     },
     created() {

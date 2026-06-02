@@ -25,9 +25,8 @@
     <template v-if="openFunction.FIRST_STATE_SWITCH">
       <span class="bk-field-tip">{{ $t(`m['单据内容：']`)}}</span>
       <bk-form :label-width="200" form-type="vertical" :ext-cls="'bk-ext-form'">
-        <template v-for="(item, index) in firstStateFields">
+        <template v-for="(item, index) in firstStateFields" :key="index">
           <div v-if="item.showFeild"
-            :key="index"
             :class="['bk-field-line', { 'full-line': item.type === 'CUSTOM-FORM' }]">
             <fields-done
               :item="item"

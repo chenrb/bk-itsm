@@ -96,15 +96,19 @@
       :width="800"
       :quick-close="true"
       :title="openBuildInfo.name">
-      <template #header><div>
-        {{ $t(`m.tickets['构建详情']`) }} 【{{ openBuildInfo.name }}】
-      </div>
-      <template #content><div>
-        <build-detail-info
-          v-if="isShowBuildDetailDialog"
-          :build-item="openBuildInfo">
-        </build-detail-info>
-      </div>
+      <template #header>
+        <div>
+          {{ $t(`m.tickets['构建详情']`) }} 【{{ openBuildInfo.name }}】
+        </div>
+      </template>
+      <template #content>
+        <div>
+          <build-detail-info
+            v-if="isShowBuildDetailDialog"
+            :build-item="openBuildInfo">
+          </build-detail-info>
+        </div>
+      </template>
     </bk-sideslider>
   </div>
 </template>
@@ -117,24 +121,26 @@
   import { errorHandler } from '../../../../../utils/errorHandler';
   import { convertMStoString, convertByteToSize } from '@/utils/util';
 
+  const t = i18n.global.t.bind(i18n.global);
+
   // 任务基础信息
   const baseTaskInfoList = [
-    { key: 'component_type', name: i18n.t('m.task[\'任务类型\']'), value: i18n.t('m.tickets[\'蓝盾任务\']') },
-    { key: 'task_schema_id', name: i18n.t('m.task[\'任务模板\']'), value: '' },
-    { key: 'name', name: i18n.t('m.task[\'任务名称\']'), value: '' },
-    { key: 'sub_pipeline_id', name: i18n.t('m.tickets[\'流水线\']'), value: '' },
-    { key: 'processor_users', name: i18n.t('m.task[\'处理人\']'), value: '' },
-    { key: 'status', name: i18n.t('m.task[\'状态\']'), value: '' },
+    { key: 'component_type', name: t('m.task[\'任务类型\']'), value: t('m.tickets[\'蓝盾任务\']') },
+    { key: 'task_schema_id', name: t('m.task[\'任务模板\']'), value: '' },
+    { key: 'name', name: t('m.task[\'任务名称\']'), value: '' },
+    { key: 'sub_pipeline_id', name: t('m.tickets[\'流水线\']'), value: '' },
+    { key: 'processor_users', name: t('m.task[\'处理人\']'), value: '' },
+    { key: 'status', name: t('m.task[\'状态\']'), value: '' },
   ];
 
   const executInfoList = [
-    { key: 'buildNum', name: i18n.t('m.tickets[\'构建号\']'), value: '' },
-    { key: 'buildNum', name: i18n.t('m.tickets[\'源材料\']'), value: '' },
-    { key: 'startTime', name: i18n.t('m.tickets[\'开始于\']'), value: '' },
-    { key: 'trigger', name: i18n.t('m.tickets[\'触发方式\']'), value: '' },
-    { key: 'endTime', name: i18n.t('m.tickets[\'完成于\']'), value: '' },
-    { key: 'executeTime', name: i18n.t('m.systemConfig[\'耗时\']'), value: '' },
-    { key: 'pipelineVersion', name: i18n.t('m.tickets[\'编排版本号\']'), value: '' },
+    { key: 'buildNum', name: t('m.tickets[\'构建号\']'), value: '' },
+    { key: 'buildNum', name: t('m.tickets[\'源材料\']'), value: '' },
+    { key: 'startTime', name: t('m.tickets[\'开始于\']'), value: '' },
+    { key: 'trigger', name: t('m.tickets[\'触发方式\']'), value: '' },
+    { key: 'endTime', name: t('m.tickets[\'完成于\']'), value: '' },
+    { key: 'executeTime', name: t('m.systemConfig[\'耗时\']'), value: '' },
+    { key: 'pipelineVersion', name: t('m.tickets[\'编排版本号\']'), value: '' },
   ];
 
   export default {
@@ -261,8 +267,8 @@
   };
 </script>
 <style lang='scss' scoped>
-@import '~@/scss/animation/rotation.scss';
-@import '~@/scss/mixins/form.scss';
+@import '@/scss/animation/rotation.scss';
+@import '@/scss/mixins/form.scss';
 .link-ui {
     color: #3A84FF;
     cursor: pointer;

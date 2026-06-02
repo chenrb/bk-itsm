@@ -40,26 +40,28 @@
           <span>{{option.name}}</span>
           <i class="bk-icon icon-close" v-if="option.can_delete" @click.stop="handleDeleteOption(option.key)"></i>
         </bk-option>
-        <template #extension><div>
-          <div class="plus-content" @click="addStatus = !addStatus">
-            <i class="bk-icon icon-plus-circle"></i>新增
+        <template #extension>
+          <div>
+            <div class="plus-content" @click="addStatus = !addStatus">
+              <i class="bk-icon icon-plus-circle"></i>新增
+            </div>
+            <div class="add-status" v-if="addStatus">
+              <bk-form-item label="name">
+                <bk-input v-model="tempChoice.name"
+                  @blur="giveDefaultKey">
+                </bk-input>
+              </bk-form-item>
+              <bk-form-item label="key">
+                <bk-input v-model="tempChoice.key">
+                </bk-input>
+              </bk-form-item>
+              <p class="operations">
+                <span @click="confirmAdd" :class="{ 'disabled': !tempChoice.name }">{{$t(`m.task['确认']`)}}</span>
+                <span @click="cancelAdd">{{$t(`m.task['取消']`)}}</span>
+              </p>
+            </div>
           </div>
-          <div class="add-status" v-if="addStatus">
-            <bk-form-item label="name">
-              <bk-input v-model="tempChoice.name"
-                @blur="giveDefaultKey">
-              </bk-input>
-            </bk-form-item>
-            <bk-form-item label="key">
-              <bk-input v-model="tempChoice.key">
-              </bk-input>
-            </bk-form-item>
-            <p class="operations">
-              <span @click="confirmAdd" :class="{ 'disabled': !tempChoice.name }">{{$t(`m.task['确认']`)}}</span>
-              <span @click="cancelAdd">{{$t(`m.task['取消']`)}}</span>
-            </p>
-          </div>
-        </div>
+        </template>
       </bk-select>
       <template v-if="item.checkValue">
         <p class="bk-task-error" v-if="item.checkMessage">{{ item.checkMessage }}</p>

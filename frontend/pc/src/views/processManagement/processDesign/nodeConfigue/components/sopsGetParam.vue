@@ -75,9 +75,11 @@
                                     :id="option.key"
                                     :name="option.name">
                                 </bk-option>
-                                <template #extension><div @click="addNewItem(props.row)" style="cursor: pointer;">
-                                    <i class="bk-icon icon-plus-circle mr10"></i>{{ $t('m.treeinfo["添加变量"]') }}
-                                </div>
+                                <template #extension>
+                                    <div @click="addNewItem(props.row)" style="cursor: pointer;">
+                                        <i class="bk-icon icon-plus-circle mr10"></i>{{ $t('m.treeinfo["添加变量"]') }}
+                                    </div>
+                                </template>
                             </bk-select>
                         </div>
                     </template>
@@ -130,16 +132,18 @@
         v-model:is-show="sliderInfo.show"
         :title="sliderInfo.title"
         :width="sliderInfo.width">
-        <template #content><div class="p20">
-          <add-field
-            :change-info="changeInfo"
-            :sosp-info="showTabData"
-            :workflow="flowInfo.id"
-            :state="configur.id"
-            @closeShade="closeShade"
-            @getRelatedFields="getRelatedFields">
-          </add-field>
-        </div>
+        <template #content>
+          <div class="p20">
+            <add-field
+              :change-info="changeInfo"
+              :sosp-info="showTabData"
+              :workflow="flowInfo.id"
+              :state="configur.id"
+              @closeShade="closeShade"
+              @getRelatedFields="getRelatedFields">
+            </add-field>
+          </div>
+        </template>
       </bk-sideslider>
     </div>
   </div>

@@ -43,10 +43,9 @@
         </bk-checkbox>
       </p>
       <bk-checkbox-group v-model="exportInfo.checkList">
-        <template v-for="item in exportFieldsList">
+        <template v-for="item in exportFieldsList" :key="item.id">
           <bk-checkbox
             :value="item.id"
-            :key="item.id"
             class="mr10 mb10"
             @change="checkOne('general', item)">
             {{item.name}}
@@ -66,10 +65,9 @@
           </bk-checkbox>
         </p>
         <bk-checkbox-group v-model="exportInfo.serviceCheckList">
-          <template v-for="item in exportInfo.serviceFieldsList">
+          <template v-for="item in exportInfo.serviceFieldsList" :key="item.id">
             <bk-checkbox
               :value="item.id"
-              :key="item.id"
               :disabled="item.disabled"
               class="mr10 mb10"
               @change="checkOne('service', item)">
@@ -93,19 +91,21 @@
         </bk-select>
       </p>
     </div>
-    <template #footer><div>
-      <bk-button
-        theme="primary"
-        :disabled="!exportInfo.checkList.length"
-        @click="submitExport">
-        {{ $t('m.treeinfo["确定"]') }}
-      </bk-button>
-      <bk-button
-        theme="default"
-        @click="cancelExport">
-        {{ $t('m.newCommon["取消"]') }}
-      </bk-button>
-    </div>
+    <template #footer>
+      <div>
+        <bk-button
+          theme="primary"
+          :disabled="!exportInfo.checkList.length"
+          @click="submitExport">
+          {{ $t('m.treeinfo["确定"]') }}
+        </bk-button>
+        <bk-button
+          theme="default"
+          @click="cancelExport">
+          {{ $t('m.newCommon["取消"]') }}
+        </bk-button>
+      </div>
+    </template>
   </bk-dialog>
 </template>
 

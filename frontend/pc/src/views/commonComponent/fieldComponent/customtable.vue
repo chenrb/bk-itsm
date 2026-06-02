@@ -26,8 +26,8 @@
       <bk-table
         :data="item.val"
         :size="'small'">
-        <template v-for="columnItem in item.meta.columns">
-          <bk-table-column :label="columnItem.name" :key="columnItem.key">
+        <template v-for="columnItem in item.meta.columns" :key="columnItem.key">
+          <bk-table-column :label="columnItem.name">
             <template #default="props">
               <template v-if="columnItem.display === 'input'">
                 <bk-input

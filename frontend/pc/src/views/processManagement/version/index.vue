@@ -195,13 +195,15 @@
           :normal-color="normalColor">
         </preview>
       </div>
-      <template #footer><div>
-        <bk-button
-          theme="default"
-          @click="processInfo.isShow = false">
-          {{ $t('m.deployPage["关闭"]') }}
-        </bk-button>
-      </div>
+      <template #footer>
+        <div>
+          <bk-button
+            theme="default"
+            @click="processInfo.isShow = false">
+            {{ $t('m.deployPage["关闭"]') }}
+          </bk-button>
+        </div>
+      </template>
     </bk-dialog>
   </div>
 </template>

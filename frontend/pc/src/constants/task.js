@@ -21,7 +21,9 @@
  */
 
 import i18n from '@/i18n/index.js';
+
+const t = i18n.global.t.bind(i18n.global);
 export const TASK_TEMPLATE_TYPES = [
-  { name: i18n.t('m.tickets[\'蓝盾任务\']'), type: 'DEVOPS' },
-  { name: i18n.t('m.task[\'普通任务\']'), type: 'NORMAL' },
+  { name: t('m.tickets[\'蓝盾任务\']'), type: 'DEVOPS' },
+  { name: t('m.task[\'普通任务\']'), type: 'NORMAL' },
 ];

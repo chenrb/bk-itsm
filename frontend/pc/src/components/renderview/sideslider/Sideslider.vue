@@ -27,12 +27,14 @@
     :title="title"
     :width="width"
     ext-cls="ui-sideslider">
-    <template #content><div>
-      <render-view
-        :form-data="formData"
-        :context="context">
-      </render-view>
-    </div>
+    <template #content>
+      <div>
+        <render-view
+          :form-data="formData"
+          :context="context">
+        </render-view>
+      </div>
+    </template>
   </bk-sideslider>
 </template>
 

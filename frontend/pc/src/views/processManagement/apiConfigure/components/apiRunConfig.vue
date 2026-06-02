@@ -30,10 +30,12 @@
           ref="requestwayDrop"
           :font-size="'normal'"
           :disabled="trueStatus">
-          <template #dropdown-trigger><bk-button type="primary">
-            <span> {{ DetailInfo.method }} </span>
-            <i :class="['bk-icon icon-angle-down']"></i>
-          </bk-button>
+          <template #dropdown-trigger>
+            <bk-button type="primary">
+              <span> {{ DetailInfo.method }} </span>
+              <i :class="['bk-icon icon-angle-down']"></i>
+            </bk-button>
+          </template>
         </bk-dropdown-menu>
         <bk-button style="border: none; height: 30px; border-radius: 0;"
           data-test-id="apiDetail_button_sendRequset"
@@ -72,18 +74,20 @@
         </bk-collapse-item>
         <bk-collapse-item name="2">
           Body
-          <template #content><div class="mb10">
-            <ace
-              :value="bodyDetailConfig.value"
-              :width="bodyDetailConfig.width"
-              :height="bodyDetailConfig.height"
-              :read-only="bodyDetailConfig.readOnly"
-              :lang="bodyDetailConfig.lang"
-              :full-screen="bodyDetailConfig.fullScreen"
-              :theme="'textmate'"
-              @blur="blur">
-            </ace>
-          </div>
+          <template #content>
+            <div class="mb10">
+              <ace
+                :value="bodyDetailConfig.value"
+                :width="bodyDetailConfig.width"
+                :height="bodyDetailConfig.height"
+                :read-only="bodyDetailConfig.readOnly"
+                :lang="bodyDetailConfig.lang"
+                :full-screen="bodyDetailConfig.fullScreen"
+                :theme="'textmate'"
+                @blur="blur">
+              </ace>
+            </div>
+          </template>
         </bk-collapse-item>
       </bk-collapse>
     </div>

@@ -173,7 +173,7 @@ export function usePermission() {
    * @param {Object} permissions - Permission data for the modal
    */
   function triggerPermisionModal(permissions) {
-    bus.$emit('showPermissionModal', permissions);
+    bus.emit('showPermissionModal', permissions);
   }
 
   /**

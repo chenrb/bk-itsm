@@ -21,7 +21,6 @@
  */
 
 import ajax from "../../utils/ajax";
-import { i18n } from "../../main";
 
 export default {
   namespaced: true,

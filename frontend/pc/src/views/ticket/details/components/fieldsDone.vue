@@ -34,8 +34,8 @@
           :data="getParseValue(item.value)"
           :size="'small'"
           :max-height="450">
-          <template v-for="title in item.choice">
-            <bk-table-column :label="title.name" :key="title.key">
+          <template v-for="title in item.choice" :key="title.key">
+            <bk-table-column :label="title.name">
               <template #default="props">
                 <span :title="props.row[title.key]">{{ props.row[title.key] }}</span>
               </template>
@@ -54,8 +54,8 @@
       <div class="bk-form-content bk-over-more" style="margin-left: 0px; width: 100%;" v-if="item.value">
         <bk-table :data="item.value"
           :size="'small'">
-          <template v-for="(column) in item.meta.columns">
-            <bk-table-column :label="column.name" :key="column.key">
+          <template v-for="(column) in item.meta.columns" :key="column.key">
+            <bk-table-column :label="column.name">
               <template #default="props">
                 <span :title="props.row[column.key]">{{ getCustomTableDisplayValue(column, props.row) || '--' }}</span>
               </template>
@@ -94,11 +94,13 @@
       </div>
       <bk-popover theme="light">
         <div class="bk-itsm-icon icon-icon-info bk-text-primary f12 rich-show"></div>
-        <template #content><div style="white-space: normal; cursor: pointer;">
-          <div v-bk-copy="item.value.replace(/<[^>]+>/g, '')" class="bk-li-right bk-fields-richtext tui-editor-contents"
-            v-dompurify-html="item.value" :title="'点击复制'">
+        <template #content>
+          <div style="white-space: normal; cursor: pointer;">
+            <div v-bk-copy="item.value.replace(/<[^>]+>/g, '')" class="bk-li-right bk-fields-richtext tui-editor-contents"
+              v-dompurify-html="item.value" :title="'点击复制'">
+            </div>
           </div>
-        </div>
+        </template>
       </bk-popover>
     </div>
     <!-- 多行文本展现出后台保存的内容格式 -->

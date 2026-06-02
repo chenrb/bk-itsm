@@ -52,18 +52,22 @@
               :font-size="'medium'"
               @show="isDropdownShow = true"
               @hide="isDropdownShow = false">
-              <template #dropdown-trigger><bk-button type="primary">
-                <template v-for="(item, index) in requestOptions">
-                  <span v-if="curEq === item" :key="index">{{item}}</span>
-                </template>
-                <i :class="['bk-icon icon-angle-down',{ 'icon-flip': isDropdownShow }]"></i>
-              </bk-button>
-              <template #dropdown-content><ul class="bk-dropdown-list">
-                <li v-for="(item, index) in requestOptions"
-                  :key="index">
-                  <a href="javascript:;" @click="selectRequsetOpt(item)">{{ item }}</a>
-                </li>
-              </ul>
+              <template #dropdown-trigger>
+                <bk-button type="primary">
+                  <template v-for="(item, index) in requestOptions" :key="index">
+                    <span v-if="curEq === item">{{item}}</span>
+                  </template>
+                  <i :class="['bk-icon icon-angle-down',{ 'icon-flip': isDropdownShow }]"></i>
+                </bk-button>
+              </template>
+              <template #dropdown-content>
+                <ul class="bk-dropdown-list">
+                  <li v-for="(item, index) in requestOptions"
+                    :key="index">
+                    <a href="javascript:;" @click="selectRequsetOpt(item)">{{ item }}</a>
+                  </li>
+                </ul>
+              </template>
             </bk-dropdown-menu>
             </template>
           </bk-input>

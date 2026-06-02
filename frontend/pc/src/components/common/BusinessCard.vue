@@ -30,22 +30,24 @@
     trigger="click"
     theme="light">
     <i class="bk-icon icon-id" v-if="memberVal" ref="icon"></i>
-    <template #content><div>
-      <ul ref="message" class="bk-member-message" v-bkloading="{ isLoading: localLoading }">
-        <li v-for="(member, memIndex) in memberList"
-          :key="memIndex"
-          style="margin-bottom: 10px; overflow: hidden;">
-          <p class="bk-message-name">{{member.username}}</p>
-          <p class="bk-member-other"
-            v-for="(person, personIndex) in memberValList"
-            :key="personIndex"
-            :title="member[person.type]">
-            <span class="bk-member-label">{{person.name}} {{$t(`m.newCommon["："]`)}}</span>
-            <pre class="bk-member-value">{{member[person.type] || '--'}}</pre>
-          </p>
-        </li>
-      </ul>
-    </div>
+    <template #content>
+      <div>
+        <ul ref="message" class="bk-member-message" v-bkloading="{ isLoading: localLoading }">
+          <li v-for="(member, memIndex) in memberList"
+            :key="memIndex"
+            style="margin-bottom: 10px; overflow: hidden;">
+            <p class="bk-message-name">{{member.username}}</p>
+            <p class="bk-member-other"
+              v-for="(person, personIndex) in memberValList"
+              :key="personIndex"
+              :title="member[person.type]">
+              <span class="bk-member-label">{{person.name}} {{$t(`m.newCommon["："]`)}}</span>
+              <pre class="bk-member-value">{{member[person.type] || '--'}}</pre>
+            </p>
+          </li>
+        </ul>
+      </div>
+    </template>
   </bk-popover>
 </template>
 

@@ -105,7 +105,7 @@
         :basic-infomation="basicInfomation"
       ></field-info>
     </div>
-    <template #footer><div class="bk-submit-task">
+    <div class="bk-submit-task">
       <bk-button
         :theme="'primary'"
         :title="$t(`m.task['确认']`)"

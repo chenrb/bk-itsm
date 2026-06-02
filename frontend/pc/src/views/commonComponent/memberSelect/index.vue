@@ -42,6 +42,8 @@
   import jsonp from 'jsonp';
   import i18n from '@/i18n/index.js';
 
+  const t = i18n.global.t.bind(i18n.global);
+
   export default {
     name: 'MemberSelector',
     components: {
@@ -64,7 +66,7 @@
       },
       placeholder: {
         type: String,
-        default: i18n.t('m.newCommon["请输入用户名"]'),
+        default: t('m.newCommon["请输入用户名"]'),
       },
       disabled: {
         type: Boolean,

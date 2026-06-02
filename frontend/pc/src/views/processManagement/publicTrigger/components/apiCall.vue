@@ -22,11 +22,10 @@
 
 <template>
   <div class="bk-api-call">
-    <template v-for="(itemInfo, index) in item.wayInfo.field_schema">
+    <template v-for="(itemInfo, index) in item.wayInfo.field_schema" :key="index">
       <bk-form-item :ext-cls="'bk-field-schema mb20'"
         :label="itemInfo.name"
         :required="itemInfo.required"
-        :key="index"
         :desc="itemInfo.tips">
         <template v-if="itemInfo.key === 'api_source'">
           <bk-select :ext-cls="'bk-form-display'"

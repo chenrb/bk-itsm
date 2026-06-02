@@ -64,7 +64,7 @@
 <script>
   import task from './task';
   import taskHistory from './taskHistory';
-  import slaRecord from './slaRecord';
+  import slaRecord from '../rightTicketTabs/SlaRecordTab.vue';
   export default {
     name: 'taskLog',
     components: {

@@ -28,8 +28,8 @@
       :ext-cls="'bk-line-height'"
       desc-type="icon">
       <bk-radio-group v-model="item.val" @change="item.checkValue = false">
-        <template v-for="radio in item.choice">
-          <bk-radio :disabled="disabled" :value="radio.key" :key="radio.key" :ext-cls="'mr20'">{{radio.name}}</bk-radio>
+        <template v-for="radio in item.choice" :key="radio.key">
+          <bk-radio :disabled="disabled" :value="radio.key" :ext-cls="'mr20'">{{radio.name}}</bk-radio>
         </template>
       </bk-radio-group>
       <template v-if="item.checkValue">

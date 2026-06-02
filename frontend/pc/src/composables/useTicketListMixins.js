@@ -29,85 +29,87 @@ import { deepClone } from '@/utils/util';
 import i18n from '@/i18n/index.js';
 import cookie from 'cookie';
 
+const t = i18n.global.t.bind(i18n.global);
+
 const SEARCH_FORMS = [
   {
-    name: i18n.t('m.tickets[\'单号/标题\']'),
-    desc: i18n.t('m.tickets[\'单号/标题\']'),
+    name: t('m.tickets[\'单号/标题\']'),
+    desc: t('m.tickets[\'单号/标题\']'),
     type: 'input',
     key: 'keyword',
     display: true,
     value: '',
     list: [],
-    placeholder: i18n.t('m.tickets["请选择单号/标题"]'),
+    placeholder: t('m.tickets["请选择单号/标题"]'),
   },
   {
-    name: i18n.t('m["项目"]'),
-    desc: i18n.t('m["项目"]'),
+    name: t('m["项目"]'),
+    desc: t('m["项目"]'),
     type: 'select',
     key: 'project_key',
     display: true,
     value: '',
     list: [],
-    placeholder: i18n.t('m["请选择项目"]'),
+    placeholder: t('m["请选择项目"]'),
   },
   {
-    name: i18n.t('m.tickets["服务目录"]'),
+    name: t('m.tickets["服务目录"]'),
     type: 'cascade',
     key: 'catalog_id',
     multiSelect: true,
     display: true,
     value: [],
     list: [],
-    placeholder: i18n.t('m.tickets["请选择服务目录"]'),
+    placeholder: t('m.tickets["请选择服务目录"]'),
   },
   {
-    name: i18n.t('m.tickets["服务"]'),
+    name: t('m.tickets["服务"]'),
     type: 'select',
     key: 'service_id__in',
     multiSelect: true,
     display: false,
     value: [],
     list: [],
-    placeholder: i18n.t('m.tickets["请选择服务"]'),
+    placeholder: t('m.tickets["请选择服务"]'),
   },
   {
-    name: i18n.t('m.tickets["提单人"]'),
+    name: t('m.tickets["提单人"]'),
     type: 'member',
     key: 'creator__in',
     multiSelect: true,
     display: true,
     value: [],
     list: [],
-    placeholder: i18n.t('m.tickets["请选择提单人"]'),
+    placeholder: t('m.tickets["请选择提单人"]'),
   },
   {
-    name: i18n.t('m.tickets["处理人"]'),
+    name: t('m.tickets["处理人"]'),
     type: 'member',
     key: 'current_processor',
     multiSelect: true,
     display: true,
     value: [],
     list: [],
-    placeholder: i18n.t('m.tickets["请选择处理人"]'),
+    placeholder: t('m.tickets["请选择处理人"]'),
   },
   {
-    name: i18n.t('m.tickets["状态"]'),
+    name: t('m.tickets["状态"]'),
     type: 'select',
     key: 'current_status__in',
     multiSelect: true,
     display: true,
     value: [],
     list: [],
-    placeholder: i18n.t('m.tickets["请选择状态"]'),
+    placeholder: t('m.tickets["请选择状态"]'),
   },
   {
-    name: i18n.t('m.tickets["提单时间"]'),
+    name: t('m.tickets["提单时间"]'),
     key: 'date_update',
     type: 'datetime',
     display: true,
     value: [],
     list: [],
-    placeholder: i18n.t('m.tickets["请选择提单时间"]'),
+    placeholder: t('m.tickets["请选择提单时间"]'),
   },
 ];
 
@@ -294,7 +296,7 @@ export function useTicketListMixins({ type, isIframe = false, columnList = [] })
 
   function getTicketsProcessors(originList) {
     const copyList = deepClone(originList);
-    const message = i18n.t('m.manageCommon[\'加载中...\']');
+    const message = t('m.manageCommon[\'加载中...\']');
     originList.forEach((ticket) => {
       ticket['current_processors'] = message;
     });
@@ -313,7 +315,7 @@ export function useTicketListMixins({ type, isIframe = false, columnList = [] })
 
   function getTicketsCreator(originList) {
     const copyList = deepClone(originList);
-    const message = i18n.t('m.manageCommon[\'加载中...\']');
+    const message = t('m.manageCommon[\'加载中...\']');
     originList.forEach((ticket) => {
       ticket['creator'] = message;
     });

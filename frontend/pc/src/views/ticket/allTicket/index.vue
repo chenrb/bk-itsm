@@ -356,7 +356,7 @@
   };
 </script>
 <style lang="scss" scoped>
-@import "~@/scss/mixins/scroller.scss";
+@import "@/scss/mixins/scroller.scss";
 .all-ticket-page {
   height: 100%;
   background: #fafbfd;

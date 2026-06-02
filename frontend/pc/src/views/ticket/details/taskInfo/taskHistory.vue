@@ -26,12 +26,13 @@
       <bk-collapse v-model="activeName">
         <bk-collapse-item name="ticket">
           {{$t(`m['单据触发器']`)}}
-          <template #content><div class="f13">
-            <bk-table
-              :header-cell-attributes="headerCellAttributes"
-              :data="ticketAction"
-              :size="'small'"
-              @sort-change="orderingClick">
+          <template #content>
+            <div class="f13">
+              <bk-table
+                :header-cell-attributes="headerCellAttributes"
+                :data="ticketAction"
+                :size="'small'"
+                @sort-change="orderingClick">
               <bk-table-column :label="$t(`m.task['执行时间']`)" :render-header="$renderHeader" :show-overflow-tooltip="true" :sortable="'custom'">
                 <template #default="props">
                   <span :title="props.row.end_time">
@@ -65,18 +66,22 @@
                   </span>
                 </template>
               </bk-table-column>
-              <template #empty><div class="empty">
-                <empty
-                  :is-error="listError"
-                  @onRefresh="getHistoryList()">
-                </empty>
-              </div>
+              <template #empty>
+                <div class="empty">
+                  <empty
+                    :is-error="listError"
+                    @onRefresh="getHistoryList()">
+                  </empty>
+                </div>
+              </template>
             </bk-table>
           </div>
+        </template>
         </bk-collapse-item>
         <bk-collapse-item :name="item.name" v-for="item in nodeActions" :key="item.name">
           {{$t(`m['节点']`) + '：' + item.name}}
-          <template #content><div class="f13">
+          <template #content>
+            <div class="f13">
             <bk-table
               :data="item.actions"
               :size="'small'"
@@ -114,18 +119,22 @@
                   </span>
                 </template>
               </bk-table-column>
-              <template #empty><div class="empty">
-                <empty
-                  :is-error="listError"
-                  @onRefresh="getHistoryList()">
-                </empty>
-              </div>
+              <template #empty>
+                <div class="empty">
+                  <empty
+                    :is-error="listError"
+                    @onRefresh="getHistoryList()">
+                  </empty>
+                </div>
+              </template>
             </bk-table>
           </div>
+        </template>
         </bk-collapse-item>
         <bk-collapse-item name="transition">
           {{$t(`m['线条触发器']`)}}
-          <template #content><div class="f13">
+          <template #content>
+            <div class="f13">
             <bk-table
               :header-cell-attributes="headerCellAttributes"
               :data="transitionAction"
@@ -164,14 +173,17 @@
                   </span>
                 </template>
               </bk-table-column>
-              <template #empty><div class="empty">
-                <empty
-                  :is-error="listError"
-                  @onRefresh="getHistoryList()">
-                </empty>
-              </div>
+              <template #empty>
+                <div class="empty">
+                  <empty
+                    :is-error="listError"
+                    @onRefresh="getHistoryList()">
+                  </empty>
+                </div>
+              </template>
             </bk-table>
           </div>
+        </template>
         </bk-collapse-item>
       </bk-collapse>
     </div>
@@ -181,14 +193,16 @@
       :title="historyDetail.title"
       :width="historyDetail.width"
       :quick-close="true">
-      <template #content><div>
-        <history-detail v-if="historyDetail.isShow"
-          :history-id="historyDetail.id"
-          :basic-infomation="basicInfomation"
-          :node-id-map="nodeIdMap"
-          :node-list="nodeList">
-        </history-detail>
-      </div>
+      <template #content>
+        <div>
+          <history-detail v-if="historyDetail.isShow"
+            :history-id="historyDetail.id"
+            :basic-infomation="basicInfomation"
+            :node-id-map="nodeIdMap"
+            :node-list="nodeList">
+          </history-detail>
+        </div>
+      </template>
     </bk-sideslider>
   </div>
 </template>
