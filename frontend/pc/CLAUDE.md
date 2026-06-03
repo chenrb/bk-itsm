@@ -19,13 +19,13 @@ npm run lint         # ESLint with auto-fix on src/
 
 ### Dev Server Setup
 
-The dev server requires local hosts configuration. Edit `vite.config.js` to set `HOST` and `SET_URL`, then add a hosts entry like `127.0.0.1 dev.paas.bking.com`. The proxy forwards `/api/*`, `/openapi/*`, `/core/` to the backend.
+The dev server is configured via Vite env vars (`VITE_DEV_HOST`, `VITE_DEV_PORT`, `VITE_SET_URL`) — set these in `frontend/pc/.env.local` or similar. The server binds to `dev.{HOST}`:8004, so add a hosts entry like `127.0.0.1 dev.localhost`. The proxy forwards `/api/*`, `/openapi/*`, `/core/` to the backend.
 
 ## Architecture
 
 ### Entry & Initialization
 
-`src/main.js` bootstraps Vue 3 with Vuex 4, Vue Router 4, and vue-i18n. Before mount, it dispatches `getPlatformPreData` (hits `init/` API). It globally registers UI components. Build system is **Vite 4** with `@vitejs/plugin-vue`. Static asset paths are managed via Vite's `base` config.
+`src/main.js` bootstraps Vue 3 with Vuex 4, Vue Router 4, and vue-i18n. Before mount, it dispatches `getPlatformPreData` (hits `init/` API). It globally registers UI components. Build system is **Vite 6** with `@vitejs/plugin-vue`. Static asset paths are managed via Vite's `base` config.
 
 ### Routing
 
@@ -82,7 +82,7 @@ Three locales: `zh-cn` (default), `en`, `ja`. Language packs in `src/i18n/lang/`
 
 ## Production Build Notes
 
-- Build tool: Vite 4 + `@vitejs/plugin-vue`
+- Build tool: Vite 6 + `@vitejs/plugin-vue`
 - Output goes to `../../../static/`
 - `window.SITE_URL` controls API path prefix
 - `window.BK_STATIC_URL` controls static asset path prefix

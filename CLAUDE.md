@@ -74,7 +74,10 @@ REDIS_MODE=single
 MYSQL_NAME=bk_itsm      MYSQL_USER=root       MYSQL_PASSWORD=root
 MYSQL_HOST=localhost     MYSQL_PORT=3306       MYSQL_TEST_NAME=bk_itsm_test
 PLATFORM_API_BASE_URL=   # Optional: base URL for platform_client HTTP calls
+ALLOWED_HOSTS=*           # Comma-separated, defaults to *
 ```
+
+Frontend dev server uses Vite env vars (`VITE_DEV_HOST`, `VITE_DEV_PORT`, `VITE_SET_URL`) in `frontend/pc/.env*` files. The server binds to `dev.{HOST}`:8004, so add a hosts entry like `127.0.0.1 dev.localhost` when using custom hosts.
 
 See `.env.example` for the full list including email, monitoring, notification, and business config.
 
@@ -178,7 +181,7 @@ Conventional commits enforced via commitlint: `feat`, `fix`, `docs`, `style`, `r
 
 ### Frontend
 
-See `frontend/pc/CLAUDE.md` for full Vue conventions. Key: Vue 3 + Vite 4 + Vuex 4, ESLint extends `eslint-config-tencent` + `plugin:vue/recommended`.
+See `frontend/pc/CLAUDE.md` for full Vue conventions. Key: Vue 3 + Vite 6 + Vuex 4, ESLint extends `eslint-config-tencent` + `plugin:vue/recommended`.
 
 ## CI
 
