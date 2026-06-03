@@ -7,6 +7,7 @@ from config import APP_CODE, BASE_DIR, PROJECT_ROOT  # noqa
 # ==============================================================================
 # Core URL / WSGI
 # ==============================================================================
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "*").split(",")
 ROOT_URLCONF = "urls"
 WSGI_APPLICATION = "wsgi.application"
 

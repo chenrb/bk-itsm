@@ -2,8 +2,8 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import path from 'path'
 
-const HOST = 'paas.bking.com'
-const ORIGIN = `http://${HOST}:8001`
+const HOST = 'paas.tisson.com'
+const ORIGIN = `http://${HOST}:8000`
 const SET_URL = ''
 
 export default defineConfig({
@@ -46,7 +46,8 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        charset: false
+        api: 'modern-compiler',
+        silenceDeprecations: ['legacy-js-api']
       }
     }
   },
