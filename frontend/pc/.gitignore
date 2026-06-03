@@ -20,3 +20,7 @@ package-lock.json
 *.sln
 .cache/
 static/js/*.js
+
+# Local dev env overrides
+.env.local
+.env.*.local
