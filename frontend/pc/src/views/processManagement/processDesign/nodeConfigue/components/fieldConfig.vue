@@ -591,7 +591,7 @@
 </script>
 
 <style lang='scss' scoped>
-    '../../../../../scss/mixins/table.scss';
+    @use '../../../../../scss/mixins/table.scss' as *;
     @use '../../../../../scss/mixins/clearfix' as *;
     .bk-field-info{
         color: #63656E;

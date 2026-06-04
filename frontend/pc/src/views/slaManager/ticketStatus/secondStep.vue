@@ -219,7 +219,7 @@
       };
     },
     async mounted() {
-      this.localeCookie = cookie.parse(document.cookie).blueking_language === 'zh-cn';
+      this.localeCookie = cookie.parse(document.cookie).itsm_language === 'zh-cn';
       // 列表数据添加流转信息
       await this.getTypeStatus();
       await this.listAddFlow();

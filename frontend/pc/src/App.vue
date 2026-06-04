@@ -21,11 +21,11 @@
   -->
 
 <template>
-  <div id="app" class="bk-app" @click="hiddenTree" v-bkloading="{ isLoading: loading }">
-    <notice-component v-if="enableNoticeCenter && !isSubNav && !$route.meta.iframe" :api-url="apiUrl" @show-alert-change="handleNoticeChange" />
+  <div id="app" class="bk-app" @click="hiddenTree" v-bkloading="window.username ? { isLoading: loading } : false">
+    <notice-component v-if="enableNoticeCenter && !isSubNav && !$route.meta.iframe && !$route.meta.noNav" :api-url="apiUrl" @show-alert-change="handleNoticeChange" />
     <template v-if="isShowView">
       <!-- has navigation-->
-      <navigation v-if="!isSubNav && !$route.meta.iframe" :class="{ 'show-notice': showNotice }">
+      <navigation v-if="!isSubNav && !$route.meta.iframe && !$route.meta.noNav" :class="{ 'show-notice': showNotice }">
         <div
           v-bkloading="{ isLoading: localLoading }"
           class="bk-app-content">
@@ -45,7 +45,7 @@
         <!-- ddd -->
         <div
           v-if="isShowView"
-          v-bkloading="{ isLoading: localLoading }"
+          v-bkloading="window.username ? { isLoading: localLoading } : false"
           class="bk-app-content">
           <permissionApply
             v-if="permissinApplyShow"
@@ -121,6 +121,10 @@
     watch: {
       $route: {
         async handler() {
+          // Skip permission checks when not authenticated
+          if (!window.username) {
+            return;
+          }
           // check the page auth
           if (!this.loading) {
             this.isRouterAlive = false;
@@ -146,6 +150,11 @@
           this.isRouterAlive = true;
         }
       });
+      // Skip API initialization when not authenticated (login page)
+      if (!window.username) {
+        this.loading = false;
+        return;
+      }
       this.loading = true;
       await this.getGlobalConfig();
       await this.getPermissionMeta();
@@ -166,8 +175,10 @@
         }, 400);
       };
       // 组件升级统一获取字段
-      this.initGetInfo();
-      this.getPageFooter();
+      if (window.username) {
+        this.initGetInfo();
+        this.getPageFooter();
+      }
     },
     methods: {
       ...mapActions([

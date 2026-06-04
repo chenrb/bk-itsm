@@ -3,28 +3,24 @@
 <head>
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
     <meta charset="utf-8">
-    <title></title>
-    <link rel="stylesheet" type="text/css" href="/js/renderform/index.css">
+    <title>ITSM</title>
     <script>
         window.SITE_URL = '/';
         window.STATIC_URL = '/';
         window.BK_STATIC_URL = '';
         window.DOC_URL = ''
-        window.BK_USER_MANAGE_HOST = '{{BK_USER_MANAGE_HOST}}';
         window.RUN_VER = '{{ RUN_VER }}'
-        window.login_url = '{{LOGIN_URL}}';
         window.hostname = '{{DOC_URL}}';
-        window.username = 'admin';
-        window.chname = 'admin';
-        window.all_access = ['STATICS_MANAGER', 'SUPERUSER'];
-        window.is_itsm_admin = true;
-        window.is_vip = true;
+        window.username = '';
+        window.chname = '';
+        window.all_access = [];
+        window.is_itsm_admin = false;
+        window.is_vip = false;
         window.use_log = true;
         window.log_name = '流程服务';
-        window.DEFAULT_PROJECT = '0';
+        window.DEFAULT_PROJECT = '';
         window.BKAPP_CI_ENABLED = 'True';
     </script>
-    <script type="text/javascript" src="/js/renderform/index.js"></script>
 </head>
 <body>
 <div id="app"></div>

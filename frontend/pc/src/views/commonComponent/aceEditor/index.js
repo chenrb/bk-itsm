@@ -20,7 +20,7 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE
  */
 
-module.exports = {
+export default {
   template: '<div :style="{height: calcSize(height), width: calcSize(width)}"></div>',
   props: {
     value: {

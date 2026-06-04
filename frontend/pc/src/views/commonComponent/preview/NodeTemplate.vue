@@ -157,7 +157,7 @@
 </script>
 <style lang="scss" scoped>
 @use "./nodeTemplate.scss";
-@use "../../../scss/animation/rotation.scss";
+@use "../../../scss/animation/rotation.scss" as *;
 
 .bk-more-padding {
   padding-right: 35px;

@@ -59,7 +59,6 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 MIDDLEWARE = (
-    "itsm.component.misc_middlewares.UserLoginForbiddenMiddleware",
     "itsm.component.misc_middlewares.ServiceSwitchCheck",
     "itsm.component.misc_middlewares.ApiIgnoreCheck",
     "django.contrib.sessions.middleware.SessionMiddleware",

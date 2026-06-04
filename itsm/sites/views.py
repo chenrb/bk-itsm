@@ -23,10 +23,9 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
-import os
 import datetime
+import os
 
-from itsm.component.decorators import login_exempt
 from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import render
@@ -34,9 +33,11 @@ from django.utils.translation import gettext as _, get_language
 from django.views.decorators.http import require_GET
 
 from common.template.template import Template
+from itsm.component.decorators import login_exempt
 from itsm.iadmin.contants import NOTICE_CENTER_SWITCH
 from itsm.iadmin.models import SystemSettings
 from itsm.project.models import UserProjectAccessRecord
+from itsm.users.data.permissions import BUILTIN_PERMISSIONS
 from itsm.users.models.role import Role
 
 
@@ -47,20 +48,18 @@ def _get_title():
 def _get_footer():
     default_footer = """
             <div class="copyright">
-                <ul class="link-list">
-                    <a href="https://wpa1.qq.com/KziXGWJs?_type=wpa&qidian=true" class="link-item">{}</a>
-                    <a href="http://bk.tencent.com/s-mart/community/" class="link-item" target="_blank">{}</a>
-                    <a href="http://bk.tencent.com/" class="link-item" target="_blank">{}</a>
-                </ul>
-                <div class="desc">Copyright &copy; 2012-${{year}} Tencent BlueKing. All Rights Reserved.V2.6.8</div>
+                <div class="desc">ITSM &copy; ${{year}} All Rights Reserved.</div>
             </div>
-            """.format(
-        _("技术支持"), _("社区论坛"), _("产品官网")
-    )
+            """
     return getattr(settings, "FOOTER", None) or default_footer
 
 
 def init(request):
+    if not request.user.is_authenticated:
+        return JsonResponse(
+            {"result": False, "message": "未登录", "code": 401}, status=401
+        )
+
     try:
         DEFAULT_PROJECT = UserProjectAccessRecord.objects.get(
             username=request.user.username
@@ -70,7 +69,6 @@ def init(request):
 
     # Get user permissions from local Role model
     if request.user.is_superuser:
-        from itsm.users.data.permissions import BUILTIN_PERMISSIONS
 
         permissions = [code for code, _, _, _ in BUILTIN_PERMISSIONS]
     else:
@@ -92,8 +90,6 @@ def init(request):
                 "IS_ITSM_ADMIN": (
                     1 if Role.is_itsm_superuser(request.user.username) else 0
                 ),
-                "need_target": False,
-                "location": "",
                 "permissions": permissions,
             },
             "message": "",
@@ -105,9 +101,6 @@ def init(request):
 def index(request):
     """首页"""
     TITLE = _get_title()
-    LOGIN_URL = settings.LOGIN_URL
-
-    BK_USER_MANAGE_HOST = settings.USER_MANAGE_HOST
 
     try:
         notice_center_switch_value = SystemSettings.objects.get(
@@ -134,9 +127,9 @@ def index(request):
             "is_vip": "true",
             "CUSTOM_TITLE": TITLE,
             "USE_LOG": "true",
-            "LOGIN_URL": LOGIN_URL,
+            "LOGIN_URL": settings.LOGIN_URL,
             "LOG_NAME": _("流程服务"),
-            "USER_MANAGE_HOST": BK_USER_MANAGE_HOST,
+            "USER_MANAGE_HOST": settings.USER_MANAGE_HOST,
             "PLATFORM_API_URL": settings.PLATFORM_API_URL,
             "TAM_PROJECT_ID": settings.TAM_PROJECT_ID,
             "DOC_URL": doc_url,
@@ -162,7 +155,7 @@ def get_footer(request):
     return JsonResponse(
         {
             "result": True,
-            "data": Template(FOOTER()).render(year=datetime.datetime.now().year),
+            "data": Template(FOOTER).render(year=datetime.datetime.now().year),
             "code": "OK",
             "message": "success",
         }

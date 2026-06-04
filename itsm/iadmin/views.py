@@ -145,7 +145,7 @@ class VersionLogsViewSet(component_viewsets.ReadOnlyModelViewSet):
     http_method_names = ["get"]
 
     def get_queryset(self):
-        lang = self.request.COOKIES.get("blueking_language", "zh-cn")
+        lang = self.request.COOKIES.get("itsm_language", "zh-cn")
         return self.queryset.filter(lang=lang).order_by("-version_size")
 
 

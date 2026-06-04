@@ -267,7 +267,7 @@
   };
 </script>
 <style lang='scss' scoped>
-@use '@/scss/animation/rotation.scss';
+@use '@/scss/animation/rotation.scss' as *;
 @use '@/scss/mixins/form.scss' as *;
 .link-ui {
     color: #3A84FF;

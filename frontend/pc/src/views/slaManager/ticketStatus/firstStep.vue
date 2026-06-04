@@ -350,7 +350,7 @@ export default {
     this.rules.name = this.checkCommonRules("name").name;
     this.rules.desc = this.checkCommonRules("select").select;
     this.rules.color_hex = this.checkCommonRules("color").color;
-    this.localeCookie = cookie.parse(document.cookie).blueking_language === "zh-cn";
+    this.localeCookie = cookie.parse(document.cookie).itsm_language === "zh-cn";
   },
   methods: {
     // setting status color

@@ -24,7 +24,6 @@ import { getCurrentInstance } from 'vue';
 import axios from 'axios';
 import bus from './bus.js';
 import { checkDataType } from './getDataType.js';
-import { showLoginModal } from '@blueking/login-modal';
 
 
 const instance = axios.create({
@@ -33,7 +32,7 @@ const instance = axios.create({
   // `headers` are custom headers to be sent
   headers: { 'X-Requested-With': 'XMLHttpRequest' },
   // csrftoken变量名
-  xsrfCookieName: window.BKAPP_CSRF_COOKIE_NAME,
+  xsrfCookieName: 'itsm_csrftoken',
   // cookie中的csrftoken信息名称
   xsrfHeaderName: 'X-CSRFToken',
   withCredentials: true,
@@ -80,12 +79,8 @@ instance.interceptors.response.use(
   (response) => {
     if (response.config.url === 'init/') {
       if (response.status === 401) {
-        const { login_url } = response.data;
-        let [loginUrl] = login_url.split('?');
-        loginUrl = `${loginUrl}?c_url=${encodeURIComponent(location.href)}`;
-
-        window.open(loginUrl, '_self');
-        return;
+        window.location.hash = '#/login';
+        return Promise.reject(response);
       }
       if ('IS_ITSM_ADMIN' in response.data.data) {
         const { DEFAULT_PROJECT, IS_ITSM_ADMIN, all_access, chname, username, permissions } = response.data.data;
@@ -99,15 +94,15 @@ instance.interceptors.response.use(
       }
     }
     // status >= 200 && status <= 505
-    if (response.status !== 499 && 'result' in response.data && !response.data.result && 'message' in response.data) {
-      window.app.$bkMessage({
+    if (response.status !== 499 && response.data && typeof response.data === 'object' && 'result' in response.data && !response.data.result && 'message' in response.data) {
+      window.app && window.app.$bkMessage && window.app.$bkMessage({
         message: response.data.message,
         theme: 'error',
       });
     }
     if (!response.data || typeof response.data === 'string') {
-      const msg = window.app.$t('m.js["接口请求异常，请联系管理员"]');
-      console.warn(window.app.$t('m.js["接口异常，"]'), window.app.$t('m.js["HTTP状态码："]'), response.status);
+      const msg = '接口请求异常，请联系管理员';
+      console.warn('接口异常，HTTP状态码：', response.status);
       if (!response.data) {
         console.error(msg);
       }
@@ -117,18 +112,12 @@ instance.interceptors.response.use(
       };
     } else if (response.status > 300) {
       if (response.status !== 499) {
-        console.error(window.app.$t('m.js["HTTP请求出错，状态码为："]'), response.status);
-        console.warn(window.app.$t('m.js["请求信息："]'), response);
+        console.error('HTTP请求出错，状态码为：', response.status);
+        console.warn('请求信息：', response);
       }
       switch (response.status) {
         case 401: {
-          // 登录控制
-          const data = response.data;
-          const successUrl = `${window.location.origin}${window.SITE_URL}static/assets/login_success.html`;
-          let [loginUrl] = data.login_url.split('?');
-          loginUrl = `${loginUrl}?c_url=${encodeURIComponent(successUrl)}`;
-
-          showLoginModal({ loginUrl });
+          window.location.hash = '#/login';
           break;
         }
         case 403: {

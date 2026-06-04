@@ -749,7 +749,7 @@
 </script>
 
 <style lang='scss' scoped>
-    @import './tree.css';
+    @use './tree.scss' as *;
     .bk-tree-point {
         position: absolute;
         top: 8px;

@@ -99,8 +99,8 @@ STORE = FileSystemStorage()
 # CSRF / Session
 # ==============================================================================
 CSRF_COOKIE_PATH = "/"
-CSRF_COOKIE_NAME = os.environ.get("CSRF_COOKIE_NAME", "bkitsm_csrftoken")
-SESSION_COOKIE_NAME = "bkitsm_sessionid"
+CSRF_COOKIE_NAME = os.environ.get("CSRF_COOKIE_NAME", "itsm_csrftoken")
+SESSION_COOKIE_NAME = "itsm_sessionid"
 LOGIN_URL = os.environ.get("LOGIN_URL", "/account/login/")
 
 APP_DOMAIN = os.getenv("APP_DOMAIN", "")

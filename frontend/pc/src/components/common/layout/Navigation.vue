@@ -336,7 +336,7 @@
       },
     },
     created() {
-      const language = getCookie('blueking_language');
+      const language = getCookie('itsm_language');
       console.log(language);
 
       this.curLanguage = ['zh', 'zh-cn'].includes(language) ? 'zh' : language;
@@ -366,7 +366,7 @@
         try {
           this.curLanguage = language;
           const local = language === 'zh' ? 'zh-cn' : language;
-          Cookies.set('blueking_language', local, {
+          Cookies.set('itsm_language', local, {
             expires: 1,
             domain: window.location.hostname.replace(/^[^.]+(.*)$/, '$1'),
             path: '/',
@@ -505,7 +505,21 @@
         this.$router.push({ name: 'ProjectList' });
       },
       onLogOut() {
-        location.href = `${window.login_url}?is_from_logout=1&c_url=${encodeURIComponent(window.location.href)}`;
+        const csrfToken = document.cookie.match(/(?:^|;\s*)itsm_csrftoken=([^;]*)/);
+        fetch('/account/logout/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken ? decodeURIComponent(csrfToken[1]) : '',
+          },
+        }).finally(() => {
+          window.username = '';
+          window.chname = '';
+          window.IS_ITSM_ADMIN = 0;
+          window.PERMISSIONS = [];
+          window.DEFAULT_PROJECT = '';
+          this.$router.push('/login');
+        });
       },
       // 切换项目
       onSelectProject(val) {

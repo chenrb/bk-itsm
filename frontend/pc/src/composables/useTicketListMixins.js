@@ -190,7 +190,7 @@ export function useTicketListMixins({ type, isIframe = false, columnList = [] })
 
   function initData() {
     const projectKey = route.query.project_id || route.query.project_key;
-    isChineseLanguage.value = cookie.parse(document.cookie).blueking_language === 'zh-cn';
+    isChineseLanguage.value = cookie.parse(document.cookie).itsm_language === 'zh-cn';
     let defaultFields = ['id', 'title', 'current_steps', 'current_processors', 'create_at', 'creator', 'operate', 'status'];
     if (currTabSettingCache.value) {
       const { fields, size } = currTabSettingCache.value;

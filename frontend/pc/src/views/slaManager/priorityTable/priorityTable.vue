@@ -154,7 +154,7 @@
     mounted() {
       this.initDate();
       // 获取英文的cookie值
-      this.localeCookie = cookie.parse(document.cookie).blueking_language !== 'zh-cn';
+      this.localeCookie = cookie.parse(document.cookie).itsm_language !== 'zh-cn';
     },
     methods: {
       initDate() {

@@ -1,6 +1,6 @@
-@import './variable.css';
+@use './variable.scss' as *;
 
-@define-mixin create-rotate $time, $deg {
+@mixin create-rotate($time, $deg) {
     animation-delay: $time;
     transform: rotate($deg);
 }
@@ -218,28 +218,28 @@
     }
 
     .rotate1 {
-        @mixin create-rotate 0.45s, -90deg;
+        @include create-rotate(0.45s, -90deg);
     }
     .rotate2 {
-        @mixin create-rotate 0.6s, -45deg;
+        @include create-rotate(0.6s, -45deg);
     }
     .rotate3 {
-        @mixin create-rotate 0.75s, 0deg;
+        @include create-rotate(0.75s, 0deg);
     }
     .rotate4 {
-        @mixin create-rotate 0.9s, 45deg;
+        @include create-rotate(0.9s, 45deg);
     }
     .rotate5 {
-        @mixin create-rotate 1.05s, 90deg;
+        @include create-rotate(1.05s, 90deg);
     }
     .rotate6 {
-        @mixin create-rotate 1.2s, 135deg;
+        @include create-rotate(1.2s, 135deg);
     }
     .rotate7 {
-        @mixin create-rotate 1.35s, 180deg;
+        @include create-rotate(1.35s, 180deg);
     }
     .rotate8 {
-        @mixin create-rotate 1.5s, -135deg;
+        @include create-rotate(1.5s, -135deg);
     }
     &.bk-spin-loading-large {
         width: 69px;

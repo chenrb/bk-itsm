@@ -521,7 +521,7 @@
 <style lang='scss' scoped>
     @use '../../../scss/mixins/clearfix' as *;
     @use '../../../scss/mixins/scroller' as *;
-    '../../../scss/mixins/table.scss';
+    @use '../../../scss/mixins/table.scss' as *;
 
     .bk-tree-table-directory {
         padding: 20px 10px 10px 10px;

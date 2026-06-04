@@ -245,7 +245,7 @@
       }
       await this.getTypeStatus();
       await this.getList();
-      this.localeCookie = cookie.parse(document.cookie).blueking_language !== 'zh-cn';
+      this.localeCookie = cookie.parse(document.cookie).itsm_language !== 'zh-cn';
       this.initFormData = deepClone(Object.assign({}, { templateInfo: this.templateInfo }, { checkList: this.checkList }));
     },
     methods: {

@@ -296,7 +296,7 @@
   };
 </script>
 <style lang='scss' scoped>
-'../../../../../scss/mixins/form.scss';
+@use '../../../../../scss/mixins/form.scss' as *;
 .bk-form-width {
     width: 240px;
     display: inline-block;

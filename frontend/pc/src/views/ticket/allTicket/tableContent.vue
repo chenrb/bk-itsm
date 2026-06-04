@@ -232,7 +232,7 @@
       },
     },
     async mounted() {
-      this.isChineseLanguage = cookie.parse(document.cookie).blueking_language === 'zh-cn';
+      this.isChineseLanguage = cookie.parse(document.cookie).itsm_language === 'zh-cn';
       this.getFields();
     },
     methods: {

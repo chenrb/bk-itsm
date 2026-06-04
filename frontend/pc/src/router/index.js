@@ -57,6 +57,8 @@ const systemLogs = () => import('../views/systemConfig/systemLogs.vue');
 // 403页面
 const limitAccess = () => import('../views/403.vue');
 const exception = () => import('../components/common/exception');
+// 登录页
+const LoginPage = () => import('../views/login/index.vue');
 
 // renderview 测试
 const RenderViewTest = () => import('../views/test/RenderViewTest.vue');
@@ -85,6 +87,12 @@ const isIframe = window.location.hash.indexOf('iframe') > -1;
 const base = isIframe ? '' : rootPath;
 
 const routes = [
+  {
+    path: '/login',
+    name: 'Login',
+    component: LoginPage,
+    meta: { noNav: true },
+  },
   {
     path: '/',
     name: 'Home',
@@ -298,6 +306,16 @@ const router = createRouter({
 connectToMain(router);
 
 router.beforeEach((to, from, next) => {
+  // Auth check: redirect to login if not authenticated
+  if (!window.username && to.name !== 'Login') {
+    next({ name: 'Login' });
+    return;
+  }
+  // Already authenticated: don't show login page
+  if (window.username && to.name === 'Login') {
+    next({ path: '/' });
+    return;
+  }
   // Permission-code based route guard
   if (to.meta && to.meta.permission) {
     if (window.IS_ITSM_ADMIN !== 1) {

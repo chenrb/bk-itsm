@@ -28,7 +28,7 @@ import enLang from 'bkui-vue/dist/locale/en.esm.js';
 import { m as zhI18n } from './lang/zh';
 import { m as enI18n } from './lang/en';
 import { m as jaI18n } from './lang/ja';
-const localeCookie = cookie.parse(document.cookie).blueking_language || 'zh-cn';
+const localeCookie = cookie.parse(document.cookie).itsm_language || 'zh-cn';
 console.log(cookie.parse(document.cookie));
 const i18n = createI18n({
   legacy: true,

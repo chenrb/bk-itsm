@@ -26,7 +26,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 import base64
 
 from django.contrib.auth import get_user_model
-from django.http import JsonResponse
 from django.utils.deprecation import MiddlewareMixin
 
 from common.mymako import render_mako_context
@@ -94,22 +93,3 @@ class NginxAuthProxy(MiddlewareMixin):
                 return None
 
         return None
-
-
-class UserLoginForbiddenMiddleware(MiddlewareMixin):
-    def process_response(self, request, response):
-        if (
-            "/init/" in request.path
-            and response.status_code == 302
-            and "/account/login_forbidden/" in getattr(response, "url", "")
-        ):
-            return JsonResponse(
-                {
-                    "result": True,
-                    "data": {"need_target": True, "location": response.url},
-                    "message": "",
-                    "code": 0,
-                }
-            )
-
-        return response

@@ -97,7 +97,7 @@
     },
     computed: {
       api() {
-        const host = window.BK_USER_MANAGE_HOST || location.origin;
+        const host = location.origin;
         return `${host}/api/c/compapi/v2/usermanage/fs_list_users/`;
       },
     },

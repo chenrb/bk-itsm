@@ -36,7 +36,6 @@ import App from "./App";
 import router from "./router";
 import Exception from "./components/common/exception";
 import ArrowsLeftIcon from "./components/common/layout/ArrowsLeftIcon";
-import "./utils/login.js";
 import i18n from "./i18n/index.js";
 import store from "./store";
 // 自定义指令
@@ -55,12 +54,7 @@ import "brace/theme/solarized_dark";
 window.$ = $;
 window.monaco = monaco;
 
-const app = createApp({
-  i18n,
-  router,
-  store,
-  render: () => App(),
-});
+const app = createApp(App);
 
 // 注册插件
 const pinia = createPinia();
@@ -95,7 +89,7 @@ app.component("app-exception", Exception);
 app.component("arrows-left-icon", ArrowsLeftIcon);
 
 // 国际化
-const localeCookie = cookie.parse(document.cookie).blueking_language || "zh-cn";
+const localeCookie = cookie.parse(document.cookie).itsm_language || "zh-cn";
 
 store.commit("setLanguage", localeCookie);
 
@@ -104,8 +98,10 @@ store.dispatch('getPlatformPreData').then(() => {
   store.dispatch('user/syncPermissions');
   app.mount("#app");
   window.app = app;
-}).catch(error => {
-  console.warn(error);
+}).catch(() => {
+  // init failed (401 or network error) — mount app so router guard redirects to login
+  app.mount("#app");
+  window.app = app;
 });
 
 

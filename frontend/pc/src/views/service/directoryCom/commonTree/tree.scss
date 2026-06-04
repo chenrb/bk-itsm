@@ -1,5 +1,5 @@
-@import './variable.css';
-@import "./loading.css";
+@use './variable.scss' as *;
+@use "./loading.scss" as *;
 
 .fade-enter-active,
 .fade-leave-active {
