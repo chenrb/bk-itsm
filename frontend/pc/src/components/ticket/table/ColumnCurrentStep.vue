@@ -59,7 +59,7 @@
   };
 </script>
 <style lang='scss' scoped>
-.current-steps-wrap ::v-deep  {
+.current-steps-wrap :deep(*) {
     .bk-tooltip, .bk-tooltip-ref {
         width: 100%;
     }

@@ -701,7 +701,7 @@
 </script>
 
 <style lang="scss" scoped>
-@import '../../../scss/mixins/scroller.scss';
+@use '../../../scss/mixins/scroller' as *;
 .ticket-detail-panel {
     width: 100%;
     height: 100%;
@@ -857,7 +857,7 @@
 
 </style>
 <style lang="scss">
-  @import '../../../scss/mixins/scroller.scss';
+  @use '../../../scss/mixins/scroller' as *;
   .processed-info-dialog.bk-dialog-wrapper .bk-dialog-body {
     padding: 3px 0 24px;
   }

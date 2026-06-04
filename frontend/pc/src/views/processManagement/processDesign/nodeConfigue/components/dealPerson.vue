@@ -445,7 +445,7 @@
 </script>
 
 <style lang='scss' scoped>
-    @import '../../../../../scss/mixins/clearfix.scss';
+    @use '../../../../../scss/mixins/clearfix' as *;
     .organization-tip {
       width: 40px;
       height: 40px;
@@ -491,7 +491,7 @@
     }
     .inline-auto-width {
         display: flex;
-        &.no-second  ::v-deep  {
+        &.no-second :deep(*) {
             .second-level {
                 display: none;
             }

@@ -378,7 +378,7 @@
 </script>
 
 <style scoped lang='scss'>
-    @import '../../../../scss/mixins/scroller';
+    @use '../../../../scss/mixins/scroller' as *;
     .bk-history-detail{
         padding: 23px;
         color: #63656E;
@@ -412,14 +412,14 @@
                     display: flex;
                     align-items: center;
                     margin-bottom: 12px;
-                    ::v-deep  .bk-table-body-wrapper{
+                    :deep(.bk-table-body-wrapper) {
                         @include scroller;
                     }
-                    ::v-deep .bk-tab-label-item{
+                    :deep(.bk-tab-label-item) {
                         min-width: 130px;
                         box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.1);
                     }
-                    ::v-deep  .bk-tab-border-card{
+                    :deep(.bk-tab-border-card) {
                         width: 100%;
                     }
                 }
@@ -440,7 +440,7 @@
         width: calc(100% - 125px);
         word-break: break-all;
     }
-    ::v-deep  .bk-tab > .bk-tab-section {
+    :deep(.bk-tab > .bk-tab-section) {
         border: 1px solid #dcdee5;
         border-top: none;
     }

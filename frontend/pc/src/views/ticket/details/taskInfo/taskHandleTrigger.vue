@@ -133,7 +133,7 @@
             line-height: normal;
             font-weight: normal;
         }
-        ::v-deep  .bk-button{
+        :deep(.bk-button) {
             & span{
                 font-size: 14px;
                 font-weight: normal;

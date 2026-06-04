@@ -1123,5 +1123,5 @@
 </script>
 
 <style lang='scss' scoped>
-    @import './triggerCss/addTrigger.scss';
+    @use './triggerCss/addTrigger.scss';
 </style>

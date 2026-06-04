@@ -399,7 +399,7 @@
 </script>
 <style lang="scss" scoped>
 .display-range {
-    ::v-deep  .bk-form-width {
+    :deep(.bk-form-width) {
         width: 303px;
     }
 }

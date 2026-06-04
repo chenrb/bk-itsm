@@ -1,4 +1,4 @@
-@import '../../../../scss/mixins/clearfix.scss';
+@use '../../../../scss/mixins/clearfix.scss' as *;
 
 .bk-configu-line {
     padding: 20px 20px 0px 20px;

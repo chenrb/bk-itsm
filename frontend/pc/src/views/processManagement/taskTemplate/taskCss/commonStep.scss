@@ -1,4 +1,4 @@
-@import '../../../../scss/mixins/scroller.scss';
+@use '../../../../scss/mixins/scroller.scss' as *;
 .bk-basic-node {
     padding: 30px 40px;
     height: 100%;
@@ -65,7 +65,7 @@
 
     .bk-form-width {
         width: 550px;
-        ::v-deep .bk-textarea-wrapper{
+        :deep(.bk-textarea-wrapper){
             background: white;
         }
     }

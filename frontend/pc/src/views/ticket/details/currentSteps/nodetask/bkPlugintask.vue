@@ -147,10 +147,10 @@
     }
     .bk-basic-node {
         padding: 0;
-        ::v-deep  .common-section-card-block {
+        :deep(.common-section-card-block) {
             display: block;
         }
-        ::v-deep  .common-section-card-body {
+        :deep(.common-section-card-body) {
             padding: 0;
         }
     }

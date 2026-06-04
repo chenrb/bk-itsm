@@ -521,7 +521,7 @@
 .icon-cus {
     font-size: 18px;
     padding: 0 9px !important;
-    ::v-deep  .bk-itsm-icon {
+    :deep(.bk-itsm-icon) {
         top: 0;
         width: auto;
     }

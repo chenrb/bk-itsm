@@ -527,8 +527,8 @@
 </script>
 
 <style scoped lang="scss">
-@import "../../../../../scss/mixins/clearfix.scss";
-@import "../../../../../scss/mixins/scroller.scss";
+@use "../../../../../scss/mixins/clearfix" as *;
+@use "../../../../../scss/mixins/scroller" as *;
 .bk-ticket-title {
     font-weight: bold;
     font-size: 14px;

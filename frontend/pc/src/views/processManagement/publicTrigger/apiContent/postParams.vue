@@ -391,8 +391,8 @@
 </script>
 
 <style lang='scss' scoped>
-    @import '../../../../scss/mixins/clearfix.scss';
-    ::v-deep  .last-add-row-column {
+    @use '../../../../scss/mixins/clearfix' as *;
+    :deep(.last-add-row-column) {
         .cell {
             padding: 0;
         }

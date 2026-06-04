@@ -445,8 +445,8 @@
 </script>
 
 <style lang='scss' scoped>
-    @import '../../../../../scss/mixins/clearfix.scss';
-    @import '../../../../../scss/mixins/scroller.scss';
+    @use '../../../../../scss/mixins/clearfix' as *;
+    @use '../../../../../scss/mixins/scroller' as *;
 
     .bk-basic-info {
         padding-bottom: 20px;
@@ -468,7 +468,7 @@
         color: #ff5656;
         font-size: 12px;
     }
-    ::v-deep  .bk-form-width {
+    :deep(.bk-form-width) {
         width: 448px;
     }
 </style>

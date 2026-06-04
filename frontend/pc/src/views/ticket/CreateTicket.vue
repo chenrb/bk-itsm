@@ -547,7 +547,7 @@
   };
 </script>
 <style lang="scss" scoped>
-@import '../../scss/mixins/scroller.scss';
+@use '../../scss/mixins/scroller' as *;
 .create-ticket-page {
     &.show-notice {
         .create-ticket-body {

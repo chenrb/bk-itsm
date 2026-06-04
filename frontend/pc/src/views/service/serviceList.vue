@@ -1147,7 +1147,7 @@
   };
 </script>
 <style lang='scss' scoped>
-@import '@/scss/mixins/scroller.scss';
+@use '../../scss/mixins/scroller' as *;
 .icon-itsm-icon-fill-fit {
     color: #2bcb55;
 }
@@ -1220,7 +1220,7 @@
         float: left;
         transition: width 0.5s ease-in;
         width: calc(100% - 288px);
-        ::v-deep  .bk-table-body-wrapper {
+        :deep(.bk-table-body-wrapper) {
             background: #ffffff;
         }
     }
@@ -1238,7 +1238,7 @@
         width: 400px;
     }
 }
-.filter-btn ::v-deep  .icon-search-more {
+.filter-btn :deep(.icon-search-more) {
     font-size: 14px;
 }
 .bk-form-checkbox {

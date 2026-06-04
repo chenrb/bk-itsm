@@ -340,7 +340,7 @@
 </script>
 
 <style lang='scss' scoped>
-    @import '../../../../scss/mixins/clearfix.scss';
+    @use '../../../../scss/mixins/clearfix' as *;
     .member-content{
         width: 100%;
         height: 32px;

@@ -281,8 +281,8 @@
 </script>
 
 <style lang='scss' scoped>
-    @import '../../../scss/mixins/clearfix.scss';
-    @import '../../../scss/mixins/scroller.scss';
+    @use '../../../scss/mixins/clearfix' as *;
+    @use '../../../scss/mixins/scroller' as *;
 
     .bk-ext-form {
         width: 100%;
@@ -303,7 +303,7 @@
             width: 280px;
             position: relative;
             padding: 0 10px 10px 0;
-            ::v-deep  .bk-label{
+            :deep(.bk-label) {
                 display: none;
             }
         }
@@ -330,7 +330,7 @@
         font-size: 12px;
         color: #ff5656;
     }
-    ::v-deep  .bk-form-item.is-required .bk-label{
+    :deep(.bk-form-item.is-required .bk-label) {
         width: auto !important;
     }
 </style>

@@ -525,7 +525,7 @@
 </script>
 
 <style lang='scss' scoped>
-    @import '../../../../scss/mixins/scroller.scss';
+    @use '../../../../scss/mixins/scroller' as *;
     .bk-basic-node {
         padding: 20px;
         height: 100%;
@@ -608,12 +608,12 @@
 
                         .bk-form-item-cus{
 
-                            ::v-deep  .bk-form-content{
+                            :deep(.bk-form-content) {
                                 display: inline-flex;
                                 align-items: center;
                             }
 
-                            ::v-deep  .bk-select-dropdown{
+                            :deep(.bk-select-dropdown) {
                                 width: 100%;
                             }
 

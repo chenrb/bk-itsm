@@ -84,7 +84,7 @@
     }
     .editor {
         height: 100%;
-        ::v-deep  .code-editor {
+        :deep(.code-editor) {
             height: 100%;
         }
     }

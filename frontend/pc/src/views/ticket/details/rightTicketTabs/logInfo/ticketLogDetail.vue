@@ -180,7 +180,7 @@
 </script>
 
 <style lang="scss" scoped>
-@import "../../../../../scss/mixins/clearfix.scss";
+@use "../../../../../scss/mixins/clearfix" as *;
 .slide-title {
     white-space: nowrap;
     text-overflow: ellipsis;

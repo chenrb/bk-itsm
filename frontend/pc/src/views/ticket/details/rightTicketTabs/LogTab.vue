@@ -245,7 +245,7 @@
 </script>
 
 <style lang="scss" scoped>
-@import "../../../../scss/mixins/scroller.scss";
+@use "../../../../scss/mixins/scroller" as *;
 .ticket-process {
   margin-left: -5px;
   cursor: pointer;
@@ -262,8 +262,7 @@
     @include scroller;
   }
 }
-.log-time-line {
-  ::v-deep  {
+.log-time-line { :deep(*) {
     .bk-timeline-title,
     .bk-timeline-content {
       font-size: 12px;

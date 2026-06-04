@@ -322,7 +322,7 @@
   };
 </script>
 <style lang="scss" scoped>
-@import '@/scss/mixins/scroller.scss';
+@use '../../../scss/mixins/scroller' as *;
 .steps-container {
     position: relative;
     width: 100%;

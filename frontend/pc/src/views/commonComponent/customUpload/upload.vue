@@ -396,5 +396,5 @@
     }
 </script>
 <style lang="scss">
-    @import 'upload';
+    @use 'upload';
 </style>

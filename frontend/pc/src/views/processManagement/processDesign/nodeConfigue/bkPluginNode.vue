@@ -541,7 +541,7 @@
 </script>
 
 <style lang='scss' scoped>
-@import '../../../../scss/mixins/scroller.scss';
+@use '../../../../scss/mixins/scroller' as *;
     .bk-form {
         display: flex;
         flex-direction: column;
@@ -552,13 +552,13 @@
         background-color: #FAFBFD;
         overflow: unset;
         @include scroller;
-        ::v-deep  .common-section-card-label {
+        :deep(.common-section-card-label) {
             display: none;
         }
-        ::v-deep  .common-section-card-body {
+        :deep(.common-section-card-body) {
             padding: 20px;
         }
-        ::v-deep  .bk-form-width {
+        :deep(.bk-form-width) {
             width: 448px;
         }
         .bk-params-title {
@@ -575,10 +575,10 @@
         }
         .bk-form-plugin {
             padding: 20px;
-            ::v-deep  .bk-schema-form-group {
+            :deep(.bk-schema-form-group) {
                 overflow: unset !important;
             }
-            ::v-deep  .bk-form-content {
+            :deep(.bk-form-content) {
                 display: flex;
                 align-items: center;
                 .bk-form-control {

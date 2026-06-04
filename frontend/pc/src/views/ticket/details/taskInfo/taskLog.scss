@@ -1,5 +1,5 @@
-@import '../../../scss/mixins/clearfix';
-@import '../../../scss/mixins/scroller';
+@use '../../../../scss/mixins/clearfix' as *;
+@use '../../../../scss/mixins/scroller' as *;
 
 .bk-flow-head {
     font-size: 14px;

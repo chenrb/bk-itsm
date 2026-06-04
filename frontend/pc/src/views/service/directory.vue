@@ -69,7 +69,7 @@
 </script>
 
 <style lang='scss' scoped>
-    @import '../../scss/mixins/scroller.scss';
+    @use '../../scss/mixins/scroller' as *;
     .service-directory {
         height: calc(100vh - 105px);
         overflow: auto;

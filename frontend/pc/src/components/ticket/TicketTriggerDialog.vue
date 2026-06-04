@@ -386,11 +386,11 @@
   };
 </script>
 <style lang='scss' scoped>
-::v-deep  .bk-dialog-wrapper .bk-dialog-body {
+:deep(.bk-dialog-wrapper .bk-dialog-body) {
     max-height: 600px;
     overflow: auto;
 }
-::v-deep  .bk-send-message {
+:deep(.bk-send-message) {
     border: 1px solid #dcdee5;
 }
 @keyframes rotation {

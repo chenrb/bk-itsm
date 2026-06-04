@@ -200,7 +200,7 @@
 </script>
 
 <style lang='scss' scoped>
-@import '../../../../../scss/mixins/scroller.scss';
+@use '../../../../../scss/mixins/scroller' as *;
 .icon-itsm-icon-three-one {
     font-size: 16px;
     cursor: pointer;
@@ -239,13 +239,13 @@
         }
     }
 }
-::v-deep  .tippy-tooltip {
+:deep(.tippy-tooltip) {
     padding: 0;
 }
-::v-deep  .tippy-arrow {
+:deep(.tippy-arrow) {
     display: none;
 }
-::v-deep  .bk-tooltip {
+:deep(.bk-tooltip) {
     display: block;
     .bk-tooltip-ref {
         display: block;

@@ -79,7 +79,7 @@
 </script>
 
 <style lang='scss' scoped>
-    @import '../jsflowCanvas/jsflowCss/nodeTemplate.scss';
+    '../jsflowCanvas/jsflowCss/nodeTemplate.scss';
     .bk-template-node {
         float: left;
     }

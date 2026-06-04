@@ -365,7 +365,7 @@
 </script>
 
 <style lang="scss" scoped>
-    @import '../../../../scss/mixins/scroller.scss';
+    @use '../../../../scss/mixins/scroller' as *;
     .process-edit {
         padding-top: 53px;
         height: 100%;

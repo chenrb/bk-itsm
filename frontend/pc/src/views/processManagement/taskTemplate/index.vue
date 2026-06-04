@@ -449,7 +449,7 @@
 </script>
 
 <style lang='scss' scoped>
-    @import './taskCss/index';
+    @use './taskCss/index';
     .itsm-page-content {
         padding: 0;
         .add-status {

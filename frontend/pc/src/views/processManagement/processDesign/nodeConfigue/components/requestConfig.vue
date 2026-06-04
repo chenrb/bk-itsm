@@ -399,7 +399,7 @@
 </script>
 
 <style lang='scss' scoped>
-@import '../../../../../scss/mixins/scroller.scss';
+@use '../../../../../scss/mixins/scroller' as *;
 .bk-config-tab {
     border-bottom: 1px solid #dde4eb;
     height: 40px;

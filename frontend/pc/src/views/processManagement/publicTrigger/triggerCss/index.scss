@@ -1,4 +1,4 @@
-@import '../../../../scss/mixins/clearfix.scss';
+@use '../../../../scss/mixins/clearfix.scss' as *;
 
 .bk-normal-search {
     margin-top: 10px;

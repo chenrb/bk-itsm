@@ -304,7 +304,7 @@
   };
 </script>
 <style lang='scss' scoped>
-@import '@/scss/mixins/scroller.scss';
+@use '../../../scss/mixins/scroller' as *;
 .service-ticket-form {
     // margin-top: 16px;
     position: relative;
@@ -335,7 +335,7 @@
         }
     }
 }
-::v-deep  .drag-entry {
+:deep(.drag-entry) {
     position: relative;
     width: 100%;
     height: 0;

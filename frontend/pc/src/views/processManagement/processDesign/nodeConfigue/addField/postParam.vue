@@ -399,8 +399,8 @@
 </script>
 
 <style lang="scss" scoped>
-    @import '../../../../../scss/mixins/clearfix.scss';
-    @import '../../../../../scss/mixins/scroller.scss';
+    @use '../../../../../scss/mixins/clearfix' as *;
+    @use '../../../../../scss/mixins/scroller' as *;
 
     .bk-more {
         &.bk-value {

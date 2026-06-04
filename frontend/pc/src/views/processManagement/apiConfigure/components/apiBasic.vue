@@ -315,7 +315,7 @@
 </script>
 
 <style lang="scss" scoped>
-    @import '../../../../scss/mixins/clearfix.scss';
+    @use '../../../../scss/mixins/clearfix' as *;
     .bk-basic-item {
         padding-bottom: 20px;
         border-bottom: 1px solid #E9EDF1;

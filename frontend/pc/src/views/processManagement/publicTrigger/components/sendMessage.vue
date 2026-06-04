@@ -132,10 +132,10 @@
 </script>
 
 <style lang='scss' scoped>
-    @import '../../../../scss/mixins/clearfix.scss';
+    @use '../../../../scss/mixins/clearfix' as *;
 
     .bk-send-message {
-        ::v-deep  .bk-tab-label-item{
+        :deep(.bk-tab-label-item) {
             min-width: 200px;
             .bk-tab-label {
                 padding: 0 5px;

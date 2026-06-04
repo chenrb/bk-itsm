@@ -188,7 +188,7 @@
 </script>
 
 <style lang='scss' scoped>
-    ::v-deep  .cus-change-mode {
+    :deep(.cus-change-mode) {
         font-size: 12px;
         text-align: right;
         background-color: #f9f9f9;
@@ -214,8 +214,7 @@
         &:hover {
             color: #63656E;
         }
-    }
-    ::v-deep  {
+    } :deep(*) {
         .tui-editor-defaultUI,
         .tui-editor-contents {
             font-family: inherit;

@@ -29,9 +29,9 @@
   };
 </script>
 <style lang="scss">
-    @import '../../scss/mixins/scroller.scss';
+    @use '../../scss/mixins/scroller' as *;
     .all-ticket-page {
-        ::v-deep  .nav-tab {
+        :deep(.nav-tab) {
             .bk-tab-section {
                 overflow-y: auto;
                 height: calc(100vh - 146px);

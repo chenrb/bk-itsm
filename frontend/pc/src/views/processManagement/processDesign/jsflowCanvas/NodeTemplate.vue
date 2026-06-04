@@ -337,7 +337,7 @@
   };
 </script>
 <style lang="scss" scoped>
-    @import './jsflowCss/nodeTemplate.scss';
+    @use './jsflowCss/nodeTemplate.scss';
 
     .bk-font-style {
         font-size: 24px;

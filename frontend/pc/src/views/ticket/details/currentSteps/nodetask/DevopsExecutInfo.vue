@@ -267,8 +267,8 @@
   };
 </script>
 <style lang='scss' scoped>
-@import '@/scss/animation/rotation.scss';
-@import '@/scss/mixins/form.scss';
+@use '@/scss/animation/rotation.scss';
+@use '@/scss/mixins/form.scss' as *;
 .link-ui {
     color: #3A84FF;
     cursor: pointer;

@@ -754,34 +754,34 @@
 </script>
 
 <style lang='scss' scoped>
-    @import '../../../../scss/mixins/scroller.scss';
+    @use '../../../../scss/mixins/scroller' as *;
     .bk-basic-node {
         padding: 20px;
         height: 100%;
         background-color: #FAFBFD;
         overflow: auto;
         @include scroller;
-        ::v-deep  .common-section-card-block {
+        :deep(.common-section-card-block) {
             display: flex;
             flex-direction: column;
         }
-        ::v-deep  .common-section-card-label {
+        :deep(.common-section-card-label) {
             width: 100%;
             padding: 0 24px;
             .common-section-card-desc {
                 width: 100%;
             }
         }
-        ::v-deep  .bk-polling {
+        :deep(.bk-polling) {
             margin-top: -25px;
         }
-        ::v-deep  .common-section-card-body {
+        :deep(.common-section-card-body) {
             padding: 20px;
         }
-        ::v-deep  .bk-form-width {
+        :deep(.bk-form-width) {
             width: 446px;
         }
-        ::v-deep  .common-section-card-block {
+        :deep(.common-section-card-block) {
             box-shadow: 0 0;
         }
         .api-params-title {

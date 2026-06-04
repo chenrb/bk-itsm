@@ -149,7 +149,7 @@
             .form-drag-wrap {
                 width: 50%;
                 &:first-child {
-                    ::v-deep  .form-view-item {
+                    :deep(.form-view-item) {
                         justify-content: flex-end;
                         .form-view-content {
                             // padding-right: 34px;
@@ -157,13 +157,13 @@
                     }
                 }
                 &:nth-child(2n) {
-                    ::v-deep  .form-view-content {
+                    :deep(.form-view-content) {
                         // padding-left: 20px;
                     }
                 }
             }
             .half-form-item {
-                ::v-deep  .form-view-item {
+                :deep(.form-view-item) {
                     display: flex;
                     border: none;
                     .form-view-content {

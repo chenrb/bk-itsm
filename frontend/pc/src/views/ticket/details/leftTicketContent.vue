@@ -263,7 +263,7 @@
         min-height: 54px;
         box-shadow: 0px 2px 6px 0px rgba(0,0,0,0.1);
         background: #ffffff;
-        ::v-deep  .bk-tab-section {
+        :deep(.bk-tab-section) {
             padding: 0;
         }
         .ticket-creator {
@@ -297,7 +297,7 @@
         .hide{
             height: 0;
         }
-        ::v-deep  .bk-icon {
+        :deep(.bk-icon) {
             // line-height: 54px;
         }
     }
@@ -307,7 +307,7 @@
         padding: 10px;
         box-shadow: 0px 2px 6px 0px rgba(0,0,0,0.1);
         background: #ffffff;
-        ::v-deep  .bk-tab-section {
+        :deep(.bk-tab-section) {
             padding: 0;
         }
         .panel-count {
@@ -323,7 +323,7 @@
             color: #fff;
             background-color: #C4C6CC;
         }
-        ::v-deep  .bk-tab-label-item.active {
+        :deep(.bk-tab-label-item.active) {
             .panel-count {
                 color: #3a84ff;
                 background: #e1ecff;
@@ -331,7 +331,7 @@
         }
     }
 }
-::v-deep  .bk-dialog {
+:deep(.bk-dialog) {
     top: 120px;
 }
 .bk-order-preview {

@@ -1,5 +1,5 @@
-@import '../../../../scss/mixins/clearfix.scss';
-@import '../../../../scss/mixins/scroller.scss';
+@use '../../../../scss/mixins/clearfix.scss' as *;
+@use '../../../../scss/mixins/scroller.scss' as *;
 
 .common-section-card-block {
     &.inner-mode {

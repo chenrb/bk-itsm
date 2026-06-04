@@ -366,7 +366,7 @@
 </script>
 
 <style lang="scss" scoped>
-    @import '../../../../scss/mixins/clearfix.scss';
+    @use '../../../../scss/mixins/clearfix' as *;
     .bk-basic-p {
         font-size: 14px;
         color: #737987;

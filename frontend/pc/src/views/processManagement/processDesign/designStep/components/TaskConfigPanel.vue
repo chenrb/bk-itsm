@@ -296,7 +296,7 @@
   };
 </script>
 <style lang='scss' scoped>
-@import '../../../../../scss/mixins/form.scss';
+'../../../../../scss/mixins/form.scss';
 .bk-form-width {
     width: 240px;
     display: inline-block;
@@ -320,7 +320,7 @@
             margin-bottom: 10px;
             font-size: 12px;
             color: #63656e;
-            ::v-deep  .bk-label .bk-label-text {
+            :deep(.bk-label .bk-label-text) {
                 font-size: 12px;
             }
         }

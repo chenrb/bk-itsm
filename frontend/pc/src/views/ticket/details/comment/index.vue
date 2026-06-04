@@ -300,7 +300,7 @@
   };
 </script>
 <style scoped lang="scss">
-    @import '../../../../scss/mixins/scroller.scss';
+    @use '../../../../scss/mixins/scroller' as *;
     @keyframes flash{
         0% {
             opacity: 0.1;

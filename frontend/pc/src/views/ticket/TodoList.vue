@@ -265,7 +265,7 @@
   };
 </script>
 <style lang="scss" scoped>
-    @import './ticketList.scss';
+    @use './ticketList.scss';
     .approve-laoding {
       display: flex;
     }

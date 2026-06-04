@@ -294,7 +294,7 @@
 </script>
 
 <style lang='scss' scoped>
-    @import '../../../../../scss/mixins/scroller';
+    @use '../../../../../scss/mixins/scroller' as *;
     .bk-half {
         width: 49%;
         position: relative;

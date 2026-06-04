@@ -115,8 +115,8 @@
 </script>
 
 <style lang='scss' scoped>
-    @import '../../../../../scss/mixins/clearfix.scss';
-    @import '../../../../../scss/mixins/scroller';
+    @use '../../../../../scss/mixins/clearfix' as *;
+    @use '../../../../../scss/mixins/scroller' as *;
     .bk-custom-line {
         display: flex;
         align-items: center;

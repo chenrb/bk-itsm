@@ -298,7 +298,7 @@
   };
 </script>
 <style lang="scss" scoped>
-    @import '../../scss/mixins/scroller.scss';
+    @use '../../scss/mixins/scroller' as *;
     .service-list-section {
         position: relative;
         padding: 20px;
@@ -393,7 +393,7 @@
             overflow: hidden;
         }
     }
-    ::v-deep  .bk-tab-section {
+    :deep(.bk-tab-section) {
         padding: 16px 0 0;
     }
     .recently-content {

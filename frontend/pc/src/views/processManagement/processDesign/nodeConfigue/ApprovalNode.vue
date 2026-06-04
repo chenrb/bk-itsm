@@ -841,9 +841,9 @@
 </script>
 
 <style lang='scss' scoped>
-    @import '../../../../scss/mixins/scroller.scss';
+    @use '../../../../scss/mixins/scroller' as *;
     .automatic-processing-form {
-        ::v-deep  .bk-form-content {
+        :deep(.bk-form-content) {
             .bk-form-checkbox {
                 display: block;
                 margin-top: 12px;
@@ -863,10 +863,10 @@
         background-color: #FAFBFD;
         overflow: auto;
         @include scroller;
-        ::v-deep  .common-section-card-label {
+        :deep(.common-section-card-label) {
             display: none;
         }
-        ::v-deep  .common-section-card-body {
+        :deep(.common-section-card-body) {
             padding: 20px;
         }
 
@@ -888,7 +888,7 @@
             }
         }
 
-        ::v-deep  .bk-form-width {
+        :deep(.bk-form-width) {
             width: 448px;
         }
         .inline-form-width {
@@ -951,12 +951,12 @@
 
                             .bk-form-item-cus{
                                 margin-top: 8px;
-                                ::v-deep  .bk-form-content{
+                                :deep(.bk-form-content) {
                                     display: inline-flex;
                                     align-items: center;
                                 }
 
-                                ::v-deep  .bk-select-dropdown{
+                                :deep(.bk-select-dropdown) {
                                     width: 100%;
                                 }
 

@@ -188,7 +188,7 @@
 </script>
 
 <style lang="scss" scoped>
-@import "../../../../scss/mixins/scroller.scss";
+@use "../../../../scss/mixins/scroller" as *;
 .icon-itsm-icon-mark-eight {
     color: red;
 }
@@ -205,11 +205,11 @@
 .right-tiket-tabs {
     flex: 1;
     background: #ffffff;
-    ::v-deep  .bk-tab-section {
+    :deep(.bk-tab-section) {
         overflow: auto;
         @include scroller;
     }
-    ::v-deep  .bk-tab-label-item {
+    :deep(.bk-tab-label-item) {
         min-width: auto;
     }
 }

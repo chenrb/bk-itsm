@@ -917,10 +917,10 @@
 </script>
 
 <style lang="scss" scoped>
-@import "../../scss/mixins/scroller.scss";
+@use "../../scss/mixins/scroller" as *;
 .my-ticket-page {
     min-height: 400px;
-    ::v-deep  .bk-tab-section {
+    :deep(.bk-tab-section) {
         padding: 0;
     }
 }
@@ -943,11 +943,11 @@
 .table-link {
     color: #3a84ff;
     vertical-align: baseline;
-    ::v-deep  .bk-link-text {
+    :deep(.bk-link-text) {
         font-size: 12px;
     }
 }
-::v-deep  .bk-tab-label-item {
+:deep(.bk-tab-label-item) {
     .panel-name,
     .panel-count {
         display: inline-block;
@@ -1051,7 +1051,7 @@
         }
     }
 }
-::v-deep  .bk-tab-label-item {
+:deep(.bk-tab-label-item) {
     border-bottom: 2px solid #3a84ff;
 }
 </style>

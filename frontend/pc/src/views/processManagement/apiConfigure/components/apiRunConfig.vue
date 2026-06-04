@@ -245,7 +245,7 @@
 </script>
 
 <style lang="scss" scoped>
-    @import '../../../../scss/mixins/clearfix.scss';
+    @use '../../../../scss/mixins/clearfix' as *;
     .bk-run-configure {
         border: 1px solid #dde4eb;
         background-color: #fafafa;

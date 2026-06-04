@@ -374,7 +374,7 @@
             margin-bottom: 18px;
         }
         .project-table {
-            ::v-deep .bk-link .bk-link-text {
+            :deep(.bk-link .bk-link-text) {
                 font-size: 12px;
                 line-height: 1;
             }

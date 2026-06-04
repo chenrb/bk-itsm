@@ -983,7 +983,7 @@
                 width: 60%;
             }
         }
-        ::v-deep  .bk-table {
+        :deep(.bk-table) {
             td, th {
                 height: 40px;
             }
@@ -1001,7 +1001,7 @@
                 margin-right: 0;
             }
         }
-        ::v-deep  .bk-table {
+        :deep(.bk-table) {
             td, th {
                 height: 30px;
                 border-bottom-color: #ffffff;

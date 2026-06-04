@@ -511,13 +511,13 @@
 </script>
 
 <style lang='scss' scoped>
-    @import '../../publicTrigger/triggerCss/index';
-    @import '../taskCss/commonTrigger';
-    @import '@/scss/common-section-card.scss';
+    @use '../../publicTrigger/triggerCss/index';
+    @use '../taskCss/commonTrigger';
+    @use '@/scss/common-section-card.scss' as *;
     .trigger-dropdown.bk-dropdown-menu {
       float: left;
       cursor: pointer;
-      ::v-deep  .bk-dropdown-trigger * {
+      :deep(.bk-dropdown-trigger *) {
         cursor: pointer;
       }
     }

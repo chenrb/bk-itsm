@@ -434,8 +434,8 @@
 </script>
 
 <style scoped lang="scss">
-@import "../../../../scss/mixins/clearfix";
-@import "../../../../scss/mixins/scroller";
+@use "../../../../scss/mixins/clearfix" as *;
+@use "../../../../scss/mixins/scroller" as *;
 
 .bk-new-task {
     margin-bottom: 70px;
@@ -479,8 +479,8 @@
     z-index: 1;
 }
 .deal-person {
-    ::v-deep  .first-level,
-    ::v-deep  .second-level {
+    :deep(.first-level),
+    :deep(.second-level) {
         width: calc(50% - 8px);
         margin-right: 8px;
         .bk-form-width {

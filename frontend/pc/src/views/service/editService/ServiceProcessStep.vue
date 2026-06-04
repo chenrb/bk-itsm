@@ -233,7 +233,7 @@
 .process-step-node-conf {
     margin: 24px auto;
     width: 1000px;
-    ::v-deep  .bk-basic-node {
+    :deep(.bk-basic-node) {
         padding: 0;
     }
 }

@@ -592,18 +592,18 @@
     .operation-group {
         margin-left: auto;
         .operation-refresh {
-            ::v-deep  .icon-refresh {
+            :deep(.icon-refresh) {
                 transition: all 1s;
                 font-size: 14px;
                 vertical-align: 1px;
             }
             &.rotate {
-                ::v-deep  .icon-refresh {
+                :deep(.icon-refresh) {
                     transform: rotate(360deg);
                 }
             }
             &.not-rotate {
-                ::v-deep  .icon-refresh {
+                :deep(.icon-refresh) {
                     transform: rotate(0);
                 }
             }
@@ -631,7 +631,7 @@
             border-color: #979ba5;
         }
         .bk-dropdown-menu-cus {
-            ::v-deep  .bk-dropdown-content {
+            :deep(.bk-dropdown-content) {
                 overflow: visible;
             }
             .bk-dropdown-list-cus {

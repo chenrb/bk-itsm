@@ -373,9 +373,9 @@
 </script>
 
 <style lang='scss' scoped>
-    @import '../../../publicTrigger/triggerCss/index';
-    @import '../../../taskTemplate/taskCss/commonTrigger';
-    @import '../../../taskTemplate/taskCss/index';
+    @use '../../../publicTrigger/triggerCss/index';
+    @use '../../../taskTemplate/taskCss/commonTrigger';
+    @use '../../../taskTemplate/taskCss/index';
     .bk-task-dialog {
         margin-top: 13px;
         @include clearfix;
@@ -453,7 +453,7 @@
         margin-right: 5px;
     }
     .config-form-item {
-        ::v-deep  .icon-exclamation-circle-shape.tooltips-icon {
+        :deep(.icon-exclamation-circle-shape.tooltips-icon) {
             left: 463px;
             right: inherit !important;
             top: 21px;

@@ -268,7 +268,7 @@
 </script>
 
 <style lang="scss" scoped>
-    @import '../../../scss/mixins/table.scss';
+    '../../../scss/mixins/table.scss';
     .bk-add-dictionary {
         margin: 0;
         padding: 20px;

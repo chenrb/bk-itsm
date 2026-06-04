@@ -464,8 +464,8 @@
 </script>
 
 <style scoped lang='scss'>
-    @import '../../../scss/mixins/clearfix.scss';
-    @import '../../../scss/mixins/scroller.scss';
+    @use '../../../scss/mixins/clearfix' as *;
+    @use '../../../scss/mixins/scroller' as *;
     #bk-printcontent {
         min-width: 1280px;
         width: 100%;
@@ -598,7 +598,7 @@
 
         .bk-RICHTEXT {
             width: 100%;
-            ::v-deep  img {
+            :deep(img) {
                 width: 100%;
             }
         }

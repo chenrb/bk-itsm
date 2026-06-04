@@ -241,7 +241,7 @@
 </script>
 
 <style lang='scss' scoped>
-    @import '../../../../scss/mixins/clearfix.scss';
+    @use '../../../../scss/mixins/clearfix' as *;
 
     .bk-response-content {
         border-top: 1px solid #DCDEE5;
@@ -251,7 +251,7 @@
         padding: 0 18px;
     }
     .no-require-item{
-        ::v-deep  .bk-label:after{
+        :deep(.bk-label:after) {
             color: transparent;
         }
     }

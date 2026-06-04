@@ -194,7 +194,7 @@
         display: flex;
         align-items: center;
         flex-wrap: nowrap;
-        ::v-deep  .bk-form-item{
+        :deep(.bk-form-item) {
             display: inline-flex;
             align-items: center;
             width: 30%;

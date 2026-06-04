@@ -424,8 +424,8 @@
   };
 </script>
 <style lang='scss' scoped>
-@import '@/scss/mixins/scroller.scss';
-@import '@/scss/common-section-card.scss';
+@use '../../../scss/mixins/scroller' as *;
+@use '@/scss/common-section-card.scss' as *;
 .bk-float-radio {
     float: left;
     line-height: 30px;
@@ -450,7 +450,7 @@
 }
 
 .auto-with-form-item {
-    ::v-deep  .bk-form-content {
+    :deep(.bk-form-content) {
         display: flex;
         .bk-select {
             flex: 1;
@@ -495,7 +495,7 @@
         margin-top: 20px;
     }
 }
-::v-deep  .common-section-card-desc {
+:deep(.common-section-card-desc) {
     width: 100%;
 }
 </style>

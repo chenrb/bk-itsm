@@ -247,13 +247,13 @@
 </script>
 
 <style lang='scss' scoped>
-    @import '../../../../scss/mixins/clearfix.scss';
+    @use '../../../../scss/mixins/clearfix' as *;
 
     .bk-change-conductor {
         font-size: 12px;
         color: #63656E;
         @include clearfix;
-        ::v-deep  .bk-form-control{
+        :deep(.bk-form-control) {
             width: calc(100% - 130px)!important;
         }
     }

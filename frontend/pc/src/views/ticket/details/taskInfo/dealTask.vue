@@ -436,7 +436,7 @@
   };
 </script>
 <style lang="scss" scoped>
-@import "@/scss/mixins/form.scss";
+@use '@/scss/mixins/form.scss' as *;
 .bk-status-normal {
     color: #3c96ff;
     border: 1px solid #3c96ff;

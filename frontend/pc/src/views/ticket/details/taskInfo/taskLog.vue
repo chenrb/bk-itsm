@@ -122,5 +122,5 @@
 </script>
 
 <style scoped lang='scss'>
-    @import './taskLog';
+    @use './taskLog';
 </style>

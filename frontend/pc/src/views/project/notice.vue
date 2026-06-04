@@ -382,8 +382,8 @@
 </script>
 
 <style lang='scss' scoped>
-    @import '../../scss/mixins/clearfix.scss';
-    @import '../../scss/mixins/scroller.scss';
+    @use '../../scss/mixins/clearfix' as *;
+    @use '../../scss/mixins/scroller' as *;
     .bk-notice-tab {
         @include clearfix;
         border-bottom: 1px solid #dde4eb;

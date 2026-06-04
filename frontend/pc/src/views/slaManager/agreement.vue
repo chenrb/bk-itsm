@@ -565,7 +565,7 @@
             }
         }
     }
-    .filter-btn ::v-deep  .icon-search-more {
+    .filter-btn :deep(.icon-search-more) {
         font-size: 14px;
     }
     .bk-highlight-setting {

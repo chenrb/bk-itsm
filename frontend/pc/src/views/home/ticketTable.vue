@@ -342,10 +342,10 @@
     .table-link {
         color: #3a84ff;
     }
-    ::v-deep  .bk-link .bk-link-text {
+    :deep(.bk-link .bk-link-text) {
         font-size: 12px;
     }
-    ::v-deep  .bk-tab-label-item {
+    :deep(.bk-tab-label-item) {
         .panel-name,
         .panel-count {
             display: inline-block;
@@ -372,7 +372,7 @@
             }
         }
     }
-    ::v-deep  .bk-tab-section {
+    :deep(.bk-tab-section) {
         padding: 20px 0 24px 0;
     }
     .view-all {

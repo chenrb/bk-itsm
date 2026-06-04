@@ -356,7 +356,7 @@
   };
 </script>
 <style lang="scss" scoped>
-@import "@/scss/mixins/scroller.scss";
+@use "../../../scss/mixins/scroller" as *;
 .all-ticket-page {
   height: 100%;
   background: #fafbfd;
@@ -365,7 +365,7 @@
       height: calc(100vh - 186px);
     }
   }
-  ::v-deep  .bk-tab-section {
+  :deep(.bk-tab-section) {
     padding: 0;
     background-color: #f5f7fa;
   }
@@ -400,7 +400,7 @@
       }
     }
   }
-  ::v-deep  .bk-tab-label-wrapper {
+  :deep(.bk-tab-label-wrapper) {
     box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.1);
   }
   .ticket-content {
@@ -479,7 +479,7 @@
   .bk-form-item {
     width: 50%;
     min-height: 32px;
-    ::v-deep  .bk-form-content {
+    :deep(.bk-form-content) {
       width: auto;
       min-height: 32px;
       margin-left: 150px;

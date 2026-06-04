@@ -456,7 +456,7 @@
         height: 22px;
         line-height: 20px;
     }
-    .current-steps-wrap ::v-deep  {
+    .current-steps-wrap :deep(*) {
          .bk-tooltip, .bk-tooltip-ref {
             width: 100%;
         }
@@ -485,7 +485,7 @@
         color: #3a84ff;
         padding: 0 5px;
     }
-    ::v-deep  .bk-table-pagination-wrapper {
+    :deep(.bk-table-pagination-wrapper) {
         background-color: #fff;
     }
 </style>

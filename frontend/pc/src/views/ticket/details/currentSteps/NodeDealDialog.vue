@@ -313,11 +313,11 @@
 </script>
 
 <style lang="scss" scoped>
-::v-deep  .bk-dialog-header-inner {
+:deep(.bk-dialog-header-inner) {
   text-align: left;
 }
 .deal-person {
-  ::v-deep  .bk-form-width {
+  :deep(.bk-form-width) {
     width: 100%;
   }
 }

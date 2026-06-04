@@ -604,8 +604,8 @@
 </script>
 
 <style lang='scss' scoped>
-    @import '../../../scss/mixins/clearfix.scss';
-    @import '../../../scss/mixins/scroller.scss';
+    @use '../../../scss/mixins/clearfix' as *;
+    @use '../../../scss/mixins/scroller' as *;
 
     .project-sla-agreement {
         height: calc(100vh - 52px);
@@ -613,7 +613,7 @@
             height: calc(100vh - 92px);
         }
     }
-    .bk-loading ::v-deep .bk-spin-loading {
+    .bk-loading :deep(.bk-spin-loading) {
         width: 16px;
         height: 16px;
     }
@@ -759,8 +759,7 @@
         }
     }
     .display-range {
-        width: 100%;
-        ::v-deep  {
+        width: 100%; :deep(*) {
             .first-level {
                 margin-right: 8px;
             }
@@ -771,7 +770,7 @@
                 width: 100%;
             }
         }
-        ::v-deep  &.no-second {
+        :deep(&.no-second) {
             .first-level {
                 width: 100%;
             }

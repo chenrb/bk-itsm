@@ -99,10 +99,10 @@
 </script>
 
 <style lang='scss' scoped>
-    @import '../../../scss/mixins/scroller.scss';
+    @use '../../../scss/mixins/scroller' as *;
     .member-form-item {
         position: relative;
-        ::v-deep  .business-popover {
+        :deep(.business-popover) {
             position: absolute;
             right: 10px;
             top: 0px;

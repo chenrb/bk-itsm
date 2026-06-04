@@ -292,7 +292,7 @@
   };
 </script>
 <style lang='scss' scoped>
-@import '@/scss/mixins/scroller.scss';
+@use '../../../scss/mixins/scroller' as *;
 .ticket-detail-iframe {
     height: 100%;
     overflow: auto;

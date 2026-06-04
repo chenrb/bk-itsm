@@ -819,14 +819,14 @@
   };
 </script>
 <style lang='scss' scoped>
-@import '@/scss/mixins/scroller.scss';
-@import '@/scss/mixins/ellipsis.scss';
+@use '../../../scss/mixins/scroller' as *;
+@use '@/scss/mixins/ellipsis.scss' as *;
 .field-tab {
-    ::v-deep  .bk-tab-label-wrapper {
+    :deep(.bk-tab-label-wrapper) {
         display: flex;
         justify-content: center;
     }
-    ::v-deep  .bk-tab-section {
+    :deep(.bk-tab-section) {
         position: relative;
         padding: 0;
         height: calc(100vh - 268px);

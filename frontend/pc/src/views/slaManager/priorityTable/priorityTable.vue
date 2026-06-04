@@ -190,8 +190,8 @@
 </script>
 
 <style lang='scss' scoped>
-    @import '../../../scss/mixins/clearfix.scss';
-    @import '../../../scss/mixins/scroller.scss';
+    @use '../../../scss/mixins/clearfix' as *;
+    @use '../../../scss/mixins/scroller' as *;
 
     .bk-priority-table {
         @include clearfix;
@@ -200,7 +200,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            ::v-deep .bk-checkbox-text{
+            :deep(.bk-checkbox-text) {
                 text-overflow: ellipsis;
                 overflow: hidden;
                 white-space: nowrap;

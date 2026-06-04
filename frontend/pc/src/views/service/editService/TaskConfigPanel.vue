@@ -314,7 +314,7 @@
   };
 </script>
 <style lang='scss' scoped>
-@import '@/scss/mixins/form.scss';
+@use '@/scss/mixins/form.scss' as *;
 .bk-form-width {
     width: 240px;
     display: inline-block;
@@ -338,7 +338,7 @@
             margin-bottom: 10px;
             font-size: 12px;
             color: #63656e;
-            ::v-deep  .bk-label .bk-label-text {
+            :deep(.bk-label .bk-label-text) {
                 font-size: 12px;
             }
         }

@@ -155,7 +155,7 @@
   };
 </script>
 <style lang='scss' scoped>
-@import '../../scss/animation/rotation.scss';
+@use '../../scss/animation/rotation.scss';
 
 .devops-preview {
     margin-top: 8px;

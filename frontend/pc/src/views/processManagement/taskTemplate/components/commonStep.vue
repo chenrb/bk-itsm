@@ -302,9 +302,9 @@
 </script>
 
 <style scoped lang="scss">
-    @import '../taskCss/commonStep';
+    @use '../taskCss/commonStep';
     .flex-form-item{
-        ::v-deep  .bk-form-content{
+        :deep(.bk-form-content) {
             display: inline-flex;
         }
     }

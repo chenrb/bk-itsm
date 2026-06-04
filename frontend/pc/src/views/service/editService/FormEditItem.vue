@@ -77,14 +77,14 @@
         border-top: 1px solid #dde4eb;
         border-bottom: 1px solid #dde4eb;
     }
-    ::v-deep  .bk-halfline-item {
+    :deep(.bk-halfline-item) {
         display: block;
         width: 100%;
     }
-    ::v-deep  .bk-half {
+    :deep(.bk-half) {
         width: 100%;
     }
-    ::v-deep .bk-add-field {
+    :deep(.bk-add-field) {
         & > .bk-form {
             margin: 0 auto;
             max-width: 600px;

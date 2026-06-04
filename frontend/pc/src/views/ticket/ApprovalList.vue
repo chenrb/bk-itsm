@@ -403,7 +403,7 @@
   };
 </script>
 <style lang="scss" scoped>
-    @import './ticketList.scss';
+    @use './ticketList.scss';
     .table-wrap {
       position: relative;
       .loading {

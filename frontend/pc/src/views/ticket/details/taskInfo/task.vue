@@ -794,14 +794,14 @@
 </script>
 
 <style scoped lang="scss">
-@import "./taskLog";
-@import "../../../scss/mixins/clearfix.scss";
-@import "../../../scss/mixins/scroller";
-@import "../../../scss/mixins/table.scss";
+@use "./taskLog";
+@use "../../../../scss/mixins/clearfix" as *;
+@use "../../../../scss/mixins/scroller" as *;
+@use "../../../../scss/mixins/table.scss" as *;
 
 .bk-dropdown-menu-cus {
     float: left;
-    ::v-deep  .bk-dropdown-content {
+    :deep(.bk-dropdown-content) {
         overflow: visible;
     }
     .bk-dropdown-list-cus {
@@ -897,7 +897,7 @@
         color: #979ba5;
     }
     .task-table-wrap {
-        ::v-deep  .cell {
+        :deep(.cell) {
             white-space: nowrap !important;
         }
         .order-opt-btns {

@@ -340,8 +340,8 @@
   };
 </script>
 <style lang='scss' scoped>
-    @import '../../../../scss/mixins/clearfix.scss';
-    @import '../../../../scss/mixins/scroller.scss';
+    @use '../../../../scss/mixins/clearfix' as *;
+    @use '../../../../scss/mixins/scroller' as *;
     .rich-show {
       margin-top: 10px;
       margin-left: 4px;
@@ -413,7 +413,7 @@
             }
             .bk-fields-richtext {
                 font-size: 14px;
-                ::v-deep  .rich-text {
+                :deep(.rich-text) {
                     margin: 5px 0;
                     overflow: hidden;
                     text-overflow: ellipsis;

@@ -214,14 +214,14 @@
   padding: 5px 10px;
   color: #63656e;
   // .single {
-  //   ::v-deep  .tree-drag-node {
+  //   :deep(.tree-drag-node) {
   //     &:hover {
   //       background-color: #cfe8fc;
   //     }
   //   }
   // }
 }
-.bk-tree ::v-deep  .tree-drag-node {
+.bk-tree :deep(.tree-drag-node) {
   display: flex;
   align-items: center;
   .tree-node {

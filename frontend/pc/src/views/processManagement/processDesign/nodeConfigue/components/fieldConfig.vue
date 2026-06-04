@@ -591,8 +591,8 @@
 </script>
 
 <style lang='scss' scoped>
-    @import '../../../../../scss/mixins/table.scss';
-    @import '../../../../../scss/mixins/clearfix.scss';
+    '../../../../../scss/mixins/table.scss';
+    @use '../../../../../scss/mixins/clearfix' as *;
     .bk-field-info{
         color: #63656E;
         font-size: 14px;

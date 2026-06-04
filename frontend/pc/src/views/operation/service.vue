@@ -573,7 +573,7 @@
         }
     }
     .service-statistics {
-        ::v-deep  .bk-table {
+        :deep(.bk-table) {
             td, th {
                 height: 30px;
                 border-bottom-color: #ffffff;

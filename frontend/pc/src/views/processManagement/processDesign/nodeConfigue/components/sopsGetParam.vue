@@ -390,13 +390,13 @@
         cursor: pointer;
     }
 }
-::v-deep  .el-input__inner {
+:deep(.el-input__inner) {
     width: 60%;
 }
-::v-deep  .rf-tag-hook {
+:deep(.rf-tag-hook) {
     top: 40px;
 }
-::v-deep  .rf-tag-form {
+:deep(.rf-tag-form) {
     width: 76%;
 }
 </style>

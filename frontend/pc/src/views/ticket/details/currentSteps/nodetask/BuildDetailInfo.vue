@@ -86,7 +86,7 @@
   };
 </script>
 <style lang='scss' scoped>
-@import '@/scss/mixins/form.scss';
+@use '@/scss/mixins/form.scss' as *;
 .build-detail-info {
     padding: 27px 29px;
 }

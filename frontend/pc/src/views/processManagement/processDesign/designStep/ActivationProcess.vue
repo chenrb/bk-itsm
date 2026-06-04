@@ -634,7 +634,7 @@
 </script>
 
 <style lang='scss' scoped>
-    @import '../../../../scss/mixins/clearfix.scss';
+    @use '../../../../scss/mixins/clearfix' as *;
     .more-configuration {
         display: flex;
         align-items: center;

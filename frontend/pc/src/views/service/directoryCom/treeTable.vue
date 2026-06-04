@@ -519,9 +519,9 @@
 </script>
 
 <style lang='scss' scoped>
-    @import '../../../scss/mixins/clearfix.scss';
-    @import '../../../scss/mixins/scroller.scss';
-    @import '../../../scss/mixins/table.scss';
+    @use '../../../scss/mixins/clearfix' as *;
+    @use '../../../scss/mixins/scroller' as *;
+    '../../../scss/mixins/table.scss';
 
     .bk-tree-table-directory {
         padding: 20px 10px 10px 10px;

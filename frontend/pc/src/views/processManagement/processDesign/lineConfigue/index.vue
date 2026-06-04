@@ -698,13 +698,13 @@
 </script>
 
 <style lang='scss' scoped>
-    @import './lineConfigu.scss';
+    @use './lineConfigu.scss';
 
     .bk-form-border {
         border-color: #ff5555;
     }
     .no-label{
-        ::v-deep .bk-label{
+        :deep(.bk-label) {
             display: none;
         }
     }

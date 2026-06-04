@@ -359,7 +359,7 @@
 </script>
 
 <style lang='scss' scoped>
-    @import './triggerCss/index.scss';
+    @use './triggerCss/index.scss';
     .search-tip {
         text-align: center;
         font-size: 14px;

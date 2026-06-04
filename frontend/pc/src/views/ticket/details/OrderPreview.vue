@@ -291,7 +291,7 @@
 </script>
 
 <style scoped lang='scss'>
-    @import '../../../scss/mixins/clearfix.scss';
+    @use '../../../scss/mixins/clearfix' as *;
 
     .bk-order-preview {
         width: 100%;

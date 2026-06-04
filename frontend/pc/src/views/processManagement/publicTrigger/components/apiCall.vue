@@ -189,7 +189,7 @@
 </script>
 
 <style lang='scss' scoped>
-    @import '../../../../scss/mixins/clearfix.scss';
+    @use '../../../../scss/mixins/clearfix' as *;
 
     .bk-field-schema {
         padding: 0 18px;

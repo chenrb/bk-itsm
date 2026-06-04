@@ -404,8 +404,8 @@
 </script>
 
 <style lang="scss" scoped>
-    @import '../../../scss/mixins/clearfix.scss';
-    @import '../../../scss/mixins/scroller.scss';
+    @use '../../../scss/mixins/clearfix' as *;
+    @use '../../../scss/mixins/scroller' as *;
     .search-result {
         height: 30px;
         width: 100%;
@@ -448,14 +448,14 @@
         .slot-content {
             flex: 1;
         }
-        ::v-deep  .bk-form-control {
+        :deep(.bk-form-control) {
             width: 400px;
             margin-left: 5px;
             .bk-form-input {
                 width: 400px;
             }
         }
-        ::v-deep  .filter-btn {
+        :deep(.filter-btn) {
             height: 32px;
             width: 32px;
             display: flex;

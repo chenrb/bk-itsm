@@ -707,7 +707,7 @@
 </script>
 
 <style scoped lang='scss'>
-    @import '../../../scss/mixins/scroller.scss';
+    @use '../../../scss/mixins/scroller' as *;
 
     .bk-itsm-cascader {
         position: relative;
