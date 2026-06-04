@@ -30,7 +30,7 @@ def _do_component_sync():
     try:
         for code in ComponentLibrary.codes():
             for version in ComponentLibrary.versions(code):
-                component_cls = ComponentLibrary.get_component_class(code=code, version=version)
+                component_cls = ComponentLibrary.get_component_class(component_code=code, version=version)
                 group_name = getattr(component_cls, "group_name", "")
                 new_name = "{}-{}".format(group_name, component_cls.name)
                 ComponentModel.objects.update_or_create(
