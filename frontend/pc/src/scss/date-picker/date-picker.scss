@@ -1,5 +1,5 @@
 @charset "utf-8";
-@import "./conf.scss";
+@use "./conf.scss" as *;
 
 .bk-date-picker {
     width: 300px;

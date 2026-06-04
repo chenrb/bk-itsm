@@ -1,8 +1,8 @@
 // 对bk.scss进行扩展 覆盖
 @charset 'utf-8';
-// @import 'conf';
-@import 'mixins/scroller';
-@import 'mixins/clearfix';
+// @use 'conf';
+@use 'mixins/scroller' as *;
+@use 'mixins/clearfix' as *;
 
 /* tree/select外壳样式 */
 .bk-search-tree {

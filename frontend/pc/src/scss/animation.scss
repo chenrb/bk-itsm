@@ -1,18 +1,15 @@
 @charset "UTF-8";
 
 // 存放常用动画
-// $animationDuration: 0.3s;
-$animations: './animation/animations';
-
 // mixin
-@import "animation/make-transitions";
+@use "animation/make-transitions" as *;
 
 // animations
-@import "animation/animations/fading/all";
-// @import "./animation/animations/sliding/all";
-@import "animation/animations/bouncing/all";
-@import "animation/animations/zooming/all";
-// @import "./animation/animations/sliding/all";
+@use "animation/animations/fading/all" as *;
+// @use "./animation/animations/sliding/all" as *;
+@use "animation/animations/bouncing/all" as *;
+@use "animation/animations/zooming/all" as *;
+// @use "./animation/animations/sliding/all" as *;
 
 // 用法
 // <transition name="slideDown">

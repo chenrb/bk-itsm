@@ -1,8 +1,9 @@
-@import 'bounce';
-@import 'bounceDown';
-@import 'bounceLeft';
-@import 'bounceRight';
-@import 'bounceUp';
+@use '../../make-transitions' as *;
+@use 'bounce';
+@use 'bounceDown';
+@use 'bounceLeft';
+@use 'bounceRight';
+@use 'bounceUp';
 
 $bounces: Down, Left, Right, Up;
 @include make-transitions('bounce', $bounces);

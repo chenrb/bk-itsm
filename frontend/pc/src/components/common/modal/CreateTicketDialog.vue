@@ -262,7 +262,7 @@
   };
 </script>
 <style lang="scss" scoped>
-    @import '../../../scss/mixins/scroller.scss';
+    @use '../../../scss/mixins/scroller' as *;
     .active-line {
         display: inline-block;
         position: absolute;
@@ -303,12 +303,12 @@
         padding: 0 4px;
         background-color: #f5f7fa;
     }
-    ::v-deep  .bk-form-input {
+    :deep(.bk-form-input) {
         border: 0px;
         border-bottom: 1px solid  #9a9ba5;
         border-radius: 0;
     }
-    ::v-deep .search-result {
+    :deep(.search-result) {
         li {
             display: flex;
             justify-content: flex-end;
@@ -337,7 +337,7 @@
             overflow: hidden;
         }
     }
-    ::v-deep  .bk-tab-section {
+    :deep(.bk-tab-section) {
         padding: 16px 0 0;
     }
     .service-content {
@@ -466,7 +466,7 @@
         }
     }
     .favorite-desc-tooltip, .service-title-desc-tooltip {
-        ::v-deep  .tippy-tooltip .tippy-arrow {
+        :deep(.tippy-tooltip .tippy-arrow) {
             bottom: -8px;
         }
     }

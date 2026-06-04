@@ -135,8 +135,8 @@
   };
 </script>
 <style lang='scss' scoped>
-@import '../../../scss/mixins/clearfix.scss';
-@import '../../../scss/mixins/scroller.scss';
+@use '../../../scss/mixins/clearfix' as *;
+@use '../../../scss/mixins/scroller' as *;
 /* 版本信息 */
 .version-log-wrap {
     position: fixed;
@@ -298,7 +298,7 @@
             overflow: auto;
             @include scroller;
 
-            ::v-deep  p {
+            :deep(p) {
                 font-size: 14px;
                 font-weight: 500;
                 color: #313238;

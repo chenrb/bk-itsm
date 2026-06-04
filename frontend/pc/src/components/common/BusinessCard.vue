@@ -37,13 +37,13 @@
             :key="memIndex"
             style="margin-bottom: 10px; overflow: hidden;">
             <p class="bk-message-name">{{member.username}}</p>
-            <p class="bk-member-other"
+            <div class="bk-member-other"
               v-for="(person, personIndex) in memberValList"
               :key="personIndex"
               :title="member[person.type]">
               <span class="bk-member-label">{{person.name}} {{$t(`m.newCommon["："]`)}}</span>
               <pre class="bk-member-value">{{member[person.type] || '--'}}</pre>
-            </p>
+            </div>
           </li>
         </ul>
       </div>
@@ -135,7 +135,7 @@
 </script>
 
 <style scoped lang="scss">
-    @import "../../scss/mixins/scroller";
+    @use "../../scss/mixins/scroller" as *;
     .icon-id {
         display: inline-block;
         width: 20px;

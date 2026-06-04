@@ -344,13 +344,13 @@
 </script>
 
 <style lang="scss">
-    @import './scss/reset.scss';
-    @import './scss/app.scss';
-    @import './scss/bk-patch.scss';
-    @import './scss/animation.scss';
-    @import './scss/mixins/scroller.scss';
-    @import './scss/bk-new-change.scss';
-    @import './scss/mixins/scroller.scss';
+    @use './scss/reset.scss';
+    @use './scss/app.scss';
+    @use './scss/bk-patch.scss';
+    @use './scss/animation.scss';
+    @use './scss/mixins/scroller.scss' as *;
+    @use './scss/mixins/clearfix.scss' as *;
+    @use './scss/bk-new-change.scss';
     /* 新增右侧弹窗Form上下布局 */
     .bk-app {
         margin: 0 auto;

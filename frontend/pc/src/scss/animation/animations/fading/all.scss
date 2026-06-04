@@ -1,12 +1,13 @@
-@import 'fade';
-@import 'fadeDown';
-@import 'fadeDownBig';
-@import 'fadeLeft';
-@import 'fadeLeftBig';
-@import 'fadeRight';
-@import 'fadeRightBig';
-@import 'fadeUp';
-@import 'fadeUpBig';
+@use '../../make-transitions' as *;
+@use 'fade';
+@use 'fadeDown';
+@use 'fadeDownBig';
+@use 'fadeLeft';
+@use 'fadeLeftBig';
+@use 'fadeRight';
+@use 'fadeRightBig';
+@use 'fadeUp';
+@use 'fadeUpBig';
 
 $fades: Down, DownBig, Left, LeftBig, Right, RightBig, Up, UpBig;
 

@@ -648,7 +648,7 @@
             }
         }
     }
-    ::v-deep  .project-select.bk-select {
+    :deep(.project-select.bk-select) {
         border: none;
         border-bottom: 1px solid #cec6cc;
         box-shadow: none;
