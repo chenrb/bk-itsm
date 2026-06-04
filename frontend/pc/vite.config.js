@@ -4,9 +4,9 @@ import path from 'path'
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), 'VITE_')
-  const HOST = env.VITE_DEV_HOST || 'localhost'
-  const ORIGIN = `http://${HOST}:${env.VITE_DEV_PORT || '8000'}`
-  const SET_URL = env.VITE_SET_URL || ''
+  const SERVER_HOST = env.VITE_SERVER_HOST || 'localhost'
+  const SERVER_PORT = parseInt(env.VITE_SERVER_PORT || '8004', 10)
+  const API_TARGET = env.VITE_API_TARGET || 'http://localhost:8001'
 
   return {
     plugins: [
@@ -54,55 +54,40 @@ export default defineConfig(({ mode }) => {
       }
     },
     server: {
-      host: HOST ? `dev.${HOST}` : 'localhost',
-      port: 8004,
-      https: ORIGIN.indexOf('https') > -1,
+      host: SERVER_HOST,
+      port: SERVER_PORT,
+      https: API_TARGET.startsWith('https'),
       open: false,
       proxy: {
         '/api/*': {
-          target: ORIGIN + SET_URL,
+          target: API_TARGET,
           changeOrigin: true,
           secure: false,
-          headers: {
-            referer: ORIGIN
-          }
         },
         '/init': {
-          target: ORIGIN + SET_URL,
+          target: API_TARGET,
           changeOrigin: true,
           secure: false,
-          headers: {
-            referer: ORIGIN
-          }
         },
         '/openapi/*': {
-          target: ORIGIN + SET_URL,
+          target: API_TARGET,
           changeOrigin: true,
           secure: false,
-          headers: {
-            referer: ORIGIN
-          }
         },
         '/core/': {
-          target: ORIGIN + SET_URL,
+          target: API_TARGET,
           changeOrigin: true,
           secure: false,
-          headers: {
-            referer: ORIGIN
-          }
         },
         '/o/bk_sops/*': {
-          target: ORIGIN,
+          target: API_TARGET,
           changeOrigin: true,
           secure: false,
-          headers: {
-            referer: ORIGIN
-          }
         },
         '/sops/*': {
-          target: ORIGIN + '/o/bk_sops/',
+          target: API_TARGET.replace(/\/$/, '') + '/o/bk_sops/',
           changeOrigin: true,
-          secure: false
+          secure: false,
         }
       }
     },

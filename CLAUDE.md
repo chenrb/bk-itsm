@@ -77,7 +77,7 @@ PLATFORM_API_BASE_URL=   # Optional: base URL for platform_client HTTP calls
 ALLOWED_HOSTS=*           # Comma-separated, defaults to *
 ```
 
-Frontend dev server uses Vite env vars (`VITE_DEV_HOST`, `VITE_DEV_PORT`, `VITE_SET_URL`) in `frontend/pc/.env*` files. The server binds to `dev.{HOST}`:8004, so add a hosts entry like `127.0.0.1 dev.localhost` when using custom hosts.
+Frontend dev server uses Vite env vars (`VITE_SERVER_HOST`, `VITE_SERVER_PORT`, `VITE_API_TARGET`) in `frontend/pc/.env*` files. Defaults: Vite on `localhost:8004`, proxy to `http://localhost:8001`. Override in `.env.local` if needed.
 
 See `.env.example` for the full list including email, monitoring, notification, and business config.
 

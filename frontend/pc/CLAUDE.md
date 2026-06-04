@@ -19,7 +19,15 @@ npm run lint         # ESLint with auto-fix on src/
 
 ### Dev Server Setup
 
-The dev server is configured via Vite env vars (`VITE_DEV_HOST`, `VITE_DEV_PORT`, `VITE_SET_URL`) — set these in `frontend/pc/.env.local` or similar. The server binds to `dev.{HOST}`:8004, so add a hosts entry like `127.0.0.1 dev.localhost`. The proxy forwards `/api/*`, `/openapi/*`, `/core/` to the backend.
+Configured via Vite env vars in `.env.development` (committed defaults) or `.env.local` (per-developer overrides, gitignored):
+
+| Variable | Default | Purpose |
+|---|---|---|
+| `VITE_SERVER_HOST` | `localhost` | Host Vite dev server binds to |
+| `VITE_SERVER_PORT` | `8004` | Port Vite dev server listens on |
+| `VITE_API_TARGET` | `http://localhost:8001` | Django backend URL for proxy |
+
+The proxy forwards `/api/*`, `/openapi/*`, `/init`, `/core/` to the backend. No hosts file setup needed.
 
 ## Architecture
 
