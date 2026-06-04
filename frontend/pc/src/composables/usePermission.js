@@ -181,6 +181,15 @@ export function usePermission() {
    * @returns {Object} { verified: Boolean, data: Object|null }
    */
   function checkPagePermission() {
+    // New permission-code based check (from route meta.permission)
+    if (route.meta && route.meta.permission) {
+      if (!hasPermissionCode(route.meta.permission)) {
+        return { verified: false, data: null };
+      }
+      return { verified: true, data: null };
+    }
+
+    // Legacy IAM-action based check
     const authMap = {
       OperationHome: 'operational_data_view',
       OperationService: 'operational_data_view',
@@ -199,9 +208,25 @@ export function usePermission() {
     return { verified: true, data: null };
   }
 
+  /**
+   * Check if the current user has a specific permission code.
+   * Reads from the permissions array stored in Vuex user state (populated from /init/).
+   * Superuser (IS_ITSM_ADMIN === 1) always returns true.
+   * @param {String} code - Permission code, e.g. 'feature:system:user-manage'
+   * @returns {Boolean}
+   */
+  function hasPermissionCode(code) {
+    if (window.IS_ITSM_ADMIN === 1) {
+      return true;
+    }
+    const permissions = store.state.user?.permissions || [];
+    return permissions.includes(code);
+  }
+
   return {
     getAllAppPermission,
     hasPermission,
+    hasPermissionCode,
     applyForPermission,
     assembleActionsData,
     assembleInstances,

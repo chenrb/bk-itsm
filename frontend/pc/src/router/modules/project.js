@@ -110,6 +110,14 @@ export default [
         name: 'projectRoles',
         component: Role,
       },
+      // 重定向：角色组管理已迁移到系统管理
+      {
+        path: 'roles-redirect',
+        name: 'projectRolesRedirect',
+        redirect: () => {
+          return { path: '/manage/user_group' };
+        },
+      },
       {
         path: 'trigger',
         name: 'projectTrigger',

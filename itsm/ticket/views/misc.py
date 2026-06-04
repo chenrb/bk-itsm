@@ -39,7 +39,7 @@ from itsm.component.exceptions import ComponentCallError
 from itsm.component.notify import EmailNotifier
 from itsm.iadmin.contants import ACTION_CHOICES_DICT
 from itsm.iadmin.models import CustomNotice
-from itsm.role.models import UserRole
+from itsm.users.models.role import Role as UserRole
 from itsm.ticket.models import (
     TicketComment,
     TicketCommentInvite,

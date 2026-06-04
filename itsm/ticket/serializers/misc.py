@@ -30,7 +30,7 @@ from itsm.component.constants import LEN_LONG, LEN_NORMAL
 from itsm.component.utils.client_backend_query import get_bk_users
 from itsm.component.utils.human import get_time
 from itsm.component.utils.misc import transform_username
-from itsm.role.models import UserRole
+from itsm.users.resolvers import resolve_processors
 from itsm.ticket.models import (
     TicketComment,
     TicketCommentInvite,
@@ -184,7 +184,7 @@ class FollowerNotifyLogSerializer(serializers.ModelSerializer):
         )
         data["create_at"] = "{}".format(get_time(instance.create_at))
         data["group"] = transform_username(
-            UserRole.get_users_by_type(
+            resolve_processors(
                 users=instance.followers,
                 user_type=instance.followers_type,
                 ticket=instance.ticket,

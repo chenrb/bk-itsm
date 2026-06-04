@@ -46,7 +46,8 @@ from itsm.component.constants import (
 from itsm.component.exceptions import CreateTicketError, ParamError
 from itsm.component.utils.client_backend_query import get_user_department_ids
 from itsm.component.utils.conversion import format_exp_value
-from itsm.role.models import UserRole
+from itsm.users.models.role import Role as UserRole
+from itsm.users.resolvers import resolve_processors
 from itsm.service.models import Service
 from itsm.ticket.models import Ticket, TicketGlobalVariable, TicketToTicket
 from itsm.ticket_status.models import TicketStatus
@@ -234,7 +235,7 @@ class StateOperateValidator:
             and reference_processors
         ):
             # 指定了角色范围的人员信息
-            valid_person = UserRole.get_users_by_type(
+            valid_person = resolve_processors(
                 reference_processor_type, reference_processors, self
             )
 
@@ -262,7 +263,7 @@ def first_state_permission(fields, first_state, username):
             return
 
     if username in set(
-        UserRole.get_users_by_type(
+        resolve_processors(
             first_state["processors_type"], first_state["processors"]
         )
     ):
@@ -278,7 +279,7 @@ def create_permission_validate(service, username):
         return
 
     if username in set(
-        UserRole.get_users_by_type(-1, service.display_type, service.display_role)
+        resolve_processors(service.display_type, service.display_role)
     ):
         return
 

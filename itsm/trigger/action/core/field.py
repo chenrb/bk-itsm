@@ -33,7 +33,8 @@ from django.core.exceptions import ValidationError
 
 from common.log import logger
 from common.template.template import Template
-from itsm.role.models import UserRole
+from itsm.users.models.role import Role as UserRole
+from itsm.users.resolvers import resolve_processors
 from itsm.postman.models import RemoteApi
 from itsm.component.constants import (
     EMPTY_DICT,
@@ -277,7 +278,7 @@ class MemberField(BaseField):
         members = []
         parse_tool = ParamParseTool(context)
         for member in copy.deepcopy(member_value):
-            member["value"] = UserRole.get_users_by_type(
+            member["value"] = resolve_processors(
                 member["value"]["member_type"], member["value"]["members"]
             )
             parse_people = parse_tool(param=member)

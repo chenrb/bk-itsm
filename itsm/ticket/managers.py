@@ -62,7 +62,8 @@ from itsm.component.constants import (
 from itsm.component.db import managers
 from itsm.component.utils.basic import create_version_number, dotted_name
 from itsm.component.utils.iam_stub import IamRequest
-from itsm.role.models import BKUserRole, UserRole
+from itsm.role.models import UserRole
+# BKUserRole removed — CMDB/organization decoupled; organization filters return empty
 from itsm.service.models import ServiceCatalog
 from itsm.ticket_status.models import TicketStatus
 from itsm.workflow.backend import PipelineWrapper
@@ -108,15 +109,9 @@ class StatusManager(Manager):
                 & Q(processors__contains=role["id"])
             )
 
-        bk_user_roles = BKUserRole.get_or_update_user_roles(username)
-        organization_ids = bk_user_roles["organization"]
-
-        # ORGANIZATION
-        for organization_id in organization_ids:
-            filters.append(
-                Q(processors_type="ORGANIZATION")
-                & Q(processors__contains=organization_id)
-            )
+        # ORGANIZATION — CMDB decoupled, no organization data available
+        # bk_user_roles = BKUserRole.get_or_update_user_roles(username)
+        # organization_ids = bk_user_roles["organization"]
 
         return reduce(operator.or_, filters)
 
@@ -218,19 +213,9 @@ class TicketManager(Manager):
         for role in general_roles:
             filters.append(Q(current_processors__contains=dotted_name(role["id"])))
 
-        # CMDB
-        bk_user_roles = BKUserRole.get_or_update_user_roles(username)
-        organization_ids = bk_user_roles["organization"]
-
-        # ORGANIZATION
-        for organization_id in organization_ids:
-            filters.append(
-                Q(
-                    current_processors__contains=dotted_name(
-                        "O_{}".format(organization_id)
-                    )
-                )
-            )
+        # ORGANIZATION — CMDB decoupled, no organization data available
+        # bk_user_roles = BKUserRole.get_or_update_user_roles(username)
+        # organization_ids = bk_user_roles["organization"]
 
         # 当前任务处理人
         filters.append(Q(current_task_processors__contains=dotted_username))

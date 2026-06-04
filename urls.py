@@ -30,12 +30,26 @@ from django.urls import include, path, re_path
 from django.contrib import admin
 from django.views import static
 
+from itsm.users import urls as users_urls
+
 # 公共URL配置
 urlpatterns = [
     # Django后台数据库管理
     re_path(r"^admin/", admin.site.urls),
     # 用户登录鉴权
-    path("account/", include("itsm.component.users.urls")),
+    path("account/", include("itsm.users.urls")),
+    # 用户管理 API（users, departments, roles, permissions, etc.）
+    re_path(r"^api/", include(users_urls.api_urlpatterns)),
+    # 角色兼容 API（/api/role/*）
+    re_path(r"^api/role/", include(users_urls.role_compat_urlpatterns)),
+    # 网关兼容 API（/gateway/usermanage/*, /gateway/bk_login/*）
+    re_path(r"^gateway/", include(users_urls.gateway_usermanage_urlpatterns)),
+    re_path(r"^gateway/", include(users_urls.gateway_bk_login_urlpatterns)),
+    # 人员选择器 JSONP（/api/c/compapi/v2/usermanage/*）
+    re_path(
+        r"^api/c/compapi/v2/usermanage/",
+        include(users_urls.compapi_urlpatterns),
+    ),
     # 接口版本管理
     re_path(r"^api/", include("itsm.api.v1")),
     # 对外开放的接口

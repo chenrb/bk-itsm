@@ -25,7 +25,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from rest_framework import serializers
 
-from itsm.role.models import UserRole
+from itsm.users.resolvers import resolve_processors
 from itsm.ticket.models import Ticket, TicketEventLog
 from itsm.workflow.models import State
 
@@ -57,12 +57,12 @@ class OperationalDataTicketSerializer(serializers.ModelSerializer):
                 {
                     "valid_processor": log.operator if log else "",
                     "operate_at": log.operate_at.strftime("%Y-%m-%d %H:%M:%S") if log else None,
-                    "processors": UserRole.get_users_by_type(
+                    "processors": resolve_processors(
                         user_type=state["processors_type"],
                         users=state["processors"],
                         ticket=instance,
                     ),
-                    "followers": UserRole.get_users_by_type(
+                    "followers": resolve_processors(
                         user_type=state["followers_type"],
                         users=state["followers"],
                         ticket=instance,

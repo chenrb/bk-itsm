@@ -4,8 +4,8 @@
 AUTH_USER_MODEL = "users.User"
 
 INSTALLED_APPS = (
-    # 用户模型
-    "itsm.component.users",
+    # 用户管理
+    "itsm.users",
     # Django 内置
     "django.contrib.admin",
     "django.contrib.auth",
@@ -51,8 +51,12 @@ INSTALLED_APPS = (
 
 AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
-    "itsm.openapi.authentication.backend.CustomUserBackend",
+    "itsm.users.backends.CustomUserBackend",
 )
+
+AUTH_PASSWORD_VALIDATORS = [
+    {"NAME": "itsm.users.validators.SecurityPolicyPasswordValidator"},
+]
 
 MIDDLEWARE = (
     "itsm.component.misc_middlewares.UserLoginForbiddenMiddleware",

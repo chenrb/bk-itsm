@@ -24,7 +24,18 @@ import ajax from "../../utils/ajax";
 
 export default {
   namespaced: true,
+  state: {
+    permissions: [],
+  },
+  mutations: {
+    setPermissions(state, permissions) {
+      state.permissions = permissions || [];
+    },
+  },
   actions: {
+    syncPermissions({ commit }) {
+      commit('setPermissions', window.PERMISSIONS || []);
+    },
     // 通用角色
     submit({ commit, state, dispatch }, params) {
       return ajax.post("role/users/", params).then((response) => {

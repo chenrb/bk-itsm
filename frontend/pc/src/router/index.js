@@ -298,6 +298,16 @@ const router = createRouter({
 connectToMain(router);
 
 router.beforeEach((to, from, next) => {
+  // Permission-code based route guard
+  if (to.meta && to.meta.permission) {
+    if (window.IS_ITSM_ADMIN !== 1) {
+      const permissions = window.PERMISSIONS || [];
+      if (!permissions.includes(to.meta.permission)) {
+        next({ path: '/limitAccess' });
+        return;
+      }
+    }
+  }
   bus.on('api-error:user-permission-denied', () => {
     next({ path: '/limitAccess' });
   });

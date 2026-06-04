@@ -31,6 +31,13 @@ const SlaPriority = () => import('../../views/slaManager/priority.vue');
 const TicketStatus = () => import('../../views/slaManager/ticketStatus.vue');
 const GlobalSetting = () => import('../../views/manage/globalSetting.vue');
 
+// 用户管理模块
+const UserManagement = () => import('../../views/manage/userManagement.vue');
+const Department = () => import('../../views/manage/department.vue');
+const Role = () => import('../../views/manage/role.vue');
+const UserGroup = () => import('../../views/manage/userGroup.vue');
+const SecurityPolicy = () => import('../../views/manage/securityPolicy.vue');
+
 // const basicModule = () => import('../../views/processManagement/basicModule/index.vue')
 // const dataDictionary = () => import('../../views/systemConfig/dataDictionary.vue')
 
@@ -79,6 +86,37 @@ export default [
         path: 'global_setting',
         name: 'globalSetting',
         component: GlobalSetting,
+      },
+      // 用户管理模块路由
+      {
+        path: 'user_management',
+        name: 'userManagement',
+        component: UserManagement,
+        meta: { permission: 'page:system' },
+      },
+      {
+        path: 'department',
+        name: 'department',
+        component: Department,
+        meta: { permission: 'page:system' },
+      },
+      {
+        path: 'role',
+        name: 'role',
+        component: Role,
+        meta: { permission: 'page:system' },
+      },
+      {
+        path: 'user_group',
+        name: 'userGroup',
+        component: UserGroup,
+        meta: { permission: 'page:system' },
+      },
+      {
+        path: 'security_policy',
+        name: 'securityPolicy',
+        component: SecurityPolicy,
+        meta: { permission: 'page:system' },
       },
       // {
       //     path: 'basic_module',

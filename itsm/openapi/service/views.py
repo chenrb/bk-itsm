@@ -47,7 +47,7 @@ from itsm.service.models import CatalogService, Service, ServiceCatalog
 from itsm.service.serializers import ServiceImportSerializer
 from itsm.workflow.models import Workflow, WorkflowVersion
 from itsm.component.constants import role, DEFAULT_PROJECT_PROJECT_KEY
-from itsm.role.models import UserRole
+from itsm.users.resolvers import resolve_processors
 
 
 @method_decorator(login_exempt, name="dispatch")
@@ -190,7 +190,7 @@ class ServiceViewSet(ApiGatewayMixin, component_viewsets.AuthModelViewSet):
                 processors = ""
             else:
                 processors = ",".join(
-                    UserRole.get_users_by_type(-1, state["processors_type"], members)
+                    resolve_processors(state["processors_type"], members)
                 )
             states_roles.append(
                 {

@@ -78,6 +78,7 @@ app.directive('anchor', directives.anchor);
 app.directive('cursorIndex', directives.cursorIndex);
 app.directive('bk-focus', directives.bkFocus);
 app.directive('cursor', cursor);
+app.directive('permission', directives.permission);
 
 // 全局属性
 app.config.globalProperties.$ace = ace;
@@ -99,6 +100,8 @@ const localeCookie = cookie.parse(document.cookie).blueking_language || "zh-cn";
 store.commit("setLanguage", localeCookie);
 
 store.dispatch('getPlatformPreData').then(() => {
+  // Sync permissions from init response into Vuex user state
+  store.dispatch('user/syncPermissions');
   app.mount("#app");
   window.app = app;
 }).catch(error => {

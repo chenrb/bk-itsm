@@ -35,7 +35,7 @@ from itsm.component.constants.iam import BK_IAM_SYSTEM_ID
 from itsm.component.utils.iam_stub import IamRequest
 from itsm.component.exceptions import ProjectNotFound
 from itsm.project.models import Project
-from itsm.role.models import UserRole
+from itsm.users.models.role import Role
 from itsm.workflow.models import TemplateField
 
 
@@ -50,7 +50,7 @@ class IsAdmin(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        if UserRole.is_itsm_superuser(request.user.username):
+        if Role.is_itsm_superuser(request.user.username):
             return True
 
         return False
@@ -67,13 +67,13 @@ class IsManager(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        if UserRole.is_itsm_superuser(request.user.username):
+        if Role.is_itsm_superuser(request.user.username):
             return True
 
-        return UserRole.is_workflow_manager(request.user.username)
+        return Role.is_workflow_manager(request.user.username)
 
     def has_object_permission(self, request, view, obj):
-        if UserRole.is_itsm_superuser(request.user.username):
+        if Role.is_itsm_superuser(request.user.username):
             return True
 
         return obj.is_obj_manager(request.user.username)

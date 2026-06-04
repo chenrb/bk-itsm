@@ -1,4 +1,5 @@
 import './cursor.js';
+import store from '@/store';
 // Vue 3 directive hooks: created, beforeMount, mounted, beforeUpdate, updated,
 // beforeUnmount, unmounted. The compat layer maps bind→beforeMount, inserted→mounted,
 // update→updated, componentUpdated→updated, unbind→beforeUnmount.
@@ -86,10 +87,41 @@ const bkFocus = {
   },
 };
 
+/**
+ * v-permission directive: show/hide element based on permission code.
+ * Usage: v-permission="'feature:system:user-manage'"
+ * Superuser (IS_ITSM_ADMIN === 1) always sees the element.
+ */
+const permission = {
+  mounted(el, binding) {
+    const code = binding.value;
+    if (!code) return;
+    if (window.IS_ITSM_ADMIN === 1) return;
+    const permissions = store.state.user?.permissions || [];
+    if (!permissions.includes(code)) {
+      el.style.display = 'none';
+    }
+  },
+  updated(el, binding) {
+    const code = binding.value;
+    if (!code) {
+      el.style.display = '';
+      return;
+    }
+    if (window.IS_ITSM_ADMIN === 1) {
+      el.style.display = '';
+      return;
+    }
+    const permissions = store.state.user?.permissions || [];
+    el.style.display = permissions.includes(code) ? '' : 'none';
+  },
+};
+
 export default {
   clickOut,
   focus,
   anchor,
   cursorIndex,
   bkFocus,
+  permission,
 };

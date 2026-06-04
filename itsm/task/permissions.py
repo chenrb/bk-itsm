@@ -26,7 +26,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from django.utils.translation import gettext as _
 from rest_framework import permissions
 
-from itsm.role.models import UserRole
+from itsm.users.models.role import Role as UserRole
 
 # 任务对象级权限说明：
 # - proceed：节点处理人（沿用 task.can_process）

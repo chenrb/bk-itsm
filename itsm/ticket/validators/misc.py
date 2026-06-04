@@ -29,7 +29,7 @@ from rest_framework import serializers
 from common.log import logger
 from itsm.component.utils.basic import Regex
 from itsm.component.utils.client_backend_query import get_bk_users
-from itsm.role.models import UserRole
+from itsm.users.resolvers import resolve_processors
 from itsm.ticket.models import Ticket, TicketComment, TicketCommentInvite
 
 
@@ -69,7 +69,7 @@ def notify_log_validate(data, operator):
 
     followers = data.get("followers")
     followers_type = data.get("followers_type")
-    receivers = UserRole.get_users_by_type(
+    receivers = resolve_processors(
         user_type=followers_type, users=followers
     )
     if not receivers:

@@ -94,7 +94,6 @@ from itsm.ticket.models import (
     Ticket,
     TicketEventLog,
     TicketToTicket,
-    UserRole,
     SignTask,
     TaskField,
     AttentionUsers,
@@ -105,6 +104,8 @@ from itsm.ticket.models import (
     SlaTicketHighlight,
     TicketRemark,
 )
+from itsm.users.models.role import Role as UserRole
+from itsm.users.resolvers import resolve_processors
 from itsm.ticket.serializers.field import (
     FieldSerializer,
     FieldSimpleSerializer,
@@ -278,7 +279,7 @@ class StatusSerializer(serializers.ModelSerializer):
             # 获取节点上的任务处理人
             sign_tasks_processor_list = [task["processor"] for task in sign_tasks_list]
             # 获取当前任务的处理人列表
-            user_list = UserRole.get_users_by_type(
+            user_list = resolve_processors(
                 inst.processors_type, inst.processors, inst.ticket
             )
             # 得到节点当前任务的已处理人

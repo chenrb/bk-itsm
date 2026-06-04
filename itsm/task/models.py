@@ -67,7 +67,8 @@ from itsm.component.utils.misc import (
     transform_username,
     get_field_value,
 )
-from itsm.role.models import UserRole, BKUserRole
+from itsm.users.models.role import Role as UserRole
+from itsm.users.resolvers import resolve_processors
 from itsm.workflow.models import BaseField, TaskSchema
 from itsm.trigger.signal import trigger_signal
 
@@ -113,11 +114,9 @@ class TaskManager(managers.Manager):
             filters.append(Q(processors__contains=dotted_name(role["id"])))
 
         # ORGANIZATION
-        bk_user_roles = BKUserRole.get_or_update_user_roles(username)
-        for organization_id in bk_user_roles["organization"]:
-            filters.append(
-                Q(processors__contains=dotted_name("O_{}".format(organization_id)))
-            )
+        # NOTE: BKUserRole (CMDB role cache) removed during platform decoupling;
+        # organization-based task filtering is no longer supported.
+        # If organization filtering is needed, implement via itsm.users.resolvers.
 
         return reduce(filter_operator.or_, filters)
 
@@ -216,7 +215,7 @@ class Task(Model):
     @cached_property
     def processor_user_list(self):
         """任务的所有处理人列表"""
-        return UserRole.get_users_by_type(
+        return resolve_processors(
             self.processors_type, self.processors, self.ticket
         )
 

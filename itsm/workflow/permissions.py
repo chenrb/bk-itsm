@@ -29,7 +29,7 @@ from rest_framework import permissions
 from itsm.component.constants import PUBLIC_PROJECT_PROJECT_KEY
 from itsm.component.drf.permissions import IamAuthPermit
 from itsm.project.models import Project
-from itsm.role.models import UserRole
+from itsm.users.models.role import Role as UserRole
 from itsm.service.models import Service
 from itsm.workflow.models import Workflow
 

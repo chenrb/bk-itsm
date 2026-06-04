@@ -263,7 +263,7 @@ class RemoteApiViewSet(DynamicListModelMixin, ModelViewSet):
 
         鉴权：仅创建人或 ITSM 超管可删除；防止项目成员相互覆盖配置。
         """
-        from itsm.role.models import UserRole
+        from itsm.users.models.role import Role
 
         id_list = [i for i in request.data.get("id").split(",") if i.isdigit()]
 
@@ -280,7 +280,7 @@ class RemoteApiViewSet(DynamicListModelMixin, ModelViewSet):
             raise ValidationError(_("接口数量异常，请刷新后重试"))
 
         username = request.user.username
-        if not UserRole.is_itsm_superuser(username):
+        if not Role.is_itsm_superuser(username):
             unauth_creators = {
                 api.creator for api in will_deleted if api.creator != username
             }

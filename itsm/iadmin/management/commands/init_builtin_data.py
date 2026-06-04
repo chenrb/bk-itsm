@@ -90,7 +90,10 @@ class Command(BaseCommand):
 
     def _get_modules(self):
         return [
+            ("permission", "内置权限", self._init_permission),
             ("role", "角色类型与用户角色", self._init_role),
+            ("user_group", "内置角色组", self._init_user_group),
+            ("security_policy", "安全策略默认值", self._init_security_policy),
             ("project", "默认项目", self._init_project),
             ("iadmin", "通知/系统设置/模板字段/表格", self._init_iadmin),
             ("workflow", "内置工作流与任务模板", self._init_workflow),
@@ -101,12 +104,100 @@ class Command(BaseCommand):
             ("version_log", "版本日志", self._init_version_log),
         ]
 
+    def _init_permission(self):
+        """初始化内置权限 + 角色 + 角色权限分配。"""
+        from itsm.users.data.permissions import (
+            BUILTIN_PERMISSIONS,
+            STATICS_MANAGER_PERMISSIONS,
+            SUPERUSER_PERMISSIONS,
+            WORKFLOW_MANAGER_PERMISSIONS,
+        )
+        from itsm.users.models import Permission, Role
+
+        # 创建内置权限
+        for code, name, category, perm_type in BUILTIN_PERMISSIONS:
+            Permission.objects.update_or_create(
+                code=code,
+                defaults={
+                    "name": str(name),
+                    "category": category,
+                    "permission_type": perm_type,
+                    "is_builtin": True,
+                },
+            )
+
+        # 创建内置角色
+        builtin_roles = [
+            ("SUPERUSER", "超级管理员", SUPERUSER_PERMISSIONS),
+            ("WORKFLOW_MANAGER", "流程管理员", WORKFLOW_MANAGER_PERMISSIONS),
+            ("STATICS_MANAGER", "统计查看员", STATICS_MANAGER_PERMISSIONS),
+        ]
+        for role_key, role_name, perm_codes in builtin_roles:
+            role, _ = Role.objects.update_or_create(
+                role_key=role_key,
+                defaults={
+                    "name": role_name,
+                    "is_builtin": True,
+                },
+            )
+            perm_ids = list(
+                Permission.objects.filter(code__in=perm_codes).values_list(
+                    "id", flat=True
+                )
+            )
+            role.permissions.set(perm_ids)
+
     def _init_role(self):
         from itsm.role.models import RoleType, UserRole
 
         RoleType.migrate_general_role_type()
         RoleType.init_builtin_roles()
         UserRole.init_builtin_user_roles()
+
+    def _init_user_group(self):
+        """初始化内置角色组。"""
+        from itsm.users.data.user_groups import BUILTIN_USER_GROUPS
+        from itsm.users.models import UserGroup
+
+        for group_key, name in BUILTIN_USER_GROUPS:
+            UserGroup.objects.update_or_create(
+                group_key=group_key,
+                defaults={
+                    "name": str(name),
+                    "is_builtin": True,
+                    "project_key": "0",
+                },
+            )
+
+    def _init_security_policy(self):
+        """初始化安全策略默认值。"""
+        from itsm.users.models import SecurityPolicy
+
+        defaults = [
+            # Password policies
+            ("password_min_length", 8, "password", "密码最小长度"),
+            ("password_require_uppercase", True, "password", "是否要求包含大写字母"),
+            ("password_require_lowercase", True, "password", "是否要求包含小写字母"),
+            ("password_require_digit", True, "password", "是否要求包含数字"),
+            ("password_require_special", False, "password", "是否要求包含特殊字符"),
+            ("password_history_count", 0, "password", "禁止重复使用最近 N 次密码"),
+            ("password_max_age_days", 0, "password", "密码过期天数（0=永不过期）"),
+            # Login policies
+            ("login_max_attempts", 5, "login", "连续失败锁定阈值"),
+            ("login_lockout_minutes", 30, "login", "锁定持续时间（分钟）"),
+            # Session policies
+            ("session_timeout_minutes", 480, "session", "Session 空闲超时时间（分钟）"),
+        ]
+        for key, value, category, description in defaults:
+            SecurityPolicy.objects.update_or_create(
+                key=key,
+                defaults={
+                    "value": value,
+                    "category": category,
+                    "description": description,
+                    "is_builtin": True,
+                },
+            )
 
     def _init_project(self):
         from itsm.project.models import Project

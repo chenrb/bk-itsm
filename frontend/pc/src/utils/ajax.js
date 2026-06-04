@@ -88,12 +88,13 @@ instance.interceptors.response.use(
         return;
       }
       if ('IS_ITSM_ADMIN' in response.data.data) {
-        const { DEFAULT_PROJECT, IS_ITSM_ADMIN, all_access, chname, username } = response.data.data;
+        const { DEFAULT_PROJECT, IS_ITSM_ADMIN, all_access, chname, username, permissions } = response.data.data;
         window.DEFAULT_PROJECT = DEFAULT_PROJECT;
         window.IS_ITSM_ADMIN = IS_ITSM_ADMIN;
         window.all_access = all_access;
         window.chname = chname;
         window.username = username;
+        window.PERMISSIONS = permissions || [];
         return response;
       }
     }

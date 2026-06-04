@@ -67,11 +67,8 @@ def clean_cache(request):
         cursor.execute("delete from `django_cache`")
 
         # 更新用户角色表的更新时间，达到清理缓存目的
-        from itsm.role.models import BKUserRole
-
-        BKUserRole.objects.update(
-            update_at=datetime.datetime.now() - datetime.timedelta(minutes=30)
-        )
+        # NOTE: BKUserRole (CMDB role cache) removed during platform decoupling;
+        # clearing django_cache above is sufficient.
 
         return Success(message=_("缓存更新成功")).json()
     except Exception as e:
@@ -110,7 +107,7 @@ def _check_resource_access(request):
 
     返回值：(allowed: bool, error_message: str)
     """
-    from itsm.role.models import UserRole
+    from itsm.users.models.role import Role
     from itsm.ticket.models import Ticket
     from itsm.workflow.models import Workflow
 
@@ -118,7 +115,7 @@ def _check_resource_access(request):
     if not username:
         return False, _("请先登录")
 
-    if UserRole.is_itsm_superuser(username):
+    if Role.is_itsm_superuser(username):
         return True, ""
 
     ticket_id = request.GET.get("ticket_id") or request.POST.get("ticket_id")

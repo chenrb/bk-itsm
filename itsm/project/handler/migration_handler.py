@@ -37,7 +37,8 @@ from itsm.component.exceptions import (
 from itsm.project.handler.utils import MigrateIamRequest
 from itsm.project.models import Project
 from itsm.service.models import Service, CatalogService, ServiceCatalog
-from itsm.ticket.models import Ticket, UserRole
+from itsm.ticket.models import Ticket
+from itsm.users.models.role import Role as UserRole
 
 GRANT = "grant"
 REVOKE = "revoke"

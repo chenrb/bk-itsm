@@ -274,6 +274,11 @@
       },
     },
     mounted() {
+      // 提示用户已迁移到系统管理
+      this.$bkMessage({
+        message: this.$t('m.userManagement["角色组管理已迁移到系统管理"]'),
+        theme: 'primary',
+      });
       this.getList();
     },
     methods: {

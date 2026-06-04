@@ -30,7 +30,7 @@ from rest_framework import permissions
 from rest_framework.serializers import ValidationError
 
 from itsm.component.utils.iam_stub import IamRequest
-from itsm.role.models import UserRole
+from itsm.users.models.role import Role as UserRole
 from itsm.service.models import Service
 
 from .models import Ticket

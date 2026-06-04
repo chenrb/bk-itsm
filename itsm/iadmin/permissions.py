@@ -33,7 +33,7 @@ from common.mymako import render_mako
 from itsm.component.constants import PUBLIC_PROJECT_PROJECT_KEY
 from itsm.component.drf.permissions import IamAuthWithoutResourcePermit, IamAuthPermit
 from itsm.project.models import Project
-from itsm.role.models import UserRole
+from itsm.users.models.role import Role
 
 
 class IsSuperuser(permissions.BasePermission):
@@ -44,7 +44,7 @@ class IsSuperuser(permissions.BasePermission):
     message = _("您没有该模块的权限")
 
     def has_permission(self, request, view):
-        return UserRole.is_itsm_superuser(request.user.username)
+        return Role.is_itsm_superuser(request.user.username)
 
 
 class IsSuperOperator(permissions.BasePermission):
@@ -58,7 +58,7 @@ class IsSuperOperator(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        return UserRole.is_itsm_superuser(request.user.username)
+        return Role.is_itsm_superuser(request.user.username)
 
 
 class IsMigrateSuperuser(permissions.BasePermission):
@@ -70,7 +70,7 @@ class IsMigrateSuperuser(permissions.BasePermission):
 
     def has_permission(self, request, view):
 
-        if UserRole.is_itsm_superuser(request.user.username):
+        if Role.is_itsm_superuser(request.user.username):
             return True
 
         # 对GET方法豁免，存在接口信息越权的问题！
@@ -89,7 +89,7 @@ class IsAdmin(permissions.BasePermission):
 
     def has_permission(self, request, view):
 
-        if UserRole.is_itsm_superuser(request.user.username):
+        if Role.is_itsm_superuser(request.user.username):
             return True
 
         # 对GET方法豁免，存在接口信息越权的问题！
@@ -100,7 +100,7 @@ class IsAdmin(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
 
-        if UserRole.is_itsm_superuser(request.user.username):
+        if Role.is_itsm_superuser(request.user.username):
             return True
 
         if request.method in permissions.SAFE_METHODS:
@@ -116,7 +116,7 @@ def superuser_permissions(view_func):
 
     @wraps(view_func)
     def __wrapper(request, *args, **kwargs):
-        if not UserRole.is_itsm_superuser(request.user.username):
+        if not Role.is_itsm_superuser(request.user.username):
             return render_mako("403.html")
 
         return view_func(request, *args, **kwargs)

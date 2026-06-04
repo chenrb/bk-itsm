@@ -74,6 +74,13 @@ import project from "./modules/project.js";
 // 根据模板重新整理
 import ticket from "./modules/ticket";
 
+// 用户管理模块
+import userManagement from "./modules/userManagement";
+import department from "./modules/department";
+import roleManagement from "./modules/roleManagement";
+import userGroup from "./modules/userGroup";
+import securityPolicy from "./modules/securityPolicy";
+
 const t = i18n.global.t.bind(i18n.global);
 
 export default createStore({
@@ -120,6 +127,12 @@ export default createStore({
     // new
     ticket,
     bkPlugin,
+    // 用户管理模块
+    userManagement,
+    department,
+    roleManagement,
+    userGroup,
+    securityPolicy,
   },
   // 公共 store
   state: {

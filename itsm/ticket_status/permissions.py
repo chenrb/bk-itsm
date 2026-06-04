@@ -27,7 +27,7 @@ from django.utils.translation import gettext as _
 from rest_framework import permissions
 
 from itsm.component.drf.permissions import IamAuthPermit
-from itsm.role.models import UserRole
+from itsm.users.models.role import Role as UserRole
 
 
 class IsAdmin(permissions.BasePermission):

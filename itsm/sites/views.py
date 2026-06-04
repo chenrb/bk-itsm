@@ -37,7 +37,7 @@ from common.template.template import Template
 from itsm.iadmin.contants import NOTICE_CENTER_SWITCH
 from itsm.iadmin.models import SystemSettings
 from itsm.project.models import UserProjectAccessRecord
-from itsm.role.models import BKUserRole, UserRole
+from itsm.users.models.role import Role
 
 
 def _get_title():
@@ -61,30 +61,40 @@ def _get_footer():
 
 
 def init(request):
-    # 更新cmdb通用角色
-    UserRole.update_cmdb_common_roles()
-    # 更新用户在各个系统的角色缓存
-    BKUserRole.get_or_update_user_roles(request.user.username)
     try:
         DEFAULT_PROJECT = UserProjectAccessRecord.objects.get(
             username=request.user.username
         ).project_key
     except Exception:
         DEFAULT_PROJECT = ""
+
+    # Get user permissions from local Role model
+    if request.user.is_superuser:
+        from itsm.users.data.permissions import BUILTIN_PERMISSIONS
+
+        permissions = [code for code, _, _, _ in BUILTIN_PERMISSIONS]
+    else:
+        permissions = list(
+            Role.objects.filter(members=request.user, is_deleted=False)
+            .values_list("permissions__code", flat=True)
+            .distinct()
+        )
+
     return JsonResponse(
         {
             "code": 0,
             "result": True,
             "data": {
                 "DEFAULT_PROJECT": DEFAULT_PROJECT,
-                "chname": request.user.get_property("chname"),
+                "chname": request.user.chname,
                 "username": request.user.username,
-                "all_access": UserRole.get_access_by_user(request.user.username),
+                "all_access": Role.get_access_by_user(request.user.username),
                 "IS_ITSM_ADMIN": (
-                    1 if UserRole.is_itsm_superuser(request.user.username) else 0
+                    1 if Role.is_itsm_superuser(request.user.username) else 0
                 ),
-                "need_target": False,  # 不需要强制跳转无权限页
+                "need_target": False,
                 "location": "",
+                "permissions": permissions,
             },
             "message": "",
         }

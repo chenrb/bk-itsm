@@ -6,7 +6,7 @@ from rest_framework.response import Response
 
 from itsm.component.drf.viewsets import ModelViewSet
 from itsm.component.exceptions import ValidateError
-from itsm.role.models import UserRole
+from itsm.users.models.role import Role as UserRole
 from itsm.ticket.models import TicketRemark, Ticket
 from itsm.ticket.permissions import RemarkPermissionValidate
 from itsm.ticket.serializers import TicketRemarkSerializer

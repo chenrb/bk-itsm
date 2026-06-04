@@ -251,6 +251,37 @@ const ROUTE_LIST = [
         icon: 'bk-itsm-icon icon-pc_setting',
         path: '/manage/global_setting',
       },
+      // 用户管理模块
+      {
+        name: t('m.userManagement["用户管理"]'),
+        id: 'userManagement',
+        icon: 'bk-itsm-icon icon-user-group',
+        path: '/manage/user_management',
+      },
+      {
+        name: t('m.userManagement["部门管理"]'),
+        id: 'department',
+        icon: 'bk-itsm-icon icon-tree-collapsed',
+        path: '/manage/department',
+      },
+      {
+        name: t('m.userManagement["角色管理"]'),
+        id: 'roleManagement',
+        icon: 'bk-itsm-icon icon-user',
+        path: '/manage/role',
+      },
+      {
+        name: t('m.userManagement["角色组管理"]'),
+        id: 'userGroup',
+        icon: 'bk-itsm-icon icon-user-group',
+        path: '/manage/user_group',
+      },
+      {
+        name: t('m.userManagement["安全策略"]'),
+        id: 'securityPolicy',
+        icon: 'bk-itsm-icon icon-lock',
+        path: '/manage/security_policy',
+      },
       // {
       //     name: t(`m["基础模型"]`),
       //     id: 'basicModule',

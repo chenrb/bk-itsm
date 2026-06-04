@@ -31,7 +31,7 @@ from itsm.component.drf import permissions as perm
 from itsm.component.drf.exception import ValidationError
 from itsm.component.drf.permissions import IamAuthPermit
 from itsm.project.models import Project
-from itsm.role.models import UserRole
+from itsm.users.models.role import Role as UserRole
 from itsm.service.models import CatalogService, Service
 
 

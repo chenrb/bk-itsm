@@ -191,7 +191,9 @@ from itsm.iadmin.contants import (
     WAITING_FOR_CONFIRM,
 )
 from itsm.postman.models import RemoteApiInstance
-from itsm.role.models import RoleType, UserRole
+from itsm.role.models import RoleType
+from itsm.users.models.role import Role as UserRole
+from itsm.users.resolvers import resolve_processors
 from itsm.service.api import get_catalog_fullname, get_service_name
 from itsm.service.models import Service, ServiceSla, SysDict
 from itsm.sla.models import PriorityMatrix, Sla, SlaTicketHighlight
@@ -380,7 +382,7 @@ class Status(Model):
             status_id=self.id, status__in=["RUNNING", "EXECUTED", "FINISHED"]
         )
         processed_user_list = tasks.values_list("processor", flat=True)
-        user_list = UserRole.get_users_by_type(
+        user_list = resolve_processors(
             self.processors_type, self.processors, self.ticket
         )
         # Filter unprocessed user
@@ -415,7 +417,7 @@ class Status(Model):
         self.save(update_fields=("updated_by",))
 
     def get_user_list(self):
-        user_list = UserRole.get_users_by_type(
+        user_list = resolve_processors(
             self.processors_type, self.processors, self.ticket
         )
         return user_list
@@ -510,7 +512,7 @@ class Status(Model):
         message, detail_message = self.get_log_message(**kwargs)
         action_type = kwargs["action_type"]
         ticket = kwargs.pop("ticket", None)
-        real_processors = UserRole.get_users_by_type(
+        real_processors = resolve_processors(
             kwargs.get("processors_type", "PERSON"),
             kwargs.get("processors"),
             ticket,
@@ -529,7 +531,7 @@ class Status(Model):
                         status_id=self.id, status=FINISHED
                     ).values_list("processor", flat=True)
                 )
-                new_processor_list = UserRole.get_users_by_type(
+                new_processor_list = resolve_processors(
                     kwargs.get("processors_type"),
                     kwargs.get("processors"),
                     self.ticket,
@@ -693,7 +695,7 @@ class Status(Model):
         if self.processors_type == "OPEN":
             return True
 
-        return username in UserRole.get_users_by_type(
+        return username in resolve_processors(
             self.processors_type, self.processors, self.ticket
         )
 
@@ -875,7 +877,7 @@ class Status(Model):
         """
         key_value = {}
         code_list = [PROCESS_COUNT, PASS_COUNT, REJECT_COUNT, PASS_RATE, REJECT_RATE]
-        user_list = UserRole.get_users_by_type(
+        user_list = resolve_processors(
             self.processors_type, self.processors, ticket
         )
         context = {"total_count": len(user_list)}
@@ -919,17 +921,17 @@ class Status(Model):
         if self.action_type == SYSTEM_OPERATE:
             return [_("系统自动处理")]
 
-        return UserRole.get_users_by_type(
+        return resolve_processors(
             self.processors_type, self.processors, self.ticket
         )
 
     def get_delivers(self):
-        return UserRole.get_users_by_type(
+        return resolve_processors(
             self.delivers_type, self.delivers, self.ticket
         )
 
     def get_assignors(self):
-        return UserRole.get_users_by_type(
+        return resolve_processors(
             self.assignors_type, self.assignors, self.ticket
         )
 
@@ -1779,7 +1781,7 @@ class Ticket(Model):
         if self.supervise_type == "EMPTY":
             return [self.creator]
 
-        supervisors = UserRole.get_users_by_type(
+        supervisors = resolve_processors(
             self.supervise_type, self.supervisor, self
         )
 
@@ -1820,7 +1822,7 @@ class Ticket(Model):
                 ticket_id=self.id, execute_state_id=node_status.state_id
             )
             for task in tasks:
-                task_processor = UserRole.get_users_by_type(
+                task_processor = resolve_processors(
                     task.processors_type, task.processors
                 )
                 processors.update(task_processor)
@@ -1915,7 +1917,7 @@ class Ticket(Model):
         if status.processors_type == ORGANIZATION:
             return [get_department_info(status.processors.strip(",")).get("name", "")]
         else:
-            return UserRole.get_users_by_type(
+            return resolve_processors(
                 status.processors_type, status.processors, self
             )
 
@@ -2633,7 +2635,7 @@ class Ticket(Model):
         """验证关注人的token有效性"""
         notify_log = self.follower_notify_logs.filter(ticket_token=token)
         if notify_log:
-            followers = UserRole.get_users_by_type(
+            followers = resolve_processors(
                 notify_log[0].followers_type,
                 notify_log[0].followers,
                 self,
@@ -3269,7 +3271,7 @@ class Ticket(Model):
             action_type = DISTRIBUTE_OPERATE
         # 认领后处理
         elif distribute_type == "CLAIM_THEN_PROCESS":
-            real_processors = UserRole.get_users_by_type(
+            real_processors = resolve_processors(
                 f_processors_type, f_processors, self
             )
             if len(real_processors) == 1:
@@ -4598,7 +4600,7 @@ class Ticket(Model):
     def get_current_processors(self):
         """获取当前处理人列表"""
 
-        users = UserRole.get_users_by_type(
+        users = resolve_processors(
             self.current_processors_type,
             self.current_processors,
             self,

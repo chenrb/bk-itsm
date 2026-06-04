@@ -198,7 +198,7 @@ class TaskViewSet(component_viewsets.ModelViewSet):
         username = request.user.username
 
         from itsm.ticket.models import Ticket
-        from itsm.role.models import UserRole
+        from itsm.users.models.role import Role as UserRole
         ticket = Ticket.objects.filter(pk=ticket_id).first()
         if ticket is None:
             raise ValidationError(_("单据不存在"))
@@ -313,7 +313,7 @@ class TaskViewSet(component_viewsets.ModelViewSet):
         username = request.user.username
 
         from itsm.ticket.models import Ticket
-        from itsm.role.models import UserRole
+        from itsm.users.models.role import Role as UserRole
         ticket = Ticket.objects.filter(pk=ticket_id).first()
         if ticket is None:
             raise ValidationError(_("单据不存在"))
@@ -359,7 +359,7 @@ class TaskFieldViewSet(component_viewsets.ModelViewSet):
         )
 
         username = request.user.username
-        from itsm.role.models import UserRole
+        from itsm.users.models.role import Role as UserRole
         is_superuser = UserRole.is_itsm_superuser(username)
         if not is_superuser:
             task_ids = {tf.task_id for tf in task_fields}
