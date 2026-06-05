@@ -103,11 +103,22 @@ CSRF_COOKIE_NAME = os.environ.get("CSRF_COOKIE_NAME", "itsm_csrftoken")
 SESSION_COOKIE_NAME = "itsm_sessionid"
 LOGIN_URL = os.environ.get("LOGIN_URL", "/account/login/")
 
-APP_DOMAIN = os.getenv("APP_DOMAIN", "")
+# Vite dev server proxy changeOrigin 改了 Host 但不改 Origin，
+# Django CSRF 校验 Origin vs Host 时会不匹配，必须信任前端地址。
+# 生产环境前后端同源，此配置无害。
 CSRF_TRUSTED_ORIGINS = [
-    "https://*.{}".format(APP_DOMAIN),
-    "http://*.{}".format(APP_DOMAIN),
+    os.environ.get("FRONTEND_URL", "http://localhost:8004")
 ]
+
+# ==============================================================================
+# CORS — 根据环境变量选择性开启跨域功能
+# ==============================================================================
+if os.environ.get("CORS_ENABLED", "").lower() == "true":
+    from config.apps import MIDDLEWARE  # noqa: F811
+
+    MIDDLEWARE = ("corsheaders.middleware.CorsMiddleware",) + MIDDLEWARE
+    CORS_ALLOW_CREDENTIALS = True
+    CORS_ORIGIN_ALLOW_ALL = True
 
 # ==============================================================================
 # Email / Notifications

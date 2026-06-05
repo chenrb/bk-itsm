@@ -37,7 +37,7 @@ urlpatterns = [
     # Django后台数据库管理
     re_path(r"^admin/", admin.site.urls),
     # 用户登录鉴权
-    path("account/", include("itsm.users.urls")),
+    path("account/", include("itsm.account.urls")),
     # 用户管理 API（users, departments, roles, permissions, etc.）
     re_path(r"^api/", include(users_urls.api_urlpatterns)),
     # 角色兼容 API（/api/role/*）

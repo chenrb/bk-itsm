@@ -4,8 +4,6 @@
 AUTH_USER_MODEL = "users.User"
 
 INSTALLED_APPS = (
-    # 用户管理
-    "itsm.users",
     # Django 内置
     "django.contrib.admin",
     "django.contrib.auth",
@@ -21,6 +19,10 @@ INSTALLED_APPS = (
     "pipeline.variable_framework",
     "pipeline.contrib.engine_admin",
     # itsm 业务
+    # 账户认证（登录/登出/JWT）
+    "itsm.account",
+    # 用户管理
+    "itsm.users",
     "itsm.iadmin",
     "itsm.gateway",
     "itsm.role",
@@ -51,7 +53,7 @@ INSTALLED_APPS = (
 
 AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
-    "itsm.users.backends.CustomUserBackend",
+    "itsm.account.backends.CustomUserBackend",
 )
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -60,12 +62,12 @@ AUTH_PASSWORD_VALIDATORS = [
 
 MIDDLEWARE = (
     "itsm.component.misc_middlewares.ServiceSwitchCheck",
-    "itsm.component.misc_middlewares.ApiIgnoreCheck",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
+    "itsm.account.middleware.LoginRequiredMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.middleware.locale.LocaleMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",

@@ -7,7 +7,7 @@
     <ul>
     {% if user.is_anonymous %}
         <script>
-            window.location.href = "/#/login";
+            window.location.href = "/account/login/";
         </script>
     {% else %}
         {% if not user.is_active %}

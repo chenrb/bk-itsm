@@ -505,21 +505,7 @@
         this.$router.push({ name: 'ProjectList' });
       },
       onLogOut() {
-        const csrfToken = document.cookie.match(/(?:^|;\s*)itsm_csrftoken=([^;]*)/);
-        fetch('/account/logout/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': csrfToken ? decodeURIComponent(csrfToken[1]) : '',
-          },
-        }).finally(() => {
-          window.username = '';
-          window.chname = '';
-          window.IS_ITSM_ADMIN = 0;
-          window.PERMISSIONS = [];
-          window.DEFAULT_PROJECT = '';
-          this.$router.push('/login');
-        });
+        window.location.href = '/account/logout/';
       },
       // 切换项目
       onSelectProject(val) {

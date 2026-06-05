@@ -2,7 +2,6 @@
 from django.urls import include, path, re_path
 from rest_framework.routers import DefaultRouter
 
-from itsm.users.views.auth import login_view, logout_view
 from itsm.users.views.department import DepartmentViewSet
 from itsm.users.views.gateway import (
     bk_get_all_users,
@@ -37,9 +36,7 @@ router.register(r"user-groups", UserGroupViewSet, basename="user-group")
 router.register(r"security-policies", SecurityPolicyViewSet, basename="security-policy")
 
 urlpatterns = [
-    # ── Auth endpoints (mounted at /account/ via root urls.py) ──
-    path("login/", login_view, name="login"),
-    path("logout/", logout_view, name="logout"),
+    # Auth endpoints have moved to itsm.account.urls (/account/*)
 ]
 
 # API ViewSet routes (mounted at /api/ via root urls.py)

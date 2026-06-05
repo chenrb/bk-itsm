@@ -35,21 +35,6 @@ from itsm.iadmin.models import SystemSettings
 User = get_user_model()
 
 
-class ApiIgnoreCheck(MiddlewareMixin):
-    def process_request(self, request):
-        if request.path.find("/openapi/") >= 0:
-            setattr(request, "_dont_enforce_csrf_checks", True)
-            setattr(request, "_login_exempt", True)
-
-        return None
-
-    def process_view(self, request, view, args, kwargs):
-        """process_view."""
-        if getattr(request, "_login_exempt", False):
-            setattr(view, "login_exempt", True)
-        return None
-
-
 class ServiceSwitchCheck(MiddlewareMixin):
     """
     手动关闭服务中间件，需要到admin里设置key='SERVICE_SWITCH'这条数据的value

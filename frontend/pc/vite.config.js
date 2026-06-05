@@ -59,6 +59,11 @@ export default defineConfig(({ mode }) => {
       https: API_TARGET.startsWith('https'),
       open: false,
       proxy: {
+        '/account/': {
+          target: API_TARGET,
+          changeOrigin: true,
+          secure: false,
+        },
         '/api/*': {
           target: API_TARGET,
           changeOrigin: true,

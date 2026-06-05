@@ -79,7 +79,8 @@ instance.interceptors.response.use(
   (response) => {
     if (response.config.url === 'init/') {
       if (response.status === 401) {
-        window.location.hash = '#/login';
+        const next = encodeURIComponent(window.location.pathname + window.location.search + window.location.hash);
+        window.location.href = '/account/login/?next=' + next;
         return Promise.reject(response);
       }
       if ('IS_ITSM_ADMIN' in response.data.data) {
@@ -117,7 +118,8 @@ instance.interceptors.response.use(
       }
       switch (response.status) {
         case 401: {
-          window.location.hash = '#/login';
+          const next = encodeURIComponent(window.location.pathname + window.location.search + window.location.hash);
+          window.location.href = '/account/login/?next=' + next;
           break;
         }
         case 403: {

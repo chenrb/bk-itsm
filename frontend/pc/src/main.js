@@ -99,9 +99,9 @@ store.dispatch('getPlatformPreData').then(() => {
   app.mount("#app");
   window.app = app;
 }).catch(() => {
-  // init failed (401 or network error) — mount app so router guard redirects to login
-  app.mount("#app");
-  window.app = app;
+  // session 丢失或网络错误 — 回到后端登录页，保留当前路径
+  const next = encodeURIComponent(window.location.pathname + window.location.search + window.location.hash);
+  window.location.href = '/account/login/?next=' + next;
 });
 
 
