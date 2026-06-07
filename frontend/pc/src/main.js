@@ -67,6 +67,7 @@ app.use(VueDOMPurifyHTML);
 
 // 注册自定义指令
 app.directive('clickoutside', clickoutside);
+app.directive('bk-clickoutside', clickoutside);
 app.directive('bk-tooltips', bkTooltips);
 app.directive('bk-overflow-tips', bkTooltips);
 app.directive('clickOut', directives.clickOut);
