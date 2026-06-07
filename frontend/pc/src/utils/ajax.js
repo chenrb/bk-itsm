@@ -24,6 +24,7 @@ import { getCurrentInstance } from 'vue';
 import axios from 'axios';
 import bus from './bus.js';
 import { checkDataType } from './getDataType.js';
+import Message from 'bkui-vue/lib/message';
 
 
 const instance = axios.create({
@@ -77,26 +78,9 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
   (response) => {
-    if (response.config.url === 'init/') {
-      if (response.status === 401) {
-        const next = encodeURIComponent(window.location.pathname + window.location.search + window.location.hash);
-        window.location.href = '/account/login/?next=' + next;
-        return Promise.reject(response);
-      }
-      if ('IS_ITSM_ADMIN' in response.data.data) {
-        const { DEFAULT_PROJECT, IS_ITSM_ADMIN, all_access, chname, username, permissions } = response.data.data;
-        window.DEFAULT_PROJECT = DEFAULT_PROJECT;
-        window.IS_ITSM_ADMIN = IS_ITSM_ADMIN;
-        window.all_access = all_access;
-        window.chname = chname;
-        window.username = username;
-        window.PERMISSIONS = permissions || [];
-        return response;
-      }
-    }
     // status >= 200 && status <= 505
     if (response.status !== 499 && response.data && typeof response.data === 'object' && 'result' in response.data && !response.data.result && 'message' in response.data) {
-      window.app && window.app.$bkMessage && window.app.$bkMessage({
+      Message({
         message: response.data.message,
         theme: 'error',
       });
@@ -117,11 +101,6 @@ instance.interceptors.response.use(
         console.warn('请求信息：', response);
       }
       switch (response.status) {
-        case 401: {
-          const next = encodeURIComponent(window.location.pathname + window.location.search + window.location.hash);
-          window.location.href = '/account/login/?next=' + next;
-          break;
-        }
         case 403: {
           // 权限控制
           bus.emit('api-error:user-permission-denied');
@@ -162,7 +141,7 @@ instance.interceptors.response.use(
       return response;
     }
 
-    if (response.data.code !== 'OK' && response.data.code !== 0) {
+    if (response.data.code !== 'OK' && response.data.code !== 0 && response.data.code !== undefined) {
       if (response.data.message) {
         response.data.msg = response.data.message;
       } else if (response.data.messages) {

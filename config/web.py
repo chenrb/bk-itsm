@@ -54,7 +54,7 @@ TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": (
-            os.path.join(BASE_DIR, "static", "assets"),
+            os.path.join(BASE_DIR, "static"),
             os.path.join(BASE_DIR, "templates"),
         ),
         "APP_DIRS": True,
@@ -103,12 +103,6 @@ CSRF_COOKIE_NAME = os.environ.get("CSRF_COOKIE_NAME", "itsm_csrftoken")
 SESSION_COOKIE_NAME = "itsm_sessionid"
 LOGIN_URL = os.environ.get("LOGIN_URL", "/account/login/")
 
-# Vite dev server proxy changeOrigin 改了 Host 但不改 Origin，
-# Django CSRF 校验 Origin vs Host 时会不匹配，必须信任前端地址。
-# 生产环境前后端同源，此配置无害。
-CSRF_TRUSTED_ORIGINS = [
-    os.environ.get("FRONTEND_URL", "http://localhost:8004")
-]
 
 # ==============================================================================
 # CORS — 根据环境变量选择性开启跨域功能
@@ -119,6 +113,8 @@ if os.environ.get("CORS_ENABLED", "").lower() == "true":
     MIDDLEWARE = ("corsheaders.middleware.CorsMiddleware",) + MIDDLEWARE
     CORS_ALLOW_CREDENTIALS = True
     CORS_ORIGIN_ALLOW_ALL = True
+    # 生产环境前后端同源，此配置无害。
+    CSRF_TRUSTED_ORIGINS = os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(",")
 
 # ==============================================================================
 # Email / Notifications

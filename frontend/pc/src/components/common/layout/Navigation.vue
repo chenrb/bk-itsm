@@ -87,9 +87,6 @@
           <template #content>
             <ul class="nav-operate-list">
               <li class="operate-item">
-                <a :href="bkDocUrl" target="_blank">{{ $t(`m.wiki["产品文档"]`) }}</a>
-              </li>
-              <li class="operate-item">
                 <div @click="isVersionLogShow = true">{{ $t(`m.wiki["版本日志"]`) }}</div>
               </li>
               <li class="operate-item">
@@ -242,7 +239,6 @@
       return {
         appLogo: itsmLogoImg,
         userName: window.username || '--',
-        bkDocUrl: window.DOC_URL,
         routerList: ROUTER_LIST.slice(0),
         isSideOpen: true,
         sideRouters: [],

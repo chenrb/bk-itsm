@@ -88,9 +88,6 @@
             :key="index"
             @click.stop="addNormal(node, item)" :title="item.name">
             <i class="bk-itsm-icon"
-              :style="{
-                'display': nodeDisabled === 'open' && (item.type === 'TASK-DEVOPS' || item.type === 'BK-PLUGIN')
-                  ? 'none' : 'inline-block' }"
               :class="[
                 item.iconStyle,
                 { 'bk-font-style': [
@@ -168,18 +165,10 @@
           { type: 'COPY', name: this.$t('m.treeinfo["复制节点"]'), iconStyle: 'icon-copy-new' },
         ],
         currentNode: {},
-        nodeDisabled: window.RUN_VER,
       };
     },
     mounted() {
       this.toolStatus = localStorage.getItem('toolStatus') || false;
-      if (this.nodeDisabled === 'ieod') {
-        const ieodList = [
-          { type: 'TASK-DEVOPS', name: this.$t('m["蓝盾节点"]'), iconStyle: 'icon-devops-task-icon' },
-          { type: 'BK-PLUGIN', name: this.$t('m[\'蓝鲸插件节点\']'), iconStyle: 'icon-chajianjiedian' },
-        ];
-        this.clickList.splice(0, 0, ieodList[0], ieodList[1]);
-      }
     },
     methods: {
       hoverNode(node) {

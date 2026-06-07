@@ -28,6 +28,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 import bus from '../utils/bus';
 import routerModules from './modules/index.js';
+import Login from '@/views/Login.vue';
 import { rootPath, connectToMain } from '@blueking/sub-saas';
 
 // 首页
@@ -287,6 +288,12 @@ const routes = [
     path: '/newBill',
     redirect: '/ticket/create',
   },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login,
+    meta: { noNav: true },
+  },
   ...routerModules,
 ];
 
@@ -298,10 +305,14 @@ const router = createRouter({
 connectToMain(router);
 
 router.beforeEach((to, from, next) => {
-  // Safety net: if SPA loads without authentication (should not happen — backend middleware protects)
+  // 登录页不需要认证
+  if (to.name === 'Login') {
+    next();
+    return;
+  }
+  // 未登录跳转 SPA 登录页
   if (!window.username) {
-    const nextUrl = encodeURIComponent(window.location.pathname + window.location.search + window.location.hash);
-    window.location.href = '/account/login/?next=' + nextUrl;
+    next({ name: 'Login' });
     return;
   }
   // Permission-code based route guard

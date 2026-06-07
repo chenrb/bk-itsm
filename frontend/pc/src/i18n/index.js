@@ -29,7 +29,6 @@ import { m as zhI18n } from './lang/zh';
 import { m as enI18n } from './lang/en';
 import { m as jaI18n } from './lang/ja';
 const localeCookie = cookie.parse(document.cookie).itsm_language || 'zh-cn';
-console.log(cookie.parse(document.cookie));
 const i18n = createI18n({
   legacy: true,
   // 语言标识
@@ -37,10 +36,10 @@ const i18n = createI18n({
   fallbackLocale: 'zh-cn',
   messages: {
     // 中文语言包
-    'zh-cn': Object.assign(zhCn, zhI18n),
+    'zh-cn': Object.assign(zhCn, { m: zhI18n }),
     // 英文语言包
-    en: Object.assign(enLang, enI18n),
-    ja: Object.assign({}, jaI18n),
+    en: Object.assign(enLang, { m: enI18n }),
+    ja: Object.assign({}, { m: jaI18n }),
   },
 });
 

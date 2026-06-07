@@ -10,7 +10,39 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [
-      vue()
+      vue(),
+      // 开发模式：使用 index-dev.html 并从 .env 注入 window 全局变量
+      {
+        name: 'dev-html-inject',
+        apply: 'serve',
+        configureServer(server) {
+          // 将 / 和 /index.html 重写到 index-dev.html
+          server.middlewares.use((req, res, next) => {
+            if (req.url === '/' || req.url === '/index.html') {
+              req.url = '/index-dev.html'
+            }
+            next()
+          })
+        },
+        transformIndexHtml: {
+          enforce: 'pre',
+          transform(html) {
+            const injectScript = `
+    <script>
+        // 开发模式配置 — 来自 .env.development
+        window.SITE_URL = '/';
+        window.STATIC_URL = '/';
+        window.VERSION = '${env.VITE_VERSION || 'dev'}';
+        window.log_name = '${env.VITE_LOG_NAME || '流程服务'}';
+        // 用户数据 — 生产模式由 Django 模板注入
+        window.username = '${(env.VITE_USERNAME || '').replace(/'/g, "\\'")}';
+        window.chname = '${(env.VITE_CHNAME || '').replace(/'/g, "\\'")}';
+        window.IS_ITSM_ADMIN = ${env.VITE_IS_ITSM_ADMIN || '0'};
+    </script>`
+            return html.replace('<!-- window 全局变量由 vite.config.js 的 dev-html-inject 插件从 .env 注入 -->', injectScript)
+          }
+        }
+      }
     ],
     resolve: {
       alias: {
@@ -59,22 +91,12 @@ export default defineConfig(({ mode }) => {
       https: API_TARGET.startsWith('https'),
       open: false,
       proxy: {
-        '/account/': {
+        '/api/': {
           target: API_TARGET,
           changeOrigin: true,
           secure: false,
         },
-        '/api/*': {
-          target: API_TARGET,
-          changeOrigin: true,
-          secure: false,
-        },
-        '/init': {
-          target: API_TARGET,
-          changeOrigin: true,
-          secure: false,
-        },
-        '/openapi/*': {
+        '/openapi/': {
           target: API_TARGET,
           changeOrigin: true,
           secure: false,
@@ -84,16 +106,6 @@ export default defineConfig(({ mode }) => {
           changeOrigin: true,
           secure: false,
         },
-        '/o/bk_sops/*': {
-          target: API_TARGET,
-          changeOrigin: true,
-          secure: false,
-        },
-        '/sops/*': {
-          target: API_TARGET.replace(/\/$/, '') + '/o/bk_sops/',
-          changeOrigin: true,
-          secure: false,
-        }
       }
     },
     build: {

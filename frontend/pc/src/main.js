@@ -20,7 +20,7 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE
  */
 
-import "./public-path";
+import "./globals";
 import { createApp } from "vue";
 import { createPinia } from "pinia";
 import cookie from "cookie";
@@ -93,15 +93,18 @@ const localeCookie = cookie.parse(document.cookie).itsm_language || "zh-cn";
 
 store.commit("setLanguage", localeCookie);
 
-store.dispatch('getPlatformPreData').then(() => {
-  // Sync permissions from init response into Vuex user state
+store.dispatch('getPlatformPreData').then((data) => {
+  console.log('[ITSM] init done, username:', window.username, 'data:', data);
   store.dispatch('user/syncPermissions');
-  app.mount("#app");
-  window.app = app;
-}).catch(() => {
-  // session 丢失或网络错误 — 回到后端登录页，保留当前路径
-  const next = encodeURIComponent(window.location.pathname + window.location.search + window.location.hash);
-  window.location.href = '/account/login/?next=' + next;
+  try {
+    app.mount("#app");
+    window.app = app;
+  } catch (e) {
+    console.error('[ITSM] mount error:', e);
+  }
+}).catch((err) => {
+  console.error('[ITSM] init FAILED, err:', err, 'username:', window.username);
+  window.location.hash = '#/login';
 });
 
 

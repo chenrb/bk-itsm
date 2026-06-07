@@ -91,25 +91,16 @@ export default {
       });
     },
     getManagePermission({ commitm }) {
-      return ajax.get(`iam/permission/platform_permission/`).then((response) => {
-        const res = response.data;
-        return res;
-      });
+      // IAM 接口已移除，返回空权限
+      return Promise.resolve({ data: {} });
     },
-    // 获取项目资源的权限结构树
     getPermissionMeta({ commit, state, dispatch }) {
-      return ajax.get(`iam/permission/meta/`).then((response) => {
-        const res = response.data;
-        commit("setPermissionMeta", res.data);
-        return res;
-      });
+      // IAM 接口已移除，使用默认空结构
+      return Promise.resolve({ data: state.permissionMeta });
     },
-    // 获取权限中心跳转链接
     getIamUrl({ commit }, data) {
-      return ajax.post(`iam/permission/query_apply_permission_url/`, data).then((response) => {
-        const res = response.data;
-        return res;
-      });
+      // IAM 接口已移除
+      return Promise.resolve({ result: false, data: {} });
     },
     // 获取组织机构人员数量
     getOrganizationNumber({ commit, state, dispatch }, id) {

@@ -29,19 +29,13 @@ import os
 from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import render
-from django.utils.translation import gettext as _, get_language
+from django.utils.translation import gettext as _
 from django.views.decorators.http import require_GET
 
 from common.template.template import Template
-from itsm.iadmin.contants import NOTICE_CENTER_SWITCH
-from itsm.iadmin.models import SystemSettings
 from itsm.project.models import UserProjectAccessRecord
 from itsm.users.data.permissions import BUILTIN_PERMISSIONS
 from itsm.users.models.role import Role
-
-
-def _get_title():
-    return "{} | {}".format(_("流程服务"), _("ITSM"))
 
 
 def _get_footer():
@@ -98,45 +92,27 @@ def init(request):
 
 def index(request):
     """首页"""
-    TITLE = _get_title()
-
-    try:
-        notice_center_switch_value = SystemSettings.objects.get(
-            key=NOTICE_CENTER_SWITCH
-        ).value
-    except SystemSettings.DoesNotExist:
-        notice_center_switch_value = "off"
-
-    # 文档地址转换
-    doc_lang = "EN"
-    lang = get_language()
-    if lang in ["zh-cn", "zh-hans"]:
-        doc_lang = "ZH"
-
     version = get_version()
-    doc_url = settings.DOC_URL.format(
-        lang=doc_lang, version=get_major_minor_version(version)
-    )
+    user = request.user
+
+    if user.is_authenticated:
+        username = user.username
+        chname = getattr(user, "chname", "") or ""
+        is_admin = 1 if Role.is_itsm_superuser(user.username) else 0
+    else:
+        username = ""
+        chname = ""
+        is_admin = 0
 
     return render(
         request,
         "index.html",
         {
-            "is_vip": "true",
-            "CUSTOM_TITLE": TITLE,
-            "USE_LOG": "true",
-            "LOGIN_URL": settings.LOGIN_URL,
-            "LOG_NAME": _("流程服务"),
-            "USER_MANAGE_HOST": settings.USER_MANAGE_HOST,
-            "PLATFORM_API_URL": settings.PLATFORM_API_URL,
-            "TAM_PROJECT_ID": settings.TAM_PROJECT_ID,
-            "DOC_URL": doc_url,
-            "DOC_CENTER_HOST": settings.DOC_CENTER_HOST,
-            "NOTICE_CENTER_SWITCH": notice_center_switch_value,
-            "SHARED_RES_URL": settings.SHARED_RES_URL,
-            "PLATFORM_NAME": settings.PLATFORM_NAME,
             "VERSION": version,
-            "CSRF_COOKIE_NAME": settings.CSRF_COOKIE_NAME,
+            "LOG_NAME": _("流程服务"),
+            "username": username,
+            "chname": chname,
+            "IS_ITSM_ADMIN": is_admin,
         },
     )
 
@@ -169,11 +145,3 @@ def get_version():
     with open(app_desc, "r") as file:
         content = file.read()
     return content.strip()
-
-
-def get_major_minor_version(version_string):
-    # 使用 split() 方法分割字符串
-    parts = version_string.split(".")
-    # 取前两个部分并用 '.' 连接
-    major_minor = ".".join(parts[:2])
-    return major_minor

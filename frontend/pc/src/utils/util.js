@@ -23,6 +23,7 @@
 import cloneDeepWith from 'lodash/cloneDeepWith';
 import { checkDataType } from './getDataType';
 import i18n from '@/i18n/index.js';
+import Message from 'bkui-vue/lib/message';
 
 const t = i18n.global.t.bind(i18n.global);
 
@@ -358,14 +359,14 @@ export function catchErrorHandler(err, ctx) {
       };
     } else {
       console.error(err);
-      ctx.bkMessageInstance = ctx.$bkMessage({
+      ctx.bkMessageInstance = Message({
         theme: 'error',
         message: err.message || err.data.msg || err.statusText,
       });
     }
   } else {
     console.error(err);
-    ctx.bkMessageInstance = ctx.$bkMessage({
+    ctx.bkMessageInstance = Message({
       theme: 'error',
       message: err.message || err.data.msg || err.statusText,
     });

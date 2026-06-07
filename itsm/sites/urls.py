@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 from django.urls import include, re_path
 
-from itsm.sites.views import index, get_footer, init
+from itsm.sites.views import index, get_footer
 
 urlpatterns = [
     re_path(r"^$", index),
-    re_path(r"^init/$", init),
     re_path(r"^core/footer/$", get_footer),
 ]

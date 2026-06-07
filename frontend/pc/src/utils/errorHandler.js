@@ -21,6 +21,7 @@
  */
 
 import { checkDataType } from './getDataType';
+import Message from 'bkui-vue/lib/message';
 
 export const errorHandler = (error, instance) => {
   if (checkDataType(error) === 'Object' && error.status === 401) {
@@ -35,10 +36,8 @@ export const errorHandler = (error, instance) => {
     msg = error;
   }
   console.log(error);
-  instance.$bkMessage({
+  Message({
     message: msg,
     theme: 'error',
-    ellipsisLine: 3,
-    ellipsisCopy: true,
   });
 };

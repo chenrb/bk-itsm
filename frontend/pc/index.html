@@ -5,21 +5,17 @@
     <meta charset="utf-8">
     <title>ITSM</title>
     <script>
+        // 基础路径 — 开发和生产模式一致
         window.SITE_URL = '/';
         window.STATIC_URL = '/';
-        window.BK_STATIC_URL = '';
-        window.DOC_URL = ''
-        window.RUN_VER = '{{ RUN_VER }}'
-        window.hostname = '{{DOC_URL}}';
-        window.username = '';
-        window.chname = '';
-        window.all_access = [];
-        window.is_itsm_admin = false;
-        window.is_vip = false;
-        window.use_log = true;
-        window.log_name = '流程服务';
-        window.DEFAULT_PROJECT = '';
-        window.BKAPP_CI_ENABLED = 'True';
+        // 后端配置 — 生产模式由 Django 模板引擎替换 {{ }}
+        window.VERSION = '{{ VERSION }}';
+        window.log_name = '{{ LOG_NAME }}';
+        // 用户数据 — 由 Django 模板注入，页面加载时即生效
+        // globals.js 中 || 保证开发模式（Vite 不处理模板语法）时回退到默认值
+        window.username = '{{ username|escapejs }}';
+        window.chname = '{{ chname|escapejs }}';
+        window.IS_ITSM_ADMIN = {{ IS_ITSM_ADMIN|default:"0" }};
     </script>
 </head>
 <body>

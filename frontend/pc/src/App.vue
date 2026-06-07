@@ -21,11 +21,10 @@
   -->
 
 <template>
-  <div id="app" class="bk-app" @click="hiddenTree" v-bkloading="window.username ? { isLoading: loading } : false">
-    <notice-component v-if="enableNoticeCenter && !isSubNav && !$route.meta.iframe && !$route.meta.noNav" :api-url="apiUrl" @show-alert-change="handleNoticeChange" />
+  <div id="app" class="bk-app" @click="hiddenTree" v-bkloading="loggedIn ? { isLoading: loading } : false">
     <template v-if="isShowView">
       <!-- has navigation-->
-      <navigation v-if="!isSubNav && !$route.meta.iframe && !$route.meta.noNav" :class="{ 'show-notice': showNotice }">
+      <navigation v-if="!isSubNav && !$route.meta.iframe && !$route.meta.noNav">
         <div
           v-bkloading="{ isLoading: localLoading }"
           class="bk-app-content">
@@ -40,32 +39,16 @@
           </router-view>
         </div>
       </navigation>
-      <!-- no navigation-->
+      <!-- no navigation (login page, iframe, etc.) -->
       <template v-else>
-        <!-- ddd -->
-        <div
-          v-if="isShowView"
-          v-bkloading="window.username ? { isLoading: localLoading } : false"
-          class="bk-app-content">
-          <permissionApply
-            v-if="permissinApplyShow"
-            ref="permissionApply"
-            :permission-data="permissionData">
-          </permissionApply>
-          <router-view
-            v-else
-            :key="routerKey">
-          </router-view>
-        </div>
+        <router-view :key="routerKey"></router-view>
       </template>
     </template>
     <PermissionModal ref="permissionModal"></PermissionModal>
   </div>
 </template>
 <script>
-  import { mapActions, mapState } from 'vuex';
-  // TODO: Replace with Vue 3 compatible notice component
-  const NoticeComponent = { template: '<div></div>' };
+  import { mapActions } from 'vuex';
   import bus from './utils/bus';
   import Navigation from './components/common/layout/Navigation.vue';
   import PermissionModal from '@/components/common/modal/PermissionModal.vue';
@@ -77,7 +60,6 @@
   export default {
     name: 'app',
     components: {
-      NoticeComponent,
       Navigation,
       PermissionModal,
       permissionApply,
@@ -90,13 +72,11 @@
     setup() { return { ...usePermission() }; },
     data() {
       return {
-        enableNoticeCenter: window.NOTICE_CENTER_SWITCH === 'on',
         loading: false,
         localLoading: false,
         isRouterAlive: true,
         permissinApplyShow: false,
         routerKey: +new Date(),
-        apiUrl: `//${window.location.host}${window.SITE_URL}notice/announcements/`,
         permissionData: {
           type: 'project', // 无权限类型: project、other
           permission: [],
@@ -105,9 +85,9 @@
       };
     },
     computed: {
-      ...mapState({
-        showNotice: state => state.showNotice,
-      }),
+      loggedIn() {
+        return !!window.username;
+      },
       routerTable() {
         return this.$store.state.tableList;
       },
@@ -347,9 +327,6 @@
           clearInterval(this.$store.state.deployOrder.intervalInfo.timeOut);
         }
       },
-      handleNoticeChange(isShow) {
-        this.$store.commit('setNoticeShow', isShow);
-      },
     },
   };
 </script>
@@ -369,18 +346,6 @@
         width: 100%;
         .bk-navigation {
             min-width: 1366px;
-            &.show-notice {
-              height: calc(100vh - 40px);
-            //   overflow: hidden;
-              .bk-navigation-wrapper {
-                .container-content {
-                  max-height: calc(100vh - 92px) !important;
-                }
-                .nav-slider-list {
-                  height: calc(100vh - 148px) !important;
-                }
-              }
-            }
             .navigation-container {
                 max-width: unset!important;
             }

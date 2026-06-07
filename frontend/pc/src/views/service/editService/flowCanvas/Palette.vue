@@ -51,11 +51,6 @@
         <i class="bk-itsm-icon icon-webhookjiedian plugin" style="font-size: 42px;"></i>
       </div>
     </li>
-    <li v-if="devopsEnabled" v-bk-tooltips.right="$t(`m['蓝盾节点']`)">
-      <div class="entry-item entry-gateway" data-type="TASK-DEVOPS" style="margin: 12px 0 2px;">
-        <i class="bk-itsm-icon icon-devops-task-icon" style="font-size: 26px;"></i>
-      </div>
-    </li>
     <!-- <li v-bk-tooltips.right="$t(`m.treeinfo['会签节点']`)">
             <div class="entry-item entry-gateway" data-type="SIGN" style="margin: 12px 0 2px;">
                 <i class="bk-itsm-icon icon-sign-node" style="font-size: 26px;"></i>
@@ -64,11 +59,6 @@
     <li v-bk-tooltips.right="$t(`m.treeinfo['审批节点']`)">
       <div class="entry-item entry-gateway" data-type="APPROVAL" style="margin: 12px 0 2px;">
         <i class="bk-itsm-icon icon-approval-node" style="font-size: 26px;"></i>
-      </div>
-    </li>
-    <li v-if="bkPluginEnabled" v-bk-tooltips.right="$t(`m['蓝鲸插件节点']`)">
-      <div class="entry-item entry-gateway" data-type="BK-PLUGIN" style="margin: 12px 0 2px;">
-        <i class="bk-itsm-icon icon-chajianjiedian plugin" style="font-size: 42px"></i>
       </div>
     </li>
     <li v-bk-tooltips.right="$t(`m.treeinfo['并行网关']`)">
@@ -87,10 +77,7 @@
   export default {
     name: 'Palette',
     data() {
-      return {
-        devopsEnabled: window.BKAPP_CI_ENABLED === 'True',
-        bkPluginEnabled: window.RUN_VER === 'ieod',
-      };
+      return {};
     },
   };
 </script>

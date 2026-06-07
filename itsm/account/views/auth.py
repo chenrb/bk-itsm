@@ -1,51 +1,48 @@
 # -*- coding: utf-8 -*-
+import json
+
 from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponseRedirect
+from django.http import JsonResponse
 from django.utils.translation import gettext_lazy as _
-from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
 from itsm.component.decorators import login_exempt
 
 
-@require_http_methods(["GET", "POST"])
-@ensure_csrf_cookie
+@require_http_methods(["POST"])
 @login_exempt
-def login_view(request):
-    if request.method == "GET":
-        return render_login_page(request, next_url=request.GET.get("next", "/"))
+@csrf_exempt
+def api_login(request):
+    """SPA 登录接口 — 接收 JSON，返回 JSON + Set-Cookie session。"""
+    try:
+        body = json.loads(request.body)
+    except (json.JSONDecodeError, ValueError):
+        return JsonResponse({"result": False, "message": "无效请求"}, status=400)
 
-    username = request.POST.get("username", "")
-    password = request.POST.get("password", "")
+    username = body.get("username", "")
+    password = body.get("password", "")
     user = authenticate(request, username=username, password=password)
 
     if user is not None:
         login(request, user)
-        next_url = request.POST.get("next", "/")
-        return HttpResponseRedirect(next_url)
+        return JsonResponse(
+            {
+                "result": True,
+                "data": {
+                    "username": user.username,
+                    "chname": user.chname,
+                },
+            }
+        )
 
-    return render_login_page(
-        request,
-        next_url=request.POST.get("next", "/"),
-        error_message=_("用户名或密码错误"),
-    )
+    return JsonResponse({"result": False, "message": str(_("用户名或密码错误"))}, status=401)
 
 
-@require_http_methods(["GET", "POST"])
+@require_http_methods(["POST"])
 @login_exempt
-def logout_view(request):
+@csrf_exempt
+def api_logout(request):
+    """SPA 登出接口。"""
     logout(request)
-    return HttpResponseRedirect("/account/login/")
-
-
-def render_login_page(request, next_url="/", error_message=""):
-    from django.shortcuts import render
-
-    return render(
-        request,
-        "account/login.html",
-        {
-            "next": next_url,
-            "error_message": error_message,
-        },
-    )
+    return JsonResponse({"result": True})

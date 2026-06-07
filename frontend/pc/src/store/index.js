@@ -162,8 +162,7 @@ export default createStore({
       choice_state_list_dict: {},
       export_fields: [],
     },
-    // 系统当前登录用户
-    user: {},
+    // user state 已移至 user module (newModules/user.js)
     // iFrame加载状态
     isIframeLoading: true,
     // 权限状态
@@ -404,12 +403,17 @@ export default createStore({
       return jsonp(bkPaasEsbHost + '/api/c/compapi/v2/usermanage/fe_update_user_language/', language);
     },
     getPlatformPreData() {
-      return ajax.get('init/', {
-        baseURL: window.SITE_URL
-      }).then((response) => {
-        if (!response) return;
-        return response.data.data;
-    });
+      return ajax.get('init/').then((response) => {
+        if (!response || !response.data || !response.data.data) return;
+        const data = response.data.data;
+        window.DEFAULT_PROJECT = data.DEFAULT_PROJECT || '';
+        window.IS_ITSM_ADMIN = data.IS_ITSM_ADMIN || 0;
+        window.all_access = data.all_access || [];
+        window.chname = data.chname || '';
+        window.username = data.username || '';
+        window.PERMISSIONS = data.permissions || [];
+        return data;
+      });
     },
     /**
      * 获取项目里面的 rtx 人员选择器数据
