@@ -27,7 +27,7 @@ import cookie from "cookie";
 import $ from "jquery";
 import * as monaco from "monaco-editor";
 // bkui-vue (BlueKing Vue 3 component library)
-import bkui from "bkui-vue";
+import bkui, { clickoutside, bkTooltips } from "bkui-vue";
 import "bkui-vue/dist/style.css";
 import VueDOMPurifyHTML from 'vue-dompurify-html';
 // view components
@@ -66,6 +66,9 @@ app.use(bkui);
 app.use(VueDOMPurifyHTML);
 
 // 注册自定义指令
+app.directive('clickoutside', clickoutside);
+app.directive('bk-tooltips', bkTooltips);
+app.directive('bk-overflow-tips', bkTooltips);
 app.directive('clickOut', directives.clickOut);
 app.directive('focus', directives.focus);
 app.directive('anchor', directives.anchor);

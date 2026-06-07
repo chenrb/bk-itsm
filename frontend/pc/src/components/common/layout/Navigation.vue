@@ -54,7 +54,7 @@
         </ul>
       </div>
       <div class="quick-entry">
-        <bk-popover theme="navigation-popover" :arrow="false" offset="0, 2" placement="bottom-start" :tippy-options="{ animateFill: false, hideOnClick: false }">
+        <bk-popover theme="navigation-popover" :arrow="false" :offset="{ mainAxis: 2, crossAxis: 0 }" placement="bottom-start" :tippy-options="{ animateFill: false, hideOnClick: false }">
           <div class="language">
             <span :class="['language-btn bk-itsm-icon', curLanguage === 'zh' ? 'icon-yuyanqiehuanzhongwen' : 'icon-yuyanqiehuanyingwen']"></span>
           </div>
@@ -78,7 +78,7 @@
             </ul>
           </template>
         </bk-popover>
-        <bk-popover theme="navigation-popover" :arrow="false" offset="0, 2" placement="bottom-start" :tippy-options="{ animateFill: false, hideOnClick: false }">
+        <bk-popover theme="navigation-popover" :arrow="false" :offset="{ mainAxis: 2, crossAxis: 0 }" placement="bottom-start" :tippy-options="{ animateFill: false, hideOnClick: false }">
           <div class="right-question-icon">
             <svg class="bk-icon" style="margin-top: 2px; width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg">
               <path d="M32,4C16.5,4,4,16.5,4,32c0,3.6,0.7,7.1,2,10.4V56c0,1.1,0.9,2,2,2h13.6C36,63.7,52.3,56.8,58,42.4S56.8,11.7,42.4,6C39.1,4.7,35.6,4,32,4z M31.3,45.1c-1.7,0-3-1.3-3-3s1.3-3,3-3c1.7,0,3,1.3,3,3S33,45.1,31.3,45.1z M36.7,31.7c-2.3,1.3-3,2.2-3,3.9v0.9H29v-1c-0.2-2.8,0.7-4.4,3.2-5.8c2.3-1.4,3-2.2,3-3.8s-1.3-2.8-3.3-2.8c-1.8-0.1-3.3,1.2-3.5,3c0,0.1,0,0.1,0,0.2h-4.8c0.1-4.4,3.1-7.4,8.5-7.4c5,0,8.3,2.8,8.3,6.9C40.5,28.4,39.2,30.3,36.7,31.7z"></path>
@@ -95,7 +95,7 @@
             </ul>
           </template>
         </bk-popover>
-        <bk-popover data-test-id="navigation-popover-user" placement="bottom-start" theme="navigation-popover" :arrow="false" offset="0, 7" :tippy-options="{ animateFill: false, hideOnClick: false }">
+        <bk-popover data-test-id="navigation-popover-user" placement="bottom-start" theme="navigation-popover" :arrow="false" :offset="{ mainAxis: 7, crossAxis: 0 }" :tippy-options="{ animateFill: false, hideOnClick: false }">
           <div class="user-name">
             <span>{{ userName }}</span>
             <i class="bk-icon icon-down-shape"></i>
@@ -160,43 +160,32 @@
         </bk-select>
         <div v-else class="project-first-text">{{ projectFirstText }}</div>
       </template>
-      <bk-navigation-menu
-        item-active-bg-color="#e1ecff"
-        item-active-color="#3a84ff"
-        item-default-color="#979ba5"
-        item-default-icon-color="#979ba5"
-        item-active-icon-color="#3a84ff"
-        :toggle-active="true"
-        :default-active="activeSideRouter">
+      <div class="nav-menu">
         <template v-for="router in sideNav" :key="router.id">
           <div
             v-if="Array.isArray(router.subRouters) && router.subRouters.length > 0"
             class="nav-group-wrap">
             <div class="group-name">{{ !isSideOpen && ['en', 'ja'].includes($store.state.language) ? router.abbrName : router.name }}</div>
-            <bk-navigation-menu-item
+            <div
               v-for="item in router.subRouters"
               :data-test-id="`navigation-menu-${item.id}`"
               :key="item.id"
-              :id="item.id"
-              :disabled="item.disabled"
-              :icon="item.icon"
-              @click="handleSideRouterClick(item)">
-              {{ item.name }}
-            </bk-navigation-menu-item>
+              :class="['nav-menu-item', { active: activeSideRouter === item.id, disabled: item.disabled }]"
+              @click="!item.disabled && handleSideRouterClick(item)">
+              <i v-if="item.icon" :class="['nav-menu-item-icon', item.icon]"></i>
+              <span class="nav-menu-item-name">{{ item.name }}</span>
+            </div>
           </div>
-          <bk-navigation-menu-item
-            :data-test-id="`navigation-menu-platformRouter-${router.id}`"
+          <div
             v-else
-            :id="router.id"
-            :has-child="false"
-            :icon="router.icon"
-            :disabled="router.disabled"
-            @click="handleSideRouterClick(router)">
-            {{ router.name }}
-          </bk-navigation-menu-item>
+            :data-test-id="`navigation-menu-platformRouter-${router.id}`"
+            :class="['nav-menu-item', { active: activeSideRouter === router.id, disabled: router.disabled }]"
+            @click="!router.disabled && handleSideRouterClick(router)">
+            <i v-if="router.icon" :class="['nav-menu-item-icon', router.icon]"></i>
+            <span class="nav-menu-item-name">{{ router.name }}</span>
+          </div>
         </template>
-
-      </bk-navigation-menu>
+      </div>
     </template>
     <div class="page-container">
       <slot></slot>
@@ -663,10 +652,40 @@
     .page-container {
         height: 100%;
     }
-    .navigation-menu-item {
-        margin: 0;
-        flex: 0 0 42px;
+    .nav-menu {
+        width: 100%;
+    }
+    .nav-menu-item {
+        display: flex;
+        align-items: center;
+        height: 42px;
         padding: 0 12px 0 22px;
+        color: #979ba5;
+        cursor: pointer;
+        font-size: 14px;
+        white-space: nowrap;
+        overflow: hidden;
+        &:hover {
+            color: #3a84ff;
+            background: #f0f5ff;
+        }
+        &.active {
+            color: #3a84ff;
+            background: #e1ecff;
+        }
+        &.disabled {
+            color: #c4c6cc;
+            cursor: not-allowed;
+        }
+        .nav-menu-item-icon {
+            margin-right: 8px;
+            font-size: 16px;
+            color: inherit;
+        }
+        .nav-menu-item-name {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
     }
     .nav-group-wrap {
         width: 100%;
