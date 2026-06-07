@@ -75,6 +75,8 @@ def update_user_departments(cache_key, username, id_only):
 
         departments = []
         for sub_dept in res:
+            if not isinstance(sub_dept, dict):
+                continue
             departments.extend(
                 [str(dept.get("id")) for dept in sub_dept.get("family", [])]
             )
