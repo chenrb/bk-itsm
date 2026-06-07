@@ -97,18 +97,23 @@ const localeCookie = cookie.parse(document.cookie).itsm_language || "zh-cn";
 
 store.commit("setLanguage", localeCookie);
 
-store.dispatch('getPlatformPreData').then((data) => {
-  console.log('[ITSM] init done, username:', window.username, 'data:', data);
-  store.dispatch('user/syncPermissions');
+function mountApp() {
   try {
     app.mount("#app");
     window.app = app;
   } catch (e) {
     console.error('[ITSM] mount error:', e);
   }
+}
+
+store.dispatch('getPlatformPreData').then((data) => {
+  console.log('[ITSM] init done, username:', window.username, 'data:', data);
+  store.dispatch('user/syncPermissions');
+  mountApp();
 }).catch((err) => {
   console.error('[ITSM] init FAILED, err:', err, 'username:', window.username);
-  window.location.hash = '#/login';
+  // session 无效时仍然 mount，让路由守卫重定向到登录页
+  mountApp();
 });
 
 
