@@ -38,6 +38,12 @@ export default defineConfig(({ mode }) => {
         window.username = '${(env.VITE_USERNAME || '').replace(/'/g, "\\'")}';
         window.chname = '${(env.VITE_CHNAME || '').replace(/'/g, "\\'")}';
         window.IS_ITSM_ADMIN = ${env.VITE_IS_ITSM_ADMIN || '0'};
+        // 平台配置 — 生产模式由 Django 模板注入
+        window.PLATFORM_NAME = '${(env.VITE_PLATFORM_NAME || '').replace(/'/g, "\\'")}';
+        window.BRAND_NAME = '${(env.VITE_BRAND_NAME || 'ITSM').replace(/'/g, "\\'")}';
+        window.FAVICON = '${(env.VITE_FAVICON || '/static/core/images/bk_itsm.png').replace(/'/g, "\\'")}';
+        window.APP_LOGO = '${(env.VITE_APP_LOGO || '/static/core/images/bk_itsm.png').replace(/'/g, "\\'")}';
+        window.FOOTER = '<div class="copyright"><div>ITSM</div></div>';
     </script>`
             return html.replace('<!-- window 全局变量由 vite.config.js 的 dev-html-inject 插件从 .env 注入 -->', injectScript)
           }

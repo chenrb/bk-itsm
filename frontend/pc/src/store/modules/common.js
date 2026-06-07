@@ -25,7 +25,7 @@ import ajax from "../../utils/ajax";
 export default {
   namespaced: true,
   state: {
-    footer: "",
+    footer: window.FOOTER || "",
     // 检测弹窗窗体变化定时器
     slideTimeout: "",
     slideStatus: true,

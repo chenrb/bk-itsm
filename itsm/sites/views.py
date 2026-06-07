@@ -47,7 +47,8 @@ def _get_footer():
     return getattr(settings, "FOOTER", None) or default_footer
 
 
-def init(request):
+def current_user(request):
+    """获取当前登录用户信息"""
     if not request.user.is_authenticated:
         return JsonResponse(
             {"result": False, "message": "未登录", "code": 401}, status=401
@@ -91,7 +92,7 @@ def init(request):
 
 
 def index(request):
-    """首页"""
+    """首页 — 注入页面级配置（平台信息 + 用户身份）到模板"""
     version = get_version()
     user = request.user
 
@@ -104,6 +105,10 @@ def index(request):
         chname = ""
         is_admin = 0
 
+    # 平台配置
+    platform_name = getattr(settings, "PLATFORM_NAME", "") or _("流程服务")
+    footer_html = Template(_get_footer()).render(year=datetime.datetime.now().year)
+
     return render(
         request,
         "index.html",
@@ -113,6 +118,12 @@ def index(request):
             "username": username,
             "chname": chname,
             "IS_ITSM_ADMIN": is_admin,
+            # 平台配置
+            "PLATFORM_NAME": platform_name,
+            "BRAND_NAME": "ITSM",
+            "FAVICON": "/static/core/images/bk_itsm.png",
+            "APP_LOGO": "/static/core/images/bk_itsm.png",
+            "FOOTER": footer_html,
         },
     )
 

@@ -35,11 +35,11 @@ __copyright__ = "Copyright © 2025 Tencent BlueKing. All Rights Reserved."
 
 # 公共URL配置
 from itsm.gateway.views import get_batch_users
-from itsm.sites.views import init
+from itsm.sites.views import current_user
 
 urlpatterns = [
     # 用户信息接口
-    re_path(r"^init/$", init),
+    re_path(r"^current_user/$", current_user),
     # 流程管理模块
     re_path(r"^workflow/", include("itsm.workflow.urls")),
     # 单据模块

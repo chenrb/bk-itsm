@@ -210,7 +210,7 @@ export function usePermission() {
 
   /**
    * Check if the current user has a specific permission code.
-   * Reads from the permissions array stored in Vuex user state (populated from /init/).
+   * Reads from the permissions array stored in Vuex user state (populated from /api/current_user/).
    * Superuser (IS_ITSM_ADMIN === 1) always returns true.
    * @param {String} code - Permission code, e.g. 'feature:system:user-manage'
    * @returns {Boolean}

@@ -24,7 +24,20 @@ import { createStore } from "vuex";
 import ajax from "../utils/ajax";
 import { jsonp } from "../utils/util";
 import i18n from '@/i18n/index.js';
-import { getPlatformConfig, setShortcutIcon } from '@blueking/platform-config'
+
+/** 设置浏览器标签页 favicon */
+function setShortcutIcon(url) {
+  let link = document.querySelector('link[rel="shortcut icon"]');
+  if (!link) {
+    link = document.createElement('link');
+    link.setAttribute('rel', 'shortcut icon');
+    document.head.appendChild(link);
+  }
+  const extMap = { ico: 'x-icon', png: 'png', svg: 'svg+xml' };
+  const ext = url ? url.split('/').pop().split('?')[0].split('.')[1] : '';
+  if (ext) link.setAttribute('type', `image/${extMap[ext] || ext}`);
+  link.setAttribute('href', url);
+}
 
 import common from "./modules/common";
 import changeType from "./modules/changeType";
@@ -278,11 +291,12 @@ export default createStore({
       TABLE_FIELDS_SWITCH: false,
       FIRST_STATE_SWITCH: false,
     },
-    platformInfo: { // 项目全局配置
-      favicon: `${window.SITE_URL}static/core/images/bk_itsm.png`,
-      name: window.log_name || t('m[\'流程服务\']'),
-      brandName: window.BK_PLATFORM_NAME || t('m[\'蓝鲸智云\']'),
+    platformInfo: {
+      favicon: window.FAVICON,
+      name: window.PLATFORM_NAME,
+      brandName: window.BRAND_NAME,
       version: window.VERSION,
+      appLogo: window.APP_LOGO,
       i18n: {}
     },
   },
@@ -403,7 +417,7 @@ export default createStore({
       return jsonp(bkPaasEsbHost + '/api/c/compapi/v2/usermanage/fe_update_user_language/', language);
     },
     getPlatformPreData() {
-      return ajax.get('init/').then((response) => {
+      return ajax.get('current_user/').then((response) => {
         if (!response || !response.data || !response.data.data) return;
         const data = response.data.data;
         window.DEFAULT_PROJECT = data.DEFAULT_PROJECT || '';
@@ -504,24 +518,14 @@ export default createStore({
       return ajax.post(`task/start_task/`, params).then((response) => response.data);
     },
     /**
-     * 获取当前用户的全局设置
+     * 获取当前用户的全局设置（从 init 接口已获取的数据中读取）
      * @returns {Object}
      */
-    async getGlobalConfig ({ state, commit }) {
-        // 默认配置
-        const config = { ...state.platformInfo }
-        let resp
-        const bkRepoUrl = window.BK_SHARED_RES_URL
-        if (bkRepoUrl) {
-          resp = await getPlatformConfig(`${bkRepoUrl}/bk_itsm/base.js`, config)
-        } else {
-          resp = await getPlatformConfig(config)
-        }
-        const { i18n, name, brandName } = resp
-        document.title = `${i18n.name || name} | ${i18n.brandName || brandName}`
-        setShortcutIcon(resp.favicon)
-        commit('setPlatformInfo', resp)
-        return resp
+    async getGlobalConfig ({ state }) {
+        const { i18n, name, brandName } = state.platformInfo
+        document.title = `${i18n?.name || name} | ${i18n?.brandName || brandName}`
+        setShortcutIcon(state.platformInfo.favicon)
+        return state.platformInfo
     }
   },
 });

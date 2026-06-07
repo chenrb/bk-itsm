@@ -3,7 +3,7 @@
 <head>
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
     <meta charset="utf-8">
-    <title>ITSM</title>
+    <title>{{ PLATFORM_NAME }} | {{ BRAND_NAME }}</title>
     <script>
         // 基础路径 — 开发和生产模式一致
         window.SITE_URL = '/';
@@ -16,6 +16,12 @@
         window.username = '{{ username|escapejs }}';
         window.chname = '{{ chname|escapejs }}';
         window.IS_ITSM_ADMIN = {{ IS_ITSM_ADMIN|default:"0" }};
+        // 平台配置 — 由 Django 模板注入
+        window.PLATFORM_NAME = '{{ PLATFORM_NAME|escapejs }}';
+        window.BRAND_NAME = '{{ BRAND_NAME|escapejs }}';
+        window.FAVICON = '{{ FAVICON|escapejs }}';
+        window.APP_LOGO = '{{ APP_LOGO|escapejs }}';
+        window.FOOTER = '{{ FOOTER|escapejs }}';
     </script>
 </head>
 <body>

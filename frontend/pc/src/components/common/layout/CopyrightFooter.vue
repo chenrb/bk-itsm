@@ -5,6 +5,7 @@
   -
   - License for BK-ITSM 蓝鲸流程服务:
   - -------------------------------------------------------------------
+
   -
   - Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
   - documentation files (the "Software"), to deal in the Software without restriction, including without limitation
@@ -22,11 +23,7 @@
 
 <template>
   <footer id="page-footer-wrapper">
-    <template v-if="bkSharedResUrl">
-      <p class="link-list" v-dompurify-html="platformInfo.i18n.footerInfoHTML"></p>
-      <p class="copyright" v-dompurify-html="platformInfo.footerCopyrightContent"></p>
-    </template>
-    <p v-else v-dompurify-html="footer" class="common-footer"></p>
+    <p v-dompurify-html="footer" class="common-footer"></p>
   </footer>
 </template>
 <script>
@@ -34,15 +31,9 @@
 
   export default {
     name: 'CopyrightFooter',
-    data() {
-      return {
-        bkSharedResUrl: window.BK_SHARED_RES_URL,
-      };
-    },
     computed: {
       ...mapState({
         footer: state => state.common.footer,
-        platformInfo: state => state.platformInfo,
       }),
     },
   };

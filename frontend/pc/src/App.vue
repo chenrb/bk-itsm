@@ -157,22 +157,12 @@
       // 组件升级统一获取字段
       if (window.username) {
         this.initGetInfo();
-        this.getPageFooter();
       }
     },
     methods: {
       ...mapActions([
         'getGlobalConfig',
       ]),
-      getPageFooter() {
-        this.$store.dispatch('common/getPageFooter').then((res) => {
-          this.$store.commit('common/setPageFooter', res.data);
-        })
-          .catch((res) => {
-            errorHandler(res, this);
-            this.$store.commit('common/setPageFooter', '<div class="copyright"><div>蓝鲸智云 版权所有</div></div>');
-          });
-      },
       // 组件升级统一获取字段
       initGetInfo() {
         const configurInfo = this.loadConfigurInfo();
