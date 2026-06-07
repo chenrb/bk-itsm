@@ -15,7 +15,6 @@ WSGI_APPLICATION = "wsgi.application"
 # REST FRAMEWORK
 # ==============================================================================
 REST_FRAMEWORK = {
-    "EXCEPTION_HANDLER": "itsm.component.generics.exception_handler",
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_PAGINATION_CLASS": "itsm.component.drf.pagination.CustomPageNumberPagination",
     "PAGE_SIZE": 10,
